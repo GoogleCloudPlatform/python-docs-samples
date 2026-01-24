@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 import os
 import time
 from typing import Iterator, Tuple, Union
@@ -58,7 +58,17 @@ from regional_samples import update_regional_secret_with_delayed_destroy
 from regional_samples import update_regional_secret_with_etag
 from regional_samples import view_regional_secret_annotations
 from regional_samples import view_regional_secret_labels
-
+from regional_samples import create_regional_secret_with_cmek
+from regional_samples import create_regional_secret_with_expire_time
+from regional_samples import create_regional_secret_with_rotation
+from regional_samples import create_regional_secret_with_topic
+from regional_samples import delete_regional_secret_expiration
+from regional_samples import update_regional_secret_expiration
+from regional_samples import list_regional_secret_tag_bindings
+from regional_samples import detach_regional_tag
+from regional_samples import update_regional_secret_rotation
+from regional_samples import delete_regional_secret_rotation
+from regional_samples import update_regional_secret_with_alias
 
 @pytest.fixture()
 def location_id() -> str:
@@ -102,6 +112,17 @@ def project_id() -> str:
 def iam_user() -> str:
     return "serviceAccount:" + os.environ["GCLOUD_SECRETS_SERVICE_ACCOUNT"]
 
+@pytest.fixture()
+def topic_name() -> str:
+    return os.environ["GOOGLE_CLOUD_TOPIC_NAME"]
+
+@pytest.fixture()
+def rotation_period_hours() -> int:
+    return 24
+
+@pytest.fixture()
+def kms_key_name() -> str:
+    return os.environ["GOOGLE_CLOUD_REGIONAL_KMS_KEY_NAME"]
 
 @pytest.fixture()
 def ttl() -> str:
@@ -858,3 +879,219 @@ def test_view_regional_secret_labels(
 
     out, _ = capsys.readouterr()
     assert label_key in out
+
+def test_create_regional_secret_with_cmek(capsys, project_id: str, secret_id: str, location_id: str, kms_key_name: str):
+
+    create_regional_secret_with_cmek.create_regional_secret_with_cmek(project_id, secret_id, location_id, kms_key_name)
+    
+    # Check the output contains expected text
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out
+    assert secret_id in out
+    assert kms_key_name in out
+    
+    retrieved_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    
+    # Check that the CMEK key name matches what we specified
+    actual_key_name = retrieved_secret.customer_managed_encryption.kms_key_name
+    assert actual_key_name == kms_key_name, f"CMEK key name mismatch: got {actual_key_name}, want {kms_key_name}"
+
+def test_create_regional_secret_with_expire_time(project_id: str, secret_id: str, location_id: str) -> None:
+    # Set expire time to 1 hour from now
+    expire_time = datetime.now() + timedelta(hours=1)
+    create_regional_secret_with_expire_time.create_regional_secret_with_expire_time(project_id, secret_id, location_id)
+    
+    retrieved_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    # Verify the secret has an expiration time
+    assert retrieved_secret.expire_time is not None, "ExpireTime is None, expected non-None"
+    retrieved_expire_time = retrieved_secret.expire_time.replace(tzinfo=None)
+    retrieved_expire_time = int(retrieved_expire_time.timestamp())
+        
+    # Convert expected datetime to seconds
+    expire_time = int(expire_time.timestamp())
+    
+    time_diff = abs(retrieved_expire_time - expire_time)
+    assert time_diff <= 1, (
+        f"ExpireTime difference too large: {time_diff} seconds. "
+    )
+
+def test_create_regional_secret_with_rotation(capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str, location_id: str, topic_name: str, rotation_period_hours: int) -> None:
+
+    # Create the secret with rotation
+    create_regional_secret_with_rotation.create_regional_secret_with_rotation(project_id, secret_id, location_id, topic_name)
+    
+    # Verify output contains expected message
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out, f"Expected 'Created secret' in output, got: {out}"
+    
+    retrieved_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    
+    # Verify rotation is configured
+    assert retrieved_secret.rotation is not None, "Rotation is None, expected non-None"
+    
+    # Verify rotation period is set correctly (24 hours = 86400 seconds)
+    expected_seconds = rotation_period_hours * 3600
+    actual_seconds = retrieved_secret.rotation.rotation_period.total_seconds()
+    assert actual_seconds == expected_seconds, f"RotationPeriod mismatch: got {actual_seconds}, want {expected_seconds}"
+    
+    # Verify next rotation time is set
+    assert retrieved_secret.rotation.next_rotation_time is not None, "NextRotationTime is None, expected non-None"
+
+def test_update_regional_secret_rotation_period(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+    location_id: str,
+    topic_name: str
+) -> None:
+    
+    create_regional_secret_with_rotation.create_regional_secret_with_rotation(project_id, secret_id, location_id, topic_name)
+    capsys.readouterr()
+    
+    updated_rotation_hours = 48
+    update_regional_secret_rotation.update_regional_secret_rotation_period(project_id, secret_id, location_id)
+    
+    # Verify output contains the secret ID
+    out, _ = capsys.readouterr()
+    assert secret_id in out, f"Expected '{secret_id}' in output, got: {out}"
+
+    retrieved_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    assert retrieved_secret.rotation is not None, "GetSecret: Rotation is nil, expected non-nil"
+    expected_seconds = updated_rotation_hours * 3600
+    actual_seconds = retrieved_secret.rotation.rotation_period.total_seconds()
+    assert actual_seconds == expected_seconds, f"RotationPeriod mismatch: got {actual_seconds}, want {expected_seconds}"
+
+
+def test_create_regional_secret_with_topic(capsys, project_id: str, secret_id: str, location_id: str, topic_name: str):
+    
+    # Call the function being tested
+    create_regional_secret_with_topic.create_regional_secret_with_topic(project_id, secret_id, location_id, topic_name)
+
+    # Check the output contains expected text
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out
+        
+    retrived_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+        
+    assert len(retrived_secret.topics) == 1, f"Expected 1 topic, got {len(retrived_secret.topics)}"
+    assert retrived_secret.topics[0].name == topic_name, f"Topic mismatch: got {retrived_secret.topics[0].name}, want {topic_name}"
+
+def test_update_regional_secret_expiration(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+    location_id: str
+) -> None:
+    create_regional_secret_with_expire_time.create_regional_secret_with_expire_time(project_id, secret_id, location_id)
+    
+    # Update expire time to 2 hours
+    new_expire = datetime.now() + timedelta(hours=2)
+    update_regional_secret_expiration.update_regional_secret_expiration(project_id, secret_id, location_id)
+    
+    # Verify output contains expected message
+    out, _ = capsys.readouterr()
+    assert "Updated secret" in out
+
+    retrieved_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    assert retrieved_secret.expire_time is not None, "ExpireTime is None, expected non-None"
+    retrieved_expire_time = retrieved_secret.expire_time.replace(tzinfo=None)
+    retrieved_expire_time = int(retrieved_expire_time.timestamp())
+        
+    new_expire = int(new_expire.timestamp())    
+    time_diff = abs(retrieved_expire_time - new_expire)
+    assert time_diff <= 1, (
+        f"ExpireTime difference too large: {time_diff} seconds. "
+    )
+
+def test_delete_regional_secret_expiration(capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str, location_id: str) -> None:
+    
+    create_regional_secret_with_expire_time.create_regional_secret_with_expire_time(project_id, secret_id, location_id)
+
+    delete_regional_secret_expiration.delete_regional_secret_expiration(project_id, secret_id, location_id)
+    out, _ = capsys.readouterr()
+    assert "Removed expiration" in out
+    
+    # Verify expire time is removed with GetSecret
+    retrieved_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    assert retrieved_secret.expire_time is None, f"ExpireTime is {retrieved_secret.expire_time}, expected None"
+
+def test_list_regional_secret_tag_bindings(capsys: pytest.LogCaptureFixture, project_id: str, location_id: str, tag_key_and_tag_value: Tuple[str, str], secret_id: str) -> None:
+    tag_key, tag_value = tag_key_and_tag_value
+    create_regional_secret_with_tags.create_regional_secret_with_tags(
+        project_id, location_id, secret_id, tag_key, tag_value
+    )
+
+    # Call the function being tested
+    list_regional_secret_tag_bindings.list_regional_secret_tag_bindings(project_id, location_id, secret_id)
+    
+    # Verify the tag value is in the returned bindings
+    out, _ = capsys.readouterr()
+    assert secret_id in out
+    assert tag_value in out
+
+def test_detach_regional_tag(
+    capsys: pytest.LogCaptureFixture, 
+    project_id: str, 
+    location_id: str, 
+    tag_key_and_tag_value: Tuple[str, str], 
+    secret_id: str
+) -> None:
+    """Test detaching a tag from a regional secret."""
+    tag_key, tag_value = tag_key_and_tag_value
+    
+    # Create a secret and bind the tag to it for testing detach
+    create_regional_secret_with_tags.create_regional_secret_with_tags(
+        project_id, location_id, secret_id, tag_key, tag_value
+    )
+    
+    # Call the function being tested - detach the tag
+    detach_regional_tag.detach_regional_tag(
+        project_id, location_id, secret_id, tag_value
+    )
+    
+    # Verify the output contains the expected message
+    out, _ = capsys.readouterr()
+    assert "Detached tag value" in out
+    
+    # List the tags to verify the tag was detached
+    list_regional_secret_tag_bindings.list_regional_secret_tag_bindings(
+        project_id, location_id, secret_id
+    )
+    
+    # Verify the tag value is no longer in the returned bindings
+    out, _ = capsys.readouterr()
+    assert tag_value not in out
+
+def test_delete_regional_secret_rotation(
+    capsys: pytest.LogCaptureFixture, 
+    project_id: str, 
+    secret_id: str, 
+    location_id: str,
+    topic_name: str
+) -> None:
+    # First create a secret with rotation configuration
+    create_regional_secret_with_rotation.create_regional_secret_with_rotation(
+        project_id, secret_id, location_id, topic_name
+    )
+    
+    # Call the function to delete the rotation configuration
+    delete_regional_secret_rotation.delete_regional_secret_rotation(
+        project_id, secret_id, location_id
+    )
+    
+    # Check the output contains the expected message
+    out, _ = capsys.readouterr()
+    assert "Removed rotation" in out
+    assert secret_id in out
+    
+    # Verify rotation is removed with GetSecret
+    retrieved_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+
+    # Check that rotation configuration is removed
+    assert not retrieved_secret.rotation, f"Rotation is {repr(retrieved_secret.rotation)}, expected None or empty"
+
+def test_update_regional_secret_with_alias(project_id: str, location_id: str, regional_secret_version: Tuple[str, str, str]) -> None:
+    secret_id, _, _ = regional_secret_version
+    update_regional_secret_with_alias.update_regional_secret_with_alias(project_id, secret_id, location_id)
+    retrieved_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    assert retrieved_secret.version_aliases["test"] == 1
