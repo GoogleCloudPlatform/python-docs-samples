@@ -1,5 +1,5 @@
 Flask==3.0.3
-gunicorn==23.0.0
+gunicorn==24.0.0
 google-events==0.14.0
 cloudevents==1.11.0
 googleapis-common-protos==1.66.0
