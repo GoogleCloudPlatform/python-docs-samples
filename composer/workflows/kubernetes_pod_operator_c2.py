@@ -17,10 +17,11 @@
 import datetime
 
 from airflow import models
-from airflow.kubernetes.secret import Secret
+
 from airflow.providers.cncf.kubernetes.operators.pod import (
     KubernetesPodOperator,
 )
+from airflow.providers.cncf.kubernetes.secret import Secret
 from kubernetes.client import models as k8s_models
 
 # A Secret is an object that contains a small amount of sensitive data such as
@@ -60,7 +61,7 @@ YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 # required to debug.
 with models.DAG(
     dag_id="composer_sample_kubernetes_pod",
-    schedule_interval=datetime.timedelta(days=1),
+    schedule=datetime.timedelta(days=1),
     start_date=YESTERDAY,
 ) as dag:
     # Only name, image, and task_id are required to create a
@@ -88,7 +89,7 @@ with models.DAG(
         # project-id as the gcr.io images and the service account that Composer
         # uses has permission to access the Google Container Registry
         # (the default service account has permission)
-        image="gcr.io/gcp-runtimes/ubuntu_20_0_4",
+        image="marketplace.gcr.io/google/ubuntu2204",
         # Specifies path to kubernetes config. The config_file is templated.
         config_file="/home/airflow/composer_kube_config",
         # Identifier of connection that should be used
@@ -130,7 +131,7 @@ with models.DAG(
         task_id="ex-kube-secrets",
         name="ex-kube-secrets",
         namespace="composer-user-workloads",
-        image="gcr.io/gcp-runtimes/ubuntu_20_0_4",
+        image="marketplace.gcr.io/google/ubuntu2204",
         startup_timeout_seconds=300,
         # The secrets to pass to Pod, the Pod will fail to create if the
         # secrets you specify in a Secret object do not exist in Kubernetes.
