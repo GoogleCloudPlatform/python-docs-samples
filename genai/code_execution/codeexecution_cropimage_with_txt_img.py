@@ -14,7 +14,7 @@
 
 
 def generate_content() -> bool:
-    # [START googlegenaisdk_codeexecution_with_txt_img]
+    # [START googlegenaisdk_codeexecution_cropimage_with_txt_img]
     import io
     from PIL import Image
     from google import genai
@@ -56,41 +56,8 @@ def generate_content() -> bool:
             image.save(output_location)
             print(f"Output is saved to {output_location}")
     # Example response:
-    #     ####################### 1. Generate Python Code #######################
-    #     import PIL.Image
-    #     import PIL.ImageDraw
     #
-    #     # Load the image to get its dimensions
-    #     img = PIL.Image.open('input_file_0.jpeg')
-    #     width, height = img.size
-    #
-    #     # Define the region for expression pedals
-    #     # Expression pedals are in the middle, roughly around y=450 to 600, x=450 to 650 (normalized)
-    #     # Let's refine based on the image
-    #     # Actually, they are between roughly 45% and 60% of width, and 45% to 60% of height.
-    #     expression_pedals_bbox = [463, 467, 606, 608] # [ymin, xmin, ymax, xmax] in normalized coordinates
-    #
-    #     # Convert normalized to pixel coordinates
-    #     def norm_to_pixel(norm_bbox, w, h):
-    #         ymin, xmin, ymax, xmax = norm_bbox
-    #         return [int(ymin * h / 1000), int(xmin * w / 1000), int(ymax * h / 1000), int(xmax * w / 1000)]
-    #
-    #     pixel_bbox = norm_to_pixel(expression_pedals_bbox, width, height)
-    #
-    #     # Crop and save
-    #     crop = img.crop((pixel_bbox[1], pixel_bbox[0], pixel_bbox[3], pixel_bbox[2]))
-    #     crop.save('expression_pedals_zoom.png')
-    #
-    #     # Output detection for internal reference
-    #     print(f'# [{{box_2d: {expression_pedals_bbox}, label: "expression pedals"}}]')
-    #
-    #     ####################### 2. Executing Python Code #######################
-    #     # [{box_2d: [463, 467, 606, 608], label: "expression pedals"}]
-    #
-    #     ####################### 3. Save Output #######################
-    #     Output is saved to sample_images/instrument-img-output.jpg
-    #     Based on the zoomed-in image, there are 4 expression pedals located in the center of the organ console, just above the pedalboard.
-    # [END googlegenaisdk_codeexecution_with_txt_img]
+    # [END googlegenaisdk_codeexecution_cropimage_with_txt_img]
     return True
 
 
