@@ -8,4 +8,4 @@ opencensus-ext-prometheus==0.2.1
 prometheus-client==0.21.1
 prometheus-flask-exporter==0.23.2
 requests==2.31.0
-Werkzeug==3.0.3
+Werkzeug==3.1.5
