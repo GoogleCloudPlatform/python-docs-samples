@@ -14,7 +14,7 @@
 
 
 def generate_content() -> bool:
-    # [START googlegenaisdk_codeexecution_with_txt_tableimg]
+    # [START googlegenaisdk_codeexecution_barplot_with_txt_img]
     import io
     from PIL import Image
     from google import genai
@@ -150,7 +150,7 @@ def generate_content() -> bool:
     #     The resulting bar chart below shows that Gemini 3 Pro outperforms the prior SOTA across all categories, with the most significant gains in **Screen** (1.49x), **Spatial** (1.36x), and **Visual Reasoning** (1.31x) benchmarks.
     #
     #     ![Gemini 3 Pro Performance Chart](performance_chart.png)
-    # [END googlegenaisdk_codeexecution_with_txt_tableimg]
+    # [END googlegenaisdk_codeexecution_barplot_with_txt_img]
     return True
 
 

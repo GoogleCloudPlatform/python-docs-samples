@@ -14,7 +14,7 @@
 
 
 def generate_content() -> bool:
-    # [START googlegenaisdk_codeexecution_with_txt_tableimg]
+    # [START googlegenaisdk_codeexecution_annotateimage_with_txt_gcsimg]
     import io
     from PIL import Image
     from google import genai
@@ -143,7 +143,7 @@ def generate_content() -> bool:
     #     - **Red Arrows (Trash/Landfill):** Non-recyclable or contaminated items like the snack wrappers (brown and Welch's), the white paper towel, and the small plastic cup are directed to the **black bin**.
     #
     #     These categorizations follow common sorting rules where green is for organics, blue for recyclables, and black for general waste.
-    # [END googlegenaisdk_codeexecution_with_txt_tableimg]
+    # [END googlegenaisdk_codeexecution_annotateimage_with_txt_gcsimg]
     return True
 
 
