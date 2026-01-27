@@ -9,7 +9,7 @@ Make sure you have followed the
 
 ```sh
 export BUCKET="your--bucket"
-gsutil mb gs://$BUCKET
+gcloud storage buckets create gs://$BUCKET
 ```
 
 ## create an Artifact Registry repository
@@ -51,4 +51,3 @@ gcloud dataflow flex-template run "flex-`date +%Y%m%d-%H%M%S`" \
 
 For more information about building and running flex templates, see
 📝 [Use Flex Templates](https://cloud.google.com/dataflow/docs/guides/templates/using-flex-templates).
-
