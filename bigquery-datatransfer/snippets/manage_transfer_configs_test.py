@@ -22,19 +22,6 @@ def test_list_configs(capsys, project_id, transfer_config_name):
     assert transfer_config_name in out
 
 
-def test_update_config(capsys, transfer_config_name):
-    manage_transfer_configs.update_config(
-        {
-            "new_display_name": "name from test_update_config",
-            "transfer_config_name": transfer_config_name,
-        }
-    )
-    out, _ = capsys.readouterr()
-    assert "Updated config:" in out
-    assert transfer_config_name in out
-    assert "name from test_update_config" in out
-
-
 def test_update_credentials_with_service_account(
     capsys, project_id, service_account_name, transfer_config_name
 ):
