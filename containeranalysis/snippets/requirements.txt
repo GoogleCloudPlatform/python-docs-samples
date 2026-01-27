@@ -1,6 +1,6 @@
 google-cloud-pubsub==2.28.0
 google-cloud-containeranalysis==2.16.0
 grafeas==1.12.1
-pytest==8.2.0
+pytest==9.0.0
 flaky==3.8.1
 mock==5.1.0

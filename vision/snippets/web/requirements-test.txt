@@ -1,2 +1,2 @@
 flaky==3.8.1
-pytest==8.2.0
+pytest==9.0.0
