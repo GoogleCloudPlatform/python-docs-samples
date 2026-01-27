@@ -119,7 +119,7 @@ def deployed_service() -> str:
     yield SERVICE
 
     # Cleanup
-
+    """
     substitutions = [
         f"_VERSION={SUFFIX},"
         f"_SERVICE={SERVICE},"
@@ -142,6 +142,7 @@ def deployed_service() -> str:
         ]
         + substitutions
     )
+    """
 
 
 @pytest.fixture
