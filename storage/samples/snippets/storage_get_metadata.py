@@ -34,6 +34,7 @@ def blob_metadata(bucket_name, blob_name):
     blob = bucket.get_blob(blob_name)
 
     print(f"Blob: {blob.name}")
+    print(f"Blob finalization: {blob.finalized_time}")
     print(f"Bucket: {blob.bucket.name}")
     print(f"Storage class: {blob.storage_class}")
     print(f"ID: {blob.id}")
