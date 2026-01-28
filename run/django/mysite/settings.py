@@ -177,7 +177,7 @@ STORAGES = {
         "options": {
             "bucket_name": GS_BUCKET_NAME,
             "querystring_auth": False,
-            "default_acl": None,
+            "default_acl": True,
             "expiration": 300,
         },
     },
@@ -185,13 +185,14 @@ STORAGES = {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
         "options": {
             "bucket_name": GS_BUCKET_NAME,
-            "querystring_auth": False,
+            "querystring_auth": True,
             "default_acl": None,
             "expiration": 300,
         },
     },
 }
 GS_DEFAULT_ACL = None
+GS_IAM_SIGN_BLOB = True
 # [END cloudrun_django_static_config]
 
 # Default primary key field type
