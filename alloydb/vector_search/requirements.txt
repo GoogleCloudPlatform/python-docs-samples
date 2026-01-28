@@ -1,0 +1,5 @@
+Flask==3.1.1
+google-cloud-alloydb==0.4.7
+google-cloud-alloydb-connector[pg8000]==1.9.0
+gunicorn==23.0.0
+psycopg2-binary==2.9.10
