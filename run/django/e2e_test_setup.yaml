@@ -58,14 +58,23 @@ steps:
         GS_BUCKET_NAME=${_STORAGE_BUCKET}
         SECRET_KEY=$(cat /dev/urandom | LC_ALL=C tr -dc '[:alpha:]' | fold -w 30 | head -n1)" > ${_SECRET_SETTINGS_NAME}
 
-        sa_email=$(gcloud projects list --filter "name=${PROJECT_ID}" --format "value(projectNumber)")-compute@developer.gserviceaccount.com
+        ./retry.sh "gcloud iam service-accounts create ${_SERVICE_ACCOUNT_NAME}"
+
+         ./retry.sh "gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+          --member="serviceAccount:${_SERVICE_ACCOUNT_EMAIL} \
+          --role=rroles/iam.serviceAccountTokenCreator"
+
+        ./retry.sh "gcloud iam add-iam-policy-binding ${_SECRET_SETTINGS_NAME} \
+        --member serviceAccount:${_SERVICE_ACCOUNT_EMAIL} \
+        --role roles/secretmanager.secretAccessor \
+        --project ${PROJECT_ID}"
 
         ./retry.sh "gcloud secrets create ${_SECRET_SETTINGS_NAME} \
           --project $PROJECT_ID \
           --data-file=${_SECRET_SETTINGS_NAME}"
 
         ./retry.sh "gcloud secrets add-iam-policy-binding ${_SECRET_SETTINGS_NAME} \
-        --member serviceAccount:${sa_email} \
+        --member serviceAccount:${_SERVICE_ACCOUNT_EMAIL} \
         --role roles/secretmanager.secretAccessor \
         --project ${PROJECT_ID}"
 
@@ -94,6 +103,7 @@ steps:
           --set-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
           --set-env-vars SETTINGS_NAME=${_SECRET_SETTINGS_NAME} \
           --command migrate \
+          --service-account=${_SERVICE_ACCOUNT_EMAIL} \
           --execute-now --wait"
 
   - id: "Create Superuser"
@@ -110,6 +120,7 @@ steps:
           --set-env-vars SETTINGS_NAME=${_SECRET_SETTINGS_NAME} \
           --set-env-vars DJANGO_SUPERUSER_PASSWORD=${_ADMIN_PASSWORD} \
           --set-env-vars DJANGO_SUPERUSER_EMAIL=${_ADMIN_EMAIL} \
+          --service-account=${_SERVICE_ACCOUNT_EMAIL} \
           --execute-now --wait"
 
   - id: "Deploy to Cloud Run"
@@ -124,6 +135,7 @@ steps:
           --no-allow-unauthenticated \
           --region ${_REGION} \
           --set-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
+          --service-account=${_SERVICE_ACCOUNT_EMAIL} \
           --set-env-vars SETTINGS_NAME=${_SECRET_SETTINGS_NAME}"
 
 images:
@@ -149,4 +161,5 @@ substitutions:
   _DB_PASS: password1234
   _ADMIN_PASSWORD: superpass
   _ADMIN_EMAIL: example@noop.com
-
+  _SERVICE_ACCOUNT_NAME: django-sa-${_VERSION}
+  _SERVICE_ACCOUNT_EMAIL: ${_SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com
