@@ -33,7 +33,7 @@ async def storage_open_object_read_full_object(
     grpc_client: an existing grpc_client to use, this is only for testing.
     """
     if grpc_client is None:
-        grpc_client = AsyncGrpcClient().grpc_client
+        grpc_client = AsyncGrpcClient()
 
     # mrd = Multi-Range-Downloader
     mrd = AsyncMultiRangeDownloader(grpc_client, bucket_name, object_name)

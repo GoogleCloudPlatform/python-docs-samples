@@ -33,7 +33,7 @@ async def storage_finalize_appendable_object_upload(
     """
 
     if grpc_client is None:
-        grpc_client = AsyncGrpcClient().grpc_client
+        grpc_client = AsyncGrpcClient()
     writer = AsyncAppendableObjectWriter(
         client=grpc_client,
         bucket_name=bucket_name,

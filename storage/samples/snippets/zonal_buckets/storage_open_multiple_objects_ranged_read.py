@@ -36,7 +36,7 @@ async def storage_open_multiple_objects_ranged_read(
     grpc_client: an existing grpc_client to use, this is only for testing.
     """
     if grpc_client is None:
-        grpc_client = AsyncGrpcClient().grpc_client
+        grpc_client = AsyncGrpcClient()
 
     async def _download_range(object_name):
         """Helper coroutine to download a range from a single object."""

@@ -90,7 +90,7 @@ async def read_appendable_object_tail(
     grpc_client: an existing grpc_client to use, this is only for testing.
     """
     if grpc_client is None:
-        grpc_client = AsyncGrpcClient().grpc_client
+        grpc_client = AsyncGrpcClient()
     writer = AsyncAppendableObjectWriter(
         client=grpc_client,
         bucket_name=bucket_name,

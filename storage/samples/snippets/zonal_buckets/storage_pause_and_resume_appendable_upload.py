@@ -32,7 +32,7 @@ async def storage_pause_and_resume_appendable_upload(
     grpc_client: an existing grpc_client to use, this is only for testing.
     """
     if grpc_client is None:
-        grpc_client = AsyncGrpcClient().grpc_client
+        grpc_client = AsyncGrpcClient()
 
     writer1 = AsyncAppendableObjectWriter(
         client=grpc_client,

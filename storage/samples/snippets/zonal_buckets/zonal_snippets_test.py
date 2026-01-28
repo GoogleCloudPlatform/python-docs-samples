@@ -48,7 +48,7 @@ _ZONAL_BUCKET = os.getenv("ZONAL_BUCKET")
 
 async def create_async_grpc_client():
     """Initializes async client and gets the current event loop."""
-    return AsyncGrpcClient().grpc_client
+    return AsyncGrpcClient()
 
 
 # Forcing a single event loop for the whole test session
