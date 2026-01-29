@@ -176,18 +176,20 @@ STORAGES = {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
         "options": {
             "bucket_name": GS_BUCKET_NAME,
-            "querystring_auth": False,
-            "default_acl": None,
+            "querystring_auth": True, # Enable signed URLs
+            "default_acl": None, # No ACLs required due to uniform level access on your bucket
             "expiration": 300,
+            "iam_sign_blob": True, # Use the IAM Sign Blob API
         },
     },
     "staticfiles": {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
         "options": {
             "bucket_name": GS_BUCKET_NAME,
-            "querystring_auth": False,
-            "default_acl": None,
+            "querystring_auth": True, # Enable signed URLs
+            "default_acl": None, # No ACLs required due to uniform level access on your bucket
             "expiration": 300,
+            "iam_sign_blob": True, # Use the IAM Sign Blob API
         },
     },
 }
