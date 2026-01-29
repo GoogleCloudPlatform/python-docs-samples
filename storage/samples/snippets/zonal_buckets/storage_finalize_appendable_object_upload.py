@@ -17,10 +17,10 @@
 import argparse
 import asyncio
 
-from google.cloud.storage._experimental.asyncio.async_appendable_object_writer import (
+from google.cloud.storage.asyncio.async_appendable_object_writer import (
     AsyncAppendableObjectWriter,
 )
-from google.cloud.storage._experimental.asyncio.async_grpc_client import AsyncGrpcClient
+from google.cloud.storage.asyncio.async_grpc_client import AsyncGrpcClient
 
 
 # [START storage_finalize_appendable_object_upload]

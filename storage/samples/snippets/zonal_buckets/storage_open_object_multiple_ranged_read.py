@@ -18,8 +18,8 @@ import argparse
 import asyncio
 from io import BytesIO
 
-from google.cloud.storage._experimental.asyncio.async_grpc_client import AsyncGrpcClient
-from google.cloud.storage._experimental.asyncio.async_multi_range_downloader import (
+from google.cloud.storage.asyncio.async_grpc_client import AsyncGrpcClient
+from google.cloud.storage.asyncio.async_multi_range_downloader import (
     AsyncMultiRangeDownloader,
 )
 
