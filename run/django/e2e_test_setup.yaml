@@ -45,7 +45,6 @@ steps:
         ./retry.sh "gsutil mb \
           -l ${_REGION} \
           -p ${PROJECT_ID} \
-          -b off \
           gs://${_STORAGE_BUCKET}"
 
   - id: "IAM and Secrets"
