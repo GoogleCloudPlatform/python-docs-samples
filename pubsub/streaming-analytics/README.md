@@ -80,7 +80,7 @@ Sample(s) showing how to use [Google Cloud Pub/Sub] with [Google Cloud Dataflow]
    ```bash
    export BUCKET_ID=your-gcs-bucket-id
 
-   gsutil mb gs://$BUCKET_ID
+   gcloud storage buckets create gs://$BUCKET_ID
    ```
 
  1. Start a [Google Cloud Scheduler] job that publishes one message to a [Google Cloud Pub/Sub] topic every minute. This will create an [App Engine] app if one has never been created on the project.
@@ -173,7 +173,7 @@ After the job has been submitted, you can check its status in the [GCP Console D
 You can also check the output to your GCS bucket using the command line below or in the [GCP Console Storage page]. You may need to wait a few minutes for the files to appear.
 
 ```bash
-gsutil ls gs://$BUCKET_ID/samples/
+gcloud storage ls gs://$BUCKET_ID/samples/
 ```
 
 ## Cleanup
@@ -198,10 +198,10 @@ gsutil ls gs://$BUCKET_ID/samples/
 
     ```bash
     # Delete only the files created by this sample.
-    gsutil -m rm -rf "gs://$BUCKET_ID/samples/output*"
+    gcloud storage rm --recursive --continue-on-error "gs://$BUCKET_ID/samples/output*"
 
     # [optional] Remove the Cloud Storage bucket.
-    gsutil rb gs://$BUCKET_ID
+    gcloud storage buckets delete gs://$BUCKET_ID
     ```
 
 [Apache Beam]: https://beam.apache.org/
