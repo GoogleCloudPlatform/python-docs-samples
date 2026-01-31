@@ -13,7 +13,9 @@
 # limitations under the License.
 import os
 
-import templatefolder_with_txt
+import codeexecution_annotateimage_with_txt_gcsimg
+import codeexecution_barplot_with_txt_img
+import codeexecution_cropimage_with_txt_img
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
@@ -21,5 +23,13 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
-def test_templatefolder_with_txt() -> None:
-    assert templatefolder_with_txt.greetings("Sampath")
+def test_codeexecution_annotateimage_with_txt_gcsimg() -> None:
+    assert codeexecution_annotateimage_with_txt_gcsimg.generate_content()
+
+
+def test_codeexecution_barplot_with_txt_img() -> None:
+    assert codeexecution_barplot_with_txt_img.generate_content()
+
+
+def test_codeexecution_cropimage_with_txt_img() -> None:
+    assert codeexecution_cropimage_with_txt_img.generate_content()
