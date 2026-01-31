@@ -1,2 +1,2 @@
-Django==5.2.9
+Django==6.0.1; python_version >= "3.12"
 gunicorn==23.0.0
