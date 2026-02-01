@@ -5,4 +5,4 @@ numpy==2.2.4; python_version > '3.9'
 numpy==2.2.4; python_version == '3.9'
 numpy==2.2.4; python_version == '3.8'
 numpy==2.2.4; python_version == '3.7'
-Werkzeug==3.0.3
+Werkzeug==3.1.4
