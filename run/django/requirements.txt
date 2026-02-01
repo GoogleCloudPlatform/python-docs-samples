@@ -3,5 +3,5 @@ Django==4.2.24; python_version >= "3.8" and python_version < "3.10"
 django-storages[google]==1.14.6
 django-environ==0.12.0
 psycopg2-binary==2.9.10
-gunicorn==23.0.0
+gunicorn==25.0.0
 google-cloud-secret-manager==2.21.1

@@ -1,7 +1,7 @@
 cryptography==45.0.1
 Flask==3.0.3
 google-auth==2.38.0
-gunicorn==23.0.0
+gunicorn==25.0.0
 requests==2.32.4
 requests-toolbelt==1.0.0
 Werkzeug==3.1.4

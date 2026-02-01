@@ -1,6 +1,6 @@
 Flask==3.0.3; python_version > '3.6'
 Flask==2.0.3; python_version < '3.7'
-gunicorn==23.0.0
+gunicorn==25.0.0
 numpy==2.2.4; python_version > '3.9'
 numpy==2.2.4; python_version == '3.9'
 numpy==2.2.4; python_version == '3.8'
