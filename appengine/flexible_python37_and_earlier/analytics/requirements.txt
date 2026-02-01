@@ -1,5 +1,5 @@
 Flask==3.0.3; python_version > '3.6'
 Flask==2.3.3; python_version < '3.7'
-gunicorn==23.0.0
+gunicorn==25.0.0
 requests[security]==2.31.0
 Werkzeug==3.0.3

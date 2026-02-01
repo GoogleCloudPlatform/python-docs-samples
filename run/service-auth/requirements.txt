@@ -2,4 +2,4 @@ google-auth==2.40.1
 google-cloud-run==0.10.18
 requests==2.32.3
 Flask==3.1.1
-gunicorn==23.0.0
+gunicorn==25.0.0

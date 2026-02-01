@@ -1,5 +1,5 @@
 Flask==3.0.3
-gunicorn==23.0.0
+gunicorn==25.0.0
 opentelemetry-exporter-gcp-trace==1.7.0
 opentelemetry-propagator-gcp==1.7.0
 opentelemetry-instrumentation-flask==0.34b0
