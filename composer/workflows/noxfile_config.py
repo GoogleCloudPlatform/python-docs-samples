@@ -39,6 +39,7 @@ TEST_CONFIG_OVERRIDE = {
         "3.10",
         "3.12",
         "3.13",
+        "3.14",
     ],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
