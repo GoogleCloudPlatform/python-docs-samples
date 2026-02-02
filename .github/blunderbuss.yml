@@ -16,12 +16,6 @@
 # Updates should be made to both assign_issues_by & assign_prs_by sections
 ###
 assign_issues_by:
-  # DEE teams
-  - labels:
-      - "api: people-and-planet-ai"
-    to:
-      - davidcavazos
-
   # AppEco teams
   - labels:
       - "api: cloudsql"
@@ -56,21 +50,6 @@ assign_issues_by:
       - "api: bigquery"
     to:
       - GoogleCloudPlatform/api-bigquery
-
-  # AppEco individuals
-  - labels:
-      - "api: aml-ai"
-    to:
-      - nickcook
-  - labels:
-      - "api: bigquery"
-    to:
-      - shollyman
-  - labels:
-      - "api: datascienceonramp"
-    to:
-      - leahecole
-      - bradmiro
 
   # Self-service teams
   - labels:
@@ -120,27 +99,10 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/googleapi-dataplex
 
-  # Self-service individuals
-  - labels:
-      - "api: auth"
-    to:
-      - arithmetic1728
-  - labels:
-      - "api: appengine"
-    to:
-      - jinglundong
-
-
 ###
 # Updates should be made to both assign_issues_by & assign_prs_by sections
 ###
 assign_prs_by:
-  # DEE teams
-  - labels:
-      - "api: people-and-planet-ai"
-    to:
-      - davidcavazos
-
   # AppEco teams
   - labels:
       - "api: cloudsql"
@@ -169,17 +131,6 @@ assign_prs_by:
       - "api: composer"
     to:
       - GoogleCloudPlatform/cloud-dpes-composer
-
-  # AppEco individuals
-  - labels:
-      - "api: bigquery"
-    to:
-      - shollyman
-  - labels:
-      - "api: datascienceonramp"
-    to:
-      - leahecole
-      - bradmiro
 
   # Self-service teams
   - labels:
@@ -235,16 +186,3 @@ assign_prs_by:
       - "api: connectgateway"
     to:
       - GoogleCloudPlatform/connectgateway
-  # Self-service individuals
-  - labels:
-      - "api: auth"
-    to:
-      - arithmetic1728
-  - labels:
-      - "api: appengine"
-    to:
-      - jinglundong
-
-###
-# Updates should be made to both assign_issues_by & assign_prs_by sections
-###
