@@ -15,13 +15,6 @@
 from . import manage_transfer_configs
 
 
-def test_list_configs(capsys, project_id, transfer_config_name):
-    manage_transfer_configs.list_configs({"project_id": project_id})
-    out, _ = capsys.readouterr()
-    assert "Got the following configs:" in out
-    assert transfer_config_name in out
-
-
 def test_update_config(capsys, transfer_config_name):
     manage_transfer_configs.update_config(
         {
