@@ -26,18 +26,18 @@ def generate_videos_from_reference(output_gcs_uri: str) -> str:
 
     operation = client.models.generate_videos(
         model="veo-3.1-generate-preview",
-        prompt="slowly rotate this coffee mug in a 360 degree circle",
+        prompt="A person walks in carrying a vase full of flowers and places the vase on a kitchen table.",
         config=GenerateVideosConfig(
             reference_images=[
                 VideoGenerationReferenceImage(
                     image=Image(
-                        gcs_uri="gs://cloud-samples-data/generative-ai/image/mug.png",
+                        gcs_uri="gs://cloud-samples-data/generative-ai/image/vase.png",
                         mime_type="image/png",
                     ),
                     reference_type="asset",
                 ),
             ],
-            aspect_ratio="16:9",
+            aspect_ratio="9:16",
             output_gcs_uri=output_gcs_uri,
         ),
     )

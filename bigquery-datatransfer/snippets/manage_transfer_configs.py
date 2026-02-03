@@ -13,27 +13,6 @@
 # limitations under the License.
 
 
-def list_configs(override_values={}):
-    # [START bigquerydatatransfer_list_configs]
-    from google.cloud import bigquery_datatransfer
-
-    transfer_client = bigquery_datatransfer.DataTransferServiceClient()
-
-    project_id = "my-project"
-    # [END bigquerydatatransfer_list_configs]
-    # To facilitate testing, we replace values with alternatives
-    # provided by the testing harness.
-    project_id = override_values.get("project_id", project_id)
-    # [START bigquerydatatransfer_list_configs]
-    parent = transfer_client.common_project_path(project_id)
-
-    configs = transfer_client.list_transfer_configs(parent=parent)
-    print("Got the following configs:")
-    for config in configs:
-        print(f"\tID: {config.name}, Schedule: {config.schedule}")
-    # [END bigquerydatatransfer_list_configs]
-
-
 def update_config(override_values={}):
     # [START bigquerydatatransfer_update_config]
     from google.cloud import bigquery_datatransfer
@@ -162,24 +141,20 @@ def schedule_backfill_manual_transfer(override_values={}):
 
 
 def delete_config(override_values={}):
-    # [START bigquerydatatransfer_delete_transfer]
     import google.api_core.exceptions
     from google.cloud import bigquery_datatransfer
 
     transfer_client = bigquery_datatransfer.DataTransferServiceClient()
 
     transfer_config_name = "projects/1234/locations/us/transferConfigs/abcd"
-    # [END bigquerydatatransfer_delete_transfer]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
     transfer_config_name = override_values.get(
         "transfer_config_name", transfer_config_name
     )
-    # [START bigquerydatatransfer_delete_transfer]
     try:
         transfer_client.delete_transfer_config(name=transfer_config_name)
     except google.api_core.exceptions.NotFound:
         print("Transfer config not found.")
     else:
         print(f"Deleted transfer config: {transfer_config_name}")
-    # [END bigquerydatatransfer_delete_transfer]
