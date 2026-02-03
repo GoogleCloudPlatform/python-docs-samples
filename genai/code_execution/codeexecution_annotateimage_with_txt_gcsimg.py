@@ -48,7 +48,7 @@ def generate_content() -> bool:
         if part.as_image() is not None:
             print("####################### 3. Save Output #######################")
             img_count += 1
-            output_location = f"sample_images/output-annotate-image-{img_count}.jpg"
+            output_location = f"robotic-annotate-output-{img_count}.jpg"
             image_data = part.as_image().image_bytes
             image = Image.open(io.BytesIO(image_data))
             image = image.convert("RGB")
@@ -134,7 +134,7 @@ def generate_content() -> bool:
     #     ####################### 2. Executing Python Code #######################
     #     None
     #     ####################### 3. Save Output #######################
-    #     Output is saved to sample_images/output-annotate-image-1.jpg
+    #     Output is saved to output-annotate-image-1.jpg
     #     The image has been annotated with arrows indicating the appropriate bin for each object based on standard waste sorting practices:
     #
     #     - **Green Arrows (Compost):** Organic items such as the green pepper, red pepper, grapes, and cherries are directed to the **green bin**.

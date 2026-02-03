@@ -20,13 +20,11 @@ def generate_content() -> bool:
     from google import genai
     from google.genai import types
 
-    # Read a local image as input
-    image_pil = Image.open("sample_images/tabular_data.png")
-    image_pil = image_pil.convert("RGB")
-    byte_io = io.BytesIO()
-    image_pil.save(byte_io, format="JPEG")
-    image_bytes = byte_io.getvalue()
-    image = types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg")
+    # Use to the benchmark image in Cloud Storage
+    image = types.Part.from_uri(
+        file_uri="https://storage.googleapis.com/cloud-samples-data/generative-ai/image/benchmark.jpeg",
+        mime_type="image/jpeg",
+    )
 
     client = genai.Client()
 
@@ -54,7 +52,7 @@ def generate_content() -> bool:
         if part.as_image() is not None:
             print("####################### 3. Save Output #######################")
             img_count += 1
-            output_location = f"sample_images/output-barplot-{img_count}.jpg"
+            output_location = f"output-barplot-{img_count}.jpg"
             image_data = part.as_image().image_bytes
             image = Image.open(io.BytesIO(image_data))
             image = image.convert("RGB")
@@ -140,9 +138,9 @@ def generate_content() -> bool:
     #     {'Visual Reasoning': np.float64(1.3065950426525028), 'Document': np.float64(1.1065092453773113), 'Spatial': np.float64(1.3636746436001959), 'Screen': np.float64(1.4856952211773211), 'Video': np.float64(1.0620548283943443), 'Education': np.float64(1.0563204005006257), 'Biomedical': np.float64(1.1138909257119955)}
     #
     #     ####################### 3. Save Output #######################
-    #     Output is saved to sample_images/output-barplot-1.jpg
+    #     Output is saved to output-barplot-1.jpg
     #     ####################### 3. Save Output #######################
-    #     Output is saved to sample_images/output-barplot-2.jpg
+    #     Output is saved to output-barplot-2.jpg
     #     Based on the data provided in the table, I have calculated the per-category performance of Gemini 3 Pro normalized against the prior state-of-the-art (SOTA), which is defined as the best performance among Gemini 2.5 Pro, Claude Opus 4.5, and GPT-5.1 for each benchmark.
     #
     #     For benchmarks where lower values are better (indicated by an asterisk, e.g., OmniDocBench1.5*), the normalization was calculated as $\text{Prior SOTA} / \text{Gemini 3 Pro Score}$. For all other benchmarks, it was calculated as $\text{Gemini 3 Pro Score} / \text{Prior SOTA}$. The values were then averaged within each category.

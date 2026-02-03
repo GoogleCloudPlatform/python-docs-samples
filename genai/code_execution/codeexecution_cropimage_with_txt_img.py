@@ -16,15 +16,14 @@
 def generate_content() -> bool:
     # [START googlegenaisdk_codeexecution_cropimage_with_txt_img]
     import io
+    import requests
     from PIL import Image
     from google import genai
     from google.genai import types
 
-    # Read a local image as input
-    image_pil = Image.open("sample_images/instrument-img.jpg")
-    byte_io = io.BytesIO()
-    image_pil.save(byte_io, format="JPEG")
-    image_bytes = byte_io.getvalue()
+    # Download the input image
+    image_path = "https://storage.googleapis.com/cloud-samples-data/generative-ai/image/chips.jpeg"
+    image_bytes = requests.get(image_path).content
     image = types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg")
 
     client = genai.Client()
@@ -33,7 +32,7 @@ def generate_content() -> bool:
         model="gemini-3-flash-preview",
         contents=[
             image,
-            "Zoom into the expression pedals and tell me how many pedals are there?",
+            "Locate the ESMT chip. What are the numbers on the chip?",
         ],
         config=types.GenerateContentConfig(tools=[types.Tool(code_execution=types.ToolCodeExecution)]),
     )
@@ -52,7 +51,7 @@ def generate_content() -> bool:
             print("####################### 3. Save Output #######################")
             image_data = part.as_image().image_bytes
             image = Image.open(io.BytesIO(image_data))
-            output_location = "sample_images/instrument-img-output.jpg"
+            output_location = "ESMT-chip-output.jpg"
             image.save(output_location)
             print(f"Output is saved to {output_location}")
     # Example response:
@@ -86,7 +85,7 @@ def generate_content() -> bool:
     #     ####################### 2. Executing Python Code #######################
     #     None
     #     ####################### 3. Save Output #######################
-    #     Output is saved to sample_images/instrument-img-output.jpg
+    #     Output is saved to instrument-img-output.jpg
     #     Based on the zoomed-in image, there are 4 expression pedals located in the center of the organ console, above the pedalboard.
     # [END googlegenaisdk_codeexecution_cropimage_with_txt_img]
     return True
