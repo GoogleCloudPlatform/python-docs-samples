@@ -96,7 +96,7 @@ with models.DAG(
         # project-id as the gcr.io images and the service account that Composer
         # uses has permission to access the Google Container Registry
         # (the default service account has permission)
-        image="gcr.io/gcp-runtimes/ubuntu_18_0_4",
+        image="marketplace.gcr.io/google/ubuntu2204",
     )
     # [END composer_kubernetespodoperator_minconfig]
     # [START composer_kubernetespodoperator_templateconfig]
