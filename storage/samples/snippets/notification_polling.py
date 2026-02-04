@@ -32,10 +32,10 @@ below:
    https://console.cloud.google.com/flows/enableapi?apiid=pubsub
 
 3. Create a Google Cloud Storage bucket:
-   $ gsutil mb gs://testbucket
+   $ gcloud storage buckets create gs://testbucket
 
 4. Create a Cloud Pub/Sub topic and publish bucket notifications there:
-   $ gsutil notification create -f json -t testtopic gs://testbucket
+   $ gcloud storage buckets notifications create gs://testbucket --topic=testtopic --payload-format=json
 
 5. Create a subscription for your new topic:
    $ gcloud pubsub subscriptions create testsubscription --topic=testtopic
