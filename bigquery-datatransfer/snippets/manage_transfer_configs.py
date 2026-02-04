@@ -138,23 +138,3 @@ def schedule_backfill_manual_transfer(override_values={}):
         print(f"backfill: {run.run_time} run: {run.name}")
     # [END bigquerydatatransfer_schedule_backfill]
     return response.runs
-
-
-def delete_config(override_values={}):
-    import google.api_core.exceptions
-    from google.cloud import bigquery_datatransfer
-
-    transfer_client = bigquery_datatransfer.DataTransferServiceClient()
-
-    transfer_config_name = "projects/1234/locations/us/transferConfigs/abcd"
-    # To facilitate testing, we replace values with alternatives
-    # provided by the testing harness.
-    transfer_config_name = override_values.get(
-        "transfer_config_name", transfer_config_name
-    )
-    try:
-        transfer_client.delete_transfer_config(name=transfer_config_name)
-    except google.api_core.exceptions.NotFound:
-        print("Transfer config not found.")
-    else:
-        print(f"Deleted transfer config: {transfer_config_name}")

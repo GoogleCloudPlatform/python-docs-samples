@@ -123,7 +123,7 @@ def transfer_client(default_credentials, project_id):
 
 @pytest.fixture(scope="session")
 def transfer_config_name(transfer_client, project_id, dataset_id, service_account_name):
-    from . import manage_transfer_configs, scheduled_query
+    from . import scheduled_query
 
     # Use the transfer_client fixture so we know quota is attributed to the
     # correct project.
@@ -140,9 +140,10 @@ def transfer_config_name(transfer_client, project_id, dataset_id, service_accoun
         }
     )
     yield transfer_config.name
-    manage_transfer_configs.delete_config(
-        {"transfer_config_name": transfer_config.name}
-    )
+    try:
+        transfer_client.delete_transfer_config(name=transfer_config.name)
+    except google.api_core.exceptions.NotFound:
+        pass
 
 
 @pytest.fixture
