@@ -92,7 +92,7 @@ def responses_subscription(
 
 @pytest.fixture(scope="session")
 def flex_template_image(utils: Utils) -> str:
-    conftest.run_cmd("gsutil", "cp", "-r", GEMMA_GCS, ".")
+    conftest.run_cmd("gcloud", "storage", "cp", "--recursive", GEMMA_GCS, ".")
     yield from utils.cloud_build_submit(NAME)
 
 
