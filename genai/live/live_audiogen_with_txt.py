@@ -29,7 +29,7 @@ async def generate_content() -> None:
                                     VoiceConfig)
 
     client = genai.Client()
-    model = "gemini-2.0-flash-live-preview-04-09"
+    model = "gemini-2.5-flash-native-audio-latest"
     # For more Voice options, check https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash#live-api-native-audio
     voice_name = "Aoede"
 
