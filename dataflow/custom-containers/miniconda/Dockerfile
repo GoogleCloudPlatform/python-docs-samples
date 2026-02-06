@@ -31,7 +31,7 @@ FROM ubuntu:latest
 WORKDIR /pipeline
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
-COPY --from=apache/beam_python3.9_sdk:2.55.1 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.9_sdk:2.69.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
 
 # Copy the python installation from the builder stage.
