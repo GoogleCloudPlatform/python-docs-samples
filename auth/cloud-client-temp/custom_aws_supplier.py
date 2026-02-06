@@ -17,8 +17,8 @@ import sys
 
 import boto3
 from dotenv import load_dotenv
-from google.auth.aws import Credentials as AwsCredentials
 from google.auth.aws import AwsSecurityCredentials, AwsSecurityCredentialsSupplier
+from google.auth.aws import Credentials as AwsCredentials
 from google.auth.exceptions import GoogleAuthError
 from google.auth.transport.requests import AuthorizedSession
 
@@ -28,7 +28,7 @@ load_dotenv()
 class CustomAwsSupplier(AwsSecurityCredentialsSupplier):
     """Custom AWS Security Credentials Supplier."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initializes the Boto3 session, prioritizing environment variables for region."""
         # Explicitly read the region from the environment first. This ensures that
         # a value from a .env file is picked up reliably for local testing.
@@ -39,7 +39,7 @@ class CustomAwsSupplier(AwsSecurityCredentialsSupplier):
         self._cached_region = None
         print(f"[INFO] CustomAwsSupplier initialized. Region from env: {region}")
 
-    def get_aws_region(self, context, request) -> str:
+    def get_aws_region(self, context: object, request: object) -> str:
         """Returns the AWS region using Boto3's default provider chain."""
         if self._cached_region:
             return self._cached_region
@@ -55,7 +55,7 @@ class CustomAwsSupplier(AwsSecurityCredentialsSupplier):
         print(f"[INFO] Boto3 resolved AWS Region: {self._cached_region}")
         return self._cached_region
 
-    def get_aws_security_credentials(self, context, request=None) -> AwsSecurityCredentials:
+    def get_aws_security_credentials(self, context: object, request: object = None) -> AwsSecurityCredentials:
         """Retrieves AWS security credentials using Boto3's default provider chain."""
         aws_credentials = self.session.get_credentials()
         if not aws_credentials:
@@ -71,7 +71,7 @@ class CustomAwsSupplier(AwsSecurityCredentialsSupplier):
         )
 
 
-def main():
+def main() -> None:
     """Main function to demonstrate the custom AWS supplier."""
     print("--- Starting Script ---")
 
