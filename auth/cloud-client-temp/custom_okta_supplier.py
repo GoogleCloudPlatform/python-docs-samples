@@ -17,11 +17,10 @@ import time
 import urllib.parse
 
 from dotenv import load_dotenv
-import requests
-
 from google.auth.exceptions import GoogleAuthError
 from google.auth.identity_pool import Credentials as IdentityPoolClient
 from google.auth.transport.requests import AuthorizedSession
+import requests
 
 load_dotenv()
 
