@@ -12,12 +12,12 @@
 # limitations under the License.
 
 import json
-import urllib.parse
 import os
+import urllib.parse
 import time
 
-import requests
 from dotenv import load_dotenv
+import requests
 from google.auth.exceptions import GoogleAuthError
 from google.auth.identity_pool import Credentials as IdentityPoolClient
 from google.auth.transport.requests import AuthorizedSession
@@ -46,7 +46,7 @@ class OktaClientCredentialsSupplier:
     (M2M) authentication with Okta.
     """
 
-    def __init__(self, domain, client_id, client_secret):
+    def __init__(self, domain: str, client_id: str, client_secret: str) -> None:
         self.okta_token_url = f"{domain}/oauth2/default/v1/token"
         self.client_id = client_id
         self.client_secret = client_secret
@@ -54,7 +54,7 @@ class OktaClientCredentialsSupplier:
         self.expiry_time = 0
         print("OktaClientCredentialsSupplier initialized.")
 
-    def get_subject_token(self, context, request=None) -> str:
+    def get_subject_token(self, context: object, request: object = None) -> str:
         """Fetches a new token if the current one is expired or missing.
 
         Args:
@@ -76,7 +76,7 @@ class OktaClientCredentialsSupplier:
         self._fetch_okta_access_token()
         return self.access_token
 
-    def _fetch_okta_access_token(self):
+    def _fetch_okta_access_token(self) -> None:
         """Performs the Client Credentials grant flow with Okta."""
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -118,7 +118,7 @@ class OktaClientCredentialsSupplier:
             ) from e
 
 
-def main():
+def main() -> None:
     """Main function to demonstrate the custom Okta supplier.
 
     TODO(Developer):
