@@ -62,7 +62,9 @@ class CustomAwsSupplier(AwsSecurityCredentialsSupplier):
             print("[ERROR] Unable to resolve AWS credentials.", file=sys.stderr)
             raise GoogleAuthError("Unable to resolve AWS credentials from the provider chain.")
 
-        print(f"[INFO] Resolved AWS Access Key ID: {aws_credentials.access_key}")
+        # Instead of printing the whole key, mask everything but the last 4 characters
+        masked_access_key = f"{'*' * 16}{aws_credentials.access_key[-4:]}"
+        print(f"[INFO] Resolved AWS Access Key ID: {masked_access_key}")
 
         return AwsSecurityCredentials(
             access_key_id=aws_credentials.access_key,
