@@ -20,7 +20,7 @@ import google.auth.transport.requests
 from google.oauth2 import service_account
 
 
-def get_idToken_from_serviceaccount(json_credential_path: str, target_audience: str):
+def get_idToken_from_serviceaccount(json_credential_path: str, target_audience: str) -> None:
     """
     TODO(Developer): Replace the below variables before running the code.
 
