@@ -53,9 +53,3 @@ def test_schedule_backfill_manual_transfer(capsys, transfer_config_name):
     assert transfer_config_name in out
     # Check that there are three runs for between 2 and 5 days ago.
     assert len(runs) == 3
-
-
-def test_delete_config(capsys, transfer_config_name):
-    # transfer_config_name fixture in conftest.py calls the delete config
-    # sample. To conserve limited BQ-DTS quota we only make basic checks.
-    assert len(transfer_config_name) != 0
