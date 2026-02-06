@@ -56,7 +56,7 @@ def verify_google_idtoken(idtoken: str, audience: str = "iap.googleapis.com",
         print(f"User id: {result['sub']}")
     # Optionally, if "INCLUDE_EMAIL" was set in the token options, check if the
     # email was verified.
-    if result['email_verified'] == "True":
+    if result.get('email_verified'):
         print(f"Email verified {result['email']}")
 
 # [END auth_cloud_verify_google_idtoken]
