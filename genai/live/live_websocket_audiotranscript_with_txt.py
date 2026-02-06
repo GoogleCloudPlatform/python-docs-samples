@@ -47,7 +47,7 @@ async def generate_content() -> str:
     # Configuration Constants
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
     LOCATION = "us-central1"
-    GEMINI_MODEL_NAME = "gemini-2.0-flash-live-preview-04-09"
+    GEMINI_MODEL_NAME = "gemini-live-2.5-flash-native-audio"
     # To generate a bearer token in CLI, use:
     #   $ gcloud auth application-default print-access-token
     # It's recommended to fetch this token dynamically rather than hardcoding.
