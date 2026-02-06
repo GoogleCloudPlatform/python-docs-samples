@@ -16,11 +16,11 @@
 
 from google.cloud import storage
 
-import google.oauth2.credentials
 import google.auth
+import google.oauth2.credentials
 
 
-def authenticate_explicit_with_adc():
+def authenticate_explicit_with_adc() -> None:
     """
     List storage buckets by authenticating with ADC.
 
