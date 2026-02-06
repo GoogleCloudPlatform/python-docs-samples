@@ -15,12 +15,11 @@
 # [START auth_cloud_idtoken_metadata_server]
 
 import google
-import google.oauth2.credentials
 from google.auth import compute_engine
 import google.auth.transport.requests
+import google.oauth2.credentials
 
-
-def idtoken_from_metadata_server(url: str):
+def idtoken_from_metadata_server(url: str) -> None:
     """
     Use the Google Cloud metadata server in the Cloud Run (or AppEngine or Kubernetes etc.,)
     environment to create an identity token and add it to the HTTP request as part of an
