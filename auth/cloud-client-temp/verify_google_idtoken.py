@@ -19,8 +19,8 @@ import google.auth.transport.requests
 from google.oauth2 import id_token
 
 
-def verify_google_idtoken(idtoken: str, audience="iap.googleapis.com",
-                          jwk_url="https://www.googleapis.com/oauth2/v3/certs"):
+def verify_google_idtoken(idtoken: str, audience: str = "iap.googleapis.com",
+                          jwk_url: str = "https://www.googleapis.com/oauth2/v3/certs") -> None:
     """
       Verifies the obtained Google id token. This is done at the receiving end of the OIDC endpoint.
       The most common use case for verifying the ID token is when you are protecting
