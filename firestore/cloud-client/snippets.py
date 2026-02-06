@@ -839,28 +839,17 @@ def delete_full_collection():
     db = firestore.Client()
 
     # [START firestore_data_delete_collection]
-    def delete_collection(coll_ref, batch_size):
-        if batch_size == 0:
-            return
+    def delete_collection(coll_ref):
 
-        docs = coll_ref.list_documents(page_size=batch_size)
-        deleted = 0
-
-        for doc in docs:
-            print(f"Deleting doc {doc.id} => {doc.get().to_dict()}")
-            doc.delete()
-            deleted = deleted + 1
-
-        if deleted >= batch_size:
-            return delete_collection(coll_ref, batch_size)
+        print(f"Recursively deleting collection: {coll_ref}")
+        db.recursive_delete(coll_ref)
 
     # [END firestore_data_delete_collection]
 
-    delete_collection(db.collection("cities"), 10)
-    delete_collection(db.collection("data"), 10)
-    delete_collection(db.collection("objects"), 10)
-    delete_collection(db.collection("users"), 10)
-    delete_collection(db.collection("users"), 0)
+    delete_collection(db.collection("cities"))
+    delete_collection(db.collection("data"))
+    delete_collection(db.collection("objects"))
+    delete_collection(db.collection("users"))
 
 
 def collection_group_query(db):
