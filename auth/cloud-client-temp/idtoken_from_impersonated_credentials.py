@@ -20,7 +20,7 @@ import google.auth.transport.requests
 
 
 def idtoken_from_impersonated_credentials(
-        impersonated_service_account: str, scope: str, target_audience: str):
+        impersonated_service_account: str, scope: str, target_audience: str) -> None:
     """
       Use a service account (SA1) to impersonate as another service account (SA2) and obtain id token
       for the impersonated account.
