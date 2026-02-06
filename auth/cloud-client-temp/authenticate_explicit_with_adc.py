@@ -14,9 +14,9 @@
 
 # [START auth_cloud_explicit_adc]
 
-from google.cloud import storage
 
 import google.auth
+from google.cloud import storage
 import google.oauth2.credentials
 
 
