@@ -17,7 +17,7 @@
 from google.cloud import storage
 
 
-def authenticate_implicit_with_adc(project_id="your-google-cloud-project-id"):
+def authenticate_implicit_with_adc(project_id: str = "your-google-cloud-project-id") -> None:
     """
     When interacting with Google Cloud Client libraries, the library can auto-detect the
     credentials to use.
