@@ -37,7 +37,7 @@ async def generate_content() -> list:
 
     client = genai.Client()
     voice_name = "Aoede"
-    model = "gemini-2.5-flash-native-audio-latest"
+    model = "gemini-live-2.5-flash-native-audio"
 
     config = LiveConnectConfig(
         response_modalities=[Modality.AUDIO],
