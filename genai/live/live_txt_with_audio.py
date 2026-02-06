@@ -27,11 +27,14 @@ async def generate_content() -> list[str]:
     import requests
     import soundfile as sf
     from google import genai
-    from google.genai.types import Blob, LiveConnectConfig, Modality
+    from google.genai.types import Blob, LiveConnectConfig, Modality, AudioTranscriptionConfig
 
     client = genai.Client()
-    model = "gemini-2.0-flash-live-preview-04-09"
-    config = LiveConnectConfig(response_modalities=[Modality.TEXT])
+    model = "gemini-live-2.5-flash-native-audio"
+    config = LiveConnectConfig(
+        response_modalities=[Modality.AUDIO],
+        output_audio_transcription=AudioTranscriptionConfig(),
+        )
 
     async with client.aio.live.connect(model=model, config=config) as session:
         audio_url = (
@@ -56,9 +59,11 @@ async def generate_content() -> list[str]:
 
         response = []
 
-        async for message in session.receive():
-            if message.text is not None:
-                response.append(message.text)
+        async for event in session.receive():
+            if(event.server_content and event.server_content.output_transcription):
+                message= event.server_content.output_transcription.text
+                if message is not None:
+                    response.append(message)
 
         print("".join(response))
     # Example output:
