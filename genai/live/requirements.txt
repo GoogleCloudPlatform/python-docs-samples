@@ -4,7 +4,7 @@ websockets==15.0.1
 numpy==1.26.4
 soundfile==0.12.1
 openai==1.99.1
-setuptools==80.9.0
+setuptools==81.0.0
 pyaudio==0.2.14
 librosa==0.11.0
 simpleaudio==1.0.0
