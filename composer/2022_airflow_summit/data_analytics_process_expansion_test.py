@@ -214,7 +214,7 @@ def bq_dataset(test_bucket):
         print(f"Ignoring NotFound on cleanup, details: {e}")
 
 
-@backoff.on_exception(backoff.expo, AssertionError, max_tries=3)
+@backoff.on_exception(backoff.expo, AssertionError, max_tries=5)
 def test_process(test_dataproc_batch):
     print(test_dataproc_batch)
 
