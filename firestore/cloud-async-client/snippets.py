@@ -693,24 +693,16 @@ async def delete_full_collection():
     db = firestore.AsyncClient()
 
     # [START firestore_data_delete_collection_async]
-    async def delete_collection(coll_ref, batch_size):
-        docs = coll_ref.limit(batch_size).stream()
-        deleted = 0
+    async def delete_collection(coll_ref):
 
-        async for doc in docs:
-            print(f"Deleting doc {doc.id} => {doc.to_dict()}")
-            await doc.reference.delete()
-            deleted = deleted + 1
-
-        if deleted >= batch_size:
-            return delete_collection(coll_ref, batch_size)
+        await db.recursive_delete(coll_ref)
 
     # [END firestore_data_delete_collection_async]
 
-    await delete_collection(db.collection("cities"), 10)
-    await delete_collection(db.collection("data"), 10)
-    await delete_collection(db.collection("objects"), 10)
-    await delete_collection(db.collection("users"), 10)
+    await delete_collection(db.collection("cities"))
+    await delete_collection(db.collection("data"))
+    await delete_collection(db.collection("objects"))
+    await delete_collection(db.collection("users"))
 
 
 async def collection_group_query(db):
