@@ -43,7 +43,6 @@ branchProtectionRules:
   # List of required status check contexts that must pass for commits to be accepted to matching branches.
   requiredStatusCheckContexts:
     - "Kokoro CI - Lint"
-    - "Kokoro CI - Python 2.7 (App Engine Standard Only)"
     - "Kokoro CI - Python 3.9"
     - "Kokoro CI - Python 3.13"
     - "cla/google"
