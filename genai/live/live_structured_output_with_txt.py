@@ -59,7 +59,7 @@ def generate_content() -> CalendarEvent:
     )
 
     completion = client.beta.chat.completions.parse(
-        model="google/gemini-2.0-flash-001",
+        model="google/gemini-2.5-flash",
         messages=[
             ChatCompletionSystemMessageParam(
                 role="system", content="Extract the event information."
