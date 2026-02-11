@@ -28,7 +28,7 @@ from google.cloud.storage.asyncio.async_multi_range_downloader import (
     AsyncMultiRangeDownloader,
 )
 
-BYTES_TO_APPEND = b"fav_bytes."
+BYTES_TO_APPEND = b"fav_bytes." * 100 * 1024 * 1024
 NUM_BYTES_TO_APPEND_EVERY_SECOND = len(BYTES_TO_APPEND)
 
 
@@ -37,14 +37,16 @@ async def appender(writer: AsyncAppendableObjectWriter, duration: int):
     """Appends 10 bytes to the object every second for a given duration."""
     print("Appender started.")
     bytes_appended = 0
-    for i in range(duration):
+    start_time = time.monotonic()
+    # Run the appender for the specified duration.
+    while time.monotonic() - start_time < duration:
         await writer.append(BYTES_TO_APPEND)
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         bytes_appended += NUM_BYTES_TO_APPEND_EVERY_SECOND
         print(
             f"[{now}] Appended {NUM_BYTES_TO_APPEND_EVERY_SECOND} new bytes. Total appended: {bytes_appended} bytes."
         )
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.1)
     print("Appender finished.")
 
 
@@ -67,9 +69,7 @@ async def tailer(
             bytes_downloaded = output_buffer.getbuffer().nbytes
             if bytes_downloaded > 0:
                 now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-                print(
-                    f"[{now}] Tailer read {bytes_downloaded} new bytes: {output_buffer.getvalue()}"
-                )
+                print(f"[{now}] Tailer read {bytes_downloaded} new bytes: ")
                 start_byte += bytes_downloaded
 
             await asyncio.sleep(0.1)  # Poll for new data every 0.1 seconds.
