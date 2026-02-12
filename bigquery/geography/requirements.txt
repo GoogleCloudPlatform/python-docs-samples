@@ -27,7 +27,7 @@ packaging==25.0
 pandas==2.3.3
 proto-plus==1.26.1
 pyarrow==21.0.0
-pyasn1==0.6.1
+pyasn1==0.6.2
 pyasn1-modules==0.4.2
 pycparser==2.23
 pyparsing==3.2.5
