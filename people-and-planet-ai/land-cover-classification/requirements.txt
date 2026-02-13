@@ -2,7 +2,7 @@
 apache-beam[gcp]==2.46.0
 earthengine-api==1.5.9
 folium==0.19.5
-google-cloud-aiplatform==1.47.0
+google-cloud-aiplatform==1.111.0
 imageio==2.36.1
 plotly==5.15.0
 tensorflow==2.12.0
