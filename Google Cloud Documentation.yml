@@ -1,0 +1,186 @@
+
+Google Cloud Documentation
+
+
+
+Google Cloud SDK
+Authentication
+
+Google Cloud Documentation
+Home
+Documentation
+Application development
+Google Cloud SDK
+Authentication
+Guías
+¿Te resultó útil?
+
+Enviar comentarios
+Métodos de autenticación en Google
+
+
+
+Este documento te ayuda a comprender algunos métodos y conceptos clave de la autenticación, y dónde obtener ayuda para implementar o solucionar problemas de autenticación. El enfoque principal de la documentación de autenticación es para los servicios de Google Cloud, pero la lista de casos de uso de autenticación y el material introductorio de esta página incluyen también casos de uso para otros productos de Google.
+
+Introducción
+La autenticación es el proceso mediante el cual se confirma tu identidad mediante el uso de algún tipo de credencial. La autenticación consiste en demostrar que eres quien dices ser.
+
+Google proporciona muchas APIs y servicios, que requieren autenticación para acceder. Google también proporciona una serie de servicios que alojan aplicaciones escritas por nuestros clientes. Estas aplicaciones también deben determinar la identidad de sus usuarios.
+
+Las API de Google implementan y extienden el framework de OAuth 2.0.
+
+Cómo obtener ayuda con la autenticación
+Acción	Instrucciones
+Autentícate en Vertex AI en modo rápido (vista previa).	Usa la clave de API que se creó para ti durante el proceso de acceso para autenticarte en Vertex AI. Para obtener más información, consulta la descripción general de Vertex AI en modo exprés.
+Autenticarme en un servicio de Google Cloud desde mi aplicación con un lenguaje de programación de alto nivel	Configurar las credenciales predeterminadas de la aplicación y, luego, usar una de las bibliotecas cliente de Cloud.
+Autentica en una aplicación que requiere un token de ID.	Obtener un token de ID de OpenID Connect (OIDC) y proporciónarlo con mi solicitud.
+Implementar la autenticación de usuario para una aplicación que accede a los servicios y recursos de Google o Google Cloud .	Consultar Cómo autenticar usuarios de aplicaciones para ver una comparación de las opciones.
+Prueba algunos comandos gcloud en mi entorno de desarrollo local.	Inicializa la CLI de gcloud.
+Probar algunas solicitudes a la Google Cloud API de REST en mi entorno de desarrollo local	Usa una herramienta de línea de comandos como curl para llamar a la API de REST.
+Probar un fragmento de código incluido en la documentación de mi producto	Configurar ADC para un entorno de desarrollo local e instalar la biblioteca cliente del producto en mi entorno local. La biblioteca cliente busca las credenciales automáticamente.
+Obtener ayuda con otro caso práctico de autenticación.	Consultar la página Casos prácticos de autenticación.
+Consultar una lista de los productos que proporciona Google en el espacio de administración de identidades y accesos.	Consultar la página Productos de administración de identidades y accesos de Google.
+Elige el método de autenticación adecuado para tu caso de uso
+Cuando accedes a los Google Cloud servicios con Google Cloud CLI, las bibliotecas cliente de Cloud, las herramientas que admiten las credenciales predeterminadas de la aplicación (ADC), como Terraform, o las solicitudes de REST, usa el siguiente diagrama para ayudarte a elegir un método de autenticación:
+
+Árbol de decisión para elegir el método de autenticación según el caso de uso
+En este diagrama, se te guiará a través de las siguientes preguntas:
+
+¿Ejecutas código en un entorno de desarrollo de un solo usuario, como tu propia estación de trabajo, Cloud Shell o una interfaz de escritorio virtual?
+Si es así, continúa con la pregunta 4.
+De lo contrario, continúa con la pregunta 2.
+¿Ejecutas código en Google Cloud?
+Si es así, continúa con la pregunta 3.
+De lo contrario, continúa con la pregunta 5.
+¿Ejecutas contenedores en Google Kubernetes Engine?
+Si es así, usa la federación de identidades para cargas de trabajo para GKE para conectar cuentas de servicio a los Pods de Kubernetes.
+De lo contrario, conecta una cuenta de servicio al recurso.
+¿Tu caso de uso requiere una cuenta de servicio?
+
+Por ejemplo, deseas configurar la autenticación y la autorización de manera coherente para tu aplicación en todos los entornos.
+
+De lo contrario, autentica con credenciales de usuario.
+Si es así, usa la identidad de una cuenta de servicio con credenciales de usuario.
+¿Tu carga de trabajo se autentica con un proveedor de identidad externo que admite la federación de identidades para cargas de trabajo?
+Si es así, configura la federación de identidades para cargas de trabajo para permitir que las aplicaciones que se ejecutan de forma local o en otros proveedores de servicios en la nube usen una cuenta de servicio.
+De lo contrario, crea una clave de cuenta de servicio.
+Métodos de autorización para los servicios de Google Cloud 
+La autorización para Google Cloud se controla principalmente a través de Identity and Access Management (IAM). IAM ofrece control detallado por principal y por recurso.
+
+Puedes aplicar otra capa de autorización con los permisos de OAuth 2.0. Cuando te autenticas en un servicio de Google Cloud , puedes usar un permiso global que autorice el acceso a todos los servicios de Google Cloud (https://www.googleapis.com/auth/cloud-platform) o, si un servicio lo admite, puedes restringir el acceso con un permiso más limitado. Los permisos limitados pueden ayudar a reducir el riesgo si tu código se ejecuta en entornos en los que los tokens vulnerados podrían ser una preocupación, como las apps para dispositivos móviles.
+
+Los permisos de autorización que acepta un método de API se indican en la documentación de referencia de la API para cada servicio de Google Cloud .
+
+Credencial predeterminada de la aplicación
+Application Default Credentials (ADC) es una estrategia que usan las bibliotecas de autenticación para encontrar credenciales automáticamente según el entorno de la aplicación. Las bibliotecas de autenticación ponen esas credenciales a disposición de las bibliotecas cliente de Cloud y las bibliotecas cliente de las APIs de Google. Cuando usas ADC, el código puede ejecutarse en un entorno de producción o de desarrollo sin cambiar la forma en que la aplicación se autentica en los servicios y las APIs de Google Cloud .
+
+Usar ADC puede simplificar el proceso de desarrollo, ya que te permite usar el mismo código de autenticación en una variedad de entornos. Sin embargo, si usas un servicio en modo de expresión, no necesitas usar ADC.
+
+Antes de poder usar ADC, debes proporcionar tus credenciales a ADC, en función de la ubicación en la que quieras que se ejecute tu código. ADC ubica las credenciales de forma automática y obtiene un token en segundo plano, lo que permite que tu código de autenticación se ejecute en diferentes entornos sin modificación. Por ejemplo, la misma versión de tu código podría autenticarse con las APIs deGoogle Cloud cuando se ejecuta en una estación de trabajo de desarrollo o en Compute Engine.
+
+Tus credenciales de gcloud no son las mismas que proporcionas a ADC mediante la CLI de gcloud. Para obtener más información, consulta Configuración de autenticación de gcloud CLI y configuración de ADC.
+
+Terminología
+Es importante comprender los siguientes términos cuando se analiza la autenticación y la autorización.
+
+Autenticación
+La autenticación es el proceso que determina la identidad de la principal que intenta acceder a un recurso.
+
+Autorización
+La autorización es el proceso que determina si la principal o la aplicación que intenta acceder a un recurso se autorizó para ese nivel de acceso.
+
+Credenciales
+Cuando en este documento se usa el término cuenta de usuario, se refiere a una Cuenta de Google o una cuenta de usuario administrada por tu proveedor de identidad y federada con la federación de identidades de personal.
+
+Para la autenticación, las credenciales son un objeto digital que proporciona prueba de identidad. Las contraseñas, los PIN y los datos biométricos se pueden usar como credenciales, según los requisitos de la aplicación. Por ejemplo, cuando accedes a tu cuenta de usuario, proporcionas tu contraseña y cumples con cualquier requisito de autenticación de dos factores como prueba de que la cuenta te pertenece, y que una persona que actúa de mala fe no está falsificando tu identidad.
+
+Los tokens no son credenciales. Son un objeto digital que demuestra que el emisor proporcionó las credenciales adecuadas.
+
+El tipo de credencial que debes proporcionar depende del recurso que estés autenticando.
+
+Se pueden crear los siguientes tipos de credenciales en la consola deGoogle Cloud :
+
+Claves de API
+
+Puedes usar claves de API con las APIs que las aceptan para acceder a ellas. Las claves de API que no están vinculadas a una cuenta de servicio proporcionan un proyecto que se usa para fines de facturación y cuotas. Si la clave de API está vinculada a una cuenta de servicio, también proporciona la identidad y la autorización de la cuenta de servicio (versión preliminar).
+
+Para obtener más información sobre las claves de API, consulta Claves de API. Para obtener más información sobre las claves de API vinculadas a una cuenta de servicio, consulta las Preguntas frecuentes sobre el modo exprés de Google Cloud.
+
+IDs de clientes OAuth
+
+Los IDs de cliente de OAuth se usan para identificar una aplicación en Google Cloud. Esto es necesario cuando deseas acceder a los recursos que son propiedad de tus usuarios finales, también llamados OAuth de tres segmentos (3LO). Para obtener más información sobre cómo obtener y usar un ID de cliente de OAuth, consulta Configura OAuth 2.0.
+
+Claves de cuenta de servicio
+
+Las claves de la cuenta de servicio identifican a una principal (la cuenta de servicio) y el proyecto asociado con la cuenta de servicio.
+
+Nota: Las claves de cuenta de servicio son un riesgo de seguridad si no se administran de forma adecuada. Debes elegir una alternativa más segura a las claves de la cuenta de servicio siempre que sea posible. Si te debes autenticar con una clave de cuenta de servicio, eres responsable de la seguridad de la clave privada y de otras operaciones que se describen en Prácticas recomendadas para administrar claves de cuentas de servicio. Si no se te permite crear una clave de cuenta de servicio, es posible que la creación de claves de cuentas de servicio esté inhabilitada para tu organización. Para obtener más información, consulta Administra los recursos de la organización con seguridad de forma predeterminada.
+Si adquiriste la clave de la cuenta de servicio de una fuente externa, debes validarla antes de usarla. Para obtener más información, consulta Requisitos de seguridad para las credenciales de fuentes externas.
+
+También puedes crear credenciales con gcloud CLI. Estas credenciales incluyen los siguientes tipos:
+
+Archivos de ADC locales
+Configuraciones de credenciales que usa la Federación de Workload Identity
+Configuraciones de credenciales que usa la federación de identidades de personal
+Nota: Si aceptas configuraciones de credenciales (JSON, archivos o transmisiones) creadas por una organización externa, debes validar la configuración de credenciales antes de usarla. Para obtener más información, consulta Requisitos de seguridad cuando se usan configuraciones de credenciales de una fuente externa.
+Principal
+Una principal es una identidad a la que se le puede otorgar acceso a un recurso. Para la autenticación, las APIs de Google admiten dos tipos de principales: cuentas de usuario y cuentas de servicio.
+
+Usar una cuenta de usuario o una cuenta de servicio para la autenticación depende de tu caso de uso. Puedes usar ambas, cada una en diferentes etapas de tu proyecto o en diferentes entornos de desarrollo.
+
+Cuentas de usuario
+Las cuentas de usuario representan a un desarrollador, un administrador o cualquier otra persona que interactúe con los servicios y las APIs de Google.
+
+Las cuentas de usuario se administran como Cuentas de Google, ya sea con Google Workspace o Cloud Identity. También pueden ser cuentas de usuario administradas por un proveedor de identidad de terceros y federadas con la federación de Workload Identity.
+
+Con una cuenta de usuario, puedes autenticarte en las APIs y los servicios de Google de las siguientes maneras:
+
+Usa la CLI de gcloud para configurar las credenciales predeterminadas de la aplicación (ADC).
+Usa tus credenciales de usuario para acceder a Google Cloud CLI y, luego, usa la herramienta para acceder a los servicios de Google Cloud .
+Usa tus credenciales de usuario para actuar en nombre de una cuenta de servicio.
+Usa tus credenciales de usuario para acceder a Google Cloud CLI y, luego, usa la herramienta a fin de generar tokens de acceso.
+Si deseas obtener una descripción general de las formas de configurar identidades para los usuarios en Google Cloud, consulta Identidades para los usuarios.
+
+Cuentas de servicio
+Las cuentas de servicio son cuentas que no representan a un usuario humano. Proporcionan una forma de administrar la autenticación y autorización cuando una persona no está involucrada de forma directa, como cuando una aplicación necesita acceder a los recursos de Google Cloud . IAM administra las cuentas de servicio.
+
+En la siguiente lista, se proporcionan algunos métodos para usar una cuenta de servicio a fin de autenticarse en las APIs y los servicios de Google, desde el más seguro hasta el menos seguro. A fin de obtener más información, consulta Elige el método de autenticación correcto para tu caso de uso en esta página.
+
+Conecta una cuenta de servicio administrada por el usuario al recurso y usa ADC para autenticarte.
+
+Esta es la forma recomendada de autenticar el código de producción que se ejecuta enGoogle Cloud.
+
+Usa una cuenta de servicio para actuar en nombre de otra.
+
+Actuar en nombre de otra cuenta de servicio te permite otorgar más privilegios a una cuenta de servicio de forma temporal. Otorgar privilegios adicionales de forma temporal permite que esa cuenta de servicio realice el acceso requerido sin tener que adquirir más privilegios de forma permanente.
+
+Usa la federación de identidades para cargas de trabajo para autenticar las cargas de trabajo que se ejecutan de forma local o en un proveedor de servicios en la nube diferente.
+
+Usa la cuenta de servicio predeterminada.
+
+No se recomienda usar la cuenta de servicio predeterminada, ya que, según su configuración predeterminada, tiene un gran privilegio, lo que infringe el principio de privilegio mínimo.
+
+Usa una clave de cuenta de servicio.
+
+Nota: Las claves de cuenta de servicio son un riesgo de seguridad si no se administran de forma adecuada. Debes elegir una alternativa más segura a las claves de la cuenta de servicio siempre que sea posible. Si te debes autenticar con una clave de cuenta de servicio, eres responsable de la seguridad de la clave privada y de otras operaciones que se describen en Prácticas recomendadas para administrar claves de cuenta de servicio. Si no se te permite crear una clave de cuenta de servicio, es posible que la creación de claves de cuentas de servicio esté inhabilitada para tu organización. Para obtener más información, consulta Administra los recursos de la organización con seguridad de forma predeterminada.
+Si adquiriste la clave de la cuenta de servicio de una fuente externa, debes validarla antes de usarla. Para obtener más información, consulta Requisitos de seguridad para las credenciales de fuentes externas.
+
+Para obtener una descripción general de las formas de configurar identidades de carga de trabajo, incluidas las cuentas de servicio, para Google Cloud, consulta Identidades para cargas de trabajo. Si deseas conocer las prácticas recomendadas, consulta Prácticas recomendadas para usar cuentas de servicio.
+
+Token
+Para la autenticación y la autorización, un token es un objeto digital que muestra que el emisor proporcionó las credenciales adecuadas que se intercambiaron por ese token. El token contiene información sobre la identidad de la principal que realiza la solicitud y el tipo de acceso para el que está autorizada.
+
+Los tokens se pueden considerar como llaves de hotel. Cuando te registras en un hotel y presentas la documentación adecuada en la recepción del hotel, recibes una llave que te permitirá acceder a recursos específicos del hotel. Por ejemplo, la llave podría darte acceso a tu habitación y al ascensor de invitados, pero no te otorgaría acceso a ninguna otra habitación ni al elevación de servicio.
+
+A excepción de las claves de API, las APIs de Google no admiten credenciales directamente. Tu aplicación debe adquirir o generar un token y proporcionarlo a la API. Hay varios tipos de tokens. Para obtener más información, consulta Descripción general de los tokens.
+
+Carga de trabajo y personal
+Google Cloud Los productos de identidad y acceso permiten el acceso a losGoogle Cloud servicios y recursos para el acceso programático y los usuarios humanos. Google Cloud usa los términos carga de trabajo para el acceso programático y personal para el acceso del usuario.
+
+La federación de identidades para cargas de trabajo te permite proporcionar acceso a cargas de trabajo locales o de múltiples nubes sin tener que crear y administrar claves de cuentas de servicio.
+
+La federación de identidades de personal te permite usar un proveedor de identidad externo para autenticar y autorizar a un personal (un grupo de usuarios, como empleados, socios y contratistas) que usa IAM, a fin de que los usuarios puedan acceder a los servicios deGoogle Cloud .
+
+¿Qué sigue?
+Obtén más información sobre cómo los servicios de Google Cloud usan IAM para controlar el acceso a los recursos de Google Cloud .
+Comprende cómo funcionan las credenciales predeterminadas de la aplicación y cómo puedes configurarlas para una variedad de entornos de desarrollo.
