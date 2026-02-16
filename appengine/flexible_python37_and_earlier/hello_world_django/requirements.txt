@@ -1,2 +1,0 @@
-Django==5.2.9
-gunicorn==23.0.0

@@ -1,3 +1,0 @@
-pytest==8.2.0
-responses==0.17.0; python_version < '3.7'
-responses==0.23.1; python_version > '3.6'
