@@ -490,8 +490,12 @@ def main(
     while not all_dags_present:
         target_env_dags = client.list_dags(target_environment_name)
         target_env_dag_ids = [dag["dag_id"] for dag in target_env_dags]
-        all_dags_present = set(source_env_dag_ids) == set(target_env_dag_ids)
-        logger.info("List of DAGs in the target environment: %s", target_env_dag_ids)
+        missing_dags = set(source_env_dag_ids) - set(target_env_dag_ids)
+        all_dags_present = not missing_dags
+        if missing_dags:
+            logger.info("Waiting for DAGs to appear in target: %s", missing_dags)
+        else:
+            logger.info("All DAGs present in target environment.")
         time.sleep(10)
     # Unpause only DAGs that were not paused in the source environment.
     # Optimization: if all DAGs were unpaused in source, use bulk unpause.
