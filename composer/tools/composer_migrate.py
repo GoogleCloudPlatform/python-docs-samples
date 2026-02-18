@@ -124,7 +124,7 @@ class ComposerClient:
         self,
         environment_name: str,
     ) -> Any:
-        """Pauses a DAG in a Composer environment."""
+        """Pauses all DAGs in a Composer environment."""
         environment = self.get_environment(environment_name)
         airflow_uri = environment["config"]["airflowUri"]
         
@@ -132,7 +132,7 @@ class ComposerClient:
         response = self.session.patch(url, json={"is_paused": True})
         if response.status_code != 200:
              raise RuntimeError(
-                f"Failed to pause DAG {dag_id}: {response.text}"
+                f"Failed to pause all DAGs: {response.text}"
             )
 
 
@@ -156,7 +156,7 @@ class ComposerClient:
         self,
         environment_name: str,
     ) -> Any:
-        """Pauses a DAG in a Composer environment."""
+        """Unpauses all DAGs in a Composer environment."""
         environment = self.get_environment(environment_name)
         airflow_uri = environment["config"]["airflowUri"]
         
@@ -164,7 +164,7 @@ class ComposerClient:
         response = self.session.patch(url, json={"is_paused": False})
         if response.status_code != 200:
              raise RuntimeError(
-                f"Failed to pause DAG {dag_id}: {response.text}"
+                f"Failed to unpause all DAGs: {response.text}"
             )            
 
     def save_snapshot(self, environment_name: str) -> str:
@@ -489,15 +489,18 @@ def main(
         all_dags_present = set(source_env_dag_ids) == set(target_env_dag_ids)
         logger.info("List of DAGs in the target environment: %s", target_env_dag_ids)
     # Unpause only DAGs that were not paused in the source environment.
-    for dag in source_env_dags:
-        if dag["dag_id"] == "airflow_monitoring":
-            continue
-        if dag["is_paused"]:
-            logger.info("DAG %s was paused in the source environment.", dag["dag_id"])
-            continue
-        logger.info("Unpausing DAG %s in the target environment.", dag["dag_id"])
-        client.unpause_dag(dag["dag_id"], target_environment_name)
-        logger.info("DAG %s unpaused.", dag["dag_id"])
+    # Optimization: if all DAGs were unpaused in source, use bulk unpause.
+    if not any(d["is_paused"] for d in source_env_dags):
+        logger.info("All DAGs were unpaused in source. Unpausing all DAGs in target.")
+        client.unpause_all_dags(target_environment_name)
+    else:
+        for dag in source_env_dags:
+            if dag["is_paused"]:
+                logger.info("DAG %s was paused in the source environment.", dag["dag_id"])
+                continue
+            logger.info("Unpausing DAG %s in the target environment.", dag["dag_id"])
+            client.unpause_dag(dag["dag_id"], target_environment_name)
+            logger.info("DAG %s unpaused.", dag["dag_id"])
     logger.info("DAGs in the target environment unpaused.")
 
     logger.info("Migration complete.")
