@@ -102,6 +102,7 @@ class ComposerClient:
             )
         return response.json()["dags"]
 
+
     def pause_dag(
         self,
         dag_id: str,
@@ -117,6 +118,23 @@ class ComposerClient:
              raise RuntimeError(
                 f"Failed to pause DAG {dag_id}: {response.text}"
             )
+    
+
+    def pause_all_dags(
+        self,
+        environment_name: str,
+    ) -> Any:
+        """Pauses a DAG in a Composer environment."""
+        environment = self.get_environment(environment_name)
+        airflow_uri = environment["config"]["airflowUri"]
+        
+        url = f"{airflow_uri}/api/v1/dags?dag_id_pattern=%" # Pause all DAGs using % as a wildcard
+        response = self.session.patch(url, json={"is_paused": True})
+        if response.status_code != 200:
+             raise RuntimeError(
+                f"Failed to pause DAG {dag_id}: {response.text}"
+            )
+
 
     def unpause_dag(
         self,
@@ -133,6 +151,21 @@ class ComposerClient:
              raise RuntimeError(
                 f"Failed to unpause DAG {dag_id}: {response.text}"
             )
+
+    def unpause_all_dags(
+        self,
+        environment_name: str,
+    ) -> Any:
+        """Pauses a DAG in a Composer environment."""
+        environment = self.get_environment(environment_name)
+        airflow_uri = environment["config"]["airflowUri"]
+        
+        url = f"{airflow_uri}/api/v1/dags?dag_id_pattern=%" # Pause all DAGs using % as a wildcard
+        response = self.session.patch(url, json={"is_paused": False})
+        if response.status_code != 200:
+             raise RuntimeError(
+                f"Failed to pause DAG {dag_id}: {response.text}"
+            )            
 
     def save_snapshot(self, environment_name: str) -> str:
         """Saves a snapshot of a Composer environment."""
@@ -433,15 +466,7 @@ def main(
         len(source_env_dags),
         source_env_dag_ids,
     )
-    for dag in source_env_dags:
-        if dag["dag_id"] == "airflow_monitoring":
-            continue
-        if dag["is_paused"]:
-            logger.info("DAG %s is already paused.", dag["dag_id"])
-            continue
-        logger.info("Pausing DAG %s in the source environment.", dag["dag_id"])
-        client.pause_dag(dag["dag_id"], source_environment_name)
-        logger.info("DAG %s paused.", dag["dag_id"])
+    client.pause_all_dags(source_environment_name)
     logger.info("All DAGs in the source environment paused.")
 
     # 4. Save snapshot of the source environment
