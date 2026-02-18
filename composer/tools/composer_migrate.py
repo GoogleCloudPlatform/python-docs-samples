@@ -78,6 +78,10 @@ class ComposerClient:
         # The original code did: POST .../environments with body.
         
         response = self.session.post(url, json=config)
+        if response.status_code == 409:
+            logger.info("Environment already exists, skipping creation.")
+            return
+
         if response.status_code != 200:
             raise RuntimeError(
                 f"Failed to create environment: {response.text}"
@@ -488,6 +492,7 @@ def main(
         target_env_dag_ids = [dag["dag_id"] for dag in target_env_dags]
         all_dags_present = set(source_env_dag_ids) == set(target_env_dag_ids)
         logger.info("List of DAGs in the target environment: %s", target_env_dag_ids)
+        time.sleep(10)
     # Unpause only DAGs that were not paused in the source environment.
     # Optimization: if all DAGs were unpaused in source, use bulk unpause.
     if not any(d["is_paused"] for d in source_env_dags):
