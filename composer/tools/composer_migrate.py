@@ -45,6 +45,14 @@ class ComposerClient:
         self.sdk_endpoint = sdk_endpoint.rstrip("/")
         self.credentials, _ = google.auth.default()
         self.session = AuthorizedSession(self.credentials)
+        self._airflow_uris = {}
+
+    def _get_airflow_uri(self, environment_name: str) -> str:
+        """Returns the Airflow URI for a given environment, caching the result."""
+        if environment_name not in self._airflow_uris:
+            environment = self.get_environment(environment_name)
+            self._airflow_uris[environment_name] = environment["config"]["airflowUri"]
+        return self._airflow_uris[environment_name]
 
     def get_environment(self, environment_name: str) -> Any:
         """Returns an environment json for a given Composer environment."""
@@ -94,9 +102,7 @@ class ComposerClient:
 
     def list_dags(self, environment_name: str) -> List[Dict[str, Any]]:
         """Returns a list of DAGs in a given Composer environment."""
-        # Get authentication context and Airflow URI
-        environment = self.get_environment(environment_name)
-        airflow_uri = environment["config"]["airflowUri"]
+        airflow_uri = self._get_airflow_uri(environment_name)
         
         url = f"{airflow_uri}/api/v1/dags"
         response = self.session.get(url)
@@ -113,8 +119,7 @@ class ComposerClient:
         environment_name: str,
     ) -> Any:
         """Pauses a DAG in a Composer environment."""
-        environment = self.get_environment(environment_name)
-        airflow_uri = environment["config"]["airflowUri"]
+        airflow_uri = self._get_airflow_uri(environment_name)
         
         url = f"{airflow_uri}/api/v1/dags/{dag_id}"
         response = self.session.patch(url, json={"is_paused": True})
@@ -129,8 +134,7 @@ class ComposerClient:
         environment_name: str,
     ) -> Any:
         """Pauses all DAGs in a Composer environment."""
-        environment = self.get_environment(environment_name)
-        airflow_uri = environment["config"]["airflowUri"]
+        airflow_uri = self._get_airflow_uri(environment_name)
         
         url = f"{airflow_uri}/api/v1/dags?dag_id_pattern=%" # Pause all DAGs using % as a wildcard
         response = self.session.patch(url, json={"is_paused": True})
@@ -146,8 +150,7 @@ class ComposerClient:
         environment_name: str,
     ) -> Any:
         """Unpauses a DAG in a Composer environment."""
-        environment = self.get_environment(environment_name)
-        airflow_uri = environment["config"]["airflowUri"]
+        airflow_uri = self._get_airflow_uri(environment_name)
         
         url = f"{airflow_uri}/api/v1/dags/{dag_id}"
         response = self.session.patch(url, json={"is_paused": False})
@@ -161,8 +164,7 @@ class ComposerClient:
         environment_name: str,
     ) -> Any:
         """Unpauses all DAGs in a Composer environment."""
-        environment = self.get_environment(environment_name)
-        airflow_uri = environment["config"]["airflowUri"]
+        airflow_uri = self._get_airflow_uri(environment_name)
         
         url = f"{airflow_uri}/api/v1/dags?dag_id_pattern=%" # Pause all DAGs using % as a wildcard
         response = self.session.patch(url, json={"is_paused": False})
