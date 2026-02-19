@@ -1,4 +1,0 @@
-Flask==3.0.3; python_version > '3.6'
-Flask==2.0.3; python_version < '3.7'
-gunicorn==23.0.0
-Werkzeug==3.0.3
