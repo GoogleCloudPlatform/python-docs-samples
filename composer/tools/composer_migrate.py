@@ -96,7 +96,7 @@ class ComposerClient:
             )
         
         operation = response.json()
-        logging.info("Create environment operation: %s", operation["name"])
+        logger.info("Create environment operation: %s", operation["name"])
         self._wait_for_operation(operation["name"])
 
 
