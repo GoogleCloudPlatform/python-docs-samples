@@ -13,19 +13,21 @@
 # limitations under the License.
 
 # [START kms_list_retired_resources]
+from typing import List
+
 from google.cloud import kms
 
 
-def list_retired_resources(project_id: str, location_id: str) -> list[kms.RetiredResource]:
+def list_retired_resources(project_id: str, location_id: str) -> List[kms.RetiredResource]:
     """
     List the retired resources in a location.
 
     Args:
-        project_id (string): Google Cloud project ID (e.g. 'my-project').
-        location_id (string): Cloud KMS location (e.g. 'us-east1').
+        project_id (str): Google Cloud project ID (e.g. 'my-project').
+        location_id (str): Cloud KMS location (e.g. 'us-east1').
 
     Returns:
-        list[RetiredResource]: The list of retired resources.
+        list[kms.RetiredResource]: The list of retired resources.
     """
 
     # Create the client.
@@ -36,13 +38,13 @@ def list_retired_resources(project_id: str, location_id: str) -> list[kms.Retire
 
     # Call the API.
     # The API paginates, but the Python client library handles that for us.
-    resources = client.list_retired_resources(request={"parent": parent})
+    resources_list = list(client.list_retired_resources(request={"parent": parent}))
 
     # Iterate over the resources and print them.
-    for resource in resources:
+    for resource in resources_list:
         print(f"Retired resource: {resource.name}")
 
-    return list(resources)
+    return resources_list
 
 
 # [END kms_list_retired_resources]

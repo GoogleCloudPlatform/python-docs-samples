@@ -23,12 +23,12 @@ def get_retired_resource(
     Get the details of a retired resource.
 
     Args:
-        project_id (string): Google Cloud project ID (e.g. 'my-project').
-        location_id (string): Cloud KMS location (e.g. 'us-east1').
-        retired_resource_id (string): ID of the retired resource to get.
+        project_id (str): Google Cloud project ID (e.g. 'my-project').
+        location_id (str): Cloud KMS location (e.g. 'us-east1').
+        resource_id (str): ID of the retired resource to get.
 
     Returns:
-        RetiredResource: The requested retired resource.
+        kms.RetiredResource: The requested retired resource.
 
     """
 

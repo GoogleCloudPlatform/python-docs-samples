@@ -23,10 +23,10 @@ def delete_key(
     Delete the given key.
 
     Args:
-        project_id (string): Google Cloud project ID (e.g. 'my-project').
-        location_id (string): Cloud KMS location (e.g. 'us-east1').
-        key_ring_id (string): ID of the Cloud KMS key ring (e.g. 'my-key-ring').
-        key_id (string): ID of the key to use (e.g. 'my-key').
+        project_id (str): Google Cloud project ID (e.g. 'my-project').
+        location_id (str): Cloud KMS location (e.g. 'us-east1').
+        key_ring_id (str): ID of the Cloud KMS key ring (e.g. 'my-key-ring').
+        key_id (str): ID of the key to use (e.g. 'my-key').
 
     Returns:
         None

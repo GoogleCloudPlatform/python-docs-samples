@@ -52,6 +52,7 @@ from create_key_symmetric_encrypt_decrypt import create_key_symmetric_encrypt_de
 from create_key_version import create_key_version
 from decrypt_asymmetric import decrypt_asymmetric
 from decrypt_symmetric import decrypt_symmetric
+from delete_key import delete_key
 from destroy_key_version import destroy_key_version
 from disable_key_version import disable_key_version
 from enable_key_version import enable_key_version
@@ -62,13 +63,12 @@ from get_key_labels import get_key_labels
 from get_key_version_attestation import get_key_version_attestation
 from get_public_key import get_public_key
 from get_public_key_jwk import get_public_key_jwk
+from get_retired_resource import get_retired_resource
 from iam_add_member import iam_add_member
 from iam_get_policy import iam_get_policy
 from iam_remove_member import iam_remove_member
-from delete_key import delete_key
-from list_retired_resources import list_retired_resources
-from get_retired_resource import get_retired_resource
 from import_manually_wrapped_key import import_manually_wrapped_key
+from list_retired_resources import list_retired_resources
 from quickstart import quickstart
 from restore_key_version import restore_key_version
 from sign_asymmetric import sign_asymmetric
@@ -920,11 +920,10 @@ def test_delete_key_and_retired_resources(
 
     # Make sure the len is 1
     assert len(filtered_retired) == 1
-    
+
     # Get the retired resource
     resource_id = filtered_retired[0].name.split("/")[-1]
     retrieved = get_retired_resource(project_id, location_id, resource_id)
-    
+
     # See if the result is the same as retired resource list[0]
     assert retrieved.name == filtered_retired[0].name
-
