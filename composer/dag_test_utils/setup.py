@@ -33,5 +33,5 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(),
     py_modules=["internal_unit_testing"],
-    install_requires=["apache-airflow[google] >= 2.0.0, < 3.0.0"],
+    install_requires=["apache-airflow[google] >=3.0.1, <3.1.0"],
 )
