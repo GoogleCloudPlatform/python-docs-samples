@@ -37,7 +37,7 @@ fi
 #Upload the tar to GCS
 tar -cvf app.tar -C .. requirements.txt main.py
 # Copy to GCS bucket
-gsutil cp app.tar gs://"$GCS_BUCKET_NAME"/gce/
+gcloud storage cp app.tar gs://"$GCS_BUCKET_NAME"/gce/
 
 # Create an instance
 gcloud compute instances create my-instance \
