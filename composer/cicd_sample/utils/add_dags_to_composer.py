@@ -57,7 +57,7 @@ def upload_dags_to_composer(
     if len(dags) > 0:
         # Note - the GCS client library does not currently support batch requests on uploads
         # if you have a large number of files, consider using
-        # the Python subprocess module to run gsutil -m cp -r on your dags
+        # the Python subprocess module to run gcloud storage cp --recursive on your dags
         # See https://cloud.google.com/storage/docs/gsutil/commands/cp for more info
         storage_client = storage.Client()
         bucket = storage_client.bucket(bucket_name)
