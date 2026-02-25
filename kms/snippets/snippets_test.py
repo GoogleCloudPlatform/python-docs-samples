@@ -52,6 +52,7 @@ from create_key_symmetric_encrypt_decrypt import create_key_symmetric_encrypt_de
 from create_key_version import create_key_version
 from decrypt_asymmetric import decrypt_asymmetric
 from decrypt_symmetric import decrypt_symmetric
+from delete_key import delete_key
 from destroy_key_version import destroy_key_version
 from disable_key_version import disable_key_version
 from enable_key_version import enable_key_version
@@ -62,10 +63,12 @@ from get_key_labels import get_key_labels
 from get_key_version_attestation import get_key_version_attestation
 from get_public_key import get_public_key
 from get_public_key_jwk import get_public_key_jwk
+from get_retired_resource import get_retired_resource
 from iam_add_member import iam_add_member
 from iam_get_policy import iam_get_policy
 from iam_remove_member import iam_remove_member
 from import_manually_wrapped_key import import_manually_wrapped_key
+from list_retired_resources import list_retired_resources
 from quickstart import quickstart
 from restore_key_version import restore_key_version
 from sign_asymmetric import sign_asymmetric
@@ -886,3 +889,41 @@ def test_verify_mac(
 def test_quickstart(project_id: str, location_id: str) -> None:
     key_rings = quickstart(project_id, location_id)
     assert key_rings
+
+
+def test_delete_key_and_retired_resources(
+    client: kms.KeyManagementServiceClient,
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+) -> None:
+    # We can test key deletion and retired resources by first creating a key.
+    key_id = f"delete-key-{uuid.uuid4()}"
+    key_ring_name = client.key_ring_path(project_id, location_id, key_ring_id)
+    key = client.create_crypto_key(
+        request={
+            "parent": key_ring_name,
+            "crypto_key_id": key_id,
+            "crypto_key": {
+                "purpose": kms.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT,
+            },
+            "skip_initial_version_creation": True,
+        }
+    )
+
+    # Delete the key.
+    delete_key(project_id, location_id, key_ring_id, key_id)
+
+    # List retired resources and filter to just our deleted key.
+    all_retired = list_retired_resources(project_id, location_id)
+    filtered_retired = [r for r in all_retired if r.original_resource == key.name]
+
+    # Make sure the len is 1
+    assert len(filtered_retired) == 1
+
+    # Get the retired resource
+    resource_id = filtered_retired[0].name.split("/")[-1]
+    retrieved = get_retired_resource(project_id, location_id, resource_id)
+
+    # See if the result is the same as retired resource list[0]
+    assert retrieved.name == filtered_retired[0].name
