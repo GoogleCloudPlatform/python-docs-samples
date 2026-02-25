@@ -20,7 +20,8 @@ def delete_key_version(
     project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str
 ) -> None:
     """
-    Delete the given key version.
+    Delete the given key version. This action is permanent and cannot be undone.
+    Once the key version is deleted, it will no longer exist.
 
     Args:
         project_id (str): Google Cloud project ID (e.g. 'my-project').
@@ -44,6 +45,7 @@ def delete_key_version(
 
     # Call the API.
     # Note: delete_crypto_key_version returns a long-running operation.
+    # Warning: This operation is permanent and cannot be undone.
     operation = client.delete_crypto_key_version(request={"name": key_version_name})
 
     # Wait for the operation to complete.
