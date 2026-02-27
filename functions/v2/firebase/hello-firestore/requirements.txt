@@ -1,5 +1,5 @@
 functions-framework==3.9.2
 google-events==0.14.0
 google-api-core==2.17.1
-protobuf==4.25.6
+protobuf==7.34.0
 cloudevents==1.11.0
