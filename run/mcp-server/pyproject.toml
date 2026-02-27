@@ -5,5 +5,5 @@ description = "Example of deploying an MCP server on Cloud Run"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "fastmcp==2.13.0",
+    "fastmcp==3.0.0",
 ]
