@@ -16,7 +16,7 @@
 steps:
   - id: "Build Container Image"
     name: gcr.io/k8s-skaffold/pack
-    args: ["build", "${_IMAGE_NAME}", "--builder=gcr.io/buildpacks/builder"]
+    args: ["build", "${_IMAGE_NAME}", "--builder=gcr.io/buildpacks/builder:google-24"]
 
   - id: "Push Container Image"
     name: "gcr.io/cloud-builders/docker"

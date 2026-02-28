@@ -70,7 +70,7 @@ steps:
 
   - id: "Build Container Image"
     name: gcr.io/k8s-skaffold/pack
-    args: ["build", "${_IMAGE_NAME}", "--builder=gcr.io/buildpacks/builder",
+    args: ["build", "${_IMAGE_NAME}", "--builder=gcr.io/buildpacks/builder:google-24",
       "--env", "GOOGLE_PYTHON_VERSION=${_PYTHON_VERSION}"]
 
   - id: "Push Container Image"
