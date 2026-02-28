@@ -6,7 +6,7 @@ pillow==10.4.0; python_version >= '3.8'
 google-cloud-aiplatform[all]==1.74.0
 sentencepiece==0.2.0
 google-auth==2.38.0
-anthropic[vertex]==0.28.0
+anthropic[vertex]==0.51.0
 langchain-core==0.2.33
 langchain-google-vertexai==1.0.10
 numpy<3
