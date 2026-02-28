@@ -1,4 +1,4 @@
 backoff==2.2.1
 pytest==8.2.0
 google-cloud-bigquery==3.27.0
-google-cloud-securitycentermanagement==0.1.21
+google-cloud-securitycentermanagement==0.1.22
