@@ -447,6 +447,7 @@ def test_create_secondary_region(
         PROJECT,
         REGION_SECONDARY,
         DISK_SIZE,
+        disk_type="pd-balanced"
     )
     assert disk.async_primary_disk.disk == autodelete_regional_blank_disk.self_link
 
@@ -460,7 +461,7 @@ def test_create_secondary(test_empty_pd_balanced_disk, autodelete_disk_name):
         secondary_disk_project=PROJECT,
         secondary_disk_zone=ZONE,
         disk_size_gb=DISK_SIZE,
-        disk_type="pd-ssd",
+        disk_type="pd-balanced",
     )
     assert disk.async_primary_disk.disk == test_empty_pd_balanced_disk.self_link
 
@@ -476,7 +477,7 @@ def test_create_custom_secondary_disk(
         secondary_disk_project=PROJECT,
         secondary_disk_zone=ZONE,
         disk_size_gb=DISK_SIZE,
-        disk_type="pd-ssd",
+        disk_type="pd-balanced",
     )
     assert disk.labels["secondary-disk-for-replication"] == "true"
     assert disk.labels["source-disk"] == test_empty_pd_balanced_disk.name
@@ -504,6 +505,7 @@ def test_start_stop_region_replication(
         PROJECT,
         REGION_SECONDARY,
         DISK_SIZE,
+        disk_type="pd-balanced"
     )
     assert start_disk_replication(
         project_id=PROJECT,
@@ -530,6 +532,7 @@ def test_start_stop_zone_replication(test_empty_pd_balanced_disk, autodelete_dis
         PROJECT,
         ZONE,
         DISK_SIZE,
+        disk_type="pd-balanced"
     )
     assert start_disk_replication(
         project_id=PROJECT,
@@ -587,6 +590,7 @@ def test_clone_disks_in_consistency_group(
         PROJECT,
         REGION_SECONDARY,
         DISK_SIZE,
+        disk_type="pd-balanced"
     )
 
     add_disk_consistency_group(
@@ -649,6 +653,7 @@ def test_stop_replications_in_consistency_group(
         PROJECT,
         REGION_SECONDARY,
         DISK_SIZE,
+        disk_type="pd-balanced"
     )
     start_disk_replication(
         project_id=PROJECT,
