@@ -2,6 +2,6 @@ Flask==3.0.3
 apache-beam[gcp]==2.46.0
 google-cloud-aiplatform==1.47.0
 gunicorn==23.0.0
-pandas==2.2.3
+pandas==3.0.0
 tensorflow==2.12.1
 Werkzeug==3.0.3
