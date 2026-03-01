@@ -37,6 +37,7 @@ from regional_samples import delete_regional_secret_label
 from regional_samples import delete_regional_secret_with_etag
 from regional_samples import destroy_regional_secret_version
 from regional_samples import destroy_regional_secret_version_with_etag
+from regional_samples import detach_regional_tag
 from regional_samples import disable_regional_secret_delayed_destroy
 from regional_samples import disable_regional_secret_version
 from regional_samples import disable_regional_secret_version_with_etag
@@ -48,6 +49,7 @@ from regional_samples import get_regional_secret
 from regional_samples import get_regional_secret_version
 from regional_samples import iam_grant_access_with_regional_secret
 from regional_samples import iam_revoke_access_with_regional_secret
+from regional_samples import list_regional_secret_tag_bindings
 from regional_samples import list_regional_secret_versions
 from regional_samples import list_regional_secret_versions_with_filter
 from regional_samples import list_regional_secrets
@@ -858,3 +860,66 @@ def test_view_regional_secret_labels(
 
     out, _ = capsys.readouterr()
     assert label_key in out
+
+
+def test_list_regional_secret_tag_bindings(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    location_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    tag_key, tag_value = tag_key_and_tag_value
+    create_regional_secret_with_tags.create_regional_secret_with_tags(
+        project_id, location_id, secret_id, tag_key, tag_value
+    )
+
+    # Call the function being tested
+
+    list_regional_secret_tag_bindings.list_regional_secret_tag_bindings(
+        project_id, location_id, secret_id
+    )
+
+    # Verify the tag value is in the returned bindings
+
+    out, _ = capsys.readouterr()
+    assert secret_id in out
+    assert tag_value in out
+
+
+def test_detach_regional_tag(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    location_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    tag_key, tag_value = tag_key_and_tag_value
+
+    # Create a secret and bind the tag to it for testing detach
+
+    create_regional_secret_with_tags.create_regional_secret_with_tags(
+        project_id, location_id, secret_id, tag_key, tag_value
+    )
+
+    # Call the function being tested - detach the tag
+
+    detach_regional_tag.detach_regional_tag(
+        project_id, location_id, secret_id, tag_value
+    )
+
+    # Verify the output contains the expected message
+
+    out, _ = capsys.readouterr()
+    assert "Detached tag value" in out
+
+    # List the tags to verify the tag was detached
+
+    list_regional_secret_tag_bindings.list_regional_secret_tag_bindings(
+        project_id, location_id, secret_id
+    )
+
+    # Verify the tag value is no longer in the returned bindings
+
+    out, _ = capsys.readouterr()
+    assert tag_value not in out
