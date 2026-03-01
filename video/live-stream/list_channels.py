@@ -39,11 +39,13 @@ def list_channels(project_id: str, location: str) -> pagers.ListChannelsPager:
 
     parent = f"projects/{project_id}/locations/{location}"
     page_result = client.list_channels(parent=parent)
-    print("Channels:")
+    print("\nThe following Channels are configured in this location:\n")
 
     responses = []
     for response in page_result:
-        print(response.name)
+        print(f"\nChannel: {response.name}")
+        print(f"  Active input: {response.active_input}")
+        print(f"  Output URI: {response.output.uri}")
         responses.append(response)
 
     return responses
