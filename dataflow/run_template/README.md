@@ -29,7 +29,7 @@ Additionally, for this sample you need the following:
 
    ```sh
    export BUCKET=your-gcs-bucket
-   gsutil mb gs://$BUCKET
+   gcloud storage buckets create gs://$BUCKET
    ```
 
 1. Clone the `python-docs-samples` repository.
