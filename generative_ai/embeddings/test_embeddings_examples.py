@@ -31,6 +31,7 @@ import model_tuning_example
 import multimodal_example
 import multimodal_image_example
 import multimodal_video_example
+import normalize_embeddings
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
@@ -95,6 +96,22 @@ def test_code_embed_text() -> None:
         dimensionality=dimensionality,
     )
     assert [len(e) for e in embeddings] == [dimensionality or 768] * len(texts)
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_embedding_normalization() -> None:
+    import numpy as np
+
+    embedding_value = [0.01] * 256
+    embedding_np = np.linalg.norm(np.array(embedding_value))
+    assert np.isclose(np.linalg.norm(embedding_np), 0.16)
+
+    normalized_embedding_np = normalize_embeddings.normalize_embedding(embedding_np)
+    assert np.isclose(np.linalg.norm(normalized_embedding_np), 1)
+
+    invalid_embedding_np = np.linalg.norm(np.array([0]))
+    normalized_embedding_np = normalize_embeddings.normalize_embedding(invalid_embedding_np)
+    assert np.isclose(np.linalg.norm(normalized_embedding_np), 0)
 
 
 @backoff.on_exception(backoff.expo, FailedPrecondition, max_time=300)
