@@ -28,7 +28,7 @@ RUN update-alternatives --install /usr/bin/java java /usr/local/openjdk-8/bin/ja
 WORKDIR /pipeline
 
 # Copy files from official SDK image.
-COPY --from=apache/beam_python3.11_sdk:2.63.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.11_sdk:2.71.0 /opt/apache/beam /opt/apache/beam
 # Set the entrypoint to Apache Beam SDK launcher.
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
 
