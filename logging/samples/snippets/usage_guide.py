@@ -28,6 +28,7 @@ import time
 
 from google.cloud.logging import Client
 
+
 def snippet(func):
     """Mark ``func`` as a snippet example function."""
     func._snippet = True

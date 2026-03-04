@@ -48,6 +48,7 @@ def test_list(example_log, capsys):
 def test_write(capsys):
 
     snippets.write_entry(TEST_LOGGER_NAME)
+
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def eventually_consistent_test():
         snippets.list_entries(TEST_LOGGER_NAME)
