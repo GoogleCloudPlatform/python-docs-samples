@@ -557,7 +557,7 @@ def main():
             print("  ERROR: %r" % (error,))
         for item in to_delete:
             pass
-            #_backoff_not_found(item.delete)
+            _backoff_not_found(item.delete)
 
 
 if __name__ == "__main__":

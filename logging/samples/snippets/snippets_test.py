@@ -23,6 +23,7 @@ import snippets
 
 
 TEST_LOGGER_NAME = "example_log_{}".format(uuid.uuid4().hex)
+TEST_TEXT = "Hello, world."
 
 
 @pytest.fixture
@@ -44,13 +45,14 @@ def test_list(example_log, capsys):
     eventually_consistent_test()
 
 
-def test_write(example_log, capsys):
+def test_write(capsys):
+
     snippets.write_entry(TEST_LOGGER_NAME)
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def eventually_consistent_test():
         snippets.list_entries(TEST_LOGGER_NAME)
         out, _ = capsys.readouterr()
-        assert example_log in out
+        assert TEST_TEXT in out
 
     eventually_consistent_test()
 

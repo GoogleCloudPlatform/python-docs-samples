@@ -90,7 +90,7 @@ def delete_logger(logger_name):
 
 
 if __name__ == "__main__":
-    """
+
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -108,7 +108,3 @@ if __name__ == "__main__":
         write_entry(args.logger_name)
     elif args.command == "delete":
         delete_logger(args.logger_name)
-    """
-    write_entry("mi_logger")
-    list_entries("mi_logger")
-    delete_logger("mi_logger")
