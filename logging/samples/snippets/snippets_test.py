@@ -44,8 +44,15 @@ def test_list(example_log, capsys):
     eventually_consistent_test()
 
 
-def test_write():
+def test_write(example_log, capsys):
     snippets.write_entry(TEST_LOGGER_NAME)
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
+    def eventually_consistent_test():
+        snippets.list_entries(TEST_LOGGER_NAME)
+        out, _ = capsys.readouterr()
+        assert example_log in out
+
+    eventually_consistent_test()
 
 
 def test_delete(example_log, capsys):
@@ -54,3 +61,5 @@ def test_delete(example_log, capsys):
         snippets.delete_logger(TEST_LOGGER_NAME)
         out, _ = capsys.readouterr()
         assert TEST_LOGGER_NAME in out
+
+    eventually_consistent_test()
