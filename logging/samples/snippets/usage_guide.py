@@ -557,6 +557,7 @@ def main():
         except Exception as error:  # pylint: disable=broad-except
             print("  ERROR: %r" % (error,))
         for item in to_delete:
+            pass
             _backoff_not_found(item.delete)
 
 

@@ -90,6 +90,7 @@ def delete_logger(logger_name):
 
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )

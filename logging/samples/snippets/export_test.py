@@ -13,8 +13,8 @@
 # limitations under the License.
 
 import os
-import re
 import random
+import re
 import string
 import time
 
