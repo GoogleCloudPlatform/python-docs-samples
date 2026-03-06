@@ -51,7 +51,7 @@ SAMPLE_RATE = 16000
 CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
 RESTART_TIMEOUT = 160  # seconds
 MAX_LOOKBACK = 3  # seconds
-HALF_CLOSE_DURATION_MS = 90 * 1000 # milliseconds
+HALF_CLOSE_DURATION_MS = 90 * 1000  # milliseconds
 
 YELLOW = "\033[0;33m"
 
