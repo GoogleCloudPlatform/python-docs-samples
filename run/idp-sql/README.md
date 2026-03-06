@@ -52,7 +52,7 @@ Other environment variables:
 
 1. Set [environment variables](#environment-variables).
 
-1. To run this application locally, download and install the `cloud_sql_proxy` by
+1. To run this application locally, download and install the `cloud-sql-proxy` by
 [following the instructions](https://cloud.google.com/sql/docs/postgres/sql-proxy#install).
 
 The proxy can be used with a TCP connection or a Unix Domain Socket. On Linux or
