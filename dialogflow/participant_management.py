@@ -196,7 +196,7 @@ def analyze_content_audio_stream(
     timeout: int,
     language_code: str,
     single_utterance=False,
-    output_multiple_utterances=True,
+    output_multiple_utterances=False,
 ):
     import google.auth
     from google.cloud import dialogflow_v2beta1 as dialogflow

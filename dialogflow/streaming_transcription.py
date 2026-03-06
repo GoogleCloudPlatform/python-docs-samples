@@ -199,7 +199,9 @@ def main():
                         timeout=RESTART_TIMEOUT,
                         language_code="en-US",
                         single_utterance=False,
-                        output_multiple_utterances=True,
+                        # Uncomment to process multiple utterances detected in the audio stream
+                        # individually instead of stitching together to form a single utterance.
+                        # output_multiple_utterances=True,
                     )
 
                     # Now, print the final transcription responses to user.
