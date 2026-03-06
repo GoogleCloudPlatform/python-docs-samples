@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import os
 import re
 import sys
 
-from google.api_core.exceptions import DeadlineExceeded
+from google.api_core.exceptions import DeadlineExceeded, OutOfRange
 
 import pyaudio
 
@@ -51,6 +51,7 @@ SAMPLE_RATE = 16000
 CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
 RESTART_TIMEOUT = 160  # seconds
 MAX_LOOKBACK = 3  # seconds
+HALF_CLOSE_DURATION_MS = 90 * 1000 # milliseconds
 
 YELLOW = "\033[0;33m"
 
@@ -214,7 +215,8 @@ def main():
                             )
                             transcript = response.recognition_result.transcript
                             # Half-close the stream with gRPC (in Python just stop yielding requests)
-                            stream.is_final = True
+                            if stream.is_final_offset > HALF_CLOSE_DURATION_MS:
+                                stream.is_final = True
                             # Exit recognition if any of the transcribed phrase could be
                             # one of our keywords.
                             if re.search(r"\b(exit|quit)\b", transcript, re.I):
@@ -223,6 +225,8 @@ def main():
                                 terminate = True
                                 stream.closed = True
                                 break
+                except OutOfRange:
+                    print("Maximum audio duration exceeded in the stream, restarting.")
                 except DeadlineExceeded:
                     print("Deadline Exceeded, restarting.")
 
