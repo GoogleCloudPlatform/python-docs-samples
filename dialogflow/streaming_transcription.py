@@ -215,7 +215,8 @@ def main():
                                 offset.seconds * 1000 + offset.microseconds / 1000
                             )
                             transcript = response.recognition_result.transcript
-                            # Half-close the stream with gRPC (in Python just stop yielding requests)
+                            # Half-close upon final results for better streaming experiences
+                            # (in Python just stop yielding requests)
                             if stream.is_final_offset > HALF_CLOSE_DURATION_MS:
                                 stream.is_final = True
                             # Exit recognition if any of the transcribed phrase could be
