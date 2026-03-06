@@ -43,7 +43,7 @@ Click [here to create a GCS bucket](https://console.cloud.google.com/storage/cre
 
 ```sh
 export GCS_BUCKET="your--bucket"
-gsutil mb gs://$GCS_BUCKET
+gcloud storage buckets create gs://$GCS_BUCKET
 ```
 
 Make sure your GCS bucket name does __not__ include the `gs://` prefix
