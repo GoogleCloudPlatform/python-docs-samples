@@ -199,6 +199,7 @@ def main():
                         timeout=RESTART_TIMEOUT,
                         language_code="en-US",
                         single_utterance=False,
+                        output_multiple_utterances=True,
                     )
 
                     # Now, print the final transcription responses to user.
