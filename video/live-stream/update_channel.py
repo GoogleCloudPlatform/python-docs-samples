@@ -32,14 +32,19 @@ from google.protobuf import field_mask_pb2 as field_mask
 
 
 def update_channel(
-    project_id: str, location: str, channel_id: str, input_id: str
+    project_id: str,
+    location: str,
+    channel_id: str,
+    input_id: str,
+    log_config: str = None,
 ) -> live_stream_v1.types.Channel:
     """Updates a channel.
     Args:
         project_id: The GCP project ID.
         location: The location of the channel.
         channel_id: The user-defined channel ID.
-        input_id: The user-defined input ID for the new input."""
+        input_id: The user-defined input ID for the new input.
+        log_config: The log severity for the channel."""
 
     client = LivestreamServiceClient()
     input = f"projects/{project_id}/locations/{location}/inputs/{input_id}"
@@ -49,12 +54,20 @@ def update_channel(
         name=name,
         input_attachments=[
             live_stream_v1.types.InputAttachment(
-                key="updated-input",
+                key=input_id,
                 input=input,
             ),
         ],
     )
-    update_mask = field_mask.FieldMask(paths=["input_attachments"])
+    update_mask_paths = ["input_attachments"]
+
+    if log_config:
+        channel.log_config = live_stream_v1.types.LogConfig(
+            log_severity=live_stream_v1.types.LogConfig.LogSeverity[log_config]
+        )
+        update_mask_paths.append("log_config")
+
+    update_mask = field_mask.FieldMask(paths=update_mask_paths)
 
     operation = client.update_channel(channel=channel, update_mask=update_mask)
     response = operation.result(600)
@@ -83,10 +96,17 @@ if __name__ == "__main__":
         help="The user-defined input ID.",
         required=True,
     )
+    parser.add_argument(
+        "--log_config",
+        help="The log severity for the channel.",
+        choices=["OFF", "DEBUG", "INFO", "WARNING", "ERROR"],
+        required=False,
+    )
     args = parser.parse_args()
     update_channel(
         args.project_id,
         args.location,
         args.channel_id,
         args.input_id,
+        args.log_config,
     )

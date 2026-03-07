@@ -17,7 +17,8 @@
 """Google Cloud Live Stream sample for creating an input endpoint. You send an
     input video stream to this endpoint.
 Example usage:
-    python create_input.py --project_id <project-id> --location <location> --input_id <input-id>
+    python create_input.py --project_id <project-id> --location <location> \
+        --input_id <input-id> [--input_type <input-type>]
 """
 
 # [START livestream_create_input]
@@ -31,20 +32,22 @@ from google.cloud.video.live_stream_v1.services.livestream_service import (
 
 
 def create_input(
-    project_id: str, location: str, input_id: str
+    project_id: str, location: str, input_id: str, input_type: str
 ) -> live_stream_v1.types.Input:
     """Creates an input.
     Args:
         project_id: The GCP project ID.
         location: The location in which to create the input.
-        input_id: The user-defined input ID."""
+        input_id: The user-defined input ID.
+        input_type: The input type.
+    """
 
     client = LivestreamServiceClient()
 
     parent = f"projects/{project_id}/locations/{location}"
 
     input = live_stream_v1.types.Input(
-        type_="RTMP_PUSH",
+        type_=input_type,
     )
     operation = client.create_input(parent=parent, input=input, input_id=input_id)
     response = operation.result(900)
@@ -68,9 +71,16 @@ if __name__ == "__main__":
         help="The user-defined input ID.",
         required=True,
     )
+    parser.add_argument(
+        "--input_type",
+        help="The input type.",
+        choices=["RTMP_PUSH", "SRT_PUSH"],
+        default="RTMP_PUSH",
+    )
     args = parser.parse_args()
     create_input(
         args.project_id,
         args.location,
         args.input_id,
+        args.input_type,
     )
