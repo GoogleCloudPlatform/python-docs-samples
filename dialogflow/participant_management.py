@@ -196,6 +196,7 @@ def analyze_content_audio_stream(
     timeout: int,
     language_code: str,
     single_utterance=False,
+    output_multiple_utterances=False,
 ):
     import google.auth
     from google.cloud import dialogflow_v2beta1 as dialogflow
@@ -231,7 +232,9 @@ def analyze_content_audio_stream(
         """Generates requests for streaming."""
         audio_generator = stream.generator()
         yield dialogflow.types.participant.StreamingAnalyzeContentRequest(
-            participant=participant_name, audio_config=audio_config
+            participant=participant_name,
+            audio_config=audio_config,
+            output_multiple_utterances=output_multiple_utterances
         )
         for content in audio_generator:
             yield dialogflow.types.participant.StreamingAnalyzeContentRequest(
