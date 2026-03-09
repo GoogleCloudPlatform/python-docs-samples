@@ -34,7 +34,7 @@ import os
 import re
 import sys
 
-from google.api_core.exceptions import DeadlineExceeded
+from google.api_core.exceptions import DeadlineExceeded, OutOfRange
 
 import pyaudio
 
@@ -51,6 +51,7 @@ SAMPLE_RATE = 16000
 CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
 RESTART_TIMEOUT = 160  # seconds
 MAX_LOOKBACK = 3  # seconds
+HALF_CLOSE_DURATION_MS = 90 * 1000  # milliseconds
 
 YELLOW = "\033[0;33m"
 
@@ -198,6 +199,9 @@ def main():
                         timeout=RESTART_TIMEOUT,
                         language_code="en-US",
                         single_utterance=False,
+                        # Uncomment to process multiple utterances detected in the audio stream
+                        # individually instead of stitching together to form a single utterance.
+                        # output_multiple_utterances=True,
                     )
 
                     # Now, print the final transcription responses to user.
@@ -213,8 +217,10 @@ def main():
                                 offset.seconds * 1000 + offset.microseconds / 1000
                             )
                             transcript = response.recognition_result.transcript
-                            # Half-close the stream with gRPC (in Python just stop yielding requests)
-                            stream.is_final = True
+                            # Half-close upon final results for better streaming experiences
+                            # (in Python just stop yielding requests)
+                            if stream.is_final_offset > HALF_CLOSE_DURATION_MS:
+                                stream.is_final = True
                             # Exit recognition if any of the transcribed phrase could be
                             # one of our keywords.
                             if re.search(r"\b(exit|quit)\b", transcript, re.I):
@@ -223,6 +229,8 @@ def main():
                                 terminate = True
                                 stream.closed = True
                                 break
+                except OutOfRange:
+                    print("Maximum audio duration exceeded in the stream, restarting.")
                 except DeadlineExceeded:
                     print("Deadline Exceeded, restarting.")
 

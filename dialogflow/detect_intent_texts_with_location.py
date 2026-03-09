@@ -58,7 +58,7 @@ def detect_intent_texts_with_location(
         print("=" * 20)
         print(f"Query text: {response.query_result.query_text}")
         print(
-            f"Detected intent: {response.query_result.intent.display_name} (confidence: {response.query_result.intent_detection_confidence,})\n"
+            f"Detected intent: {response.query_result.intent.display_name} (confidence: {response.query_result.intent_detection_confidence})\n"
         )
         print(f"Fulfillment text: {response.query_result.fulfillment_text}\n")
 
