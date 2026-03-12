@@ -194,7 +194,7 @@ oauth2client==4.1.3
     # via google-apitools
 objsize==0.7.0
     # via apache-beam
-orjson==3.9.15
+orjson==3.11.6
     # via apache-beam
 overrides==7.7.0
     # via google-cloud-pubsublite
