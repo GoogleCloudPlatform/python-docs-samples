@@ -16,7 +16,7 @@
 """Standalone script for migrating environments from Composer 2 to Composer 3."""
 
 import argparse
-import json
+import logging
 import math
 import pprint
 import time
@@ -24,10 +24,6 @@ from typing import Any, Dict, List
 
 import google.auth
 from google.auth.transport.requests import AuthorizedSession
-import requests
-
-import logging
-
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -77,41 +73,35 @@ class ComposerClient:
         # The API expects the resource name in the format:
         # projects/{project}/locations/{location}/environments/{environment_name}
         if "name" not in config:
-             raise ValueError("Environment name is missing in the config.")
-        
+            raise ValueError("Environment name is missing in the config.")
+
         # Extract environment ID from the full name if needed as query param,
         # but the original code didn't use it, so we trust the body 'name' field.
         # However, usually for Create, we might need environmentId query param if we want to specify it explicitly
         # and it's not inferred.
         # The original code did: POST .../environments with body.
-        
+
         response = self.session.post(url, json=config)
         if response.status_code == 409:
             logger.info("Environment already exists, skipping creation.")
             return
 
         if response.status_code != 200:
-            raise RuntimeError(
-                f"Failed to create environment: {response.text}"
-            )
-        
+            raise RuntimeError(f"Failed to create environment: {response.text}")
+
         operation = response.json()
         logger.info("Create environment operation: %s", operation["name"])
         self._wait_for_operation(operation["name"])
 
-
     def list_dags(self, environment_name: str) -> List[Dict[str, Any]]:
         """Returns a list of DAGs in a given Composer environment."""
         airflow_uri = self._get_airflow_uri(environment_name)
-        
+
         url = f"{airflow_uri}/api/v1/dags"
         response = self.session.get(url)
         if response.status_code != 200:
-             raise RuntimeError(
-                f"Failed to list DAGs: {response.text}"
-            )
+            raise RuntimeError(f"Failed to list DAGs: {response.text}")
         return response.json()["dags"]
-
 
     def pause_dag(
         self,
@@ -120,14 +110,11 @@ class ComposerClient:
     ) -> Any:
         """Pauses a DAG in a Composer environment."""
         airflow_uri = self._get_airflow_uri(environment_name)
-        
+
         url = f"{airflow_uri}/api/v1/dags/{dag_id}"
         response = self.session.patch(url, json={"is_paused": True})
         if response.status_code != 200:
-             raise RuntimeError(
-                f"Failed to pause DAG {dag_id}: {response.text}"
-            )
-    
+            raise RuntimeError(f"Failed to pause DAG {dag_id}: {response.text}")
 
     def pause_all_dags(
         self,
@@ -135,14 +122,11 @@ class ComposerClient:
     ) -> Any:
         """Pauses all DAGs in a Composer environment."""
         airflow_uri = self._get_airflow_uri(environment_name)
-        
-        url = f"{airflow_uri}/api/v1/dags?dag_id_pattern=%" # Pause all DAGs using % as a wildcard
+
+        url = f"{airflow_uri}/api/v1/dags?dag_id_pattern=%"  # Pause all DAGs using % as a wildcard
         response = self.session.patch(url, json={"is_paused": True})
         if response.status_code != 200:
-             raise RuntimeError(
-                f"Failed to pause all DAGs: {response.text}"
-            )
-
+            raise RuntimeError(f"Failed to pause all DAGs: {response.text}")
 
     def unpause_dag(
         self,
@@ -151,13 +135,11 @@ class ComposerClient:
     ) -> Any:
         """Unpauses a DAG in a Composer environment."""
         airflow_uri = self._get_airflow_uri(environment_name)
-        
+
         url = f"{airflow_uri}/api/v1/dags/{dag_id}"
         response = self.session.patch(url, json={"is_paused": False})
         if response.status_code != 200:
-             raise RuntimeError(
-                f"Failed to unpause DAG {dag_id}: {response.text}"
-            )
+            raise RuntimeError(f"Failed to unpause DAG {dag_id}: {response.text}")
 
     def unpause_all_dags(
         self,
@@ -165,13 +147,11 @@ class ComposerClient:
     ) -> Any:
         """Unpauses all DAGs in a Composer environment."""
         airflow_uri = self._get_airflow_uri(environment_name)
-        
-        url = f"{airflow_uri}/api/v1/dags?dag_id_pattern=%" # Pause all DAGs using % as a wildcard
+
+        url = f"{airflow_uri}/api/v1/dags?dag_id_pattern=%"  # Pause all DAGs using % as a wildcard
         response = self.session.patch(url, json={"is_paused": False})
         if response.status_code != 200:
-             raise RuntimeError(
-                f"Failed to unpause all DAGs: {response.text}"
-            )            
+            raise RuntimeError(f"Failed to unpause all DAGs: {response.text}")
 
     def save_snapshot(self, environment_name: str) -> str:
         """Saves a snapshot of a Composer environment."""
@@ -181,10 +161,8 @@ class ComposerClient:
         )
         response = self.session.post(url, json={})
         if response.status_code != 200:
-            raise RuntimeError(
-                f"Failed to initiate snapshot save: {response.text}"
-            )
-        
+            raise RuntimeError(f"Failed to initiate snapshot save: {response.text}")
+
         operation = response.json()
         logging.info("Save snapshot operation: %s", operation["name"])
         completed_operation = self._wait_for_operation(operation["name"])
@@ -202,36 +180,31 @@ class ComposerClient:
         )
         response = self.session.post(url, json={"snapshotPath": snapshot_path})
         if response.status_code != 200:
-            raise RuntimeError(
-                f"Failed to initiate snapshot load: {response.text}"
-            )
+            raise RuntimeError(f"Failed to initiate snapshot load: {response.text}")
 
         operation = response.json()
         logging.info("Load snapshot operation: %s", operation["name"])
         self._wait_for_operation(operation["name"])
 
-
     def _wait_for_operation(self, operation_name: str) -> Any:
         """Waits for a long-running operation to complete."""
         # operation_name is distinct from operation_id.
         # It is a full resource name: projects/.../locations/.../operations/...
-        
+
         # We need to poll the operation status.
         url = f"{self.sdk_endpoint}/v1/{operation_name}"
-        
+
         while True:
             response = self.session.get(url)
             if response.status_code != 200:
-                 raise RuntimeError(
-                    f"Failed to get operation status: {response.text}"
-                )
+                raise RuntimeError(f"Failed to get operation status: {response.text}")
             operation = response.json()
             if "done" in operation and operation["done"]:
                 if "error" in operation:
                     raise RuntimeError(f"Operation failed: {operation['error']}")
                 logging.info("Operation completed successfully.")
                 return operation
-            
+
             logging.info("Waiting for operation to complete...")
             time.sleep(10)
 
@@ -416,7 +389,6 @@ def main(
     sdk_endpoint: str,
     dry_run: bool,
 ) -> int:
-
     client = ComposerClient(
         project=project_name, location=location, sdk_endpoint=sdk_endpoint
     )
@@ -507,7 +479,9 @@ def main(
     else:
         for dag in source_env_dags:
             if dag["is_paused"]:
-                logger.info("DAG %s was paused in the source environment.", dag["dag_id"])
+                logger.info(
+                    "DAG %s was paused in the source environment.", dag["dag_id"]
+                )
                 continue
             logger.info("Unpausing DAG %s in the target environment.", dag["dag_id"])
             client.unpause_dag(dag["dag_id"], target_environment_name)
@@ -559,8 +533,7 @@ def parse_arguments() -> Dict[Any, Any]:
         action="store_true",
         default=False,
         help=(
-            "If true, script will only print the config for the Composer 3"
-            " environment."
+            "If true, script will only print the config for the Composer 3 environment."
         ),
     )
     argument_parser.add_argument(
