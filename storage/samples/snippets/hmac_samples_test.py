@@ -17,7 +17,6 @@ HMAC_KEY_TEST_SERVICE_ACCOUNT (valid service account email) env variables to be
 set in order to run.
 """
 
-
 import os
 
 import google.api_core.exceptions
@@ -51,9 +50,18 @@ def new_hmac_key():
 
     NOTE: Due to the module scope, test order in this file is significant
     """
-    hmac_key, secret = STORAGE_CLIENT.create_hmac_key(
-        service_account_email=SERVICE_ACCOUNT_EMAIL, project_id=PROJECT_ID
-    )
+    try:
+        hmac_key, secret = STORAGE_CLIENT.create_hmac_key(
+            service_account_email=SERVICE_ACCOUNT_EMAIL, project_id=PROJECT_ID
+        )
+    except google.api_core.exceptions.PreconditionFailed as e:
+        # Check if the failure is due to the Organization Policy constraint
+        if "constraints/iam.disableServiceAccountKeyCreation" in str(e):
+            pytest.skip(
+                "Temporary skip: HMAC key creation is disabled by organization policy "
+                "on project python-docs-samples-tests. See b/493225655."
+            )
+        raise
     yield hmac_key
     # Re-fetch the key metadata in case state has changed during the test.
     hmac_key = STORAGE_CLIENT.get_hmac_key_metadata(
@@ -77,9 +85,16 @@ def test_list_keys(capsys, new_hmac_key):
 
 
 def test_create_key(capsys):
-    hmac_key = storage_create_hmac_key.create_key(
-        PROJECT_ID, SERVICE_ACCOUNT_EMAIL
-    )
+    try:
+        hmac_key = storage_create_hmac_key.create_key(PROJECT_ID, SERVICE_ACCOUNT_EMAIL)
+    except google.api_core.exceptions.PreconditionFailed as e:
+        if "constraints/iam.disableServiceAccountKeyCreation" in str(e):
+            pytest.skip(
+                "Temporary skip: HMAC key creation is disabled by organization policy "
+                "on project python-docs-samples-tests. See b/493225655."
+            )
+        raise
+
     hmac_key.state = "INACTIVE"
     hmac_key.update()
     hmac_key.delete()
