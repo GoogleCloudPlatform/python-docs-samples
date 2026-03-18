@@ -12,9 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Example usage:
+# python samples/snippets/storage_transfer_manager_download_many.py \
+#     --bucket_name <your-bucket-name> \
+#     --blobs <blob_name_1> <blob_name_2> \
+#     --destination_directory <destination_directory> \
+#     --blob_name_prefix <prefix>
+
+
 # [START storage_transfer_manager_download_many]
 def download_many_blobs_with_transfer_manager(
-    bucket_name, blob_names, destination_directory="", workers=8
+    bucket_name, blob_names, destination_directory="", blob_name_prefix="", workers=8
 ):
     """Download blobs in a list by name, concurrently in a process pool.
 
@@ -36,11 +44,11 @@ def download_many_blobs_with_transfer_manager(
     # blob_names = ["myblob", "myblob2"]
 
     # The directory on your computer to which to download all of the files. This
-    # string is prepended (with os.path.join()) to the name of each blob to form
-    # the full path. Relative paths and absolute paths are both accepted. An
-    # empty string means "the current working directory". Note that this
-    # parameter allows accepts directory traversal ("../" etc.) and is not
-    # intended for unsanitized end user input.
+    # string is prepended to the name of each blob to form the full path using
+    # pathlib. Relative paths and absolute paths are both accepted. An empty
+    # string means "the current working directory". Note that this parameter
+    # will NOT allow files to escape the destination_directory and will skip
+    # downloads that attempt directory traversal outside of it.
     # destination_directory = ""
 
     # The maximum number of processes to use for the operation. The performance
@@ -56,15 +64,63 @@ def download_many_blobs_with_transfer_manager(
     bucket = storage_client.bucket(bucket_name)
 
     results = transfer_manager.download_many_to_path(
-        bucket, blob_names, destination_directory=destination_directory, max_workers=workers
+        bucket,
+        blob_names,
+        destination_directory=destination_directory,
+        blob_name_prefix=blob_name_prefix,
+        max_workers=workers,
     )
 
     for name, result in zip(blob_names, results):
-        # The results list is either `None` or an exception for each blob in
+        # The results list is either `None`, an exception, or a warning for each blob in
         # the input list, in order.
-
-        if isinstance(result, Exception):
+        if isinstance(result, UserWarning):
+            print("Skipped download for {} due to warning: {}".format(name, result))
+        elif isinstance(result, Exception):
             print("Failed to download {} due to exception: {}".format(name, result))
         else:
-            print("Downloaded {} to {}.".format(name, destination_directory + name))
+            print(
+                "Downloaded {} inside {} directory.".format(name, destination_directory)
+            )
+
+
 # [END storage_transfer_manager_download_many]
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Download blobs in a list by name, concurrently in a process pool."
+    )
+    parser.add_argument(
+        "--bucket_name", required=True, help="The name of your GCS bucket"
+    )
+    parser.add_argument(
+        "--blobs",
+        nargs="+",
+        required=True,
+        help="The list of blob names to download",
+    )
+    parser.add_argument(
+        "--destination_directory",
+        default="",
+        help="The directory on your computer to which to download all of the files",
+    )
+    parser.add_argument(
+        "--blob_name_prefix",
+        default="",
+        help="A string that will be prepended to each blob_name to determine the source blob name",
+    )
+    parser.add_argument(
+        "--workers", type=int, default=8, help="The maximum number of processes to use"
+    )
+
+    args = parser.parse_args()
+
+    download_many_blobs_with_transfer_manager(
+        bucket_name=args.bucket_name,
+        blob_names=args.blobs,
+        destination_directory=args.destination_directory,
+        blob_name_prefix=args.blob_name_prefix,
+        workers=args.workers,
+    )
