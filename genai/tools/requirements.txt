@@ -1,3 +1,3 @@
-google-genai==1.45.0
+google-genai==1.56.0
 # PIl is required for tools_code_execution_with_txt_img.py
 pillow==11.1.0
