@@ -1,4 +1,4 @@
-Django==6.0.1; python_version >= "3.12"
+Django==6.0.3; python_version >= "3.12"
 gunicorn==23.0.0
 psycopg2-binary==2.9.11
 django-environ==0.12.0
