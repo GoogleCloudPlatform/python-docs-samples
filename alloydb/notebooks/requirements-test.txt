@@ -3,4 +3,4 @@ sqlalchemy==2.0.40
 pytest==8.3.3
 ipykernel==6.29.5
 pytest-asyncio==0.24.0
-nbconvert==7.16.6
+nbconvert==7.17.0
