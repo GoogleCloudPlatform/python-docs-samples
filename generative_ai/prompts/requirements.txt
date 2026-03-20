@@ -1,6 +1,6 @@
-pandas==2.2.3; python_version == '3.7'
-pandas==2.2.3; python_version == '3.8'
-pandas==2.2.3; python_version > '3.8'
+pandas==3.0.0; python_version == '3.7'
+pandas==3.0.0; python_version == '3.8'
+pandas==3.0.0; python_version > '3.8'
 pillow==10.4.0; python_version < '3.8'
 pillow==10.4.0; python_version >= '3.8'
 google-cloud-aiplatform[all]==1.74.0
