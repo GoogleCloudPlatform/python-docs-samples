@@ -95,7 +95,7 @@ def dataflow_job(
 ) -> Iterator[str]:
     # Upload the state dict to Cloud Storage.
     state_dict_gcs = f"gs://{bucket_name}/temp/state_dict.pt"
-    conftest.run_cmd("gsutil", "cp", "-n", state_dict_path, state_dict_gcs)
+    conftest.run_cmd("gcloud", "storage", "cp", "--no-clobber", state_dict_path, state_dict_gcs)
 
     # Launch the streaming Dataflow pipeline.
     conftest.run_cmd(
