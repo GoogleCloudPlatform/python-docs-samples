@@ -19,6 +19,7 @@ def test_call_python_udf(project_id: str, location: str):
     bpd.close_session()
 
     # [START bigquery_dataframes_call_python_udf]
+    import textwrap
     import bigframes.pandas as bpd
 
     # Set the billing project to use for queries. This step is optional, as the
@@ -31,24 +32,30 @@ def test_call_python_udf(project_id: str, location: str):
     # Create a sample series.
     xml_series = bpd.Series(
         [
-            """
-            <book id="1">
-                <title>The Great Gatsby</title>
-                <author>F. Scott Fitzgerald</author>
-            </book>
-            """,
-            """
-            <book id="2">
-                <title>1984</title>
-                <author>George Orwell</author>
-            </book>
-            """,
-            """
-            <book id="3">
-                <title>Brave New World</title>
-                <author>Aldous Huxley</author>
-            </book>
-            """,
+            textwrap.dedent(
+                """
+                <book id="1">
+                    <title>The Great Gatsby</title>
+                    <author>F. Scott Fitzgerald</author>
+                </book>
+                """
+            ),
+            textwrap.dedent(
+                """
+                <book id="2">
+                    <title>1984</title>
+                    <author>George Orwell</author>
+                </book>
+                """
+            ),
+            textwrap.dedent(
+                """
+                <book id="3">
+                    <title>Brave New World</title>
+                    <author>Aldous Huxley</author>
+                </book>
+                """
+            ),
         ]
     )
 
