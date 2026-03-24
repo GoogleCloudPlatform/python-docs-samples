@@ -77,6 +77,7 @@
 /appengine/standard_python3/spanner/*  @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /asset/**/*                            @GoogleCloudPlatform/cloud-asset-analysis-team @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /bigquery/**/*                         @chalmerlowe @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
+/bigquery/bigframes/**/*               @tswast @GoogleCloudPlatform/api-bigquery @GoogleCloudPlatform/cloud-samples-reviewers
 /bigquery/remote_function/**/*         @autoerr @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /cloud-media-livestream/**/*           @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /bigquery-connection/**/*              @GoogleCloudPlatform/api-bigquery @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
