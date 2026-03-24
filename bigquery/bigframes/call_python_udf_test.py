@@ -29,6 +29,9 @@ def test_call_python_udf(project_id: str, location: str):
     # Since this example works with local data, set a processing location.
     bpd.options.bigquery.location = location  # "US"
 
+    # Using partial ordering mode enables more efficient query optimizations.
+    bpd.options.bigquery.ordering_mode = "partial"
+
     # Create a sample series.
     xml_series = bpd.Series(
         [
