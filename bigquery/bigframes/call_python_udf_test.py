@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def test_call_python_udf(project_id: str, location: str):
+def test_call_python_udf(project_id: str, location: str) -> None:
     import bigframes.pandas as bpd
 
     bpd.close_session()
