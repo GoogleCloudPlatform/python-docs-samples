@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def test_call_python_udf(project_id: str, location: str):
     import bigframes.pandas as bpd
+
     bpd.close_session()
 
     # [START bigquery_dataframes_call_python_udf]
@@ -29,24 +31,24 @@ def test_call_python_udf(project_id: str, location: str):
     # Create a sample series.
     xml_series = bpd.Series(
         [
-            '''
+            """
             <book id="1">
                 <title>The Great Gatsby</title>
                 <author>F. Scott Fitzgerald</author>
             </book>
-            ''',
-            '''
+            """,
+            """
             <book id="2">
                 <title>1984</title>
                 <author>George Orwell</author>
             </book>
-            ''',
-            '''
+            """,
+            """
             <book id="3">
                 <title>Brave New World</title>
                 <author>Aldous Huxley</author>
             </book>
-            ''',
+            """,
         ]
     )
 
@@ -58,7 +60,7 @@ def test_call_python_udf(project_id: str, location: str):
 
     xpath_query = "//title/text()"
     titles = xml_series.apply(cw_xml_extract, args=(xpath_query,))
-    result  = titles.to_pandas()
+    result = titles.to_pandas()
     # [END bigquery_dataframes_call_python_udf]
     print(result)
     assert len(result.index) == 3
