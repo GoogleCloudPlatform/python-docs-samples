@@ -14,7 +14,6 @@
 
 import os
 
-from google.cloud.bigquery_reservation_v1.services import reservation_service
 import pytest
 
 
@@ -24,19 +23,5 @@ def project_id() -> str:
 
 
 @pytest.fixture(scope="session")
-def reservation_client(
-    transport: str = "grpc",
-) -> reservation_service.ReservationServiceClient:
-    return reservation_service.ReservationServiceClient(transport=transport)
-
-
-@pytest.fixture(scope="session")
 def location() -> str:
     return "US"
-
-
-@pytest.fixture(scope="session")
-def location_path(project_id: str, location: str) -> str:
-    return reservation_service.ReservationServiceClient.common_location_path(
-        project_id, location
-    )
