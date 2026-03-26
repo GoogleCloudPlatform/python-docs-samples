@@ -4,5 +4,5 @@ google-auth==2.47.0
 pytest===8.4.2; python_version == '3.9'
 pytest==9.0.2; python_version > '3.9'
 boto3>=1.26.0
-requests==2.32.5
+requests==2.33.0
 python-dotenv==1.2.1
