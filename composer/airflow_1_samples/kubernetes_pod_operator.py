@@ -97,7 +97,7 @@ with models.DAG(
     )
     # [END composer_kubernetespodoperator_minconfig_airflow_1]
     # [START composer_kubernetespodoperator_templateconfig_airflow_1]
-    kubenetes_template_ex = kubernetes_pod_operator.KubernetesPodOperator(
+    kubernetes_template_ex = kubernetes_pod_operator.KubernetesPodOperator(
         task_id="ex-kube-templates",
         name="ex-kube-templates",
         namespace="default",

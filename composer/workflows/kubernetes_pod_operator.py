@@ -100,7 +100,7 @@ with models.DAG(
     )
     # [END composer_kubernetespodoperator_minconfig]
     # [START composer_kubernetespodoperator_templateconfig]
-    kubenetes_template_ex = KubernetesPodOperator(
+    kubernetes_template_ex = KubernetesPodOperator(
         task_id="ex-kube-templates",
         name="ex-kube-templates",
         namespace="default",

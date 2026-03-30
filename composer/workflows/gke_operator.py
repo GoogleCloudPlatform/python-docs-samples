@@ -91,7 +91,7 @@ with models.DAG(
     # [END composer_gkeoperator_minconfig]
 
     # [START composer_gkeoperator_templateconfig]
-    kubenetes_template_ex = GKEStartPodOperator(
+    kubernetes_template_ex = GKEStartPodOperator(
         task_id="ex-kube-templates",
         name="ex-kube-templates",
         project_id=PROJECT_ID,
@@ -238,6 +238,6 @@ with models.DAG(
     create_cluster >> kubernetes_min_pod >> delete_cluster
     create_cluster >> kubernetes_full_pod >> delete_cluster
     create_cluster >> kubernetes_affinity_ex >> delete_cluster
-    create_cluster >> kubenetes_template_ex >> delete_cluster
+    create_cluster >> kubernetes_template_ex >> delete_cluster
 
 # [END composer_gkeoperator]
