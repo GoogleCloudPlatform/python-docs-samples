@@ -1,0 +1,5 @@
+pytest
+pytest-asyncio
+google-cloud-bigquery
+bigframes
+google-cloud-testutils
