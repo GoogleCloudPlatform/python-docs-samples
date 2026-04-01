@@ -6,6 +6,11 @@ This sample uses the `streamable-http` transport, which allows for running MCP
 servers remotely. You can read more about MCP transports in the
 [official MCP docs](https://modelcontextprotocol.io/docs/concepts/architecture#transport-layer).
 
+[![Run in Google Cloud][run_img]][run_link]
+
+[run_img]: https://storage.googleapis.com/cloudrun/button.svg
+[run_link]: https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&cloudshell_working_dir=run/mcp-server
+
 ## Benefits of running an MCP server remotely
 
 Running an MCP server remotely on Cloud Run can provide several benefits:
