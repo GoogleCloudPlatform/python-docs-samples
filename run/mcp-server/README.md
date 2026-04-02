@@ -6,10 +6,7 @@ This sample uses the `streamable-http` transport, which allows for running MCP
 servers remotely. You can read more about MCP transports in the
 [official MCP docs](https://modelcontextprotocol.io/docs/concepts/architecture#transport-layer).
 
-[![Run in Google Cloud][run_img]][run_link]
-
-[run_img]: https://deploy.cloud.run/button.svg
-[run_link]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&dir=run/mcp-server
+<a href="https://deploy.cloud.run"><img src="https://deploy.cloud.run/button.svg" alt="Run on Google Cloud" height="40"/></a>
 
 ## Benefits of running an MCP server remotely
 
