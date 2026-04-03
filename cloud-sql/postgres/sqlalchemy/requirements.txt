@@ -1,6 +1,6 @@
 Flask==2.2.2
 pg8000==1.31.5
-SQLAlchemy==2.0.40
+SQLAlchemy==2.0.48
 cloud-sql-python-connector==1.20.0
 gunicorn==23.0.0
 functions-framework==3.9.2
