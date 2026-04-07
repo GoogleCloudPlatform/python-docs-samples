@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import bigframes.pandas as bpd
-import pandas as pd
 
 import call_python_udf
 
