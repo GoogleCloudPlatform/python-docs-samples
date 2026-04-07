@@ -12,13 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+
 # [START cloudrun_mcpserver]
 import asyncio
 import logging
 import os
+from otel_setup import setup_opentelemetry
 
 from fastmcp import FastMCP 
 
+setup_opentelemetry("mcp-server")
 logger = logging.getLogger(__name__)
 logging.basicConfig(format="[%(levelname)s]: %(message)s", level=logging.INFO)
 

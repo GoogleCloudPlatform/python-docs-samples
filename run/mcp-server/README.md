@@ -182,3 +182,26 @@ You should see the following output:
 
 You have successfully deployed a remote MCP server to Cloud Run and tested it
 using the FastMCP client.
+
+## Observability with OpenTelemetry
+
+This sample includes integration with OpenTelemetry to send traces, logs, and metrics to Google
+Cloud Observability (Cloud Trace, Cloud Logging, and Cloud Monitoring).
+
+[FastMCP is natively instrumented for
+OpenTelemetry](https://gofastmcp.com/servers/telemetry#opentelemetry), so simply setting up the
+SDK is enough to get telemetry data. Learn more about OpenTelemetry instrumentation
+[here](https://docs.cloud.google.com/stackdriver/docs/instrumentation/overview).
+
+
+### Setup Observability
+
+1.  **Ensure APIs are enabled**:
+    Make sure you have enabled the Telemetry (OTLP) API, Cloud Logging API, and Cloud Monitoring API in your GCP project.
+
+    ```bash
+    gcloud services enable logging.googleapis.com monitoring.googleapis.com telemetry.googleapis.com
+    ```
+
+1.  **View Traces**:
+    After interacting with the server to generate traces, you can view them in the Google Cloud Console. For detailed instructions, see the [Google Cloud Trace documentation on finding traces](https://docs.cloud.google.com/trace/docs/finding-traces).
