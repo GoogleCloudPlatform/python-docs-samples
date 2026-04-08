@@ -1,0 +1,5 @@
+pytest
+pytest-xdist
+mock
+google-cloud-retail>=2.10.0
+google-api-core
