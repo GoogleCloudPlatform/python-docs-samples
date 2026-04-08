@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START run_mcp_otel_setup]
+# [START cloudrun_mcpserver_otel_setup]
 import logging
 import google.auth
 import google.auth.transport.requests
@@ -62,4 +62,6 @@ def setup_opentelemetry(service_name: str) -> None:
     )
     trace.set_tracer_provider(tracer_provider)
     logger.info("OpenTelemetry successfully initialized.")
-# [END run_mcp_otel_setup]
+
+
+# [END cloudrun_mcpserver_otel_setup]
