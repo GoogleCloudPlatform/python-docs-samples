@@ -63,7 +63,6 @@ def search_pagination(
     try:
         first_response = client.search(request=first_request)
         print("--- First Page ---")
-        # Use .pages to process only the first page and avoid auto-pagination
         first_page = next(first_response.pages)
         for result in first_page.results:
             print(f"Product ID: {result.product.id}")
