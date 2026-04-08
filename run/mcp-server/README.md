@@ -197,7 +197,7 @@ SDK is enough to get telemetry data. Learn more about OpenTelemetry instrumentat
 ### Setup Observability
 
 1.  **Ensure APIs are enabled**:
-    Make sure you have enabled the Telemetry (OTLP) API, Cloud Logging API, and Cloud Monitoring API in your GCP project.
+    Make sure you have enabled the Telemetry (OTLP) API, Cloud Logging API, and Cloud Monitoring API in your Google Cloud project.
 
     ```bash
     gcloud services enable logging.googleapis.com monitoring.googleapis.com telemetry.googleapis.com
