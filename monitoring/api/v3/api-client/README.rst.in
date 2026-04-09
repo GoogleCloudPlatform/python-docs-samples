@@ -1,15 +1,15 @@
 # This file is used to generate README.rst
 
 product:
-  name: Stackdriver Monitoring
-  short_name: Stackdriver Monitoring
+  name: Cloud Logging Monitoring
+  short_name: Cloud Logging Monitoring
   url: https://cloud.google.com/monitoring/docs
   description: > 
-    `Stackdriver Monitoring `_ collects metrics, events, and metadata from
+    `Cloud Logging Monitoring `_ collects metrics, events, and metadata from
     Google Cloud Platform, Amazon Web Services (AWS), hosted uptime probes,
     application instrumentation, and a variety of common application components
     including Cassandra, Nginx, Apache Web Server, Elasticsearch and many
-    others. Stackdriver ingests that data and generates insights via
+    others. Cloud Logging ingests that data and generates insights via
     dashboards, charts, and alerts.
 
 setup:

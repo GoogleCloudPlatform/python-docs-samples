@@ -27,7 +27,7 @@ def retry_or_not(data, context):
         data (dict): The event payload.
         context (google.cloud.functions.Context): The event metadata.
     Returns:
-        None; output is written to Stackdriver Logging
+        None; output is written to Cloud Logging
     """
 
     # Retry based on a user-defined parameter

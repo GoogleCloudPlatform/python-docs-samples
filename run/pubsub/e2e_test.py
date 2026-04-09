@@ -233,7 +233,7 @@ def test_end_to_end(pubsub_topic):
     future.result()
 
     # Check the logs for "Hello Runner"
-    time.sleep(20)  # Slight delay writing to stackdriver
+    time.sleep(20)  # Slight delay writing to Cloud Logging
     client = LoggingServiceV2Client()
     resource_names = [f"projects/{PROJECT}"]
 
@@ -246,7 +246,7 @@ def test_end_to_end(pubsub_topic):
         f"AND resource.labels.service_name={CLOUD_RUN_SERVICE} "
     )
 
-    # Retry a maximum number of 10 times to find results in stackdriver
+    # Retry a maximum number of 10 times to find results in Cloud Logging
     found = False
     for x in range(10):
         iterator = client.list_log_entries(

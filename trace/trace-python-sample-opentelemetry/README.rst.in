@@ -1,11 +1,11 @@
 # This file is used to generate README.rst
 
 product:
-  name: Stackdriver Trace
-  short_name: Stackdriver Trace
+  name: Cloud Trace
+  short_name: Cloud Trace
   url: https://cloud.google.com/trace/docs
   description: > 
-    `Stackdriver Trace`_ collects latency data from applications and displays
+    `Cloud Trace`_ collects latency data from applications and displays
     it in near real time in the Google Cloud Platform Console.
 
 setup:

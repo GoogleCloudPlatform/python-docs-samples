@@ -29,7 +29,7 @@ def avoid_infinite_retries(cloud_event):
     Args:
         cloud_event: The cloud event associated with the current trigger
     Returns:
-        None; output is written to Stackdriver Logging
+        None; output is written to Cloud Logging
     """
     timestamp = cloud_event["time"]
 

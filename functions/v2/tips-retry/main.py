@@ -31,7 +31,7 @@ def retry_or_not(cloud_event):
     Args:
         cloud_event: The cloud event with a Pub/Sub data payload
     Returns:
-        None; output is written to Stackdriver Logging
+        None; output is written to Cloud Logging
     """
 
     # The Pub/Sub event payload is passed as the CloudEvent's data payload.

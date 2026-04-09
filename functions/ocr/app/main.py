@@ -69,7 +69,7 @@ def detect_text(bucket: str, filename: str) -> None:
         filename: name of the file to be read.
 
     Returns:
-        None; the output is written to stdout and Stackdriver Logging.
+        None; the output is written to stdout and cloud logging.
     """
     print("Looking for text in image {}".format(filename))
 
@@ -123,7 +123,7 @@ def process_image(file_info: dict, context: dict) -> None:
         context: a dictionary containing metadata about the event.
 
     Returns:
-        None; the output is written to stdout and Stackdriver Logging.
+        None; the output is written to stdout and cloud logging.
     """
     bucket = validate_message(file_info, "bucket")
     name = validate_message(file_info, "name")
@@ -148,7 +148,7 @@ def translate_text(event: dict, context: dict) -> None:
         context: a dictionary containing metadata about the event.
 
     Returns:
-        None; the output is written to stdout and Stackdriver Logging.
+        None; the output is written to stdout and cloud logging.
     """
     if event.get("data"):
         message_data = base64.b64decode(event["data"]).decode("utf-8")
@@ -189,7 +189,7 @@ def save_result(event: dict, context: dict) -> None:
         context: a dictionary containing metadata about the event.
 
     Returns:
-        None; the output is written to stdout and Stackdriver Logging.
+        None; the output is written to stdout and cloud logging.
     """
     if event.get("data"):
         message_data = base64.b64decode(event["data"]).decode("utf-8")

@@ -1,6 +1,6 @@
 # Cloud Run Manual Logging Sample
 
-This sample shows how to send structured logs to Stackdriver Logging.
+This sample shows how to send structured logs to Cloud Logging.
 
 [![Run in Google Cloud][run_img]][run_link]
 

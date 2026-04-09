@@ -169,8 +169,8 @@ def test_end_to_end(service_url_auth_token, deployed_service):
     assert response.status_code == 200
     assert "Hello Logger!" in response.content.decode("UTF-8")
 
-    # Test that the logs are writing properly to stackdriver
-    time.sleep(10)  # Slight delay writing to stackdriver
+    # Test that the logs are writing properly to Cloud Logging
+    time.sleep(10)  # Slight delay writing to Cloud Logging
     client = LoggingServiceV2Client()
     resource_names = [f"projects/{PROJECT}"]
     # We add timestamp for making the query faster.
@@ -184,7 +184,7 @@ def test_end_to_end(service_url_auth_token, deployed_service):
         "AND jsonPayload.component=arbitrary-property"
     )
 
-    # Retry a maximum number of 10 times to find results in stackdriver
+    # Retry a maximum number of 10 times to find results in Cloud Logging
     found = False
     for x in range(10):
         iterator = client.list_log_entries(
