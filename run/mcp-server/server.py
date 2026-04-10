@@ -12,17 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 # [START cloudrun_mcpserver]
 import asyncio
 import logging
 import os
-from otel_setup import setup_opentelemetry
 
 from fastmcp import FastMCP 
 
-setup_opentelemetry("mcp-server")
 logger = logging.getLogger(__name__)
 logging.basicConfig(format="[%(levelname)s]: %(message)s", level=logging.INFO)
 
@@ -56,7 +52,8 @@ def subtract(a: int, b: int) -> int:
     logger.info(f">>> 🛠️ Tool: 'subtract' called with numbers '{a}' and '{b}'")
     return a - b
 
-if __name__ == "__main__":
+
+def main():
     logger.info(f"🚀 MCP server started on port {os.getenv('PORT', 8080)}")
     # Could also use 'sse' transport, host="0.0.0.0" required for Cloud Run.
     asyncio.run(
@@ -67,4 +64,7 @@ if __name__ == "__main__":
         )
     )
 
+
+if __name__ == "__main__":
+    main()
 # [END cloudrun_mcpserver]

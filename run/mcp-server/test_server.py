@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from otel_setup import setup_opentelemetry
 
-setup_opentelemetry("test-server")
 
 # [START cloudrun_mcpserver_test]
 import asyncio

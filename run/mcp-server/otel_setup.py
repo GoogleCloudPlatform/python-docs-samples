@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_mcpserver_otel_setup]
+# [START cloudrun_mcpserver_setup_otel]
 import logging
 import google.auth
 import google.auth.transport.requests
@@ -64,4 +64,4 @@ def setup_opentelemetry(service_name: str) -> None:
     logger.info("OpenTelemetry successfully initialized.")
 
 
-# [END cloudrun_mcpserver_otel_setup]
+# [END cloudrun_mcpserver_setup_otel]
