@@ -61,7 +61,7 @@ def test_pubsub_to_gcs():
 
     # Check for output files on GCS.
     gcs_client = GcsIO()
-    files = gcs_client.list_prefix(f"gs://{BUCKET}/pubsub/{UUID}")
+    files = gcs_client.list_files(f"gs://{BUCKET}/pubsub/{UUID}")
     assert len(files) > 0
 
     # Clean up.
