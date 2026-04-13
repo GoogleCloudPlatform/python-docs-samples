@@ -765,11 +765,11 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "fastmcp", specifier = "==3.2.0" },
-    { name = "google-auth" },
-    { name = "grpcio" },
-    { name = "opentelemetry-api" },
-    { name = "opentelemetry-exporter-otlp-proto-grpc" },
-    { name = "opentelemetry-sdk" },
+    { name = "google-auth", specifier = "==2.49.1" },
+    { name = "grpcio", specifier = "==1.80.0" },
+    { name = "opentelemetry-api", specifier = "==1.40.0" },
+    { name = "opentelemetry-exporter-otlp-proto-grpc", specifier = "==1.40.0" },
+    { name = "opentelemetry-sdk", specifier = "==1.40.0" },
 ]
 
 [[package]]
