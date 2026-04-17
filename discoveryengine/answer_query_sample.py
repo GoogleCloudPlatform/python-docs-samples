@@ -69,8 +69,8 @@ def answer_query_sample(
         ignore_non_answer_seeking_query=False,  # Optional: Ignore non-answer seeking query
         ignore_low_relevant_content=False,  # Optional: Return fallback answer when content is not relevant
         model_spec=discoveryengine.AnswerQueryRequest.AnswerGenerationSpec.ModelSpec(
-            # Use the 2026 stable production model for answer generation
-            model_version="gemini-2.5-flash/answer_gen/stable",
+        # Use the 2026 stable production model for answer generation
+        model_version="gemini-2.5-flash/answer_gen/stable",
         ),
         prompt_spec=discoveryengine.AnswerQueryRequest.AnswerGenerationSpec.PromptSpec(
             preamble="Give a detailed answer.",  # Optional: Natural language instructions for customizing the answer.
