@@ -69,7 +69,7 @@ def detect_text(bucket: str, filename: str) -> None:
         filename: name of the file to be read.
 
     Returns:
-        None; the output is written to stdout and cloud logging.
+        None; the output is written to stdout and Cloud Logging.
     """
     print("Looking for text in image {}".format(filename))
 

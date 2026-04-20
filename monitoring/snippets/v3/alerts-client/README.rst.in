@@ -1,11 +1,11 @@
 # This file is used to generate README.rst
 
 product:
-  name: Google Cloud Logging Alerting API
-  short_name: Cloud Logging Alerting API
+  name: Google Cloud Monitoring Alerting API
+  short_name: Cloud Monitoring Alerting API
   url: https://cloud.google.com/monitoring/alerts/
   description: >
-      Cloud Logging Monitoring collects metrics, events, and metadata from Google
+      Google Monitoring collects metrics, events, and metadata from Google
       Cloud Platform, Amazon Web Services (AWS), hosted uptime probes,
       application instrumentation, and a variety of common application
       components including Cassandra, Nginx, Apache Web Server, Elasticsearch
