@@ -122,7 +122,7 @@ def _get_simple_path_and_depth(full_resource_name: str) -> tuple[str, int]:
     return simple_path, depth
 
 
-def discover_and_partition_folders():
+def discover_and_partition_folders() -> None:
     """Discovers all folders in the bucket and partitions them by depth.
 
     Result is stored in the global folders_by_depth dictionary.
@@ -170,7 +170,7 @@ def discover_and_partition_folders():
 
 
 # Defines retriable error codes for the DeleteFolder API call.
-def should_retry(exception):
+def should_retry(exception: Exception) -> int|None:
     if not isinstance(exception, (google_exceptions.GoogleAPICallError, grpc.RpcError)):
         return False
 
@@ -192,7 +192,7 @@ def should_retry(exception):
     return status_code in retryable_grpc_codes
 
 
-def delete_folder(folder_full_resource_name: str):
+def delete_folder(folder_full_resource_name: str) -> None:
     """Attempts to delete a single GCS HNS folder.
 
     Includes retry logic for transient errors.
@@ -247,7 +247,7 @@ def delete_folder(folder_full_resource_name: str):
 
 
 # --- STATS REPORTER THREAD ---
-def stats_reporter_thread_logic(stop_event: threading.Event, start_time: float):
+def stats_reporter_thread_logic(stop_event: threading.Event, start_time: float) -> None:
     """Logs current statistics periodically."""
     logging.info("Stats Reporter: Started.")
     while not stop_event.wait(STATS_REPORT_INTERVAL):
