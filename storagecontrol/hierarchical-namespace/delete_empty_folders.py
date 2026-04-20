@@ -170,7 +170,7 @@ def discover_and_partition_folders() -> None:
 
 
 # Defines retriable error codes for the DeleteFolder API call.
-def should_retry(exception: Exception) -> int|None:
+def should_retry(exception: Exception) -> int | None:
     if not isinstance(exception, (google_exceptions.GoogleAPICallError, grpc.RpcError)):
         return False
 
