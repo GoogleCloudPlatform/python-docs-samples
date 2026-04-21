@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample command-line program for retrieving Cloud Logging Monitoring API V3
+"""Sample command-line program for retrieving Cloud Monitoring API V3
 data.
 
 See README.md for instructions on setting up your development environment.
