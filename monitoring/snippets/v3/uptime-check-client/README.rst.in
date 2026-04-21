@@ -1,15 +1,15 @@
 # This file is used to generate README.rst
 
 product:
-  name: Google Cloud Logging Uptime Checks API
-  short_name: Cloud Logging Uptime Checks API
+  name: Google Cloud Monitoring Uptime Checks API
+  short_name: Cloud Uptime Checks API
   url: https://cloud.google.com/monitoring/uptime-checks/management
   description: >
-      Cloud Logging Monitoring collects metrics, events, and metadata from Google
+      Cloud Monitoring collects metrics, events, and metadata from Google
       Cloud Platform, Amazon Web Services (AWS), hosted uptime probes,
       application instrumentation, and a variety of common application
       components including Cassandra, Nginx, Apache Web Server, Elasticsearch
-      and many others. Cloud Logging's Uptime Checks API allows you to create,
+      and many others. Cloud Monitoring's Uptime Checks API allows you to create,
       delete, and list your project's Uptime Checks.
 
 setup:

@@ -7,7 +7,7 @@ Google Cloud Monitoring Alerting API Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/alerts-client/README.rst
 
 
-This directory contains samples for Google Cloud Monitoring Alerting API. Cloud Logging Monitoring collects metrics, events, and metadata from Google Cloud Platform, Amazon Web Services (AWS), hosted uptime probes, application instrumentation, and a variety of common application components including Cassandra, Nginx, Apache Web Server, Elasticsearch and many others. Cloud Logging's Alerting API allows you to create, delete, and make back up copies of your alert policies.
+This directory contains samples for Google Cloud Monitoring Alerting API. Cloud Monitoring collects metrics, events, and metadata from Google Cloud Platform, Amazon Web Services (AWS), hosted uptime probes, application instrumentation, and a variety of common application components including Cassandra, Nginx, Apache Web Server, Elasticsearch and many others. Cloud Monitoring's Alerting API allows you to create, delete, and make back up copies of your alert policies.
 
 
 

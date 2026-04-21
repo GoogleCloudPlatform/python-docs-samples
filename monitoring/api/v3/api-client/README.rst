@@ -7,7 +7,7 @@ Cloud Monitoring Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/api-client/README.rst
 
 
-This directory contains samples for Cloud Monitoring. `Cloud Monitoring `_ collects metrics, events, and metadata from Google Cloud Platform, Amazon Web Services (AWS), hosted uptime probes, application instrumentation, and a variety of common application components including Cassandra, Nginx, Apache Web Server, Elasticsearch and many others. Cloud Logging ingests that data and generates insights via dashboards, charts, and alerts.
+This directory contains samples for Cloud Monitoring. `Cloud Monitoring `_ collects metrics, events, and metadata from Google Cloud Platform, Amazon Web Services (AWS), hosted uptime probes, application instrumentation, and a variety of common application components including Cassandra, Nginx, Apache Web Server, Elasticsearch and many others. Cloud Monitoring ingests that data and generates insights via dashboards, charts, and alerts.
 
 
 

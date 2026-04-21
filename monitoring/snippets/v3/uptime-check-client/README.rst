@@ -7,7 +7,7 @@ Google Cloud Monitoring Uptime Checks API Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/uptime-check-client/README.rst
 
 
-This directory contains samples for Google Cloud Monitoring Uptime Checks API. Cloud Logging Monitoring collects metrics, events, and metadata from Google Cloud Platform, Amazon Web Services (AWS), hosted uptime probes, application instrumentation, and a variety of common application components including Cassandra, Nginx, Apache Web Server, Elasticsearch and many others. Cloud Logging's Uptime Checks API allows you to create, delete, and list your project's Uptime Checks.
+This directory contains samples for Google Cloud Monitoring Uptime Checks API. Cloud Monitoring collects metrics, events, and metadata from Google Cloud Platform, Amazon Web Services (AWS), hosted uptime probes, application instrumentation, and a variety of common application components including Cassandra, Nginx, Apache Web Server, Elasticsearch and many others. Cloud Monitoring's Uptime Checks API allows you to create, delete, and list your project's Uptime Checks.
 
 
 

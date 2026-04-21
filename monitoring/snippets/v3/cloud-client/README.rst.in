@@ -1,15 +1,15 @@
 # This file is used to generate README.rst
 
 product:
-  name: Google Cloud Logging Monitoring API
-  short_name: Cloud Logging Monitoring API
+  name: Google Cloud Monitoring API
+  short_name: Cloud  Monitoring API
   url: https://cloud.google.com/monitoring/docs/
   description: >
-      Cloud Logging Monitoring collects metrics, events, and metadata from Google
+      Cloud Monitoring collects metrics, events, and metadata from Google
       Cloud Platform, Amazon Web Services (AWS), hosted uptime probes,
       application instrumentation, and a variety of common application
       components including Cassandra, Nginx, Apache Web Server, Elasticsearch
-       and many others. Cloud Logging ingests that data and generates insights
+       and many others. Cloud Monitoring ingests that data and generates insights
        via dashboards, charts, and alerts.
 
 required_api_url: https://console.cloud.google.com/apis/library/monitoring.googleapis.com
