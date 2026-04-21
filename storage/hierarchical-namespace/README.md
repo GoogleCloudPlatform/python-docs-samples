@@ -34,6 +34,4 @@ This script recursively deletes empty folders within a specified GCS bucket and
 3.  **Run:** `bash python3 delete_empty_folders.py`
 
 **Note:** This script *only* deletes folders. Folders containing any objects
-will not be deleted, and a "Failed Precondition" warning will be logged. Creating empty folders
-through the web interface will result in folders that are not truly empty, with a hidden 0 byte
-file. Use CLI instead.
+will not be deleted, and a "Failed Precondition" warning will be logged.
