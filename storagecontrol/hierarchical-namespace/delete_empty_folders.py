@@ -51,7 +51,7 @@ BUCKET_NAME = "YOUR_BUCKET_NAME"
 FOLDER_PREFIX = "YOUR_FOLDER_PREFIX/"
 
 # Max number of concurrent threads to use for deleting folders.
-MAX_WORKERS = 2
+MAX_WORKERS = 32
 
 # How often to log statistics during deletion, in seconds.
 STATS_REPORT_INTERVAL = 5
