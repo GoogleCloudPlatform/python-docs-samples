@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+# [START cloudrun_mcpserver_test_otel]
+from otel_setup import setup_opentelemetry
+setup_opentelemetry("test-server")
 
 # [START cloudrun_mcpserver_test]
 import asyncio
@@ -41,3 +43,4 @@ async def test_server():
 if __name__ == "__main__":
     asyncio.run(test_server())
 # [END cloudrun_mcpserver_test]
+# [END cloudrun_mcpserver_test_otel]

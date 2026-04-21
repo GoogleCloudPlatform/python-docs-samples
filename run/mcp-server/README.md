@@ -203,15 +203,11 @@ SDK is enough to get telemetry data. Learn more about OpenTelemetry instrumentat
     gcloud services enable logging.googleapis.com monitoring.googleapis.com telemetry.googleapis.com
     ```
 
-1.  **Run the instrumented server**:
-    By default, the sample runs `server.py` without instrumentation. To use OpenTelemetry, you need to run `server_otel.py`.
+1.  **Run the server**:
+    The sample is pre-configured to use OpenTelemetry.
     
-    *   **Locally**: Run `uv run server_otel.py`. You can also test it with the instrumented client: `uv run test_server_otel.py`.
-    *   **Cloud Run**: Use `Dockerfile.otel` instead of `Dockerfile`. You can do this by copying it over the default `Dockerfile` before building:
-        ```bash
-        cp Dockerfile.otel Dockerfile
-        ```
-        Then rebuild and redeploy using the instructions in the [Deploy](#deploy) section.
+    *   **Locally**: Run `uv run server.py`. You can test it with the client: `uv run test_server.py`.
+    *   **Cloud Run**: Deploy using the instructions in the [Deploy](#deploy) section. The default `Dockerfile` is already set up to run the instrumented server.
 
 1.  **View Traces**:
     After interacting with the server to generate traces, you can view them in the Google Cloud Console. For detailed instructions, see the [Google Cloud Trace documentation on finding traces](https://docs.cloud.google.com/trace/docs/finding-traces).

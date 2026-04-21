@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_mcpserver_otel]
+from otel_setup import setup_opentelemetry
+setup_opentelemetry("mcp-server")
+
 # [START cloudrun_mcpserver]
 import asyncio
 import logging
@@ -52,8 +56,7 @@ def subtract(a: int, b: int) -> int:
     logger.info(f">>> 🛠️ Tool: 'subtract' called with numbers '{a}' and '{b}'")
     return a - b
 
-
-def main():
+if __name__ == "__main__":
     logger.info(f"🚀 MCP server started on port {os.getenv('PORT', 8080)}")
     # Could also use 'sse' transport, host="0.0.0.0" required for Cloud Run.
     asyncio.run(
@@ -64,7 +67,5 @@ def main():
         )
     )
 
-
-if __name__ == "__main__":
-    main()
 # [END cloudrun_mcpserver]
+# [END cloudrun_mcpserver_otel]
