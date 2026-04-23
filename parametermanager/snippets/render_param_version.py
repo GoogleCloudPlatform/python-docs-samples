@@ -32,7 +32,7 @@ def render_param_version(
         project_id (str): The ID of the project where the parameter is located.
         parameter_id (str): The ID of the parameter for
         which version details are to be rendered.
-        version_id (str): The ID of the version to be rendered.
+        version_id (str): The ID of the version or alias (e.g. "latest") to be rendered.
 
     Returns:
         parametermanager_v1.RenderParameterVersionResponse: An object
