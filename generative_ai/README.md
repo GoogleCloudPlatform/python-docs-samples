@@ -39,7 +39,7 @@ Browse the folders below to find the Generative AI capabilities you're intereste
    </td>
    <td><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/extensions/overview">https://cloud.google.com/vertex-ai/generative-ai/docs/extensions/overview</a>
    </td>
-   <td>Learn how to connect foundation models to external systems. These samples cover how to register and use Vertex AI Extensions to allow your models to interact with third-party APIs.
+   <td>These samples show how to connect Gemini to external APIs and databases so your models can retrieve live data and execute real-world actions. **Note** that as Google Cloud transitions to the Gemini Enterprise Agent Platform, standalone Vertex AI Extensions are evolving into *Tools* managed within the centralized Agent Registry. While these examples teach the core mechanics of model-to-API communication, future production applications should adopt the new Agent Platform architecture..
    </td>
   </tr>
   <tr>
