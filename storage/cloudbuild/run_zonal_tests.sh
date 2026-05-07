@@ -1,4 +1,4 @@
-
+#!/bin/bash
 set -euxo pipefail
 echo '--- Installing git and cloning repository on VM ---'
 sudo apt-get update && sudo apt-get install -y git python3-pip python3-venv
@@ -6,10 +6,10 @@ sudo apt-get update && sudo apt-get install -y git python3-pip python3-venv
 # Clone the repository and checkout the specific commit from the build trigger.
 git clone --no-checkout --depth 1 --sparse --filter=blob:none https://github.com/googleapis/python-docs-samples.git
 cd python-docs-samples
-git sparse-checkout set main/storage
+git sparse-checkout set storage
 git fetch origin "refs/pull/${_PR_NUMBER}/head"
 git checkout ${COMMIT_SHA}
-cd main/storage
+cd storage
 
 
 echo '--- Installing Python and dependencies on VM ---'
