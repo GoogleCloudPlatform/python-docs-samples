@@ -20,7 +20,7 @@ echo 'Install testing libraries explicitly, as they are not in setup.py'
 pip install --upgrade pip
 pip install pytest pytest-timeout pytest-subtests pytest-asyncio
 pip install google-cloud-testutils google-cloud-kms
-pip install -e .
+pip install google-cloud-storage[grpc,testing]
 
 echo '--- Setting up environment variables on VM ---'
 export ZONAL_BUCKET=${_ZONAL_BUCKET}
