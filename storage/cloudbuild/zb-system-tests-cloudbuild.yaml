@@ -98,7 +98,7 @@ steps:
           sleep 15
         done
         # copy the script to the VM
-        gcloud compute scp main/storage/cloudbuild/run_zonal_tests.sh ${_VM_NAME}:~ --zone=${_ZONE} --internal-ip --ssh-key-file=/workspace/.ssh/google_compute_engine
+        gcloud compute scp storage/cloudbuild/run_zonal_tests.sh ${_VM_NAME}:~ --zone=${_ZONE} --internal-ip --ssh-key-file=/workspace/.ssh/google_compute_engine
 
         # Execute the script on the VM via SSH.
         # Capture the exit code to ensure cleanup happens before the build fails.
