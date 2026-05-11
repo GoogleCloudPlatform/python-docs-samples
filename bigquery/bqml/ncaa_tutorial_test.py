@@ -71,9 +71,7 @@ def test_ncaa_tutorial(delete_dataset):
         WHERE
             # remove the game to predict
             game_id != 'f1063e80-23c7-486b-9a5e-faa52beb2d83'
-    """.format(
-        dataset_id
-    )
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_create_model]
@@ -84,9 +82,7 @@ def test_ncaa_tutorial(delete_dataset):
             *
         FROM
             ML.TRAINING_INFO(MODEL `{}.ncaa_model`)
-    """.format(
-        dataset_id
-    )
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_get_training_statistics]
@@ -104,9 +100,7 @@ def test_ncaa_tutorial(delete_dataset):
         FROM
             ML.EVALUATE(MODEL `{0}.ncaa_model`,
                 TABLE eval_table)
-    """.format(
-        dataset_id
-    )
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_evaluate_model]
@@ -139,9 +133,7 @@ def test_ncaa_tutorial(delete_dataset):
                 game_to_predict) AS truth
         ON
             predict.game_id = truth.game_id
-    """.format(
-        dataset_id
-    )
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_predict_outcomes]

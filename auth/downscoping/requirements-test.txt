@@ -1,3 +1,2 @@
-pytest==8.2.0
-google-cloud-storage==2.9.0; python_version < '3.7'
-google-cloud-storage==2.9.0; python_version > '3.6'
+pytest==9.0.3
+google-cloud-storage==3.10.1; python_version > '3.9'

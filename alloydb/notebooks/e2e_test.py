@@ -93,9 +93,9 @@ async def test_embeddings_batch_processing(
         skip_shell_commands=True,
         replace={
             (
-                "password = input(\"Please provide "
+                'password = input("Please provide '
                 "a password to be used for 'postgres' "
-                "database user: \")"
+                'database user: ")'
             ): f"password = '{password}'",
             (
                 "await create_db("
@@ -141,14 +141,12 @@ async def test_embeddings_batch_processing(
             # Get the table back to the original state
             await conn.execute(
                 sqlalchemy.text(
-                    f"UPDATE {table_name} set "
-                    f"analysis_embedding = NULL"
+                    f"UPDATE {table_name} set " f"analysis_embedding = NULL"
                 )
             )
             await conn.execute(
                 sqlalchemy.text(
-                    f"UPDATE {table_name} set "
-                    f"overview_embedding = NULL"
+                    f"UPDATE {table_name} set " f"overview_embedding = NULL"
                 )
             )
             await conn.commit()

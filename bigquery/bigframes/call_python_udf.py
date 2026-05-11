@@ -21,13 +21,13 @@ import bigframes.pandas as bpd
 import pandas as pd
 import pyarrow as pa
 
-
 # Using partial ordering mode enables more efficient query optimizations.
 bpd.options.bigquery.ordering_mode = "partial"
 
 
 def call_python_udf(
-    project_id: str, location: str,
+    project_id: str,
+    location: str,
 ) -> Tuple[pd.Series, bpd.Series]:
     # Set the billing project to use for queries. This step is optional, as the
     # project can be inferred from your environment in many cases.
@@ -39,30 +39,24 @@ def call_python_udf(
     # Create a sample series.
     xml_series = pd.Series(
         [
-            textwrap.dedent(
-                """
+            textwrap.dedent("""
                 <book id="1">
                     <title>The Great Gatsby</title>
                     <author>F. Scott Fitzgerald</author>
                 </book>
-                """
-            ),
-            textwrap.dedent(
-                """
+                """),
+            textwrap.dedent("""
                 <book id="2">
                     <title>1984</title>
                     <author>George Orwell</author>
                 </book>
-                """
-            ),
-            textwrap.dedent(
-                """
+                """),
+            textwrap.dedent("""
                 <book id="3">
                     <title>Brave New World</title>
                     <author>Aldous Huxley</author>
                 </book>
-                """
-            ),
+                """),
         ],
         dtype=pd.ArrowDtype(pa.string()),
     )

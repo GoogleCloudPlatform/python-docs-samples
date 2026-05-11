@@ -19,6 +19,8 @@ import call_python_udf
 
 def test_call_python_udf(project_id: str, location: str) -> None:
     bpd.close_session()
-    pd_result, bf_result = call_python_udf.call_python_udf(project_id=project_id, location=location)
+    pd_result, bf_result = call_python_udf.call_python_udf(
+        project_id=project_id, location=location
+    )
     assert len(pd_result.index) == 3
     assert len(bf_result.index) == 3

@@ -1,2 +1,2 @@
-google-auth==2.19.1
-requests==2.32.4
+google-auth==2.52.0; python_version > '3.9'
+requests==2.33.1; python_version > '3.9'
