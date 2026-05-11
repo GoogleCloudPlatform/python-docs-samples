@@ -1,2 +1,3 @@
 # samples/snippets should be runnable with no "extras"
 google-cloud-bigquery==3.29.0
+pyOpenSSL==26.2.0
