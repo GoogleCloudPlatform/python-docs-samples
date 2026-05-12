@@ -19,7 +19,6 @@ import socket
 from flask import Flask, request
 from google.cloud import datastore
 
-
 app = Flask(__name__)
 
 
@@ -78,9 +77,7 @@ def server_error(e):
         """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
-    """.format(
-            e
-        ),
+    """.format(e),
         500,
     )
 

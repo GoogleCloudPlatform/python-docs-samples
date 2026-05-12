@@ -524,7 +524,7 @@ pytest-instafail==0.5.0
 pytest-rerunfailures==12.0
 pytest-timeouts==1.2.1
 pytest-xdist==3.3.1
-pytest==7.4.0
+pytest==9.0.3
 python-arango==7.5.8
 python-daemon==3.0.1
 python-dateutil==2.8.2

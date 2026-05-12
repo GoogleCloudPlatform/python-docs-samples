@@ -19,7 +19,6 @@ import os
 from flask import Flask
 import requests
 
-
 app = Flask(__name__)
 
 
@@ -63,9 +62,7 @@ def server_error(e):
         """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
-    """.format(
-            e
-        ),
+    """.format(e),
         500,
     )
 

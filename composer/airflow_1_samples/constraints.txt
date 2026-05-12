@@ -263,7 +263,7 @@ pysftp==0.2.9
 pytest-cov==2.10.1
 pytest-instafail==0.4.2
 pytest-timeouts==1.2.1
-pytest==5.4.3
+pytest==9.0.3
 python-daemon==2.2.4
 python-dateutil==2.8.1
 python-editor==1.0.4

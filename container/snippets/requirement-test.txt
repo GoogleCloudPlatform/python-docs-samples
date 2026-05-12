@@ -13,5 +13,5 @@
 # limitations under the License.
 
 backoff==1.11.1
-pytest==7.0.0
+pytest==9.0.3
 google-api-core=2.5.0
