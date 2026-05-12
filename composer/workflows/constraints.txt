@@ -577,7 +577,7 @@ pytest-mock==3.14.0
 pytest-rerunfailures==14.0
 pytest-timeouts==1.2.1
 pytest-xdist==3.6.1
-pytest==7.4.4
+pytest==9.0.3
 python-arango==8.0.0
 python-daemon==3.0.1
 python-dateutil==2.9.0.post0
