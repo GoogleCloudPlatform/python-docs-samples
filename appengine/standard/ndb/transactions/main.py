@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import cgi
 import random
 import urllib
-
-import cgi
 
 import flask
 
 # [START gae_ndb_transactions_import]
 from google.appengine.api import taskqueue
 from google.appengine.ext import ndb
+
 # [END gae_ndb_transactions_import]
 
 
@@ -81,6 +81,8 @@ def insert_if_absent(note_key, note):
         note.put()
         return True
     return False
+
+
 # [END gae_ndb_transactions_insert_standard]
 
 

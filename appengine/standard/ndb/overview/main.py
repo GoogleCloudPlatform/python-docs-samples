@@ -20,15 +20,14 @@ This sample is used on this page:
 For more information, see README.md
 """
 
+import cgi
+
 # [START gae_ndb_overview]
 import textwrap
 import urllib
 
-import cgi
-
-from google.appengine.ext import ndb
-
 import webapp2
+from google.appengine.ext import ndb
 
 
 # [START gae_ndb_overview_greeting]

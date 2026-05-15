@@ -17,19 +17,18 @@ import os
 import tempfile
 import uuid
 
+import pytest
+import storage_download_encrypted_file
+import storage_generate_encryption_key
+import storage_get_bucket_encryption_enforcement_config
+import storage_object_csek_to_cmek
+import storage_rotate_encryption_key
+import storage_set_bucket_encryption_enforcement_config
+import storage_update_bucket_encryption_enforcement_config
+import storage_upload_encrypted_file
 from google.api_core.exceptions import NotFound
 from google.cloud import storage
 from google.cloud.storage import Blob
-import pytest
-
-import storage_download_encrypted_file
-import storage_generate_encryption_key
-import storage_object_csek_to_cmek
-import storage_rotate_encryption_key
-import storage_upload_encrypted_file
-import storage_get_bucket_encryption_enforcement_config
-import storage_set_bucket_encryption_enforcement_config
-import storage_update_bucket_encryption_enforcement_config
 from google.cloud.storage.bucket import EncryptionEnforcementConfig
 
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
