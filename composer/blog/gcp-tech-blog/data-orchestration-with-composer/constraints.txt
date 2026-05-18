@@ -64,7 +64,7 @@ SecretStorage==3.3.3
 Shapely==1.8.5.post1
 Sphinx==5.3.0
 WTForms==3.0.1
-Werkzeug==2.2.3
+Werkzeug==3.1.8; python_version >= '3.9'
 adal==1.2.7
 aiobotocore==2.5.2
 aiofiles==23.1.0
