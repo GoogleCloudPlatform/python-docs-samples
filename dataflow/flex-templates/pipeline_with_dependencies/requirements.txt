@@ -275,7 +275,7 @@ referencing==0.33.0
     #   jsonschema-specifications
 regex==2023.12.25
     # via apache-beam
-requests==2.31.0
+requests==2.34.2; python_version >= '3.10'
     # via
     #   apache-beam
     #   google-api-core

@@ -1,2 +1,2 @@
-requests==2.31.0
+requests==2.34.2; python_version >= '3.10'
 functions-framework==3.9.2
