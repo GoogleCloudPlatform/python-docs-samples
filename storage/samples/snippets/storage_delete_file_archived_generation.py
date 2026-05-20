@@ -30,9 +30,7 @@ def delete_file_archived_generation(bucket_name, blob_name, generation):
 
     bucket = storage_client.get_bucket(bucket_name)
     bucket.delete_blob(blob_name, generation=generation)
-    print(
-        f"Generation {generation} of blob {blob_name} was deleted from {bucket_name}"
-    )
+    print(f"Generation {generation} of blob {blob_name} was deleted from {bucket_name}")
 
 
 # [END storage_delete_file_archived_generation]
@@ -40,7 +38,5 @@ def delete_file_archived_generation(bucket_name, blob_name, generation):
 
 if __name__ == "__main__":
     delete_file_archived_generation(
-        bucket_name=sys.argv[1],
-        blob_name=sys.argv[2],
-        generation=sys.argv[3]
+        bucket_name=sys.argv[1], blob_name=sys.argv[2], generation=sys.argv[3]
     )

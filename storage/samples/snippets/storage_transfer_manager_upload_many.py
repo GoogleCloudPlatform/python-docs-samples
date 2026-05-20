@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 # [START storage_transfer_manager_upload_many]
 def upload_many_blobs_with_transfer_manager(
     bucket_name, filenames, source_directory="", workers=8
@@ -64,4 +65,6 @@ def upload_many_blobs_with_transfer_manager(
             print("Failed to upload {} due to exception: {}".format(name, result))
         else:
             print("Uploaded {} to {}.".format(name, bucket.name))
+
+
 # [END storage_transfer_manager_upload_many]

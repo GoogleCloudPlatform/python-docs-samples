@@ -17,7 +17,6 @@ import uuid
 
 from google.api_core.exceptions import NotFound
 from google.cloud import storage
-
 import pytest
 
 import storage_create_bucket_notifications
@@ -85,14 +84,18 @@ def bucket_w_notification(storage_client, _notification_topic):
 
 
 def test_list_bucket_notifications(bucket_w_notification, capsys):
-    storage_list_bucket_notifications.list_bucket_notifications(bucket_w_notification.name)
+    storage_list_bucket_notifications.list_bucket_notifications(
+        bucket_w_notification.name
+    )
     out, _ = capsys.readouterr()
     assert "Notification ID" in out
 
 
 def test_print_pubsub_bucket_notification(bucket_w_notification, capsys):
     notification_id = 1
-    storage_print_pubsub_bucket_notification.print_pubsub_bucket_notification(bucket_w_notification.name, notification_id)
+    storage_print_pubsub_bucket_notification.print_pubsub_bucket_notification(
+        bucket_w_notification.name, notification_id
+    )
     out, _ = capsys.readouterr()
     assert "Notification ID: 1" in out
 
@@ -102,7 +105,9 @@ def test_create_bucket_notifications(bucket_w_notification, capsys):
     assert bucket_w_notification.notification(notification_id=1).exists() is True
     assert bucket_w_notification.notification(notification_id=2).exists() is False
 
-    storage_create_bucket_notifications.create_bucket_notifications(bucket_w_notification.name, _topic_name)
+    storage_create_bucket_notifications.create_bucket_notifications(
+        bucket_w_notification.name, _topic_name
+    )
     out, _ = capsys.readouterr()
     assert "Successfully created notification" in out
     # test succesfully creates new bucket notification with ID 2
@@ -112,9 +117,17 @@ def test_create_bucket_notifications(bucket_w_notification, capsys):
 def test_delete_bucket_notification(bucket_w_notification, capsys):
     # test bucket notification ID 1 was created in the fixture
     notification_id = 1
-    assert bucket_w_notification.notification(notification_id=notification_id).exists() is True
+    assert (
+        bucket_w_notification.notification(notification_id=notification_id).exists()
+        is True
+    )
 
-    storage_delete_bucket_notification.delete_bucket_notification(bucket_w_notification.name, notification_id)
+    storage_delete_bucket_notification.delete_bucket_notification(
+        bucket_w_notification.name, notification_id
+    )
     out, _ = capsys.readouterr()
     assert "Successfully deleted notification" in out
-    assert bucket_w_notification.notification(notification_id=notification_id).exists() is False
+    assert (
+        bucket_w_notification.notification(notification_id=notification_id).exists()
+        is False
+    )

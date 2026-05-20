@@ -46,8 +46,11 @@ def print_pubsub_bucket_notification(bucket_name, notification_id):
     print(f"Etag: {notification.etag}")
     print(f"Self Link: {notification.self_link}")
 
+
 # [END storage_print_pubsub_bucket_notification]
 
 
 if __name__ == "__main__":
-    print_pubsub_bucket_notification(bucket_name=sys.argv[1], notification_id=sys.argv[2])
+    print_pubsub_bucket_notification(
+        bucket_name=sys.argv[1], notification_id=sys.argv[2]
+    )

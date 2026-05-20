@@ -29,9 +29,7 @@ def get_key(access_id, project_id):
 
     storage_client = storage.Client(project=project_id)
 
-    hmac_key = storage_client.get_hmac_key_metadata(
-        access_id, project_id=project_id
-    )
+    hmac_key = storage_client.get_hmac_key_metadata(access_id, project_id=project_id)
 
     print("The HMAC key metadata is:")
     print(f"Service Account Email: {hmac_key.service_account_email}")

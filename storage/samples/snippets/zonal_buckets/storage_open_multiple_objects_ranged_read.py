@@ -20,13 +20,12 @@ Example usage:
     --bucket_name <BUCKET_NAME> \
     --object_names <OBJECT_1> <OBJECT_2> <OBJECT_3>```
 """
+
 import argparse
 import asyncio
 from io import BytesIO
 
-from google.cloud.storage.asyncio.async_grpc_client import (
-    AsyncGrpcClient,
-)
+from google.cloud.storage.asyncio.async_grpc_client import AsyncGrpcClient
 from google.cloud.storage.asyncio.async_multi_range_downloader import (
     AsyncMultiRangeDownloader,
 )

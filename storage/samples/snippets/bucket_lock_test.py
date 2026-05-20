@@ -16,6 +16,7 @@ import time
 import uuid
 
 from google.cloud import storage
+
 import pytest
 
 import storage_disable_default_event_based_hold
@@ -29,7 +30,6 @@ import storage_remove_retention_policy
 import storage_set_event_based_hold
 import storage_set_retention_policy
 import storage_set_temporary_hold
-
 
 BLOB_NAME = "storage_snippets_test_sigil"
 BLOB_CONTENT = "Hello, is it me you're looking for?"
@@ -50,9 +50,7 @@ def bucket():
 
 
 def test_retention_policy_no_lock(bucket, capsys):
-    storage_set_retention_policy.set_retention_policy(
-        bucket.name, RETENTION_POLICY
-    )
+    storage_set_retention_policy.set_retention_policy(bucket.name, RETENTION_POLICY)
     bucket.reload()
 
     assert bucket.retention_period is RETENTION_POLICY
@@ -79,9 +77,7 @@ def test_retention_policy_no_lock(bucket, capsys):
 
 
 def test_retention_policy_lock(bucket, capsys):
-    storage_set_retention_policy.set_retention_policy(
-        bucket.name, RETENTION_POLICY
-    )
+    storage_set_retention_policy.set_retention_policy(bucket.name, RETENTION_POLICY)
     bucket.reload()
     assert bucket.retention_policy_locked is None
 
@@ -95,33 +91,19 @@ def test_retention_policy_lock(bucket, capsys):
 
 
 def test_enable_disable_bucket_default_event_based_hold(bucket, capsys):
-    storage_get_default_event_based_hold.get_default_event_based_hold(
-        bucket.name
-    )
+    storage_get_default_event_based_hold.get_default_event_based_hold(bucket.name)
     out, _ = capsys.readouterr()
-    assert (
-        f"Default event-based hold is not enabled for {bucket.name}"
-        in out
-    )
-    assert (
-        f"Default event-based hold is enabled for {bucket.name}"
-        not in out
-    )
+    assert f"Default event-based hold is not enabled for {bucket.name}" in out
+    assert f"Default event-based hold is enabled for {bucket.name}" not in out
 
-    storage_enable_default_event_based_hold.enable_default_event_based_hold(
-        bucket.name
-    )
+    storage_enable_default_event_based_hold.enable_default_event_based_hold(bucket.name)
     bucket.reload()
 
     assert bucket.default_event_based_hold is True
 
-    storage_get_default_event_based_hold.get_default_event_based_hold(
-        bucket.name
-    )
+    storage_get_default_event_based_hold.get_default_event_based_hold(bucket.name)
     out, _ = capsys.readouterr()
-    assert (
-        f"Default event-based hold is enabled for {bucket.name}" in out
-    )
+    assert f"Default event-based hold is enabled for {bucket.name}" in out
 
     # Changes to the bucket will be readable immediately after writing,
     # but configuration changes may take time to propagate.
@@ -131,9 +113,7 @@ def test_enable_disable_bucket_default_event_based_hold(bucket, capsys):
     blob.upload_from_string(BLOB_CONTENT)
     assert blob.event_based_hold is True
 
-    storage_release_event_based_hold.release_event_based_hold(
-        bucket.name, blob.name
-    )
+    storage_release_event_based_hold.release_event_based_hold(bucket.name, blob.name)
     blob.reload()
     assert blob.event_based_hold is False
 
@@ -153,9 +133,7 @@ def test_enable_disable_temporary_hold(bucket):
     blob.reload()
     assert blob.temporary_hold is True
 
-    storage_release_temporary_hold.release_temporary_hold(
-        bucket.name, blob.name
-    )
+    storage_release_temporary_hold.release_temporary_hold(bucket.name, blob.name)
     blob.reload()
     assert blob.temporary_hold is False
 
@@ -169,8 +147,6 @@ def test_enable_disable_event_based_hold(bucket):
     blob.reload()
     assert blob.event_based_hold is True
 
-    storage_release_event_based_hold.release_event_based_hold(
-        bucket.name, blob.name
-    )
+    storage_release_event_based_hold.release_event_based_hold(bucket.name, blob.name)
     blob.reload()
     assert blob.event_based_hold is False

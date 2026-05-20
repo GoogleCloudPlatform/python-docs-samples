@@ -24,18 +24,18 @@ Sample that exports OpenTelemetry Traces collected from the Storage client to Cl
 def run_quickstart(bucket_name, blob_name, data):
     # [START storage_enable_otel_tracing]
 
+    from google.cloud import storage
     from opentelemetry import trace
     from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+
+    # Optional: Enable traces emitted from the requests HTTP library.
+    from opentelemetry.instrumentation.requests import RequestsInstrumentor
     from opentelemetry.resourcedetector.gcp_resource_detector import (
         GoogleCloudResourceDetector,
     )
     from opentelemetry.sdk.trace import TracerProvider
     from opentelemetry.sdk.trace.export import BatchSpanProcessor
     from opentelemetry.sdk.trace.sampling import ALWAYS_ON
-    # Optional: Enable traces emitted from the requests HTTP library.
-    from opentelemetry.instrumentation.requests import RequestsInstrumentor
-
-    from google.cloud import storage
 
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
@@ -74,7 +74,11 @@ def run_quickstart(bucket_name, blob_name, data):
         print(f"{blob_name} uploaded to {bucket_name}.")
 
         blob.download_as_bytes()
-        print("Downloaded storage object {} from bucket {}.".format(blob_name, bucket_name))
+        print(
+            "Downloaded storage object {} from bucket {}.".format(
+                blob_name, bucket_name
+            )
+        )
 
     # [END storage_enable_otel_tracing]
 

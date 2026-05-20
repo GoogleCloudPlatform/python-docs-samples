@@ -22,7 +22,6 @@ from google.cloud.storage.asyncio.async_appendable_object_writer import (
 )
 from google.cloud.storage.asyncio.async_grpc_client import AsyncGrpcClient
 
-
 # [START storage_create_and_write_appendable_object]
 
 

@@ -28,7 +28,9 @@ def create_bucket_object_retention(bucket_name):
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(bucket_name, enable_object_retention=True)
 
-    print(f"Created bucket {bucket_name} with object retention enabled setting: {bucket.object_retention_mode}")
+    print(
+        f"Created bucket {bucket_name} with object retention enabled setting: {bucket.object_retention_mode}"
+    )
 
 
 # [END storage_create_bucket_with_object_retention]

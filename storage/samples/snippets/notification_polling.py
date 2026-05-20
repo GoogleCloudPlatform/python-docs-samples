@@ -78,7 +78,9 @@ def summarize(message):
     if "overwroteGeneration" in attributes:
         description += f"\tOverwrote generation: {attributes['overwroteGeneration']}\n"
     if "overwrittenByGeneration" in attributes:
-        description += f"\tOverwritten by generation: {attributes['overwrittenByGeneration']}\n"
+        description += (
+            f"\tOverwritten by generation: {attributes['overwrittenByGeneration']}\n"
+        )
 
     payload_format = attributes["payloadFormat"]
     if payload_format == "JSON_API_V1":
@@ -101,9 +103,7 @@ def summarize(message):
 def poll_notifications(project, subscription_name):
     """Polls a Cloud Pub/Sub subscription for new GCS events for display."""
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(
-        project, subscription_name
-    )
+    subscription_path = subscriber.subscription_path(project, subscription_name)
 
     def callback(message):
         print(f"Received message:\n{summarize(message)}")
@@ -126,8 +126,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "project", help="The ID of the project that owns the subscription"
     )
-    parser.add_argument(
-        "subscription", help="The ID of the Pub/Sub subscription"
-    )
+    parser.add_argument("subscription", help="The ID of the Pub/Sub subscription")
     args = parser.parse_args()
     poll_notifications(args.project, args.subscription)

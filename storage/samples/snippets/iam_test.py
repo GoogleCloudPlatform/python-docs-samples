@@ -55,8 +55,8 @@ def bucket():
 def public_bucket():
     # The new projects don't allow to make a bucket available to public, so
     # we need to use the old main project for now.
-    original_value = os.environ['GOOGLE_CLOUD_PROJECT']
-    os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['MAIN_GOOGLE_CLOUD_PROJECT']
+    original_value = os.environ["GOOGLE_CLOUD_PROJECT"]
+    os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["MAIN_GOOGLE_CLOUD_PROJECT"]
     bucket = None
     while bucket is None or bucket.exists():
         storage_client = storage.Client()
@@ -68,7 +68,7 @@ def public_bucket():
     time.sleep(3)
     bucket.delete(force=True)
     # Set the value back.
-    os.environ['GOOGLE_CLOUD_PROJECT'] = original_value
+    os.environ["GOOGLE_CLOUD_PROJECT"] = original_value
 
 
 def test_view_bucket_iam_members(capsys, bucket):
@@ -110,7 +110,8 @@ def test_add_bucket_conditional_iam_binding(bucket):
 
 def test_remove_bucket_iam_member(public_bucket):
     storage_remove_bucket_iam_member.remove_bucket_iam_member(
-        public_bucket.name, ROLE, MEMBER)
+        public_bucket.name, ROLE, MEMBER
+    )
 
     policy = public_bucket.get_iam_policy(requested_policy_version=3)
     assert not any(
@@ -139,7 +140,9 @@ def test_remove_bucket_conditional_iam_binding(bucket):
 def test_set_bucket_public_iam(public_bucket):
     # The test project has org policy restricting identities by domain.
     # Testing "domain:google.com" instead of "allUsers"
-    storage_set_bucket_public_iam.set_bucket_public_iam(public_bucket.name, ["domain:google.com"])
+    storage_set_bucket_public_iam.set_bucket_public_iam(
+        public_bucket.name, ["domain:google.com"]
+    )
     policy = public_bucket.get_iam_policy(requested_policy_version=3)
 
     assert any(

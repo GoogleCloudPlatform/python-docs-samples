@@ -18,18 +18,16 @@ Sample application that demonstrates how to use the App Engine Memcache API.
 For more information, see README.md.
 """
 
+import cgi
+
 # [START gae_memcache_guestbook_all]
 import logging
 import urllib
 
-import cgi
 import cStringIO
-
-from google.appengine.api import memcache
-from google.appengine.api import users
-from google.appengine.ext import ndb
-
 import webapp2
+from google.appengine.api import memcache, users
+from google.appengine.ext import ndb
 
 
 class Greeting(ndb.Model):
@@ -98,6 +96,7 @@ class MainPage(webapp2.RequestHandler):
             except ValueError:
                 logging.error("Memcache set failed - data larger than 1MB")
         return greetings
+
     # [END gae_memcache_guestbook_check_memcache]
 
     # [START gae_memcache_guestbook_query_datastore]
@@ -130,6 +129,7 @@ class MainPage(webapp2.RequestHandler):
                 "<blockquote>{}</blockquote>".format(cgi.escape(greeting.content))
             )
         return output.getvalue()
+
     # [END gae_memcache_guestbook_query_datastore]
 
 

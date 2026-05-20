@@ -17,11 +17,13 @@
 
 # [START storage_upload_encrypted_file]
 import base64
+
 # [END storage_upload_encrypted_file]
 import sys
-# [START storage_upload_encrypted_file]
 
 from google.cloud import storage
+
+# [START storage_upload_encrypted_file]
 
 
 def upload_encrypted_blob(
@@ -48,9 +50,7 @@ def upload_encrypted_blob(
     # 32 bytes. Since it's passed in as a base64 encoded string, it needs
     # to be decoded.
     encryption_key = base64.b64decode(base64_encryption_key)
-    blob = bucket.blob(
-        destination_blob_name, encryption_key=encryption_key
-    )
+    blob = bucket.blob(destination_blob_name, encryption_key=encryption_key)
 
     # Optional: set a generation-match precondition to avoid potential race conditions
     # and data corruptions. The request to upload is aborted if the object's
@@ -60,11 +60,11 @@ def upload_encrypted_blob(
     # generation-match precondition using its generation number.
     generation_match_precondition = 0
 
-    blob.upload_from_filename(source_file_name, if_generation_match=generation_match_precondition)
-
-    print(
-        f"File {source_file_name} uploaded to {destination_blob_name}."
+    blob.upload_from_filename(
+        source_file_name, if_generation_match=generation_match_precondition
     )
+
+    print(f"File {source_file_name} uploaded to {destination_blob_name}.")
 
 
 # [END storage_upload_encrypted_file]

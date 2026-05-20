@@ -34,9 +34,7 @@ def restore_soft_deleted_object(bucket_name, blob_name, blob_generation):
     # exists with the same name.
     bucket.restore_blob(blob_name, generation=blob_generation)
 
-    print(
-        f"Soft-deleted object {blob_name} is restored in the bucket {bucket_name}"
-    )
+    print(f"Soft-deleted object {blob_name} is restored in the bucket {bucket_name}")
 
 
 # [END storage_restore_object]

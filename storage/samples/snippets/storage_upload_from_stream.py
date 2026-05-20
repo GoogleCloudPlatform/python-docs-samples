@@ -43,8 +43,7 @@ def upload_blob_from_stream(bucket_name, file_obj, destination_blob_name):
     # Upload data from the stream to your bucket.
     blob.upload_from_file(file_obj)
 
-    print(
-        f"Stream data uploaded to {destination_blob_name} in bucket {bucket_name}."
-    )
+    print(f"Stream data uploaded to {destination_blob_name} in bucket {bucket_name}.")
+
 
 # [END storage_stream_file_upload]

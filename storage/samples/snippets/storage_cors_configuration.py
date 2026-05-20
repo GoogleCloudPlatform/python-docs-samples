@@ -29,11 +29,9 @@ def cors_configuration(bucket_name):
     bucket.cors = [
         {
             "origin": ["*"],
-            "responseHeader": [
-                "Content-Type",
-                "x-goog-resumable"],
-            "method": ['PUT', 'POST'],
-            "maxAgeSeconds": 3600
+            "responseHeader": ["Content-Type", "x-goog-resumable"],
+            "method": ["PUT", "POST"],
+            "maxAgeSeconds": 3600,
         }
     ]
     bucket.patch()

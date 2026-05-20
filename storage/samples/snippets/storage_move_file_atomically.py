@@ -37,9 +37,7 @@ def move_object(bucket_name: str, blob_name: str, new_blob_name: str) -> None:
     blob_to_move = bucket.blob(blob_name)
 
     # Use move_blob to perform an efficient, server-side move.
-    moved_blob = bucket.move_blob(
-        blob=blob_to_move, new_name=new_blob_name
-    )
+    moved_blob = bucket.move_blob(blob=blob_to_move, new_name=new_blob_name)
 
     print(f"Blob {blob_to_move.name} has been moved to {moved_blob.name}.")
 

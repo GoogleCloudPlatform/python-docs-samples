@@ -17,9 +17,9 @@
 
 import sys
 
-# [START storage_get_soft_deleted_bucket]
-
 from google.cloud import storage
+
+# [START storage_get_soft_deleted_bucket]
 
 
 def get_soft_deleted_bucket(bucket_name, generation):
@@ -34,7 +34,9 @@ def get_soft_deleted_bucket(bucket_name, generation):
 
     """
     storage_client = storage.Client()
-    bucket = storage_client.get_bucket(bucket_name, soft_deleted=True, generation=generation)
+    bucket = storage_client.get_bucket(
+        bucket_name, soft_deleted=True, generation=generation
+    )
 
     print(f"ID: {bucket.id}")
     print(f"Name: {bucket.name}")

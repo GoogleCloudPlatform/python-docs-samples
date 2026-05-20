@@ -38,7 +38,10 @@ def delete_bucket_notification(bucket_name, notification_id):
     notification = bucket.notification(notification_id=notification_id)
     notification.delete()
 
-    print(f"Successfully deleted notification with ID {notification_id} for bucket {bucket_name}")
+    print(
+        f"Successfully deleted notification with ID {notification_id} for bucket {bucket_name}"
+    )
+
 
 # [END storage_delete_bucket_notification]
 

@@ -39,14 +39,10 @@ def remove_bucket_default_owner(bucket_name, user_email):
     bucket.default_object_acl.user(user_email).revoke_owner()
     bucket.default_object_acl.save()
 
-    print(
-        f"Removed user {user_email} from the default acl of bucket {bucket_name}."
-    )
+    print(f"Removed user {user_email} from the default acl of bucket {bucket_name}.")
 
 
 # [END storage_remove_bucket_default_owner]
 
 if __name__ == "__main__":
-    remove_bucket_default_owner(
-        bucket_name=sys.argv[1], user_email=sys.argv[2]
-    )
+    remove_bucket_default_owner(bucket_name=sys.argv[1], user_email=sys.argv[2])

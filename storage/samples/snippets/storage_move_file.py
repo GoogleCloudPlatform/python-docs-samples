@@ -20,7 +20,12 @@ import sys
 from google.cloud import storage
 
 
-def move_blob(bucket_name, blob_name, destination_bucket_name, destination_blob_name,):
+def move_blob(
+    bucket_name,
+    blob_name,
+    destination_bucket_name,
+    destination_blob_name,
+):
     """Moves a blob from one bucket to another with a new name."""
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
@@ -47,7 +52,10 @@ def move_blob(bucket_name, blob_name, destination_bucket_name, destination_blob_
     destination_generation_match_precondition = 0
 
     blob_copy = source_bucket.copy_blob(
-        source_blob, destination_bucket, destination_blob_name, if_generation_match=destination_generation_match_precondition,
+        source_blob,
+        destination_bucket,
+        destination_blob_name,
+        if_generation_match=destination_generation_match_precondition,
     )
     source_bucket.delete_blob(blob_name)
 

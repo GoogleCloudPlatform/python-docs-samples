@@ -17,7 +17,12 @@ import os
 import tempfile
 import uuid
 
+from google.api_core.exceptions import NotFound
+from google.cloud import storage
+from google.cloud.storage import Blob
+from google.cloud.storage.bucket import EncryptionEnforcementConfig
 import pytest
+
 import storage_download_encrypted_file
 import storage_generate_encryption_key
 import storage_get_bucket_encryption_enforcement_config
@@ -26,10 +31,6 @@ import storage_rotate_encryption_key
 import storage_set_bucket_encryption_enforcement_config
 import storage_update_bucket_encryption_enforcement_config
 import storage_upload_encrypted_file
-from google.api_core.exceptions import NotFound
-from google.cloud import storage
-from google.cloud.storage import Blob
-from google.cloud.storage.bucket import EncryptionEnforcementConfig
 
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 KMS_KEY = os.environ["MAIN_CLOUD_KMS_KEY"]

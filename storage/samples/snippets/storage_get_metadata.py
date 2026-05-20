@@ -63,9 +63,7 @@ def blob_metadata(bucket_name, blob_name):
     print(f"Retention mode: {blob.retention.mode}")
     print(f"Retention retain until time: {blob.retention.retain_until_time}")
     if blob.retention_expiration_time:
-        print(
-            f"retentionExpirationTime: {blob.retention_expiration_time}"
-        )
+        print(f"retentionExpirationTime: {blob.retention_expiration_time}")
 
 
 # [END storage_get_metadata]

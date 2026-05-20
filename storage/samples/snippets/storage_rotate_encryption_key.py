@@ -17,11 +17,13 @@
 
 # [START storage_rotate_encryption_key]
 import base64
+
 # [END storage_rotate_encryption_key]
 import sys
-# [START storage_rotate_encryption_key]
 
 from google.cloud import storage
+
+# [START storage_rotate_encryption_key]
 
 
 def rotate_encryption_key(
@@ -36,12 +38,8 @@ def rotate_encryption_key(
 
     # Both source_blob and destination_blob refer to the same storage object,
     # but destination_blob has the new encryption key.
-    source_blob = bucket.blob(
-        blob_name, encryption_key=current_encryption_key
-    )
-    destination_blob = bucket.blob(
-        blob_name, encryption_key=new_encryption_key
-    )
+    source_blob = bucket.blob(blob_name, encryption_key=current_encryption_key)
+    destination_blob = bucket.blob(blob_name, encryption_key=new_encryption_key)
     generation_match_precondition = None
     token = None
 

@@ -30,9 +30,7 @@ def enable_uniform_bucket_level_access(bucket_name):
     bucket.iam_configuration.uniform_bucket_level_access_enabled = True
     bucket.patch()
 
-    print(
-        f"Uniform bucket-level access was enabled for {bucket.name}."
-    )
+    print(f"Uniform bucket-level access was enabled for {bucket.name}.")
 
 
 # [END storage_enable_uniform_bucket_level_access]

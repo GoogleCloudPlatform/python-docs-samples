@@ -29,79 +29,90 @@ import os
 # that our new projects are enforced to have
 # 'constraints/iam.disableServiceAccountKeyCreation' policy.
 def get_service_account_email():
-    session = os.environ.get('RUN_TESTS_SESSION')
-    if session == 'py-3.6':
-        return ('py36-storage-test@'
-                'python-docs-samples-tests.iam.gserviceaccount.com')
-    if session == 'py-3.7':
-        return ('py37-storage-test@'
-                'python-docs-samples-tests.iam.gserviceaccount.com')
-    if session == 'py-3.8':
-        return ('py38-storage-test@'
-                'python-docs-samples-tests.iam.gserviceaccount.com')
-    if session == 'py-3.9':
-        return ('py39-storage-test@'
-                'python-docs-samples-tests.iam.gserviceaccount.com')
-    if session == 'py-3.10':
-        return ('py310-storage-test@'
-                'python-docs-samples-tests.iam.gserviceaccount.com')
-    return os.environ['HMAC_KEY_TEST_SERVICE_ACCOUNT']
+    session = os.environ.get("RUN_TESTS_SESSION")
+    if session == "py-3.6":
+        return "py36-storage-test@" "python-docs-samples-tests.iam.gserviceaccount.com"
+    if session == "py-3.7":
+        return "py37-storage-test@" "python-docs-samples-tests.iam.gserviceaccount.com"
+    if session == "py-3.8":
+        return "py38-storage-test@" "python-docs-samples-tests.iam.gserviceaccount.com"
+    if session == "py-3.9":
+        return "py39-storage-test@" "python-docs-samples-tests.iam.gserviceaccount.com"
+    if session == "py-3.10":
+        return "py310-storage-test@" "python-docs-samples-tests.iam.gserviceaccount.com"
+    return os.environ["HMAC_KEY_TEST_SERVICE_ACCOUNT"]
 
 
 # We change the value of CLOUD_KMS_KEY based on the value of
 # RUN_TESTS_SESSION.
 def get_cloud_kms_key():
-    session = os.environ.get('RUN_TESTS_SESSION')
-    if session == 'py-3.6':
-        return ('projects/python-docs-samples-tests-py36/locations/us/'
-                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
-    if session == 'py-3.7':
-        return ('projects/python-docs-samples-tests-py37/locations/us/'
-                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
-    if session == 'py-3.8':
-        return ('projects/python-docs-samples-tests-py38/locations/us/'
-                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
-    if session == 'py-3.9':
-        return ('projects/python-docs-samples-tests-py39/locations/us/'
-                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
-    if session == 'py-3.10':
-        return ('projects/python-docs-samples-tests-310/locations/us/'
-                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
-    if session == 'py-3.11':
-        return ('projects/python-docs-samples-tests-311/locations/us/'
-                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
-    if session == 'py-3.12':
-        return ('projects/python-docs-samples-tests-312/locations/us/'
-                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
-    if session == 'py-3.13':
-        return ('projects/python-docs-samples-tests-313/locations/us/'
-                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
-    return os.environ['CLOUD_KMS_KEY']
+    session = os.environ.get("RUN_TESTS_SESSION")
+    if session == "py-3.6":
+        return (
+            "projects/python-docs-samples-tests-py36/locations/us/"
+            "keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key"
+        )
+    if session == "py-3.7":
+        return (
+            "projects/python-docs-samples-tests-py37/locations/us/"
+            "keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key"
+        )
+    if session == "py-3.8":
+        return (
+            "projects/python-docs-samples-tests-py38/locations/us/"
+            "keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key"
+        )
+    if session == "py-3.9":
+        return (
+            "projects/python-docs-samples-tests-py39/locations/us/"
+            "keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key"
+        )
+    if session == "py-3.10":
+        return (
+            "projects/python-docs-samples-tests-310/locations/us/"
+            "keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key"
+        )
+    if session == "py-3.11":
+        return (
+            "projects/python-docs-samples-tests-311/locations/us/"
+            "keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key"
+        )
+    if session == "py-3.12":
+        return (
+            "projects/python-docs-samples-tests-312/locations/us/"
+            "keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key"
+        )
+    if session == "py-3.13":
+        return (
+            "projects/python-docs-samples-tests-313/locations/us/"
+            "keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key"
+        )
+    return os.environ["CLOUD_KMS_KEY"]
 
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    'ignored_versions': ["2.7", "3.6", "3.7", "3.11", "3.12", "3.13"],
-
+    "ignored_versions": ["2.7", "3.6", "3.7", "3.11", "3.12", "3.13"],
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
     # to use your own Cloud project.
     # 'gcloud_project_env': 'GOOGLE_CLOUD_PROJECT',
-    'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
-
+    "gcloud_project_env": "BUILD_SPECIFIC_GCLOUD_PROJECT",
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    'envs': {
-        'HMAC_KEY_TEST_SERVICE_ACCOUNT': get_service_account_email(),
-        'CLOUD_KMS_KEY': get_cloud_kms_key(),
+    "envs": {
+        "HMAC_KEY_TEST_SERVICE_ACCOUNT": get_service_account_email(),
+        "CLOUD_KMS_KEY": get_cloud_kms_key(),
         # Some tests can not use multiple projects because of several reasons:
         # 1. The new projects is enforced to have the
         # 'constraints/iam.disableServiceAccountKeyCreation' policy.
         # 2. The new projects buckets need to have universal permission model.
         # For those tests, we'll use the original project.
-        'MAIN_GOOGLE_CLOUD_PROJECT': 'python-docs-samples-tests',
-        'MAIN_CLOUD_KMS_KEY': ('projects/python-docs-samples-tests/locations/us/'
-                               'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
+        "MAIN_GOOGLE_CLOUD_PROJECT": "python-docs-samples-tests",
+        "MAIN_CLOUD_KMS_KEY": (
+            "projects/python-docs-samples-tests/locations/us/"
+            "keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key"
+        ),
     },
 }

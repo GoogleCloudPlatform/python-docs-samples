@@ -47,4 +47,5 @@ def download_blob_to_stream(bucket_name, source_blob_name, file_obj):
     return file_obj
     # Before reading from file_obj, remember to rewind with file_obj.seek(0).
 
+
 # [END storage_stream_file_download]

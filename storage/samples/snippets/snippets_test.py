@@ -15,15 +15,16 @@
 import asyncio
 import io
 import os
+import sys
 import tempfile
 import time
 import uuid
-import sys
 
 from google.cloud import storage
 import google.cloud.exceptions
 import pytest
 import requests
+
 
 import storage_add_bucket_label
 import storage_async_download

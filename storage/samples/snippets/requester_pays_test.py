@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import backoff
 import os
 import tempfile
 
+import backoff
 from google.api_core.exceptions import GoogleAPIError
 from google.cloud import storage
 import pytest
@@ -24,7 +24,6 @@ import storage_disable_requester_pays
 import storage_download_file_requester_pays
 import storage_enable_requester_pays
 import storage_get_requester_pays_status
-
 
 # We use a different bucket from other tests.
 # The service account for the test needs to have Billing Project Manager role

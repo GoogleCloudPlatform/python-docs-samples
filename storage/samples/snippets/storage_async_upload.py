@@ -17,7 +17,6 @@
 import asyncio
 import sys
 
-
 """Sample that asynchronously uploads a file to GCS
 """
 
@@ -30,6 +29,7 @@ async def async_upload_blob(bucket_name):
     # bucket_name = "your-bucket-name"
     import asyncio
     from functools import partial
+
     from google.cloud import storage
 
     storage_client = storage.Client()
@@ -44,7 +44,9 @@ async def async_upload_blob(bucket_name):
         content = f"Hello world #{x}"
         blob = bucket.blob(blob_name)
         # The first arg, None, tells it to use the default loops executor
-        tasks.append(loop.run_in_executor(None, partial(blob.upload_from_string, content)))
+        tasks.append(
+            loop.run_in_executor(None, partial(blob.upload_from_string, content))
+        )
 
     # If the method returns a value (such as download_as_string), gather will return the values
     await asyncio.gather(*tasks)
@@ -56,6 +58,4 @@ async def async_upload_blob(bucket_name):
 
 
 if __name__ == "__main__":
-    asyncio.run(async_upload_blob(
-        bucket_name=sys.argv[1]
-    ))
+    asyncio.run(async_upload_blob(bucket_name=sys.argv[1]))

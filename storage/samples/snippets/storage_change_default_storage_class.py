@@ -31,7 +31,9 @@ def change_default_storage_class(bucket_name):
     bucket.storage_class = constants.COLDLINE_STORAGE_CLASS
     bucket.patch()
 
-    print(f"Default storage class for bucket {bucket_name} has been set to {bucket.storage_class}")
+    print(
+        f"Default storage class for bucket {bucket_name} has been set to {bucket.storage_class}"
+    )
     return bucket
 
 

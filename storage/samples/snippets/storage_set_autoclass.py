@@ -39,8 +39,12 @@ def set_autoclass(bucket_name):
     bucket.autoclass_enabled = enabled
     bucket.autoclass_terminal_storage_class = terminal_storage_class
     bucket.patch()
-    print(f"Autoclass enabled is set to {bucket.autoclass_enabled} for {bucket.name} at {bucket.autoclass_toggle_time}.")
-    print(f"Autoclass terminal storage class is {bucket.autoclass_terminal_storage_class}.")
+    print(
+        f"Autoclass enabled is set to {bucket.autoclass_enabled} for {bucket.name} at {bucket.autoclass_toggle_time}."
+    )
+    print(
+        f"Autoclass terminal storage class is {bucket.autoclass_terminal_storage_class}."
+    )
 
     return bucket
 

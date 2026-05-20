@@ -16,11 +16,13 @@
 
 # [START storage_download_encrypted_file]
 import base64
+
 # [END storage_download_encrypted_file]
 import sys
-# [START storage_download_encrypted_file]
 
 from google.cloud import storage
+
+# [START storage_download_encrypted_file]
 
 
 def download_encrypted_blob(
@@ -51,9 +53,7 @@ def download_encrypted_blob(
 
     blob.download_to_filename(destination_file_name)
 
-    print(
-        f"Blob {source_blob_name} downloaded to {destination_file_name}."
-    )
+    print(f"Blob {source_blob_name} downloaded to {destination_file_name}.")
 
 
 # [END storage_download_encrypted_file]

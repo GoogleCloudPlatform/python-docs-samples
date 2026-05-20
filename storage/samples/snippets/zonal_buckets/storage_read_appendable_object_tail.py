@@ -16,9 +16,10 @@
 
 import argparse
 import asyncio
-import time
 from datetime import datetime
 from io import BytesIO
+import time
+
 
 from google.cloud.storage.asyncio.async_appendable_object_writer import (
     AsyncAppendableObjectWriter,

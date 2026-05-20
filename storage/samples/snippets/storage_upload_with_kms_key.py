@@ -21,7 +21,10 @@ from google.cloud import storage
 
 
 def upload_blob_with_kms(
-    bucket_name, source_file_name, destination_blob_name, kms_key_name,
+    bucket_name,
+    source_file_name,
+    destination_blob_name,
+    kms_key_name,
 ):
     """Uploads a file to the bucket, encrypting it with the given KMS key."""
     # bucket_name = "your-bucket-name"
@@ -41,7 +44,9 @@ def upload_blob_with_kms(
     # generation-match precondition using its generation number.
     generation_match_precondition = 0
 
-    blob.upload_from_filename(source_file_name, if_generation_match=generation_match_precondition)
+    blob.upload_from_filename(
+        source_file_name, if_generation_match=generation_match_precondition
+    )
 
     print(
         "File {} uploaded to {} with encryption key {}.".format(

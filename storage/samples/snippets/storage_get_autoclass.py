@@ -32,8 +32,12 @@ def get_autoclass(bucket_name):
     terminal_storage_class = bucket.autoclass_terminal_storage_class
     tsc_update_time = bucket.autoclass_terminal_storage_class_update_time
 
-    print(f"Autoclass enabled is set to {autoclass_enabled} for {bucket.name} at {autoclass_toggle_time}.")
-    print(f"Autoclass terminal storage class is set to {terminal_storage_class} for {bucket.name} at {tsc_update_time}.")
+    print(
+        f"Autoclass enabled is set to {autoclass_enabled} for {bucket.name} at {autoclass_toggle_time}."
+    )
+    print(
+        f"Autoclass terminal storage class is set to {terminal_storage_class} for {bucket.name} at {tsc_update_time}."
+    )
 
     return bucket
 

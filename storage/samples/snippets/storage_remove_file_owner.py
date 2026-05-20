@@ -38,14 +38,14 @@ def remove_blob_owner(bucket_name, blob_name, user_email):
     blob.acl.user(user_email).revoke_owner()
     blob.acl.save()
 
-    print(
-        f"Removed user {user_email} from blob {blob_name} in bucket {bucket_name}."
-    )
+    print(f"Removed user {user_email} from blob {blob_name} in bucket {bucket_name}.")
 
 
 # [END storage_remove_file_owner]
 
 if __name__ == "__main__":
     remove_blob_owner(
-        bucket_name=sys.argv[1], blob_name=sys.argv[2], user_email=sys.argv[3],
+        bucket_name=sys.argv[1],
+        blob_name=sys.argv[2],
+        user_email=sys.argv[3],
     )

@@ -47,7 +47,4 @@ def write_read(bucket_name, blob_name):
 # [END storage_fileio_write_read]
 
 if __name__ == "__main__":
-    write_read(
-        bucket_name=sys.argv[1],
-        blob_name=sys.argv[2]
-    )
+    write_read(bucket_name=sys.argv[1], blob_name=sys.argv[2])

@@ -16,11 +16,13 @@
 
 # [START storage_generate_signed_url_v2]
 import datetime
+
 # [END storage_generate_signed_url_v2]
 import sys
-# [START storage_generate_signed_url_v2]
 
 from google.cloud import storage
+
+# [START storage_generate_signed_url_v2]
 
 
 def generate_signed_url(bucket_name, blob_name):

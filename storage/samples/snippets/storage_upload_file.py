@@ -41,11 +41,11 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     # generation-match precondition using its generation number.
     generation_match_precondition = 0
 
-    blob.upload_from_filename(source_file_name, if_generation_match=generation_match_precondition)
-
-    print(
-        f"File {source_file_name} uploaded to {destination_blob_name}."
+    blob.upload_from_filename(
+        source_file_name, if_generation_match=generation_match_precondition
     )
+
+    print(f"File {source_file_name} uploaded to {destination_blob_name}.")
 
 
 # [END storage_upload_file]

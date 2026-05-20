@@ -17,9 +17,9 @@
 
 import sys
 
-# [START storage_get_bucket_metadata]
-
 from google.cloud import storage
+
+# [START storage_get_bucket_metadata]
 
 
 def bucket_metadata(bucket_name):

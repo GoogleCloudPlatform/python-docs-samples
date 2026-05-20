@@ -38,7 +38,10 @@ def create_bucket_notifications(bucket_name, topic_name):
     notification = bucket.notification(topic_name=topic_name)
     notification.create()
 
-    print(f"Successfully created notification with ID {notification.notification_id} for bucket {bucket_name}")
+    print(
+        f"Successfully created notification with ID {notification.notification_id} for bucket {bucket_name}"
+    )
+
 
 # [END storage_create_bucket_notifications]
 

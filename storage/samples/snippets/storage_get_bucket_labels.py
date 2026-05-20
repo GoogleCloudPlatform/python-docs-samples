@@ -17,11 +17,13 @@
 
 # [START storage_get_bucket_labels]
 import pprint
+
 # [END storage_get_bucket_labels]
 import sys
-# [START storage_get_bucket_labels]
 
 from google.cloud import storage
+
+# [START storage_get_bucket_labels]
 
 
 def get_bucket_labels(bucket_name):

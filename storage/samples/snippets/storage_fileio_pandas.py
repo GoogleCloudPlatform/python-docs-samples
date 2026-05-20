@@ -30,15 +30,15 @@ def pandas_write(bucket_name, blob_name):
     # The ID of your new GCS object
     # blob_name = "storage-object-name"
 
-    from google.cloud import storage
     import pandas as pd
+    from google.cloud import storage
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
 
     with blob.open("w") as f:
-        df = pd.DataFrame({'a': [1, 2, 3], 'b': [4, 5, 6]})
+        df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
         f.write(df.to_csv(index=False))
 
     print(f"Wrote csv with pandas with name {blob_name} from bucket {bucket.name}.")
@@ -58,8 +58,8 @@ def pandas_read(bucket_name, blob_name):
     # The ID of your new GCS object
     # blob_name = "storage-object-name"
 
-    from google.cloud import storage
     import pandas as pd
+    from google.cloud import storage
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
@@ -75,12 +75,6 @@ def pandas_read(bucket_name, blob_name):
 
 
 if __name__ == "__main__":
-    pandas_write(
-        bucket_name=sys.argv[1],
-        blob_name=sys.argv[2]
-    )
+    pandas_write(bucket_name=sys.argv[1], blob_name=sys.argv[2])
 
-    pandas_read(
-        bucket_name=sys.argv[1],
-        blob_name=sys.argv[2]
-    )
+    pandas_read(bucket_name=sys.argv[1], blob_name=sys.argv[2])

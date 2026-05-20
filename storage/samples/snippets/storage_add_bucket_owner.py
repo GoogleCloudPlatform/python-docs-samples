@@ -39,9 +39,7 @@ def add_bucket_owner(bucket_name, user_email):
     bucket.acl.user(user_email).grant_owner()
     bucket.acl.save()
 
-    print(
-        f"Added user {user_email} as an owner on bucket {bucket_name}."
-    )
+    print(f"Added user {user_email} as an owner on bucket {bucket_name}.")
 
 
 # [END storage_add_bucket_owner]

@@ -37,7 +37,9 @@ def create_bucket_dual_region(bucket_name, location, region_1, region_2):
     # location = "US"
 
     storage_client = storage.Client()
-    bucket = storage_client.create_bucket(bucket_name, location=location, data_locations=[region_1, region_2])
+    bucket = storage_client.create_bucket(
+        bucket_name, location=location, data_locations=[region_1, region_2]
+    )
 
     print(f"Created bucket {bucket_name}")
     print(f" - location: {bucket.location}")
@@ -50,5 +52,8 @@ def create_bucket_dual_region(bucket_name, location, region_1, region_2):
 
 if __name__ == "__main__":
     create_bucket_dual_region(
-        bucket_name=sys.argv[1], location=sys.argv[2], region_1=sys.argv[3], region_2=sys.argv[4]
+        bucket_name=sys.argv[1],
+        location=sys.argv[2],
+        region_1=sys.argv[3],
+        region_2=sys.argv[4],
     )

@@ -40,7 +40,9 @@ def set_object_retention_policy(bucket_name, contents, destination_blob_name):
 
     # Set the retention policy for the file.
     blob.retention.mode = "Unlocked"
-    retention_date = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=10)
+    retention_date = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+        days=10
+    )
     blob.retention.retain_until_time = retention_date
     blob.patch()
     print(
@@ -48,7 +50,9 @@ def set_object_retention_policy(bucket_name, contents, destination_blob_name):
     )
 
     # To modify an existing policy on an unlocked file object, pass in the override parameter.
-    new_retention_date = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=9)
+    new_retention_date = datetime.datetime.now(
+        datetime.timezone.utc
+    ) + datetime.timedelta(days=9)
     blob.retention.retain_until_time = new_retention_date
     blob.patch(override_unlocked_retention=True)
     print(

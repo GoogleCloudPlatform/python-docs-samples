@@ -38,6 +38,7 @@ def list_bucket_notifications(bucket_name):
     for notification in notifications:
         print(f"Notification ID: {notification.notification_id}")
 
+
 # [END storage_list_bucket_notifications]
 
 

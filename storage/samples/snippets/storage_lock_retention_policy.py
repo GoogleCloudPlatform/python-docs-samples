@@ -34,9 +34,7 @@ def lock_retention_policy(bucket_name):
     bucket.lock_retention_policy()
 
     print(f"Retention policy for {bucket_name} is now locked")
-    print(
-        f"Retention policy effective as of {bucket.retention_policy_effective_time}"
-    )
+    print(f"Retention policy effective as of {bucket.retention_policy_effective_time}")
 
 
 # [END storage_lock_retention_policy]

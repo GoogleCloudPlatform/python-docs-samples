@@ -30,9 +30,7 @@ def list_keys(project_id):
     hmac_keys = storage_client.list_hmac_keys(project_id=project_id)
     print("HMAC Keys:")
     for hmac_key in hmac_keys:
-        print(
-            f"Service Account Email: {hmac_key.service_account_email}"
-        )
+        print(f"Service Account Email: {hmac_key.service_account_email}")
         print(f"Access ID: {hmac_key.access_id}")
     return hmac_keys
 

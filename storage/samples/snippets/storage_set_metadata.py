@@ -35,7 +35,7 @@ def set_blob_metadata(bucket_name, blob_name):
     # object's metageneration does not match your precondition.
     metageneration_match_precondition = blob.metageneration
 
-    metadata = {'color': 'Red', 'name': 'Test'}
+    metadata = {"color": "Red", "name": "Test"}
     blob.metadata = metadata
     blob.patch(if_metageneration_match=metageneration_match_precondition)
 

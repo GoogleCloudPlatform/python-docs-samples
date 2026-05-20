@@ -17,11 +17,13 @@
 
 # [START storage_generate_signed_post_policy_v4]
 import datetime
+
 # [END storage_generate_signed_post_policy_v4]
 import sys
-# [START storage_generate_signed_post_policy_v4]
 
 from google.cloud import storage
+
+# [START storage_generate_signed_post_policy_v4]
 
 
 def generate_signed_post_policy_v4(bucket_name, blob_name):
@@ -35,9 +37,7 @@ def generate_signed_post_policy_v4(bucket_name, blob_name):
         bucket_name,
         blob_name,
         expiration=datetime.timedelta(minutes=10),
-        fields={
-          'x-goog-meta-test': 'data'
-        }
+        fields={"x-goog-meta-test": "data"},
     )
 
     # Create an HTML form with the provided policy
@@ -60,6 +60,4 @@ def generate_signed_post_policy_v4(bucket_name, blob_name):
 # [END storage_generate_signed_post_policy_v4]
 
 if __name__ == "__main__":
-    generate_signed_post_policy_v4(
-        bucket_name=sys.argv[1], blob_name=sys.argv[2]
-    )
+    generate_signed_post_policy_v4(bucket_name=sys.argv[1], blob_name=sys.argv[2])

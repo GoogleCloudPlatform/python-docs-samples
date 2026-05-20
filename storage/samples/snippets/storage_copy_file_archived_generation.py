@@ -21,7 +21,7 @@ from google.cloud import storage
 
 
 def copy_file_archived_generation(
-        bucket_name, blob_name, destination_bucket_name, destination_blob_name, generation
+    bucket_name, blob_name, destination_bucket_name, destination_blob_name, generation
 ):
     """Copies a blob from one bucket to another with a new name with the same generation."""
     # bucket_name = "your-bucket-name"
@@ -46,7 +46,11 @@ def copy_file_archived_generation(
 
     # source_generation selects a specific revision of the source object, as opposed to the latest version.
     blob_copy = source_bucket.copy_blob(
-        source_blob, destination_bucket, destination_blob_name, source_generation=generation, if_generation_match=destination_generation_match_precondition
+        source_blob,
+        destination_bucket,
+        destination_blob_name,
+        source_generation=generation,
+        if_generation_match=destination_generation_match_precondition,
     )
 
     print(
@@ -68,5 +72,5 @@ if __name__ == "__main__":
         blob_name=sys.argv[2],
         destination_bucket_name=sys.argv[3],
         destination_blob_name=sys.argv[4],
-        generation=sys.argv[5]
+        generation=sys.argv[5],
     )

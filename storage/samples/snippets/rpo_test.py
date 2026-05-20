@@ -58,4 +58,7 @@ def test_create_bucket_turbo_replication(capsys):
     bucket_name = f"test-rpo-{uuid.uuid4()}"
     storage_create_bucket_turbo_replication.create_bucket_turbo_replication(bucket_name)
     out, _ = capsys.readouterr()
-    assert f"{bucket_name} created with the recovery point objective (RPO) set to ASYNC_TURBO in NAM4." in out
+    assert (
+        f"{bucket_name} created with the recovery point objective (RPO) set to ASYNC_TURBO in NAM4."
+        in out
+    )

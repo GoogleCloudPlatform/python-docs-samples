@@ -37,16 +37,18 @@ def change_file_storage_class(bucket_name, blob_name):
     blob.reload()  # Fetch blob metadata to use in generation_match_precondition.
     generation_match_precondition = blob.generation
 
-    blob.update_storage_class("NEARLINE", if_generation_match=generation_match_precondition)
+    blob.update_storage_class(
+        "NEARLINE", if_generation_match=generation_match_precondition
+    )
 
     print(
         "Blob {} in bucket {} had its storage class set to {}".format(
-            blob_name,
-            bucket_name,
-            blob.storage_class
+            blob_name, bucket_name, blob.storage_class
         )
     )
     return blob
+
+
 # [END storage_change_file_storage_class]
 
 

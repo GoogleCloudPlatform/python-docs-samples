@@ -27,8 +27,8 @@ def bucket():
     """Yields a bucket that is deleted after the test completes."""
     # The new projects enforces uniform bucket level access, so
     # we need to use the old main project for now.
-    original_value = os.environ['GOOGLE_CLOUD_PROJECT']
-    os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['MAIN_GOOGLE_CLOUD_PROJECT']
+    original_value = os.environ["GOOGLE_CLOUD_PROJECT"]
+    os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["MAIN_GOOGLE_CLOUD_PROJECT"]
     bucket = None
     while bucket is None or bucket.exists():
         bucket_name = f"uniform-bucket-level-access-{uuid.uuid4().hex}"
@@ -38,4 +38,4 @@ def bucket():
     time.sleep(3)
     bucket.delete(force=True)
     # Set the value back.
-    os.environ['GOOGLE_CLOUD_PROJECT'] = original_value
+    os.environ["GOOGLE_CLOUD_PROJECT"] = original_value

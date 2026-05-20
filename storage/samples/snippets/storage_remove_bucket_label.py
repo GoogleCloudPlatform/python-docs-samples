@@ -17,11 +17,13 @@
 
 # [START storage_remove_bucket_label]
 import pprint
+
 # [END storage_remove_bucket_label]
 import sys
-# [START storage_remove_bucket_label]
 
 from google.cloud import storage
+
+# [START storage_remove_bucket_label]
 
 
 def remove_bucket_label(bucket_name):

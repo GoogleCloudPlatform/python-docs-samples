@@ -59,8 +59,7 @@ class MainPage(webapp2.RequestHandler):
             )
 
         self.response.out.write(
-            textwrap.dedent(
-                """\
+            textwrap.dedent("""\
             <html>
               <body>
                 {blockquotes}
@@ -80,8 +79,7 @@ class MainPage(webapp2.RequestHandler):
                     <input type="submit" value="switch">
                 </form>
               </body>
-            </html>"""
-            ).format(
+            </html>""").format(
                 blockquotes="\n".join(greeting_blockquotes),
                 sign=urllib.urlencode({"guestbook_name": guestbook_name}),
                 guestbook_name=cgi.escape(guestbook_name),

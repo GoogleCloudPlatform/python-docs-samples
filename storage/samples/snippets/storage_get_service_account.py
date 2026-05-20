@@ -24,9 +24,7 @@ def get_service_account():
     storage_client = storage.Client()
 
     email = storage_client.get_service_account_email()
-    print(
-        f"The GCS service account for project {storage_client.project} is: {email} "
-    )
+    print(f"The GCS service account for project {storage_client.project} is: {email} ")
 
 
 # [END storage_get_service_account]

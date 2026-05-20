@@ -13,17 +13,16 @@
 # limitations under the License.
 
 import asyncio
-import uuid
-import os
-
-import pytest
-from google.cloud.storage import Client
 import contextlib
+import os
+import uuid
 
-from google.cloud.storage.asyncio.async_grpc_client import AsyncGrpcClient
+from google.cloud.storage import Client
 from google.cloud.storage.asyncio.async_appendable_object_writer import (
     AsyncAppendableObjectWriter,
 )
+from google.cloud.storage.asyncio.async_grpc_client import AsyncGrpcClient
+import pytest
 
 # Import all the snippets
 import storage_create_and_write_appendable_object

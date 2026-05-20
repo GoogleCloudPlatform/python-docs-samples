@@ -43,7 +43,9 @@ def configure_retries(bucket_name, blob_name):
     # Customize retry with an initial wait time of 1.5 (default=1.0).
     # Customize retry with a wait time multiplier per iteration of 1.2 (default=2.0).
     # Customize retry with a maximum wait time of 45.0 (default=60.0).
-    modified_retry = modified_retry.with_delay(initial=1.5, multiplier=1.2, maximum=45.0)
+    modified_retry = modified_retry.with_delay(
+        initial=1.5, multiplier=1.2, maximum=45.0
+    )
 
     # blob.delete() uses DEFAULT_RETRY by default.
     # Pass in modified_retry to override the default retry behavior.

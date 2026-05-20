@@ -44,7 +44,9 @@ def compose_file(bucket_name, first_blob_name, second_blob_name, destination_blo
     # There is also an `if_source_generation_match` parameter, which is not used in this example.
     destination_generation_match_precondition = 0
 
-    destination.compose(sources, if_generation_match=destination_generation_match_precondition)
+    destination.compose(
+        sources, if_generation_match=destination_generation_match_precondition
+    )
 
     print(
         "New composite object {} in the bucket {} was created by combining {} and {}".format(

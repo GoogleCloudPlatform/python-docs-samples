@@ -17,14 +17,16 @@
 
 import sys
 
-# [START storage_restore_soft_deleted_bucket]
-
 from google.cloud import storage
+
+# [START storage_restore_soft_deleted_bucket]
 
 
 def restore_bucket(bucket_name, bucket_generation):
     storage_client = storage.Client()
-    bucket = storage_client.restore_bucket(bucket_name=bucket_name, generation=bucket_generation)
+    bucket = storage_client.restore_bucket(
+        bucket_name=bucket_name, generation=bucket_generation
+    )
     print(f"Soft-deleted bucket {bucket.name} with ID: {bucket.id} was restored.")
     print(f"Bucket Generation: {bucket.generation}")
 
@@ -33,6 +35,8 @@ def restore_bucket(bucket_name, bucket_generation):
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Wrong inputs!! Usage of script - \"python storage_restore_soft_deleted_bucket.py <bucket_name> <bucket_generation>\" ")
+        print(
+            'Wrong inputs!! Usage of script - "python storage_restore_soft_deleted_bucket.py <bucket_name> <bucket_generation>" '
+        )
         sys.exit(1)
     restore_bucket(bucket_name=sys.argv[1], bucket_generation=sys.argv[2])

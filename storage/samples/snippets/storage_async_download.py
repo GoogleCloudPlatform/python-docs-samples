@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import asyncio
 import argparse
+import asyncio
 
 """Sample that asynchronously downloads multiple files from GCS to application's memory.
 """
@@ -24,8 +24,7 @@ import argparse
 # [START storage_async_download]
 # This sample can be run by calling `async.run(async_download_blobs('bucket_name', ['file1', 'file2']))`
 async def async_download_blobs(bucket_name, *file_names):
-    """Downloads a number of files in parallel from the bucket.
-    """
+    """Downloads a number of files in parallel from the bucket."""
     # The ID of your GCS bucket.
     # bucket_name = "your-bucket-name"
 
@@ -33,6 +32,7 @@ async def async_download_blobs(bucket_name, *file_names):
     # file_names = ["myfile1", "myfile2"]
 
     import asyncio
+
     from google.cloud import storage
 
     storage_client = storage.Client()
@@ -57,13 +57,20 @@ async def async_download_blobs(bucket_name, *file_names):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-b', '--bucket_name', type=str, dest='bucket_name', help='provide the name of the GCS bucket')
     parser.add_argument(
-        '-f', '--file_name',
-        action='append',
+        "-b",
+        "--bucket_name",
         type=str,
-        dest='file_names',
-        help='Example: -f file1.txt or --file_name my_fav.mp4 . It can be used multiple times.'
+        dest="bucket_name",
+        help="provide the name of the GCS bucket",
+    )
+    parser.add_argument(
+        "-f",
+        "--file_name",
+        action="append",
+        type=str,
+        dest="file_names",
+        help="Example: -f file1.txt or --file_name my_fav.mp4 . It can be used multiple times.",
     )
     args = parser.parse_args()
 

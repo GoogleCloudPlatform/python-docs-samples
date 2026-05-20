@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 # [START storage_transfer_manager_download_chunks_concurrently]
 def download_chunks_concurrently(
     bucket_name, blob_name, filename, chunk_size=32 * 1024 * 1024, workers=8

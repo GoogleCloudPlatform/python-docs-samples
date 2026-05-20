@@ -33,9 +33,7 @@ def set_bucket_public_iam(
     bucket = storage_client.bucket(bucket_name)
 
     policy = bucket.get_iam_policy(requested_policy_version=3)
-    policy.bindings.append(
-        {"role": "roles/storage.objectViewer", "members": members}
-    )
+    policy.bindings.append({"role": "roles/storage.objectViewer", "members": members})
 
     bucket.set_iam_policy(policy)
 
