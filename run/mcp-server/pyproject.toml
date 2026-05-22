@@ -11,5 +11,6 @@ dependencies = [
     "opentelemetry-exporter-otlp-proto-grpc==1.40.0",
     "google-auth==2.49.1",
     "grpcio==1.80.0",
+    "cryptography==46.0.7",
 ]
 
