@@ -1,2 +1,2 @@
-pytest==9.0.3; python_version >= "3.10"
+pytest==8.2.0
 cloud-composer-dag-test-utils==1.0.0
