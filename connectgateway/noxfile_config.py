@@ -14,7 +14,7 @@
 
 TEST_CONFIG_OVERRIDE = {
      # You can opt out from the test for specific Python versions.
-     "ignored_versions": ["2.7", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"],
+     "ignored_versions": ["3.8", "3.9", "3.11", "3.12", "3.13"],
      "enforce_type_hints": True,
      "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
      "pip_version_override": None,
