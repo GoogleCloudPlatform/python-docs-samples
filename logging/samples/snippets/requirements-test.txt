@@ -1,3 +1,2 @@
 backoff==2.2.1
-pytest===7.4.4; python_version == '3.7'
-pytest==8.2.2; python_version >= '3.8'
+pytest==9.0.3; python_version >= "3.10"

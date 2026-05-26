@@ -19,7 +19,8 @@ TEST_CONFIG_OVERRIDE = {
     # Opting out of all Python versions except 3.10.
     # The Python version used is defined by the Dockerfile and the job
     # submission enviornment must match.
-    "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.9", "3.11", "3.12", "3.13"],
+    # Note: Docker-based sample, testing only against version specified in Dockerfile (3.14)
+    "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13"],
     "envs": {
         "PYTHONPATH": ".."
     },

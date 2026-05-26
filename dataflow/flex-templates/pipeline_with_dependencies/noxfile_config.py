@@ -19,5 +19,6 @@ TEST_CONFIG_OVERRIDE = {
     # > ℹ️ We're opting out of all Python versions except 3.11.
     # > The Python version used is defined by the Dockerfile, so it's redundant
     # > to run multiple tests since they would all be running the same Dockerfile.
+    # Note: Docker-based sample, testing only against version specified in Dockerfile (3.14)
     "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.9", "3.10", "3.12", "3.13"],
 }
