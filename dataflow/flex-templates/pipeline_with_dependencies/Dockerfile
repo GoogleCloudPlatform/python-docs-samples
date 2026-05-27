@@ -24,14 +24,14 @@
 # This Dockerfile illustrates how to use a custom base image when building
 # a custom contaier images for Dataflow. A 'slim' base image is smaller in size,
 # but does not include some preinstalled libraries, like google-cloud-debugger.
-# To use a standard image, use apache/beam_python3.11_sdk:2.54.0 instead.
+# To use a standard image, use apache/beam_python3.14_sdk:2.73.0 instead.
 # Use consistent versions of Python interpreter in the project.
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 # Copy SDK entrypoint binary from Apache Beam image, which makes it possible to
 # use the image as SDK container image. If you explicitly depend on
 # apache-beam in setup.py, use the same version of Beam in both files.
-COPY --from=apache/beam_python3.11_sdk:2.54.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.14_sdk:2.73.0 /opt/apache/beam /opt/apache/beam
 
 # Copy Flex Template launcher binary from the launcher image, which makes it
 # possible to use the image as a Flex Template base image.

@@ -1,1 +1,1 @@
-pytest==8.2.0
+endpoints/getting-started/clients/service_to_service_non_default/requirements-test.txt

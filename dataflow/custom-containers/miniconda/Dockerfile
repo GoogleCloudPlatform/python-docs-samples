@@ -18,7 +18,7 @@ FROM continuumio/miniconda3:22.11.1-alpine AS builder
 
 # Create a virtual environment and make it standalone with conda-pack.
 # https://conda.github.io/conda-pack
-RUN conda create -y -n env python=3.9 \
+RUN conda create -y -n env python=3.14 \
     && conda install -y conda-pack \
     && conda-pack -n env -o /tmp/env.tar \
     && mkdir /opt/python \
@@ -31,7 +31,7 @@ FROM ubuntu:latest
 WORKDIR /pipeline
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
-COPY --from=apache/beam_python3.9_sdk:2.55.1 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.14_sdk:2.73.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
 
 # Copy the python installation from the builder stage.
