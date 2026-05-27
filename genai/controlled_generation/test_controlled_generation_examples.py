@@ -25,7 +25,7 @@ import ctrlgen_with_nested_class_schema
 import ctrlgen_with_nullable_schema
 import ctrlgen_with_resp_schema
 
-os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
