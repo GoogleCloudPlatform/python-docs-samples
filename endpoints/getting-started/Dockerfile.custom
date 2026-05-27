@@ -5,7 +5,7 @@
 FROM gcr.io/google_appengine/python
 
 RUN apt-get update && \
-    apt-get install -y python2.7 python-pip && \
+    apt-get install -y python3.14 python-pip && \
     apt-get clean && \
     rm /var/lib/apt/lists/*_*
 

@@ -37,7 +37,7 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends docker.io
 
 # Install dependencies.
-RUN pip3 install --no-cache-dir apache-beam[gcp]==2.63.0
+RUN pip3 install --no-cache-dir apache-beam[gcp]==2.73.0
 RUN pip install --no-cache-dir kafka-python==2.0.6
 
 # Verify that the image does not have conflicting dependencies.

@@ -34,7 +34,7 @@ COPY --from=apache/beam_python3.14_sdk:2.73.0 /opt/apache/beam /opt/apache/beam
 
 # Copy Flex Template launcher binary from the launcher image, which makes it
 # possible to use the image as a Flex Template base image.
-COPY --from=gcr.io/dataflow-templates-base/python310-template-launcher-base:latest /opt/google/dataflow/python_template_launcher /opt/google/dataflow/python_template_launcher
+COPY --from=gcr.io/dataflow-templates-base/python314-template-launcher-base:latest /opt/google/dataflow/python_template_launcher /opt/google/dataflow/python_template_launcher
 
 # Copy the model directory downloaded from Kaggle and the pipeline code.
 COPY pytorch_model pytorch_model

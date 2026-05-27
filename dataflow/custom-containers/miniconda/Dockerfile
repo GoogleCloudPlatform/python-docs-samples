@@ -18,7 +18,7 @@ FROM continuumio/miniconda3:22.11.1-alpine AS builder
 
 # Create a virtual environment and make it standalone with conda-pack.
 # https://conda.github.io/conda-pack
-RUN conda create -y -n env python=3.9 \
+RUN conda create -y -n env python=3.14 \
     && conda install -y conda-pack \
     && conda-pack -n env -o /tmp/env.tar \
     && mkdir /opt/python \
