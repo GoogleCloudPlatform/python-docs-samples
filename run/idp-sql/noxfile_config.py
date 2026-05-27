@@ -22,8 +22,9 @@
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    # We only run the cloud run tests in py39 session.
-    "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.12", "3.13"],
+    # We only run the cloud run tests in py314 session.
+    # Note: Docker-based sample, testing only against version specified in Dockerfile (3.14)
+    "ignored_versions": ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"],
     "enforce_type_hints": True,
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a

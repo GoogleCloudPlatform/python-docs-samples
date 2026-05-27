@@ -14,7 +14,7 @@
 
 # [START cloudrun_mcpserver_dockerfile_python]
 # Use the official Python image
-FROM python:3.13-slim
+FROM python:3.14-slim
 
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
