@@ -305,7 +305,7 @@ typing-extensions==4.10.0
     # via apache-beam
 tzlocal==5.2
     # via js2py
-urllib3==2.6.0
+urllib3==2.6.3
     # via requests
 wrapt==1.16.0
     # via deprecated

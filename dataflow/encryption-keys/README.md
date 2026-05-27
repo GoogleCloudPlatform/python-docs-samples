@@ -25,7 +25,7 @@ Additionally, for this sample you need the following:
 
    ```sh
    export BUCKET=your-gcs-bucket
-   gsutil mb gs://$BUCKET
+   gcloud storage buckets create gs://$BUCKET
    ```
 
 1. [Create a symmetric key ring](https://cloud.google.com/kms/docs/creating-keys).
@@ -174,10 +174,10 @@ To avoid incurring charges to your GCP account for the resources used:
 
 ```sh
 # Remove only the files created by this sample.
-gsutil -m rm -rf "gs://$BUCKET/samples/dataflow/kms"
+gcloud storage rm --recursive --continue-on-error "gs://$BUCKET/samples/dataflow/kms"
 
 # [optional] Remove the Cloud Storage bucket.
-gsutil rb gs://$BUCKET
+gcloud storage buckets delete gs://$BUCKET
 
 # Remove the BigQuery table.
 bq rm -f -t $PROJECT:$DATASET.$TABLE
