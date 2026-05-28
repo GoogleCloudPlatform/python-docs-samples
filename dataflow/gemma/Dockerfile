@@ -29,7 +29,7 @@ RUN pip install --upgrade --no-cache-dir pip \
     && pip install --no-cache-dir -r requirements.txt
 
 # Copy files from official SDK image, including script/dependencies.
-COPY --from=apache/beam_python3.11_sdk:2.54.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.14_sdk:2.73.0 /opt/apache/beam /opt/apache/beam
 
 # Copy the model directory downloaded from Kaggle and the pipeline code.
 COPY gemma_2b gemma_2B

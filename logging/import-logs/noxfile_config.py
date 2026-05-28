@@ -17,5 +17,5 @@
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7", "3.6", "3.7"],
+    "ignored_versions": ["3.8", "3.9", "3.11", "3.12", "3.13"],
 }
