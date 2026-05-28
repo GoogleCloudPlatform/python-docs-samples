@@ -31,7 +31,7 @@ import tools_google_search_with_txt
 import tools_urlcontext_with_txt
 import tools_vais_with_txt
 
-os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"

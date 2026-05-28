@@ -1,0 +1,152 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+substitutions:
+  _REGION: "us-central1"
+  _ZONE: "us-central1-a"
+  _SHORT_BUILD_ID: ${BUILD_ID:0:8}
+  _VM_NAME: "py-sdk-sys-test-${_SHORT_BUILD_ID}"
+  _ULIMIT: "10000" # 10k, for gRPC bidi streams
+
+
+
+steps:
+  # Step 0: Generate a persistent SSH key for this build run.
+  # This prevents gcloud from adding a new key to the OS Login profile on every ssh/scp command.
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    id: "generate-ssh-key"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        mkdir -p /workspace/.ssh
+        # Generate the SSH key
+        ssh-keygen -t rsa -f /workspace/.ssh/google_compute_engine -N '' -C gcb
+        # Save the public key content to a file for the cleanup step
+        cat /workspace/.ssh/google_compute_engine.pub > /workspace/gcb_ssh_key.pub
+    waitFor: ["-"]
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    id: "cleanup-old-keys"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        #!/bin/bash
+        set -e
+
+        echo "Fetching OS Login SSH keys..."
+        echo "Removing all keys."
+        echo "---------------------------------------------------------------------"
+
+        FINGERPRINTS_TO_DELETE=$$(gcloud compute os-login ssh-keys list \
+          --format="value(fingerprint)")
+
+        echo "Keys to delete: $$FINGERPRINTS_TO_DELETE"
+
+        if [ -z "$$FINGERPRINTS_TO_DELETE" ]; then
+          echo "No keys found to delete. Nothing to do."
+          exit 0
+        fi
+
+        while IFS= read -r FINGERPRINT; do
+          if [ -n "$$FINGERPRINT" ]; then
+            echo "Deleting key with fingerprint: $$FINGERPRINT"
+            gcloud compute os-login ssh-keys remove \
+              --key="$$FINGERPRINT" \
+              --quiet || true
+          fi
+        done <<< "$$FINGERPRINTS_TO_DELETE"
+
+        echo "---------------------------------------------------------------------"
+        echo "Cleanup complete."
+
+  # Step 1 Create a GCE VM to run the tests.
+  # The VM is created in the same zone as the buckets to test rapid storage features.
+  # It's given the 'cloud-platform' scope to allow it to access GCS and other services.
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    id: "create-vm"
+    entrypoint: "gcloud"
+    args:
+      - "compute"
+      - "instances"
+      - "create"
+      - "${_VM_NAME}"
+      - "--project=${PROJECT_ID}"
+      - "--zone=${_ZONE}"
+      - "--machine-type=e2-medium"
+      - "--image-family=debian-13"
+      - "--image-project=debian-cloud"
+      - "--service-account=${_ZONAL_VM_SERVICE_ACCOUNT}"
+      - "--scopes=https://www.googleapis.com/auth/devstorage.full_control,https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/devstorage.read_write"
+      - "--metadata=enable-oslogin=TRUE"
+    waitFor: ["-"]
+
+  # Step 2: Run the integration tests inside the newly created VM and cleanup.
+  # This step uses 'gcloud compute ssh' to execute a remote script.
+  # The VM is deleted after tests are run, regardless of success.
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    id: "run-tests-and-delete-vm"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        set -e
+        # Wait for the VM to be fully initialized and SSH to be ready.
+        for i in {1..10}; do
+          if gcloud compute ssh ${_VM_NAME} --zone=${_ZONE} --internal-ip --ssh-key-file=/workspace/.ssh/google_compute_engine --command="echo VM is ready"; then
+            break
+          fi
+          echo "Waiting for VM to become available... (attempt $i/10)"
+          sleep 15
+        done
+        # copy the script to the VM
+        gcloud compute scp storage/cloudbuild/run_zonal_tests.sh ${_VM_NAME}:~ --zone=${_ZONE} --internal-ip --ssh-key-file=/workspace/.ssh/google_compute_engine
+
+        # Execute the script on the VM via SSH.
+        # Capture the exit code to ensure cleanup happens before the build fails.
+        set +e
+        gcloud compute ssh ${_VM_NAME} --zone=${_ZONE} --internal-ip --ssh-key-file=/workspace/.ssh/google_compute_engine --command="ulimit -n ${_ULIMIT}; COMMIT_SHA=${COMMIT_SHA} _ZONAL_BUCKET=${_ZONAL_BUCKET} CROSS_REGION_BUCKET=${_CROSS_REGION_BUCKET} _PR_NUMBER=${_PR_NUMBER} bash run_zonal_tests.sh"
+        EXIT_CODE=$?
+        set -e
+
+        echo "--- Deleting GCE VM ---"
+        gcloud compute instances delete "${_VM_NAME}" --zone=${_ZONE} --quiet
+
+        # Exit with the original exit code from the test script.
+        exit $$EXIT_CODE
+    waitFor:
+      - "create-vm"
+      - "generate-ssh-key"
+      - "cleanup-old-keys"
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    id: "cleanup-ssh-key"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        echo "--- Removing SSH key from OS Login profile to prevent accumulation ---"
+        gcloud compute os-login ssh-keys remove \
+          --key-file=/workspace/gcb_ssh_key.pub || true
+    waitFor:
+      - "run-tests-and-delete-vm"
+
+timeout: "3600s" # 60 minutes
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  pool:
+    name: "projects/${PROJECT_ID}/locations/us-central1/workerPools/cloud-build-worker-pool"

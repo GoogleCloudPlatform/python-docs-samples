@@ -17,7 +17,7 @@ import codeexecution_annotateimage_with_txt_gcsimg
 import codeexecution_barplot_with_txt_img
 import codeexecution_cropimage_with_txt_img
 
-os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"

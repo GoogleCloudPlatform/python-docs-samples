@@ -41,7 +41,7 @@ import videogen_with_vid_edit_insert
 import videogen_with_vid_edit_remove
 
 
-os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"

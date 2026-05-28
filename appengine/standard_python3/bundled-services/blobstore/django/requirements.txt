@@ -1,4 +1,4 @@
-Django==5.1.9; python_version >= "3.10"
+Django==5.1.15; python_version >= "3.10"
 Django==4.2.16; python_version < "3.10"
 django-environ==0.10.0
 google-cloud-logging==3.5.0
