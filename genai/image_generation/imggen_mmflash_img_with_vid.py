@@ -16,7 +16,8 @@
 def generate_content() -> str:
     # [START googlegenaisdk_imggen_mmflash_img_with_vid]
     from google import genai
-    from google.genai.types import GenerateContentConfig, Modality, Image, Part
+    from google.genai.types import GenerateContentConfig, Modality, Part
+    from PIL import Image
     from io import BytesIO
 
     client = genai.Client()
