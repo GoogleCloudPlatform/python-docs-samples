@@ -11,5 +11,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # [START memorystore_requirements_app_engine_standard_py2]
-redis==3.3.11
+redis==8.0.0
 # [END memorystore_requirements_app_engine_standard_py2]
