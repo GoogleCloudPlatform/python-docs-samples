@@ -1,5 +1,5 @@
 selenium==4.10.0
-Flask==2.2.2
+Flask==2.2.5
 Werkzeug==2.3.8
 pytest==8.2.0
 pytest-flask==1.2.0
