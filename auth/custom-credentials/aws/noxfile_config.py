@@ -14,5 +14,5 @@
 
 TEST_CONFIG_OVERRIDE = {
     # Note: Docker-based sample, testing only against version specified in Dockerfile (3.14)
-    "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"],
+    "ignored_versions": ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"],
 }
