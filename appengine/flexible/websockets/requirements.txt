@@ -3,4 +3,4 @@ Flask-Sockets==0.2.1
 gunicorn==23.0.0
 requests==2.31.0
 markupsafe==2.0.1
-Werkzeug==1.0.1;
+Werkzeug==3.1.6;
