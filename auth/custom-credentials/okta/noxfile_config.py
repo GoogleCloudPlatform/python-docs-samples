@@ -13,5 +13,5 @@
 # limitations under the License.
 
 TEST_CONFIG_OVERRIDE = {
-    "ignored_versions": ["3.7", "3.8", "3.9", "3.11", "3.12", "3.13"],
+    "ignored_versions": ["3.8", "3.9", "3.11", "3.12", "3.13"],
 }
