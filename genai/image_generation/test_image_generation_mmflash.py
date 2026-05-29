@@ -19,6 +19,7 @@
 import os
 
 import imggen_mmflash_edit_img_with_txt_img
+import imggen_mmflash_img_with_vid
 import imggen_mmflash_locale_aware_with_txt
 import imggen_mmflash_multiple_imgs_with_txt
 import imggen_mmflash_txt_and_img_with_txt
@@ -49,3 +50,6 @@ def test_imggen_mmflash_locale_aware_with_txt() -> None:
 
 def test_imggen_mmflash_multiple_imgs_with_txt() -> None:
     assert imggen_mmflash_multiple_imgs_with_txt.generate_content()
+
+def test_imggen_mmflash_img_with_vid() -> None:
+    assert imggen_mmflash_img_with_vid.generate_content()

@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,17 +14,26 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_imggen_mmflash_locale_aware_with_txt]
+    # [START googlegenaisdk_imggen_mmflash_img_with_vid]
     from google import genai
-    from google.genai.types import GenerateContentConfig, Modality
+    from google.genai.types import GenerateContentConfig, Modality, Part
     from PIL import Image
     from io import BytesIO
 
     client = genai.Client()
 
+    # A video on 'The ABCs of agent building'
+    video = "https://www.youtube.com/watch?v=rjoMZyxncUI"
+
     response = client.models.generate_content(
         model="gemini-3.1-flash-image",
-        contents=("Generate a photo of a breakfast meal."),
+        contents=[
+            Part.from_uri(
+                file_uri=video,
+                mime_type="video/mp4"
+            ), 
+            "Generate an infographic of the topics covered in this video."
+        ],
         config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
     for part in response.candidates[0].content.parts:
@@ -32,13 +41,10 @@ def generate_content() -> str:
             print(part.text)
         elif part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
-            image.save("output_folder/example-breakfast-meal.png")
-    # Example response:
-    #   Generates a photo of a vibrant and appetizing breakfast meal.
-    #   The scene will feature a white plate with golden-brown pancakes
-    #   stacked neatly, drizzled with rich maple syrup and ...
-    # [END googlegenaisdk_imggen_mmflash_locale_aware_with_txt]
-    return "output_folder/example-breakfast-meal.png"
+            image.save("output_folder/video-image.png")
+
+    # [END googlegenaisdk_imggen_mmflash_img_with_vid]
+    return "output_folder/video-image.png"
 
 
 if __name__ == "__main__":
