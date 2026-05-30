@@ -1,2 +1,2 @@
 pytest==8.2.0
-cloudevents==1.11.0
+cloudevents==2.0.0
