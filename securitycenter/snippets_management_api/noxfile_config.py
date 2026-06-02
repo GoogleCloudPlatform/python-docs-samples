@@ -25,7 +25,7 @@ TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # SKIPPED VERSIONS: due to concurrency issues editing multiple org level
     # custom modules, only test these samples on latest Python.
-    "ignored_versions": ["2.7", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"],
+    "ignored_versions": ["3.8", "3.9", "3.11", "3.12", "3.13"],
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string

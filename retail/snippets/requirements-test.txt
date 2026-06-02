@@ -1,4 +1,4 @@
-pytest
+pytest==9.0.3; python_version >= "3.10"
 pytest-xdist
 mock
 google-cloud-retail>=2.10.0
