@@ -1,1 +1,1 @@
-endpoints/getting-started/clients/service_to_service_non_default/requirements-test.txt
+pytest==9.0.3; python_version >= "3.10"
