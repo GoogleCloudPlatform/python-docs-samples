@@ -1,0 +1,34 @@
+name: "CI: Check Manual Test Completion"
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+jobs:
+  check-task:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify tests checkbox is ticked
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prBody = context.payload.pull_request.body;
+            
+            if (!prBody) {
+              core.setFailed("PR description is empty. Please use the PR template and check the required boxes.");
+              return;
+            }
+            
+            // Regex checks for a markdown checkbox followed by 'nox -s py-3.'
+            // [ x ] or [x] means checked. [ ] means unchecked.
+            const checkedRegex = /- \[[xX]\] .*nox -s py-3\.\d+/;
+            const includesTargetText = prBody.includes("nox -s py-3.");
+            
+            if (!includesTargetText) {
+              core.setFailed("The required test verification line seems to be missing from the PR description.");
+              return;
+            }
+            
+            if (checkedRegex.test(prBody)) {
+              console.log("Success: The test execution checkbox has been marked!");
+            } else {
+              core.setFailed("You must run the tests and check the 'nox -s py-3.9' box before this PR can be merged.");
+            }
