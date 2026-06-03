@@ -43,8 +43,6 @@ branchProtectionRules:
   # List of required status check contexts that must pass for commits to be accepted to matching branches.
   requiredStatusCheckContexts:
     - "Lint"
-    # - "Kokoro CI - Python 3.9"
-    # - "Kokoro CI - Python 3.13"
     - "cla/google"
     - "snippet-bot check"
 # List of explicit permissions to add (additive only)
