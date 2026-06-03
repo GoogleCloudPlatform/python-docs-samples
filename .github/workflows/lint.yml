@@ -1,8 +1,6 @@
 name: Lint
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -34,14 +32,6 @@ jobs:
       - name: Make script executable
         run: chmod +x .github/scripts/lint-changed.sh
 
-      - name: Run lint script for changed files
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          BASE_REF: ${{ github.base_ref }}
-          BEFORE_SHA: ${{ github.event.before }}
+      - name: name: Run lint script for changed files
         run: |
-          # Use default string values if the GitHub Context variables are null/empty
-          .github/scripts/lint-changed.sh \
-            "${EVENT_NAME:-local}" \
-            "${BASE_REF:-main}" \
-            "${BEFORE_SHA:-}"
+          .github/scripts/lint-changed.sh "pull_request" "${{ github.base_ref }}"
