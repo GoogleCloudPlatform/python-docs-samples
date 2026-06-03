@@ -42,7 +42,7 @@ branchProtectionRules:
   requiresStrictStatusChecks: false
   # List of required status check contexts that must pass for commits to be accepted to matching branches.
   requiredStatusCheckContexts:
-    - "Lint"
+    - "lint"
     - "cla/google"
     - "snippet-bot check"
 # List of explicit permissions to add (additive only)
