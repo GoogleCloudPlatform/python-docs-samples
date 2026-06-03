@@ -27,7 +27,9 @@ jobs:
           python -m pip install nox
 
       - name: Prepare noxfile
-        run: cp noxfile-template.py noxfile.py
+      # copy from customized noxfile so that we don't lint everything in the repository
+      # we don't expect contributors to fix past lint issues
+        run: cp .github/scripts/noxfile-lint.py noxfile.py
 
       - name: Make script executable
         run: chmod +x .github/scripts/lint-changed.sh
