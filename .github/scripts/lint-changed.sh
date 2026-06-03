@@ -17,24 +17,26 @@ set -euo pipefail
 
 EVENT_NAME="${1:-local}"
 BASE_REF="${2:-main}"
-BEFORE_SHA="${3:-}"
 
 echo "Configuring target diff for event: $EVENT_NAME"
 
-# Determine the base branch/commit to diff against
+# Determine the target reference to diff against
 if [ "$EVENT_NAME" = "pull_request" ]; then
+    echo "Fetching origin/$BASE_REF metadata..."
     # Ensure we have the target branch metadata fetched.
     git fetch origin "$BASE_REF" --depth=1 --quiet
-    BASE_SHA="origin/$BASE_REF"
+    
+    # Isolate to only changes in the PR
+    DIFF_COMMAND="origin/$BASE_REF..." 
 else
-    BASE_SHA="$BEFORE_SHA"
-    # Fallback if it's a direct push without a prior SHA, or a local run
-    if [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ] || [ -z "$BASE_SHA" ]; then
-        BASE_SHA="HEAD~1"
-    fi
+    # Local fallback
+    # diff against local main branch.
+    echo "Running locally. Diffing against local $BASE_REF..."
+    DIFF_COMMAND="$BASE_REF"
 fi
 
-DIFF_OUTPUT=$(git diff --name-only --diff-filter=d "$BASE_SHA" -- '*.py' 2>/dev/null || true)
+# Gather modified/added Python files, explicitly ignoring deleted files via --diff-filter=d
+DIFF_OUTPUT=$(git diff --name-only --diff-filter=d "$DIFF_COMMAND" -- '*.py' 2>/dev/null || true)
 
 if [ -n "$DIFF_OUTPUT" ]; then
     mapfile -t CHANGED_FILES <<< "$DIFF_OUTPUT"
@@ -42,17 +44,20 @@ else
     CHANGED_FILES=()
 fi
 
-# Execute linters if files exist
+# Execute linters if changed Python files exist
 if [ ${#CHANGED_FILES[@]} -gt 0 ]; then
     echo "Files to lint:"
     printf ' - %s\n' "${CHANGED_FILES[@]}"
 
-    # Track execution success manually so both tools get a chance to run
+    # Track execution success manually so both tools get a chance to run.
+    # This prevents the workflow from dying on Black without showing Flake8 errors.
     BLACK_EXIT=0
     LINT_EXIT=0
 
-    # Pass the array safely using "${CHANGED_FILES[@]}"
+    echo "Running blacken..."
     nox -s blacken -- "${CHANGED_FILES[@]}" || BLACK_EXIT=$?
+    
+    echo "Running flake8 lint..."
     nox -s lint -- "${CHANGED_FILES[@]}" || LINT_EXIT=$?
 
     if [ $BLACK_EXIT -ne 0 ] || [ $LINT_EXIT -ne 0 ]; then
