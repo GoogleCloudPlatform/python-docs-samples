@@ -4,6 +4,5 @@ Django==6.0.1; python_version >= "3.12"
 #mysqlclient==1.4.1
 wheel==0.40.0
 gunicorn==23.0.0; python_version > '3.0'
-gunicorn==23.0.0; python_version < '3.0'
 # psycopg2==2.8.4 # uncomment if you prefer to build from source
 psycopg2-binary==2.9.11
