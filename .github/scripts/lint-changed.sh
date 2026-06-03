@@ -56,10 +56,10 @@ if [ ${#CHANGED_FILES[@]} -gt 0 ]; then
 
     # adding -q to silence some of the extraneous logging
     echo "Running blacken..."
-    nox -q -s blacken -- "${CHANGED_FILES[@]}" || BLACK_EXIT=$?
+    nox -s blacken -- "${CHANGED_FILES[@]}" || BLACK_EXIT=$?
     
     echo "Running flake8 lint..."
-    nox -q -s lint -- "${CHANGED_FILES[@]}" || LINT_EXIT=$?
+    nox -s lint -- "${CHANGED_FILES[@]}" || LINT_EXIT=$?
 
     if [ $BLACK_EXIT -ne 0 ] || [ $LINT_EXIT -ne 0 ]; then
         echo "❌ One or more linting checks failed."
