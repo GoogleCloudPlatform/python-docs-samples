@@ -12,7 +12,6 @@ echo "Configuring target diff for event: $EVENT_NAME"
 # Determine the base branch/commit to diff against
 if [ "$EVENT_NAME" = "pull_request" ]; then
     # Ensure we have the target branch metadata fetched.
-    # Note: If this fails due to shallow clone issues, the script will exit safely via set -e
     git fetch origin "$BASE_REF" --depth=1 --quiet
     BASE_SHA="origin/$BASE_REF"
 else
@@ -23,8 +22,13 @@ else
     fi
 fi
 
-# Extract changed Python files into a Bash array
-mapfile -t CHANGED_FILES < <(git diff --name-only --diff-filter=d "$BASE_SHA" -- '*.py' 2>/dev/null || true)
+DIFF_OUTPUT=$(git diff --name-only --diff-filter=d "$BASE_SHA" -- '*.py' 2>/dev/null || true)
+
+if [ -n "$DIFF_OUTPUT" ]; then
+    mapfile -t CHANGED_FILES <<< "$DIFF_OUTPUT"
+else
+    CHANGED_FILES=()
+fi
 
 # Execute linters if files exist
 if [ ${#CHANGED_FILES[@]} -gt 0 ]; then
@@ -45,3 +49,4 @@ if [ ${#CHANGED_FILES[@]} -gt 0 ]; then
     fi
 else
     echo "✅ No Python files changed in this scope. Skipping checks."
+fi
