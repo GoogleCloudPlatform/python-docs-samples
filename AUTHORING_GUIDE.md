@@ -109,7 +109,7 @@ started with using a service or API — it should be in a _quickstart_ folder.
 
 ### Python Versions
 
-Samples should support Python 3.9, 3.10, 3.11, 3.12 and 3.13.
+Samples should support Python 3.10, 3.11, 3.12, 3.13 and 3.14.
 
 If the API or service your sample works with has specific Python version
 requirements different from those mentioned above, the sample should support
