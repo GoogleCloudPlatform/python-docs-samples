@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # test_pass.py
-import os
 
 
 def calculate_square(number: int) -> int:
@@ -25,5 +24,4 @@ def calculate_square(number: int) -> int:
 
 if __name__ == "__main__":
     # Ensure a basic execution works cleanly
-    current_directory = os.getcwd()
     calculate_square(5)
