@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 import os
-import sys
+
 import nox
 
 # Use a stable Python version for running the style utilities
@@ -38,6 +38,20 @@ def _determine_local_import_names(start_dir: str) -> list[str]:
     except Exception:
         return []
 
+# Linting with flake8.
+#
+# We ignore the following rules:
+#   ANN101: missing type annotation for `self` in method
+#   ANN102: missing type annotation for `cls` in method
+#   E203: whitespace before ‘:’
+#   E266: too many leading ‘#’ for block comment
+#   E501: line too long
+#   I202: Additional newline in a section of imports
+#
+# We also need to specify the rules which are ignored by default:
+# ['E226', 'W504', 'E126', 'E123', 'W503', 'E24', 'E704', 'E121']
+#
+# For more information see: https://pypi.org/project/flake8-annotations
 
 # Standardize style configuration parameters
 FLAKE8_COMMON_ARGS = [
