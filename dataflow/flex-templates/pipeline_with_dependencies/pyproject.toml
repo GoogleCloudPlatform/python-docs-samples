@@ -20,6 +20,6 @@ build-backend = "setuptools.build_meta"
 name = "my_package"
 version = "0.1.0"
 dependencies = [
-  "apache-beam[gcp]==2.54.0",  # Must match the version in `Dockerfile``.
+  "apache-beam[gcp]==2.73.0",  # Must match the version in `Dockerfile``.
   "pyfiglet",  # This is the only non-Beam dependency of this pipeline.
 ]
