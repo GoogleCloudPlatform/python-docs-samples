@@ -32,6 +32,6 @@ jobs:
       - name: Make script executable
         run: chmod +x .github/scripts/lint-changed.sh
 
-      - name: name: Run lint script for changed files
+      - name: Run lint script for changed files
         run: |
           .github/scripts/lint-changed.sh "pull_request" "${{ github.base_ref }}"
