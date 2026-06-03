@@ -35,8 +35,13 @@ jobs:
         run: chmod +x .github/scripts/lint-changed.sh
 
       - name: Run lint script for changed files
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE_SHA: ${{ github.event.before }}
         run: |
+          # Use default string values if the GitHub Context variables are null/empty
           .github/scripts/lint-changed.sh \
-            "${{ github.event_name }}" \
-            "${{ github.base_ref || github.ref_name }}" \
-            "${{ github.event.before }}"
+            "${EVENT_NAME:-local}" \
+            "${BASE_REF:-main}" \
+            "${BEFORE_SHA:-}"
