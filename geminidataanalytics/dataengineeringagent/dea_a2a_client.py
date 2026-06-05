@@ -31,7 +31,7 @@ import asyncio
 import os
 import pathlib
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 import uuid
 
 from a2a import client as a2a_client
@@ -71,7 +71,7 @@ async def force_alt_sse(request: httpx.Request) -> None:
     request.url = request.url.copy_merge_params({"alt": "sse"})
 
 
-def get_bearer_token() -> Optional[str]:
+def get_bearer_token() -> str | None:
   """Fetches a Google Cloud bearer token using Application Default Credentials (ADC)."""
   try:
     credentials, _ = default(
@@ -89,7 +89,7 @@ def get_bearer_token() -> Optional[str]:
     return None
 
 
-def load_instructions(paths: List[str]) -> List[Dict[str, str]]:
+def load_instructions(paths: list[str]) -> list[dict[str, str]]:
   """Reads instructions from files or directories."""
   instructions = []
   for path_str in paths:
@@ -97,17 +97,57 @@ def load_instructions(paths: List[str]) -> List[Dict[str, str]]:
     if not path.exists():
       raise FileNotFoundError(f"Instruction path does not exist: {path_str}")
     if path.is_file():
-      instructions.append(
-          {"name": path.name, "definition": path.read_text(encoding="utf-8")}
-      )
+      try:
+        instructions.append(
+            {"name": path.name, "definition": path.read_text(encoding="utf-8")}
+        )
+      except UnicodeDecodeError:
+        logging.warning("Skipping non-UTF-8 file: %s", path_str)
     elif path.is_dir():
       for file_path in path.iterdir():
-        if file_path.is_file():
-          instructions.append({
-              "name": file_path.name,
-              "definition": file_path.read_text(encoding="utf-8"),
-          })
+        if file_path.is_file() and not file_path.name.startswith("."):
+          try:
+            instructions.append({
+                "name": file_path.name,
+                "definition": file_path.read_text(encoding="utf-8"),
+            })
+          except UnicodeDecodeError:
+            logging.warning("Skipping non-UTF-8 file: %s", file_path)
   return instructions
+
+
+def _extract_metadata(event: dict[str, Any]) -> tuple[str | None, str | None]:
+  """Extracts conversation token and finish reason from an event dictionary."""
+  metadata = None
+  if "task" in event:
+    metadata = event["task"].get("metadata", {})
+  elif "status_update" in event:
+    metadata = event["status_update"].get("metadata", {})
+  elif "message" in event:
+    metadata = event["message"].get("metadata", {})
+
+  if not metadata:
+    return None, None
+
+  conversation_token = None
+  token_val = metadata.get(CONVERSATION_TOKEN_EXT_URI)
+  if token_val:
+    conversation_token = (
+        token_val.get("conversationToken")
+        if isinstance(token_val, dict)
+        else token_val
+    )
+
+  finish_reason = None
+  reason_val = metadata.get(FINISH_REASON_EXT_URI)
+  if reason_val:
+    finish_reason = (
+        reason_val.get("finishReason")
+        if isinstance(reason_val, dict)
+        else reason_val
+    )
+
+  return conversation_token, finish_reason
 
 
 # --- Core Interaction Snippet ---
@@ -118,22 +158,23 @@ async def interact_with_data_engineering_agent(
     auth_token: str,
     gcp_resource_id: str,
     message: str,
-    conversation_token: Optional[str] = None,
-    instructions: Optional[List[Dict[str, str]]] = None,
-) -> str:
+    conversation_token: str | None = None,
+    instructions: list[dict[str, str]] | None = None,
+    max_retries: int = 5,
+) -> str | None:
   """Sends a query to the Data Engineering Agent via the A2A protocol.
 
   This function implements the complete client communication lifecycle:
   1. Resolves the Agent Card to discover endpoint protocols.
   2. Establishes the A2A client session over HTTP/SSE.
-  3. Attaches required metadata extensions (GCP Resource ID, Conversation Token,
+  3. Attaches required metadata extensions (Google Cloud resource ID, Conversation Token,
      instructions).
   4. Invokes the agent and streams responses.
   5. Handles DEADLINE_EXCEEDED finish reason by auto-resuming the turn.
 
   Args:
       auth_token: A Google Cloud access token for authentication.
-      gcp_resource_id: The target GCP resource ID, formatted as
+      gcp_resource_id: The target Google Cloud resource ID, formatted as
         'projects/{project}/locations/{location}/...'
       message: The natural language query to send to the agent.
       conversation_token: Optional conversation token to resume an existing
@@ -182,18 +223,33 @@ async def interact_with_data_engineering_agent(
 
     try:
       # Helper to build request metadata
-      def build_metadata(token_val: Optional[str]) -> Dict[str, Any]:
-        meta = {GCP_RESOURCE_EXT_URI: {"gcpResourceId": gcp_resource_id}}
+      def build_metadata(token_val: str | None) -> dict[str, Any]:
+        metadata = {GCP_RESOURCE_EXT_URI: {"gcpResourceId": gcp_resource_id}}
         if token_val:
-          meta[CONVERSATION_TOKEN_EXT_URI] = token_val
+          metadata[CONVERSATION_TOKEN_EXT_URI] = token_val
         if instructions:
-          meta[INSTRUCTION_EXT_URI] = {"agentInstructions": instructions}
-        return meta
+          metadata[INSTRUCTION_EXT_URI] = {"agentInstructions": instructions}
+        return metadata
 
       context_id = str(uuid.uuid4())
       current_token = conversation_token
       query_to_send = message
       is_retry = False
+      retry_count = 0
+
+      extensions = [
+          MESSAGE_LEVEL_EXT_URI,
+          INSTRUCTION_EXT_URI,
+          GCP_RESOURCE_EXT_URI,
+          CONVERSATION_TOKEN_EXT_URI,
+          FINISH_REASON_EXT_URI,
+      ]
+      service_params = a2a_service_params.ServiceParametersFactory.create(
+          [a2a_service_params.with_a2a_extensions(extensions)]
+      )
+      context = a2a_client.ClientCallContext(
+          service_parameters=service_params, timeout=600.0
+      )
 
       while True:
         if is_retry:
@@ -211,22 +267,7 @@ async def interact_with_data_engineering_agent(
             metadata=build_metadata(current_token),
         )
 
-        extensions = [
-            MESSAGE_LEVEL_EXT_URI,
-            INSTRUCTION_EXT_URI,
-            GCP_RESOURCE_EXT_URI,
-            CONVERSATION_TOKEN_EXT_URI,
-            FINISH_REASON_EXT_URI,
-        ]
-
-        service_params = a2a_service_params.ServiceParametersFactory.create(
-            [a2a_service_params.with_a2a_extensions(extensions)]
-        )
-        context = a2a_client.ClientCallContext(
-            service_parameters=service_params, timeout=600.0
-        )
-
-        finish_reason: Optional[str] = None
+        finish_reason: str | None = None
         responses = client.send_message(request, context=context)
 
         async for response_obj in responses:
@@ -238,37 +279,19 @@ async def interact_with_data_engineering_agent(
           )
           events = event if isinstance(event, list) else [event]
           for e in events:
-            # Extract metadata from different possible A2A event layers
-            meta = None
-            if "task" in e:
-              meta = e["task"].get("metadata", {})
-            elif "status_update" in e:
-              meta = e["status_update"].get("metadata", {})
-            elif "message" in e:
-              meta = e["message"].get("metadata", {})
-
-            if meta:
-              # Update conversation token
-              token_val = meta.get(CONVERSATION_TOKEN_EXT_URI)
-              if token_val:
-                extracted_token = (
-                    token_val.get("conversationToken")
-                    if isinstance(token_val, dict)
-                    else token_val
-                )
-                if extracted_token:
-                  current_token = extracted_token
-              # Extract finish reason
-              reason_val = meta.get(FINISH_REASON_EXT_URI)
-              if reason_val:
-                finish_reason = (
-                    reason_val.get("finishReason")
-                    if isinstance(reason_val, dict)
-                    else reason_val
-                )
+            token, reason = _extract_metadata(e)
+            current_token = token or current_token
+            finish_reason = reason or finish_reason
 
         # Handle deadline exceeded by repeating the turn
         if finish_reason == "DEADLINE_EXCEEDED":
+          retry_count += 1
+          if retry_count > max_retries:
+            logging.error(
+                "Max retries (%d) exceeded due to repeated DEADLINE_EXCEEDED.",
+                max_retries,
+            )
+            break
           logging.warning("Agent execution hit deadline. Resuming...")
           query_to_send = "Please continue."
           is_retry = True
@@ -290,7 +313,7 @@ async def main() -> None:
       description="Data Engineering Agent A2A Client"
   )
   parser.add_argument(
-      "--gcp_resource_id", required=True, help="Target GCP resource ID."
+      "--gcp_resource_id", required=True, help="Target Google Cloud resource ID."
   )
   parser.add_argument("--message", required=True, help="The message to send.")
   parser.add_argument(
@@ -305,6 +328,8 @@ async def main() -> None:
 
   args = parser.parse_args()
   logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+  logging.getLogger("httpx").setLevel(logging.WARNING)
+  logging.getLogger("a2a").setLevel(logging.WARNING)
 
   token = os.getenv("GOOGLE_ACCESS_TOKEN") or get_bearer_token()
   if not token:
