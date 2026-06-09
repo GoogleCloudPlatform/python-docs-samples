@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START memorystore_redis_client_side_metrics]
 import os
 import time
 import redis
@@ -100,3 +101,4 @@ if __name__ == "__main__":
 
     tracer_provider.force_flush()
     meter_provider.force_flush()
+# [END memorystore_redis_client_side_metrics]
