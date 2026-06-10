@@ -1,5 +1,5 @@
 earthengine-api==1.5.9
 folium==0.19.5
-google-cloud-aiplatform[full]==1.157.0; python_version >= "3.10"
+google-cloud-aiplatform==1.157.0; python_version >= "3.10"
 pandas==2.2.3
 tensorflow==2.12.0
