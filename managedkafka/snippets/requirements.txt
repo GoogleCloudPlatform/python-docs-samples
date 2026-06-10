@@ -1,4 +1,4 @@
-protobuf==5.29.4
+protobuf==5.29.6
 pytest==9.0.3; python_version >= "3.10"
 google-api-core==2.23.0
 google-auth==2.38.0
