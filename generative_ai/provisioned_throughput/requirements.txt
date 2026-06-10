@@ -1,2 +1,2 @@
-google-cloud-aiplatform==1.157.0; python_version >= "3.10"
+google-cloud-aiplatform==1.157.0
 google-auth==2.38.0

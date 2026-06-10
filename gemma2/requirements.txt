@@ -1,2 +1,2 @@
-google-cloud-aiplatform[full]==1.157.0; python_version >= "3.10"
+google-cloud-aiplatform[full]==1.157.0
 protobuf==5.29.5
