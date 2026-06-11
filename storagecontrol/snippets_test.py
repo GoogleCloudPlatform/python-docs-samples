@@ -12,18 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import storage
-
-import pytest
-
 import create_folder
 import delete_folder
+import delete_folder_recursive
 import get_folder
+from google.cloud import storage
 import list_folders
 import managed_folder_create
 import managed_folder_delete
 import managed_folder_get
 import managed_folder_list
+import pytest
 import rename_folder
 
 # === Folders === #
@@ -107,8 +106,6 @@ def test_managed_folder_create_get_list_delete(
 def test_delete_folder_recursive(
     capsys: pytest.LogCaptureFixture, hns_enabled_bucket: storage.Bucket, uuid_name: str
 ) -> None:
-    import delete_folder_recursive
-
     bucket_name = hns_enabled_bucket.name
     folder_name = uuid_name
 
