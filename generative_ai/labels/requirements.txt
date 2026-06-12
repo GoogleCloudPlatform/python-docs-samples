@@ -1,1 +1,1 @@
-google-cloud-aiplatform==1.133.0
+google-cloud-aiplatform==1.157.0
