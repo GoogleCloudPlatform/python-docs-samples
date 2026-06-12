@@ -12,20 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import storage
-
-import pytest
-
 import create_folder
 import delete_folder
+import delete_folder_recursive
 import get_folder
+from google.cloud import storage
 import list_folders
 import managed_folder_create
 import managed_folder_delete
 import managed_folder_get
 import managed_folder_list
+import pytest
 import rename_folder
-
 
 # === Folders === #
 
@@ -100,6 +98,27 @@ def test_managed_folder_create_get_list_delete(
     # Test delete managed folder
     managed_folder_delete.delete_managed_folder(
         bucket_name=bucket_name, managed_folder_id=folder_name
+    )
+    out, _ = capsys.readouterr()
+    assert folder_name in out
+
+
+def test_delete_folder_recursive(
+    capsys: pytest.LogCaptureFixture, hns_enabled_bucket: storage.Bucket, uuid_name: str
+) -> None:
+    bucket_name = hns_enabled_bucket.name
+    folder_name = uuid_name
+
+    # Create folder
+    create_folder.create_folder(bucket_name=bucket_name, folder_name=folder_name)
+
+    # Create a nested folder
+    nested_folder_name = f"{folder_name}/nested_folder"
+    create_folder.create_folder(bucket_name=bucket_name, folder_name=nested_folder_name)
+
+    # Test delete folder recursive
+    delete_folder_recursive.delete_folder_recursive(
+        bucket_name=bucket_name, folder_name=folder_name
     )
     out, _ = capsys.readouterr()
     assert folder_name in out
