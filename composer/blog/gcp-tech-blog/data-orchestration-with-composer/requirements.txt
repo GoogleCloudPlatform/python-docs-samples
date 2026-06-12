@@ -3,4 +3,4 @@
 apache-airflow[google]==3.2.1; python_version >= 3.10
 apache-airflow-providers-apache-beam==5.1.1
 apache-airflow-providers-slack==7.3.2
-apache-airflow-providers-http==4.4.2
+apache-airflow-providers-http==6.0.3
