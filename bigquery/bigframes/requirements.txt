@@ -1,1 +1,1 @@
-bigframes==2.38.0
+bigframes==2.39.0
