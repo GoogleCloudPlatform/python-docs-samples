@@ -242,7 +242,7 @@ pyarrow==14.0.2
     # via apache-beam
 pyarrow-hotfix==0.6
     # via apache-beam
-pyasn1==0.5.1
+pyasn1==0.6.3
     # via
     #   oauth2client
     #   pyasn1-modules
