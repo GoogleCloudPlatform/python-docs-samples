@@ -35,7 +35,7 @@ class GemmaModelHandler(ModelHandler[str, PredictionResult, GemmaCausalLM]):
         self,
         model_name: str = "gemma_2B",
     ):
-        """ Implementation of the ModelHandler interface for Gemma using text as input.
+        """Implementation of the ModelHandler interface for Gemma using text as input.
 
         Example Usage::
 
@@ -48,7 +48,7 @@ class GemmaModelHandler(ModelHandler[str, PredictionResult, GemmaCausalLM]):
         self._env_vars = {}
 
     def share_model_across_processes(self) -> bool:
-        """ Indicates if the model should be loaded once-per-VM rather than
+        """Indicates if the model should be loaded once-per-VM rather than
         once-per-worker-process on a VM. Because Gemma is a large language model,
         this will always return True to avoid OOM errors.
         """
@@ -62,7 +62,7 @@ class GemmaModelHandler(ModelHandler[str, PredictionResult, GemmaCausalLM]):
         self,
         batch: Sequence[str],
         model: GemmaCausalLM,
-        inference_args: Optional[dict[str, Any]] = None
+        inference_args: Optional[dict[str, Any]] = None,
     ) -> Iterable[PredictionResult]:
         """Runs inferences on a batch of text strings.
 
@@ -85,7 +85,8 @@ class GemmaModelHandler(ModelHandler[str, PredictionResult, GemmaCausalLM]):
 class FormatOutput(beam.DoFn):
     def process(self, element, *args, **kwargs):
         yield "Input: {input}, Output: {output}".format(
-            input=element.example, output=element.inference)
+            input=element.example, output=element.inference
+        )
 
 
 if __name__ == "__main__":
@@ -119,13 +120,16 @@ if __name__ == "__main__":
 
     pipeline = beam.Pipeline(options=beam_options)
     _ = (
-        pipeline | "Read Topic" >>
-        beam.io.ReadFromPubSub(subscription=args.messages_subscription)
+        pipeline
+        | "Read Topic"
+        >> beam.io.ReadFromPubSub(subscription=args.messages_subscription)
         | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
-        | "RunInference-Gemma" >> RunInference(
+        | "RunInference-Gemma"
+        >> RunInference(
             GemmaModelHandler(args.model_path)
         )  # Send the prompts to the model and get responses.
         | "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
-        | "Publish Result" >>
-        beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responses_topic))
+        | "Publish Result"
+        >> beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responses_topic)
+    )
     pipeline.run()

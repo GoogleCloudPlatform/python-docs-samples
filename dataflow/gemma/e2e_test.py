@@ -39,6 +39,7 @@ OPTION B: Run tests with nox
 NOTE: For the tests to find the conftest in the testing infrastructure,
       add the PYTHONPATH to the "env" in your noxfile_config.py file.
 """
+
 from collections.abc import Callable, Iterator
 
 import conftest  # python-docs-samples/dataflow/conftest.py
@@ -70,8 +71,9 @@ def messages_topic(pubsub_topic: Callable[[str], str]) -> str:
 
 
 @pytest.fixture(scope="session")
-def messages_subscription(pubsub_subscription: Callable[[str, str], str],
-                          messages_topic: str) -> str:
+def messages_subscription(
+    pubsub_subscription: Callable[[str, str], str], messages_topic: str
+) -> str:
     return pubsub_subscription("messages", messages_topic)
 
 
@@ -81,20 +83,21 @@ def responses_topic(pubsub_topic: Callable[[str], str]) -> str:
 
 
 @pytest.fixture(scope="session")
-def responses_subscription(pubsub_subscription: Callable[[str, str], str],
-                           responses_topic: str) -> str:
+def responses_subscription(
+    pubsub_subscription: Callable[[str, str], str], responses_topic: str
+) -> str:
     return pubsub_subscription("responses", responses_topic)
 
 
 @pytest.fixture(scope="session")
 def dataflow_job(
-        project: str,
-        bucket_name: str,
-        location: str,
-        unique_name: str,
-        container_image: str,
-        messages_subscription: str,
-        responses_topic: str,
+    project: str,
+    bucket_name: str,
+    location: str,
+    unique_name: str,
+    container_image: str,
+    messages_subscription: str,
+    responses_topic: str,
 ) -> Iterator[str]:
     # Launch the streaming Dataflow pipeline.
     conftest.run_cmd(
@@ -127,20 +130,18 @@ def dataflow_job(
 
 @pytest.mark.timeout(3600)
 def test_pipeline_dataflow(
-        project: str,
-        location: str,
-        dataflow_job: str,
-        messages_topic: str,
-        responses_subscription: str,
+    project: str,
+    location: str,
+    dataflow_job: str,
+    messages_topic: str,
+    responses_subscription: str,
 ) -> None:
     print(f"Waiting for the Dataflow workers to start: {dataflow_job}")
     conftest.wait_until(
-        lambda: conftest.dataflow_num_workers(project, location, dataflow_job)
-        > 0,
+        lambda: conftest.dataflow_num_workers(project, location, dataflow_job) > 0,
         "workers are running",
     )
-    num_workers = conftest.dataflow_num_workers(project, location,
-                                                dataflow_job)
+    num_workers = conftest.dataflow_num_workers(project, location, dataflow_job)
     print(f"Dataflow job num_workers: {num_workers}")
 
     messages = ["This is a test for a Python sample."]
