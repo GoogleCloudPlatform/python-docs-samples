@@ -1,0 +1,62 @@
+from google.cloud import dataplex_v1
+import google.api_core.exceptions
+
+
+def create_data_quality_scan_global(
+    project_id: str,
+    dataset_id: str,
+    table_id: str,
+    location: str,
+    column_id_1: str,
+    column_id_2: str
+) -> dataplex_v1.DataScan:
+    """Creates a Dataplex Data Quality Scan using global API endpoint routing.
+
+        A bigquery table with at least 2 columns is expected.
+    """
+    client = dataplex_v1.DataScanServiceClient()
+
+    parent = client.common_location_path(project=project_id, location=location)
+
+    bigquery_table = f"//bigquery.googleapis.com/projects/{project_id}/datasets/{dataset_id}/tables/{table_id}"
+
+    data_quality_spec = dataplex_v1.DataQualitySpec(
+        rules=[
+            dataplex_v1.DataQualityRule(
+                name="global-null-assertion",
+                dimension="COMPLETENESS",
+                description="Fails if any row contains a null value",
+                sql_assertion=dataplex_v1.DataQualityRule.SqlAssertion(
+                    # Use ${data()} as the placeholder for the table Dataplex is scanning
+                    sql_statement="SELECT * FROM ${data()}" f"WHERE {column_id_1} IS NULL OR {column_id_2} IS NULL"
+                )
+            )
+        ]
+    )
+
+    data_scan = dataplex_v1.DataScan(
+        display_name="Global Data Quality Scan",
+        data=dataplex_v1.DataSource(resource=bigquery_table),
+        data_quality_spec=data_quality_spec,
+    )
+
+    request = dataplex_v1.CreateDataScanRequest(
+        parent=parent,
+        data_scan=data_scan
+    )
+
+    try:
+        operation = client.create_data_scan(request=request)
+        print(operation)
+        return operation.result()
+    except google.api_core.exceptions.AlreadyExists:
+        print("A scan with this ID already Exists.")
+    except google.api_core.exceptions.InvalidArgument as e:
+        print(f"Your scan configuration is invalid: {e}")
+    except google.api_core.exceptions.GoogleAPIError as e:
+        print(f"Unexpected exception: {e}")
+
+
+# TODO remove before PR
+if __name__ == "__main__":
+    create_data_quality_scan_global(project_id="samples-xwf-01", dataset_id="test_dataset_01", table_id="test_table_01", location="us-central1", column_id_1="test_field_01", column_id_2="test_field_02")
