@@ -15,10 +15,10 @@
 import asyncio
 import io
 import os
+import sys
 import tempfile
 import time
 import uuid
-import sys
 
 from google.cloud import storage
 import google.cloud.exceptions
