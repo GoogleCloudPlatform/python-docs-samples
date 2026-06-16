@@ -23,13 +23,11 @@ documentation at https://cloud.google.com/logging/docs.
 
 import argparse
 
-from google.cloud import logging
-
-
-# [START logging_write_log_entry]
-import logging
 import google.cloud.logging
 
+import logging
+
+# [START logging_write_log_entry]
 def write_entry(logger_name):
     """Writes log entries using the Python standard library integration."""
     # Instantiate Cloud Logging client
@@ -66,7 +64,7 @@ def write_entry(logger_name):
 # [START logging_list_log_entries]
 def list_entries(logger_name):
     """Lists the most recent entries for a given logger."""
-    logging_client = logging.Client()
+    logging_client = google.cloud.logging.Client()
     logger = logging_client.logger(logger_name)
 
     print("Listing entries for logger {}:".format(logger.name))
@@ -85,7 +83,7 @@ def delete_logger(logger_name):
 
     Note that a deletion can take several minutes to take effect.
     """
-    logging_client = logging.Client()
+    logging_client = google.cloud.logging.Client()
     logger = logging_client.logger(logger_name)
 
     logger.delete()
