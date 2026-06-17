@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START dataplex_data_quality_scan_global]
+# [START dataplex_create_data_quality_scan_global]
 import google.api_core.exceptions
 from google.cloud import dataplex_v1
 
@@ -25,14 +25,12 @@ def create_data_quality_scan_global(
     column_id_1: str,
     column_id_2: str,
 ) -> None:
-    """Creates a Dataplex Data Quality Scan using global API endpoint routing.
-
-    A bigquery table with at least 2 columns is expected.
-    """
+    """Creates a Dataplex Data Quality Scan using global API endpoint routing."""
     client = dataplex_v1.DataScanServiceClient()
 
     parent = client.common_location_path(project=project_id, location=location)
 
+    # A bigquery table with at least 2 columns is assumed.
     bigquery_table = (
         f"//bigquery.googleapis.com/projects/{project_id}"
         f"/datasets/{dataset_id}/tables/{table_id}"
@@ -73,4 +71,4 @@ def create_data_quality_scan_global(
     except google.api_core.exceptions.GoogleAPIError as e:
         print(f"Unexpected exception: {e}")
 
-# [END dataplex_data_quality_scan_global]
+# [END dataplex_create_data_quality_scan_global]
