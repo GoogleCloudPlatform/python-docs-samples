@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START dataplex_data_quality_scan_global]
 import google.api_core.exceptions
 from google.cloud import dataplex_v1
 
@@ -71,3 +72,5 @@ def create_data_quality_scan_global(
         print(f"Your scan configuration is invalid: {e}")
     except google.api_core.exceptions.GoogleAPIError as e:
         print(f"Unexpected exception: {e}")
+
+# [END dataplex_data_quality_scan_global]
