@@ -67,7 +67,7 @@ def create_data_quality_scan_global(
         operation = client.create_data_scan(request=request)
         print(operation.result())
     except google.api_core.exceptions.AlreadyExists:
-        print("A scan with this ID already Exists.")
+        print("A scan with this ID already exists.")
     except google.api_core.exceptions.InvalidArgument as e:
         print(f"Your scan configuration is invalid: {e}")
     except google.api_core.exceptions.GoogleAPIError as e:
