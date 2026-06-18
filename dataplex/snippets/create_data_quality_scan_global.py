@@ -25,7 +25,16 @@ def create_data_quality_scan_global(
     column_id_1: str,
     column_id_2: str,
 ) -> None:
-    """Creates a Dataplex Data Quality Scan using global API endpoint routing."""
+    """Creates a Dataplex Data Quality Scan using global API endpoint routing.
+
+    Args:
+        project_id (str): GCP project ID where the scan is created.
+        dataset_id (str): Target BigQuery dataset ID.
+        table_id (str): Target BigQuery table ID to scan.
+        location (str): GCP region where serverless compute runs.
+        column_id_1 (str): Name of the first column to evaluate.
+        column_id_2 (str): Name of the second column to evaluate.
+    """
     client = dataplex_v1.DataScanServiceClient()
 
     parent = client.common_location_path(project=project_id, location=location)
