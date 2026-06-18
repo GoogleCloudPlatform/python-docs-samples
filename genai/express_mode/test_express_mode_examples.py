@@ -14,8 +14,9 @@
 
 from unittest.mock import MagicMock, patch
 
-import api_key_example
 from google.genai import types
+
+import api_key_example
 
 
 @patch("google.genai.Client")
