@@ -17,7 +17,6 @@ from google.genai.types import GenerateContentResponse
 
 def generate_content() -> GenerateContentResponse:
     # [START googlegenaisdk_tools_code_exec_with_txt_local_img]
-    from PIL import Image
     from google import genai
     from google.genai.types import (
         GenerateContentConfig,
@@ -25,6 +24,7 @@ def generate_content() -> GenerateContentResponse:
         Tool,
         ToolCodeExecution,
     )
+    from PIL import Image
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     code_execution_tool = Tool(code_execution=ToolCodeExecution())
@@ -46,7 +46,7 @@ def generate_content() -> GenerateContentResponse:
         image_data = Image.open(image_file)
 
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.5-flash",
             contents=[image_data, prompt],
             config=GenerateContentConfig(
                 tools=[code_execution_tool],

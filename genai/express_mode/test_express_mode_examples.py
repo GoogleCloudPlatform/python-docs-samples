@@ -14,9 +14,8 @@
 
 from unittest.mock import MagicMock, patch
 
-from google.genai import types
-
 import api_key_example
+from google.genai import types
 
 
 @patch("google.genai.Client")
@@ -40,7 +39,7 @@ def test_api_key_example(mock_genai_client: MagicMock) -> None:
 
     mock_genai_client.assert_called_once_with(vertexai=True, api_key="YOUR_API_KEY")
     mock_genai_client.return_value.models.generate_content.assert_called_once_with(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         contents="Explain bubble sort to me.",
     )
     assert response == "This is a mocked bubble sort explanation."

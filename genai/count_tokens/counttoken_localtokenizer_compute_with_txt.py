@@ -17,7 +17,7 @@ def counttoken_localtokenizer_compute_with_txt() -> int:
     # [START googlegenaisdk_counttoken_localtokenizer_compute_with_txt]
     from google.genai.local_tokenizer import LocalTokenizer
 
-    tokenizer = LocalTokenizer(model_name="gemini-2.5-flash")
+    tokenizer = LocalTokenizer(model_name="gemini-3.5-flash")
     response = tokenizer.compute_tokens("What's the longest word in the English language?")
     print(response)
     # Example output:

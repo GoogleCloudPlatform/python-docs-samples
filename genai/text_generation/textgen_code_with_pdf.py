@@ -21,7 +21,7 @@ def generate_content() -> str:
     from google.genai.types import HttpOptions, Part
 
     client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
-    model_id = "gemini-2.5-flash"
+    model_id = "gemini-3.5-flash"
     prompt = "Convert this python code to use Google Python Style Guide."
     print("> ", prompt, "\n")
     pdf_uri = "https://storage.googleapis.com/cloud-samples-data/generative-ai/text/inefficient_fibonacci_series_python_code.pdf"

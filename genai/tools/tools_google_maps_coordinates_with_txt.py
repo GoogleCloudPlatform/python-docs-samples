@@ -20,16 +20,16 @@ def generate_content() -> str:
         GenerateContentConfig,
         GoogleMaps,
         HttpOptions,
+        LatLng,
+        RetrievalConfig,
         Tool,
         ToolConfig,
-        RetrievalConfig,
-        LatLng
     )
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         contents="Where can I get the best espresso near me?",
         config=GenerateContentConfig(
             tools=[

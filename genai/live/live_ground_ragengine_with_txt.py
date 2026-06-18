@@ -17,12 +17,19 @@ import asyncio
 async def generate_content(memory_corpus: str) -> list[str]:
     # [START googlegenaisdk_live_ground_ragengine_with_txt]
     from google import genai
-    from google.genai.types import (Content, LiveConnectConfig, Modality, Part,
-                                    Retrieval, Tool, VertexRagStore,
-                                    VertexRagStoreRagResource)
+    from google.genai.types import (
+        Content,
+        LiveConnectConfig,
+        Modality,
+        Part,
+        Retrieval,
+        Tool,
+        VertexRagStore,
+        VertexRagStoreRagResource,
+    )
 
     client = genai.Client()
-    model_id = "gemini-2.0-flash-live-preview-04-09"
+    model_id = "gemini-live-2.5-flash-native-audio"
     rag_store = VertexRagStore(
         rag_resources=[
             VertexRagStoreRagResource(

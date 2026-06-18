@@ -18,7 +18,15 @@ def create_tuning_job(output_gcs_uri: str) -> str:
     import time
 
     from google import genai
-    from google.genai.types import HttpOptions, CreateTuningJobConfig, TuningDataset, EvaluationConfig, OutputConfig, GcsDestination, Metric
+    from google.genai.types import (
+        CreateTuningJobConfig,
+        EvaluationConfig,
+        GcsDestination,
+        HttpOptions,
+        Metric,
+        OutputConfig,
+        TuningDataset,
+    )
 
     # TODO(developer): Update and un-comment below line
     # output_gcs_uri = "gs://your-bucket/your-prefix"
@@ -47,7 +55,7 @@ def create_tuning_job(output_gcs_uri: str) -> str:
     )
 
     tuning_job = client.tunings.tune(
-        base_model="gemini-2.5-flash",
+        base_model="gemini-3.5-flash",
         training_dataset=training_dataset,
         config=CreateTuningJobConfig(
             tuned_model_display_name="Example tuning job",
