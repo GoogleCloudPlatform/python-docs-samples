@@ -26,10 +26,10 @@ def create_data_profile_scan_global(
     """Creates a Dataplex Data Profile Scan using global API endpoint routing.
 
     Args:
-        project_id (str): Google Cloud Platform project ID where the scan is created.
+        project_id (str): Google Cloud project ID where the scan is created.
         dataset_id (str): Target BigQuery dataset ID.
         table_id (str): Target BigQuery table ID to scan.
-        location (str): Google Cloud Platform region where serverless compute runs.
+        location (str): Google Cloud region where serverless compute runs.
     """
     client = dataplex_v1.DataScanServiceClient()
 
