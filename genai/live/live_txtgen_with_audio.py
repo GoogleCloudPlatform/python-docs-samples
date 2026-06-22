@@ -28,7 +28,7 @@ async def generate_content() -> list[str]:
     from google.genai.types import Blob, LiveConnectConfig, Modality
 
     client = genai.Client()
-    model = "gemini-2.0-flash-live-preview-04-09"
+    model = "gemini-live-2.5-flash-native-audio"
     config = LiveConnectConfig(response_modalities=[Modality.TEXT])
 
     def get_audio(url: str) -> bytes:

@@ -17,7 +17,6 @@ def generate_content() -> str:
     # [START googlegenaisdk_ctrlgen_with_class_schema]
     from google import genai
     from google.genai.types import GenerateContentConfig, HttpOptions
-
     from pydantic import BaseModel
 
     class Recipe(BaseModel):
@@ -26,7 +25,7 @@ def generate_content() -> str:
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         contents="List a few popular cookie recipes.",
         config=GenerateContentConfig(
             response_mime_type="application/json",

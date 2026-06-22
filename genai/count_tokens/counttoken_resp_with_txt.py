@@ -24,7 +24,7 @@ def count_tokens_example() -> int:
 
     # Send text to Gemini
     response = client.models.generate_content(
-        model="gemini-2.5-flash", contents=prompt
+        model="gemini-3.5-flash", contents=prompt
     )
 
     # Prompt and response tokens count

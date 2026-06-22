@@ -20,7 +20,7 @@ def generate_content() -> str:
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         contents=[
             Part.from_uri(
                 file_uri="gs://cloud-samples-data/generative-ai/video/ad_copy_from_video.mp4",

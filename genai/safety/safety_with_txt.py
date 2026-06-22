@@ -20,8 +20,8 @@ def generate_content() -> GenerateContentResponse:
     from google import genai
     from google.genai.types import (
         GenerateContentConfig,
-        HarmCategory,
         HarmBlockThreshold,
+        HarmCategory,
         HttpOptions,
         SafetySetting,
     )
@@ -54,7 +54,7 @@ def generate_content() -> GenerateContentResponse:
     ]
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         contents=prompt,
         config=GenerateContentConfig(
             system_instruction=system_instruction,

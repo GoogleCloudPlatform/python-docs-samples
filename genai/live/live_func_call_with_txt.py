@@ -20,12 +20,18 @@ from google.genai.types import FunctionResponse
 async def generate_content() -> list[FunctionResponse]:
     # [START googlegenaisdk_live_func_call_with_txt]
     from google import genai
-    from google.genai.types import (Content, FunctionDeclaration,
-                                    FunctionResponse, LiveConnectConfig,
-                                    Modality, Part, Tool)
+    from google.genai.types import (
+        Content,
+        FunctionDeclaration,
+        FunctionResponse,
+        LiveConnectConfig,
+        Modality,
+        Part,
+        Tool,
+    )
 
     client = genai.Client()
-    model_id = "gemini-2.0-flash-live-preview-04-09"
+    model_id = "gemini-live-2.5-flash-native-audio"
 
     # Simple function definitions
     turn_on_the_lights = FunctionDeclaration(name="turn_on_the_lights")

@@ -16,10 +16,10 @@
 def generate_content() -> str:
     # [START googlegenaisdk_tools_urlcontext_with_txt]
     from google import genai
-    from google.genai.types import Tool, GenerateContentConfig, HttpOptions, UrlContext
+    from google.genai.types import GenerateContentConfig, HttpOptions, Tool, UrlContext
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-2.5-flash"
+    model_id = "gemini-3.5-flash"
 
     url_context_tool = Tool(
         url_context=UrlContext
@@ -71,10 +71,10 @@ def generate_content() -> str:
     # get URLs retrieved for context
     print(response.candidates[0].url_context_metadata)
     # url_metadata=[UrlMetadata(
-    #   retrieved_url='https://ai.google.dev/gemini-api/docs/models#gemini-2.5-flash',
+    #   retrieved_url='https://ai.google.dev/gemini-api/docs/models#gemini-3.5-flash',
     #   url_retrieval_status=<UrlRetrievalStatus.URL_RETRIEVAL_STATUS_SUCCESS: 'URL_RETRIEVAL_STATUS_SUCCESS'>
     # ), UrlMetadata(
-    #   retrieved_url='https://ai.google.dev/gemini-api/docs/models#gemini-2.5-pro',
+    #   retrieved_url='https://ai.google.dev/gemini-api/docs/models#gemini-3.1-pro-preview',
     #   url_retrieval_status=<UrlRetrievalStatus.URL_RETRIEVAL_STATUS_SUCCESS: 'URL_RETRIEVAL_STATUS_SUCCESS'>
     # )]
     # [END googlegenaisdk_tools_urlcontext_with_txt]

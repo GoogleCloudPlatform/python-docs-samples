@@ -16,10 +16,16 @@
 def generate_content() -> str:
     # [START googlegenaisdk_tools_google_search_and_urlcontext_with_txt]
     from google import genai
-    from google.genai.types import Tool, GenerateContentConfig, HttpOptions, UrlContext, GoogleSearch
+    from google.genai.types import (
+        GenerateContentConfig,
+        GoogleSearch,
+        HttpOptions,
+        Tool,
+        UrlContext,
+    )
 
     client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
-    model_id = "gemini-2.5-flash"
+    model_id = "gemini-3.5-flash"
 
     tools = [
         Tool(url_context=UrlContext),

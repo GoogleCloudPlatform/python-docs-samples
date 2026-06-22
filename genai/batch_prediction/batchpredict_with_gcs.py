@@ -18,7 +18,7 @@ def generate_content(output_uri: str) -> str:
     import time
 
     from google import genai
-    from google.genai.types import CreateBatchJobConfig, JobState, HttpOptions
+    from google.genai.types import CreateBatchJobConfig, HttpOptions, JobState
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     # TODO(developer): Update and un-comment below line
@@ -28,7 +28,7 @@ def generate_content(output_uri: str) -> str:
     job = client.batches.create(
         # To use a tuned model, set the model param to your tuned model using the following format:
         # model="projects/{PROJECT_ID}/locations/{LOCATION}/models/{MODEL_ID}
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         # Source link: https://storage.cloud.google.com/cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl
         src="gs://cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl",
         config=CreateBatchJobConfig(dest=output_uri),

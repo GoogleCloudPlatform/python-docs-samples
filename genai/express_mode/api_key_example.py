@@ -23,7 +23,7 @@ def generate_content() -> str:
     client = genai.Client(vertexai=True, api_key=API_KEY)
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         contents="Explain bubble sort to me.",
     )
 
