@@ -12,21 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from collections.abc import Iterable, Sequence
-
 import logging
-
-from typing import Any
-from typing import Optional
+from collections.abc import Iterable, Sequence
+from typing import Any, Optional
 
 import apache_beam as beam
-from apache_beam.ml.inference import utils
-from apache_beam.ml.inference.base import ModelHandler
-from apache_beam.ml.inference.base import PredictionResult
-from apache_beam.ml.inference.base import RunInference
-from apache_beam.options.pipeline_options import PipelineOptions
-
 import keras_nlp
+from apache_beam.ml.inference import utils
+from apache_beam.ml.inference.base import (ModelHandler, PredictionResult,
+                                           RunInference)
+from apache_beam.options.pipeline_options import PipelineOptions
 from keras_nlp.src.models.gemma.gemma_causal_lm import GemmaCausalLM
 
 
