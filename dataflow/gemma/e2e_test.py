@@ -48,10 +48,10 @@ from conftest import Utils
 import pytest
 
 DATAFLOW_MACHINE_TYPE = "g2-standard-8"
-# TODO If testing locally, point this to a bucket you control
-# and download the gemma assets
-# GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/gemma_2b"
-GEMMA_GCS = "gs://test-bucket-for-gemma/assets_here/gemma_2b"
+# NOTE: For local testing, ensure the 'gemma_2b_en' directory is uploaded 
+# to a GCS bucket you manage. Update the constant below to point to 
+# the root path of this uploaded directory (e.g., 'gs://your-bucket-name/path/to/gemma_2b_en').
+GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/gemma_2b"
 NAME = "dataflow/gemma/streaming"
 
 
