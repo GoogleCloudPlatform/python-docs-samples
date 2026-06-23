@@ -24,10 +24,11 @@ from apache_beam.ml.inference.base import PredictionResult
 from apache_beam.ml.inference.base import RunInference
 from apache_beam.options.pipeline_options import PipelineOptions
 
-import logging
-
 import keras_nlp
+
 from keras_nlp.src.models.gemma.gemma_causal_lm import GemmaCausalLM
+
+import logging
 
 
 class GemmaModelHandler(ModelHandler[str, PredictionResult, GemmaCausalLM]):
