@@ -34,7 +34,7 @@ OPTION A: Run tests with pytest, you can use -k to run specific tests
 
 OPTION B: Run tests with nox
     pip install nox
-    nox -s py-3.10
+    nox -s py-3.11
 
 NOTE: For the tests to find the conftest in the testing infrastructure,
       add the PYTHONPATH to the "env" in your noxfile_config.py file.
@@ -47,8 +47,11 @@ from conftest import Utils
 
 import pytest
 
-DATAFLOW_MACHINE_TYPE = "g2-standard-4"
-GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/gemma_2b"
+DATAFLOW_MACHINE_TYPE = "g2-standard-8"
+# TODO If testing locally, point this to a bucket you control
+# and download the gemma assets
+# GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/gemma_2b"
+GEMMA_GCS = "gs://test-bucket-for-gemma/assets_here/gemma_2b"
 NAME = "dataflow/gemma/streaming"
 
 
@@ -111,6 +114,7 @@ def dataflow_job(
         f"--temp_location=gs://{bucket_name}/temp",
         f"--region={location}",
         f"--machine_type={DATAFLOW_MACHINE_TYPE}",
+        "--disk_size_gb=100",
         f"--sdk_container_image=gcr.io/{project}/{container_image}",
         "--dataflow_service_options=worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx",
         "--requirements_cache=skip",
