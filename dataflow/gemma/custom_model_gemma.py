@@ -13,11 +13,10 @@
 # limitations under the License.
 
 from collections.abc import Iterable, Sequence
-
-import logging
-
 from typing import Any
 from typing import Optional
+
+import logging
 
 import apache_beam as beam
 from apache_beam.ml.inference import utils
