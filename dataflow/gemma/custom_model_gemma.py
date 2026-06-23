@@ -16,9 +16,10 @@ from collections.abc import Iterable, Sequence
 from typing import Any
 from typing import Optional
 
+import apache_beam as beam
+
 import logging
 
-import apache_beam as beam
 from apache_beam.ml.inference import utils
 from apache_beam.ml.inference.base import ModelHandler
 from apache_beam.ml.inference.base import PredictionResult
