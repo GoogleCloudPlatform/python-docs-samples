@@ -20,12 +20,19 @@ import sys
 from google.cloud import storage
 
 
-def compose_file(bucket_name, first_blob_name, second_blob_name, destination_blob_name):
+def compose_file(
+    bucket_name,
+    first_blob_name,
+    second_blob_name,
+    destination_blob_name,
+    delete_source_objects=False,
+):
     """Concatenate source blobs into destination blob."""
     # bucket_name = "your-bucket-name"
     # first_blob_name = "first-object-name"
     # second_blob_name = "second-blob-name"
     # destination_blob_name = "destination-object-name"
+    # delete_source_objects = False
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
@@ -44,13 +51,24 @@ def compose_file(bucket_name, first_blob_name, second_blob_name, destination_blo
     # There is also an `if_source_generation_match` parameter, which is not used in this example.
     destination_generation_match_precondition = 0
 
-    destination.compose(sources, if_generation_match=destination_generation_match_precondition)
-
-    print(
-        "New composite object {} in the bucket {} was created by combining {} and {}".format(
-            destination_blob_name, bucket_name, first_blob_name, second_blob_name
-        )
+    destination.compose(
+        sources,
+        if_generation_match=destination_generation_match_precondition,
+        delete_source_objects=delete_source_objects,
     )
+
+    if delete_source_objects:
+        print(
+            "New composite object {} in the bucket {} was created by combining {} and {}. Source objects were deleted.".format(
+                destination_blob_name, bucket_name, first_blob_name, second_blob_name
+            )
+        )
+    else:
+        print(
+            "New composite object {} in the bucket {} was created by combining {} and {}".format(
+                destination_blob_name, bucket_name, first_blob_name, second_blob_name
+            )
+        )
     return destination
 
 
