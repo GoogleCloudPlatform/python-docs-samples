@@ -57,18 +57,16 @@ def compose_file(
         delete_source_objects=delete_source_objects,
     )
 
-    if delete_source_objects:
-        print(
-            "New composite object {} in the bucket {} was created by combining {} and {}. Source objects were deleted.".format(
-                destination_blob_name, bucket_name, first_blob_name, second_blob_name
-            )
+    suffix = " Source objects were deleted." if delete_source_objects else ""
+    print(
+        "New composite object {} in the bucket {} was created by combining {} and {}.{}".format(
+            destination_blob_name,
+            bucket_name,
+            first_blob_name,
+            second_blob_name,
+            suffix,
         )
-    else:
-        print(
-            "New composite object {} in the bucket {} was created by combining {} and {}".format(
-                destination_blob_name, bucket_name, first_blob_name, second_blob_name
-            )
-        )
+    )
     return destination
 
 
