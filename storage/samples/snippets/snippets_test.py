@@ -667,7 +667,7 @@ def test_object_get_kms_key(test_bucket):
     assert kms_key.startswith(KMS_KEY)
 
 
-def test_storage_compose_file(test_bucket):
+def test_storage_compose_file(test_bucket, capsys):
     source_files = ["test_upload_blob_1", "test_upload_blob_2"]
     for source in source_files:
         blob = test_bucket.blob(source)
@@ -683,6 +683,38 @@ def test_storage_compose_file(test_bucket):
         composed = destination.download_as_bytes()
 
         assert composed.decode("utf-8") == source_files[0] + source_files[1]
+
+        # Sources should not be deleted by default
+        assert test_bucket.blob(source_files[0]).exists()
+        assert test_bucket.blob(source_files[1]).exists()
+
+
+def test_storage_compose_file_delete_sources(test_bucket, capsys):
+    source_files = ["test_upload_blob_3", "test_upload_blob_4"]
+    for source in source_files:
+        blob = test_bucket.blob(source)
+        blob.upload_from_string(source)
+
+    with tempfile.NamedTemporaryFile() as dest_file:
+        destination = storage_compose_file.compose_file(
+            test_bucket.name,
+            source_files[0],
+            source_files[1],
+            dest_file.name,
+            delete_source_objects=True,
+        )
+        composed = destination.download_as_bytes()
+
+        assert composed.decode("utf-8") == source_files[0] + source_files[1]
+
+        # Sources should be deleted
+        assert not test_bucket.blob(source_files[0]).exists()
+        assert not test_bucket.blob(source_files[1]).exists()
+
+        out, _ = capsys.readouterr()
+        assert "Source objects {} and {} were deleted.".format(
+            source_files[0], source_files[1]
+        ) in out
 
 
 def test_cors_configuration(test_bucket, capsys):
