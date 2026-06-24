@@ -36,7 +36,7 @@ OPTION B: Run tests with nox
     pip install nox
     nox -s py-3.11
 
-NOTE: For the tests to find the conftest in the testing infrastructure,
+TODO(developer): For the tests to find the conftest in the testing infrastructure,
       add the PYTHONPATH to the "env" in your noxfile_config.py file.
 """
 
