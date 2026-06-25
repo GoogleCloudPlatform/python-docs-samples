@@ -30,8 +30,10 @@ def generate_content() -> CalendarEvent:
     import google.auth.transport.requests
     import openai
     from google.auth import default
-    from openai.types.chat import (ChatCompletionSystemMessageParam,
-                                   ChatCompletionUserMessageParam)
+    from openai.types.chat import (
+        ChatCompletionSystemMessageParam,
+        ChatCompletionUserMessageParam,
+    )
 
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     location = "us-central1"
@@ -59,7 +61,7 @@ def generate_content() -> CalendarEvent:
     )
 
     completion = client.beta.chat.completions.parse(
-        model="google/gemini-2.5-flash",
+        model="google/gemini-3.5-flash",
         messages=[
             ChatCompletionSystemMessageParam(
                 role="system", content="Extract the event information."

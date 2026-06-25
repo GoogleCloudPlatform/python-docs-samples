@@ -18,7 +18,7 @@ def create_tuning_job() -> str:
     import time
 
     from google import genai
-    from google.genai.types import HttpOptions, CreateTuningJobConfig, TuningDataset
+    from google.genai.types import CreateTuningJobConfig, HttpOptions, TuningDataset
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
@@ -32,7 +32,7 @@ def create_tuning_job() -> str:
     # Refer to https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini-use-continuous-tuning#google-gen-ai-sdk
     # for example to continuous tune from SFT tuned model.
     tuning_job = client.tunings.tune(
-        base_model="gemini-2.5-flash",
+        base_model="gemini-3.5-flash",
         training_dataset=training_dataset,
         config=CreateTuningJobConfig(
             tuned_model_display_name="Example tuning job",

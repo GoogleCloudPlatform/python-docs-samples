@@ -17,14 +17,14 @@ def generate_content() -> str:
     # [START googlegenaisdk_tools_code_exec_with_txt]
     from google import genai
     from google.genai.types import (
+        GenerateContentConfig,
         HttpOptions,
         Tool,
         ToolCodeExecution,
-        GenerateContentConfig,
     )
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-2.5-flash"
+    model_id = "gemini-3.5-flash"
 
     code_execution_tool = Tool(code_execution=ToolCodeExecution())
     response = client.models.generate_content(

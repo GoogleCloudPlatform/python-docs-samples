@@ -12,67 +12,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START dataplex_create_data_quality_scan_global]
+# [START dataplex_create_data_profile_scan_global]
 import google.api_core.exceptions
 from google.cloud import dataplex_v1
 
 
-def create_data_quality_scan_global(
+def create_data_profile_scan_global(
     project_id: str,
     dataset_id: str,
     table_id: str,
     location: str,
-    column_id_1: str,
-    column_id_2: str,
 ) -> None:
-    """Creates a Dataplex Data Quality Scan using global API endpoint routing.
+    """Creates a Dataplex Data Profile Scan using global API endpoint routing.
 
     Args:
         project_id (str): Google Cloud project ID where the scan is created.
         dataset_id (str): Target BigQuery dataset ID.
         table_id (str): Target BigQuery table ID to scan.
         location (str): Google Cloud region where serverless compute runs.
-        column_id_1 (str): Name of the first column to evaluate.
-        column_id_2 (str): Name of the second column to evaluate.
     """
     client = dataplex_v1.DataScanServiceClient()
 
     parent = client.common_location_path(project=project_id, location=location)
 
-    # A bigquery table with at least 2 columns is assumed.
     bigquery_table = (
         f"//bigquery.googleapis.com/projects/{project_id}"
         f"/datasets/{dataset_id}/tables/{table_id}"
     )
 
-    data_quality_spec = dataplex_v1.DataQualitySpec(
-        rules=[
-            dataplex_v1.DataQualityRule(
-                name="global-null-assertion",
-                dimension="COMPLETENESS",
-                description="Fails if any row contains a null value",
-                sql_assertion=dataplex_v1.DataQualityRule.SqlAssertion(
-                    # Use ${data()} as the placeholder for the table Dataplex is scanning
-                    sql_statement=(
-                        "SELECT * FROM ${data()} "
-                        f"WHERE {column_id_1} IS NULL OR {column_id_2} IS NULL"
-                    )
-                ),
-            )
-        ]
-    )
+    data_profile_spec = dataplex_v1.DataProfileSpec(sampling_percent=100.0)
 
     data_scan = dataplex_v1.DataScan(
-        display_name="Global Data Quality Scan",
+        display_name="Global Data Profile Scan",
+        description="Regional data profile scan generating automated table statistics.",
         data=dataplex_v1.DataSource(resource=bigquery_table),
-        data_quality_spec=data_quality_spec,
+        data_profile_spec=data_profile_spec,
     )
 
-    request = dataplex_v1.CreateDataScanRequest(parent=parent, data_scan=data_scan)
+    request = dataplex_v1.CreateDataScanRequest(
+        parent=parent,
+        data_scan=data_scan,
+    )
 
     try:
         operation = client.create_data_scan(request=request)
         print(operation.result())
+
     except google.api_core.exceptions.AlreadyExists:
         print("A scan with this ID already exists.")
     except google.api_core.exceptions.InvalidArgument as e:
@@ -80,4 +65,5 @@ def create_data_quality_scan_global(
     except google.api_core.exceptions.GoogleAPIError as e:
         print(f"Unexpected exception: {e}")
 
-# [END dataplex_create_data_quality_scan_global]
+
+# [END dataplex_create_data_profile_scan_global]
