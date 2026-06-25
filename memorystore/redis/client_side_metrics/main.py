@@ -15,16 +15,17 @@
 # [START memorystore_redis_client_side_metrics]
 import os
 import time
-import redis
-from redis.exceptions import ConnectionError, TimeoutError
-from opentelemetry import trace, metrics
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+from opentelemetry import metrics, trace
+from opentelemetry.exporter.cloud_monitoring import CloudMonitoringMetricsExporter
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.instrumentation.redis import RedisInstrumentor
 from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
-from opentelemetry.exporter.cloud_monitoring import CloudMonitoringMetricsExporter
-from opentelemetry.instrumentation.redis import RedisInstrumentor
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+import redis
+from redis.exceptions import ConnectionError, TimeoutError
 
 # 1. Initialize Tracing
 tracer_provider = TracerProvider()
