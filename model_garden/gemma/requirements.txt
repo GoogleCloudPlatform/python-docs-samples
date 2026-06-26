@@ -1,1 +1,1 @@
-google-cloud-aiplatform[full]==1.157.0
+google-cloud-aiplatform[full]==2.0.0
