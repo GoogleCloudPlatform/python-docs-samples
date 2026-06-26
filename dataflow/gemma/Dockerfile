@@ -15,7 +15,7 @@
 # This uses Ubuntu with Python 3.11
 # You can check the Python version for a given tensorflow
 # container at https://hub.docker.com/r/tensorflow/tensorflow/tags
-ARG SERVING_BUILD_IMAGE=tensorflow/tensorflow:2.16.1-gpu
+ARG SERVING_BUILD_IMAGE=tensorflow/tensorflow:2.20.0-gpu
 
 FROM ${SERVING_BUILD_IMAGE}
 
@@ -29,7 +29,7 @@ RUN pip install --upgrade --no-cache-dir pip \
     && pip install --no-cache-dir -r requirements.txt
 
 # Copy files from official SDK image, including script/dependencies.
-COPY --from=apache/beam_python3.14_sdk:2.73.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.11_sdk:2.74.0 /opt/apache/beam /opt/apache/beam
 
 # Copy the model directory downloaded from Kaggle and the pipeline code.
 COPY gemma_2b gemma_2B

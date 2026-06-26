@@ -34,11 +34,12 @@ OPTION A: Run tests with pytest, you can use -k to run specific tests
 
 OPTION B: Run tests with nox
     pip install nox
-    nox -s py-3.10
+    nox -s py-3.11
 
-NOTE: For the tests to find the conftest in the testing infrastructure,
+TODO(developer): For the tests to find the conftest in the testing infrastructure,
       add the PYTHONPATH to the "env" in your noxfile_config.py file.
 """
+
 from collections.abc import Callable, Iterator
 
 import conftest  # python-docs-samples/dataflow/conftest.py
@@ -46,7 +47,10 @@ from conftest import Utils
 
 import pytest
 
-DATAFLOW_MACHINE_TYPE = "g2-standard-4"
+DATAFLOW_MACHINE_TYPE = "g2-standard-8"
+# TODO(developer): For local testing, ensure the 'gemma_2b_en' directory is uploaded 
+# to a GCS bucket you manage. Update the constant below to point to 
+# the root path of this uploaded directory (e.g., 'gs://your-bucket-name/path/to/gemma_2b').
 GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/gemma_2b"
 NAME = "dataflow/gemma/streaming"
 
@@ -70,8 +74,9 @@ def messages_topic(pubsub_topic: Callable[[str], str]) -> str:
 
 
 @pytest.fixture(scope="session")
-def messages_subscription(pubsub_subscription: Callable[[str, str], str],
-                          messages_topic: str) -> str:
+def messages_subscription(
+    pubsub_subscription: Callable[[str, str], str], messages_topic: str
+) -> str:
     return pubsub_subscription("messages", messages_topic)
 
 
@@ -81,20 +86,21 @@ def responses_topic(pubsub_topic: Callable[[str], str]) -> str:
 
 
 @pytest.fixture(scope="session")
-def responses_subscription(pubsub_subscription: Callable[[str, str], str],
-                           responses_topic: str) -> str:
+def responses_subscription(
+    pubsub_subscription: Callable[[str, str], str], responses_topic: str
+) -> str:
     return pubsub_subscription("responses", responses_topic)
 
 
 @pytest.fixture(scope="session")
 def dataflow_job(
-        project: str,
-        bucket_name: str,
-        location: str,
-        unique_name: str,
-        container_image: str,
-        messages_subscription: str,
-        responses_topic: str,
+    project: str,
+    bucket_name: str,
+    location: str,
+    unique_name: str,
+    container_image: str,
+    messages_subscription: str,
+    responses_topic: str,
 ) -> Iterator[str]:
     # Launch the streaming Dataflow pipeline.
     conftest.run_cmd(
@@ -108,6 +114,7 @@ def dataflow_job(
         f"--temp_location=gs://{bucket_name}/temp",
         f"--region={location}",
         f"--machine_type={DATAFLOW_MACHINE_TYPE}",
+        "--disk_size_gb=100",
         f"--sdk_container_image=gcr.io/{project}/{container_image}",
         "--dataflow_service_options=worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx",
         "--requirements_cache=skip",
@@ -127,20 +134,18 @@ def dataflow_job(
 
 @pytest.mark.timeout(3600)
 def test_pipeline_dataflow(
-        project: str,
-        location: str,
-        dataflow_job: str,
-        messages_topic: str,
-        responses_subscription: str,
+    project: str,
+    location: str,
+    dataflow_job: str,
+    messages_topic: str,
+    responses_subscription: str,
 ) -> None:
     print(f"Waiting for the Dataflow workers to start: {dataflow_job}")
     conftest.wait_until(
-        lambda: conftest.dataflow_num_workers(project, location, dataflow_job)
-        > 0,
+        lambda: conftest.dataflow_num_workers(project, location, dataflow_job) > 0,
         "workers are running",
     )
-    num_workers = conftest.dataflow_num_workers(project, location,
-                                                dataflow_job)
+    num_workers = conftest.dataflow_num_workers(project, location, dataflow_job)
     print(f"Dataflow job num_workers: {num_workers}")
 
     messages = ["This is a test for a Python sample."]
