@@ -2,4 +2,4 @@ protobuf==6.33.6
 apache_beam[gcp]==2.74.0
 keras==3.14.1
 keras_nlp==0.29.1
-pyOpenSSL==25.3.0
+pyOpenSSL==26.0.0
