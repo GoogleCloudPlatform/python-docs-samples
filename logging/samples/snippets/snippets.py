@@ -23,34 +23,39 @@ documentation at https://cloud.google.com/logging/docs.
 
 import argparse
 
-from google.cloud import logging
+import google.cloud.logging
 
+import logging
 
 # [START logging_write_log_entry]
 def write_entry(logger_name):
-    """Writes log entries to the given logger."""
-    logging_client = logging.Client()
+    """Writes log entries using the Python standard library integration."""
+    # Instantiate Cloud Logging client
+    client = google.cloud.logging.Client()
 
-    # This log can be found in the Cloud Logging console under 'Custom Logs'.
-    logger = logging_client.logger(logger_name)
+    # Set up standard library integration
+    # Attaches the CloudLoggingHandler to the root logger.
+    # The 'name' parameter sets the destination log ID in Cloud Logging.
+    client.setup_logging(name=logger_name)
 
-    # Make a simple text log
-    logger.log_text("Hello, world!")
+    # Simple text log
+    logging.info("Hello, world!")
 
-    # Simple text log with severity.
-    logger.log_text("Goodbye, world!", severity="WARNING")
+    # Simple text log with severity
+    # Standard Python logging levels map to Cloud Logging severities.
+    logging.warning("Goodbye, world!")
 
-    # Struct log. The struct can be any JSON-serializable dictionary.
-    logger.log_struct(
-        {
-            "name": "King Arthur",
-            "quest": "Find the Holy Grail",
-            "favorite_color": "Blue",
-        },
-        severity="INFO",
-    )
+    # Structured log (JSON payload)
+    # Use the 'json_fields' key in the 'extra' argument to log a dictionary.
+    # Data will appear as the jsonPayload in the Cloud Logging entry.
+    data_dict = {
+        "name": "King Arthur",
+        "quest": "Find the Holy Grail",
+        "favorite_color": "Blue",
+    }
+    logging.info("Quest details", extra={"json_fields": data_dict})
 
-    print("Wrote logs to {}.".format(logger.name))
+    print(f"Wrote logs to {logger_name}.")
 
 
 # [END logging_write_log_entry]
@@ -59,7 +64,7 @@ def write_entry(logger_name):
 # [START logging_list_log_entries]
 def list_entries(logger_name):
     """Lists the most recent entries for a given logger."""
-    logging_client = logging.Client()
+    logging_client = google.cloud.logging.Client()
     logger = logging_client.logger(logger_name)
 
     print("Listing entries for logger {}:".format(logger.name))
@@ -78,7 +83,7 @@ def delete_logger(logger_name):
 
     Note that a deletion can take several minutes to take effect.
     """
-    logging_client = logging.Client()
+    logging_client = google.cloud.logging.Client()
     logger = logging_client.logger(logger_name)
 
     logger.delete()
