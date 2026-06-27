@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 
 import base64
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 import os
 import time
 from typing import Iterator, Optional, Tuple, Union
@@ -20,7 +20,7 @@ import uuid
 
 from google.api_core import exceptions, retry
 from google.cloud import resourcemanager_v3
-from google.cloud import secretmanager
+from google.cloud import secretmanager, secretmanager_v1
 from google.protobuf.duration_pb2 import Duration
 
 import pytest
@@ -32,16 +32,22 @@ from consume_event_notification import consume_event_notification
 from create_secret import create_secret
 from create_secret_with_annotations import create_secret_with_annotations
 from create_secret_with_delayed_destroy import create_secret_with_delayed_destroy
+from create_secret_with_expiration import create_secret_with_expiration
 from create_secret_with_labels import create_secret_with_labels
+from create_secret_with_rotation import create_secret_with_rotation
 from create_secret_with_tags import create_secret_with_tags
+from create_secret_with_topic import create_secret_with_topic
 from create_secret_with_user_managed_replication import create_ummr_secret
 from create_update_secret_label import create_update_secret_label
 from delete_secret import delete_secret
 from delete_secret_annotation import delete_secret_annotation
+from delete_secret_expiration import delete_secret_expiration
 from delete_secret_label import delete_secret_label
+from delete_secret_rotation import delete_secret_rotation
 from delete_secret_with_etag import delete_secret_with_etag
 from destroy_secret_version import destroy_secret_version
 from destroy_secret_version_with_etag import destroy_secret_version_with_etag
+from detach_tag_binding import detach_tag
 from disable_secret_version import disable_secret_version
 from disable_secret_version_with_etag import disable_secret_version_with_etag
 from disable_secret_with_delayed_destroy import disable_secret_with_delayed_destroy
@@ -56,8 +62,11 @@ from list_secret_versions import list_secret_versions
 from list_secret_versions_with_filter import list_secret_versions_with_filter
 from list_secrets import list_secrets
 from list_secrets_with_filter import list_secrets_with_filter
+from list_tag_bindings import list_tag_bindings
 from quickstart import quickstart
 from update_secret import update_secret
+from update_secret_expiration import update_secret_expiration
+from update_secret_rotation import update_secret_rotation
 from update_secret_with_alias import update_secret_with_alias
 from update_secret_with_delayed_destroy import update_secret_with_delayed_destroy
 from update_secret_with_etag import update_secret_with_etag
@@ -88,6 +97,16 @@ def project_id() -> str:
 @pytest.fixture()
 def iam_user() -> str:
     return "serviceAccount:" + os.environ["GCLOUD_SECRETS_SERVICE_ACCOUNT"]
+
+
+@pytest.fixture()
+def topic_name() -> str:
+    return os.environ["GOOGLE_CLOUD_TOPIC_NAME"]
+
+
+@pytest.fixture()
+def rotation_period_hours() -> int:
+    return 24
 
 
 @pytest.fixture()
@@ -745,3 +764,238 @@ def test_update_secret_with_delayed_destroy(secret_with_delayed_destroy: Tuple[s
     updated_version_destroy_ttl_value = 118400
     updated_secret = update_secret_with_delayed_destroy(project_id, secret_id, updated_version_destroy_ttl_value)
     assert updated_secret.version_destroy_ttl == timedelta(seconds=updated_version_destroy_ttl_value)
+
+
+def test_list_tag_bindings(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    # Get the tag value from the fixture
+
+    _, tag_value = tag_key_and_tag_value
+
+    # Create the secret and bind tag (using existing fixtures)
+
+    bind_tags_to_secret(project_id, secret_id, tag_value)
+
+    # Call the function being tested
+
+    list_tag_bindings(project_id, secret_id)
+
+    # Verify the tag value is in the returned bindings
+
+    out, _ = capsys.readouterr()
+    assert secret_id in out
+    assert tag_value in out
+
+
+def test_detach_tag(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    """Test detaching a tag from a secret."""
+    # Get the tag value from the fixture
+
+    _, tag_value = tag_key_and_tag_value
+
+    # First bind the tag to the secret
+
+    bind_tags_to_secret(project_id, secret_id, tag_value)
+
+    # Now detach the tag
+
+    detach_tag(project_id, secret_id, tag_value)
+
+    out, _ = capsys.readouterr()
+    assert "Detached tag value" in out
+
+    list_tag_bindings(project_id, secret_id)
+
+    # Verify the tag value is no longer in the returned bindings
+
+    out, _ = capsys.readouterr()
+    assert tag_value not in out
+
+
+def test_create_secret_with_expiration(project_id: str, secret_id: str) -> None:
+    """Test creating a secret with an expiration time."""
+
+    # Set expire time to 1 hour from now
+
+    expire_time = datetime.now(timezone.utc) + timedelta(hours=1)
+    create_secret_with_expiration(project_id, secret_id)
+
+    retrieved_secret = get_secret(project_id, secret_id)
+    # Verify the secret has an expiration time
+
+    assert (
+        retrieved_secret.expire_time is not None
+    ), "ExpireTime is None, expected non-None"
+
+    retrieved_expire_time = retrieved_secret.expire_time.astimezone(timezone.utc)
+
+    retrieved_timestamp = int(retrieved_expire_time.timestamp())
+    expected_timestamp = int(expire_time.timestamp())
+
+    time_diff = abs(retrieved_timestamp - expected_timestamp)
+    assert time_diff <= 1, f"ExpireTime difference too large: {time_diff} seconds."
+
+
+def test_update_secret_expiration(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+) -> None:
+    create_secret_with_expiration(project_id, secret_id)
+
+    # Update expire time to 2 hours
+
+    new_expire = datetime.now(timezone.utc) + timedelta(
+        hours=2
+    )  # 2 hours from now in seconds
+    update_secret_expiration(project_id, secret_id)
+
+    # Verify output contains expected message
+
+    out, _ = capsys.readouterr()
+    assert "Updated secret" in out
+
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert (
+        retrieved_secret.expire_time is not None
+    ), "ExpireTime is None, expected non-None"
+    retrieved_expire_time = retrieved_secret.expire_time.astimezone(timezone.utc)
+    retrieved_timestamp = int(retrieved_expire_time.timestamp())
+
+    new_expire = int(new_expire.timestamp())
+    time_diff = abs(retrieved_timestamp - new_expire)
+    assert time_diff <= 1, f"ExpireTime difference too large: {time_diff} seconds. "
+
+
+def test_delete_expiration(
+    capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str
+) -> None:
+
+    create_secret_with_expiration(project_id, secret_id)
+
+    delete_secret_expiration(project_id, secret_id)
+    out, _ = capsys.readouterr()
+    assert "Removed expiration" in out
+
+    # Verify expire time is removed with GetSecret
+
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert (
+        retrieved_secret.expire_time is None
+    ), f"ExpireTime is {retrieved_secret.expire_time}, expected None"
+
+
+def test_create_secret_with_rotation(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+    topic_name: str,
+    rotation_period_hours: int,
+) -> None:
+    """Test creating a secret with rotation configuration."""
+
+    # Create the secret with rotation
+
+    create_secret_with_rotation(project_id, secret_id, topic_name)
+
+    # Verify output contains expected message
+
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out, f"Expected 'Created secret' in output, got: {out}"
+
+    retrieved_secret = get_secret(project_id, secret_id)
+
+    # Verify rotation is configured
+
+    assert retrieved_secret.rotation is not None, "Rotation is None, expected non-None"
+
+    # Verify rotation period is set correctly (24 hours = 86400 seconds)
+
+    expected_seconds = rotation_period_hours * 3600
+    actual_seconds = retrieved_secret.rotation.rotation_period.total_seconds()
+    assert (
+        actual_seconds == expected_seconds
+    ), f"RotationPeriod mismatch: got {actual_seconds}, want {expected_seconds}"
+
+    # Verify next rotation time is set
+
+    assert (
+        retrieved_secret.rotation.next_rotation_time is not None
+    ), "NextRotationTime is None, expected non-None"
+
+
+def test_update_secret_rotation_period(
+    capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str, topic_name: str
+) -> None:
+
+    create_secret_with_rotation(project_id, secret_id, topic_name)
+    capsys.readouterr()
+
+    updated_rotation_hours = 48
+    update_secret_rotation(project_id, secret_id)
+
+    # Verify output contains the secret ID
+
+    out, _ = capsys.readouterr()
+    assert secret_id in out, f"Expected '{secret_id}' in output, got: {out}"
+
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert (
+        retrieved_secret.rotation is not None
+    ), "GetSecret: Rotation is nil, expected non-nil"
+    expected_seconds = updated_rotation_hours * 3600
+    actual_seconds = retrieved_secret.rotation.rotation_period.total_seconds()
+    assert (
+        actual_seconds == expected_seconds
+    ), f"RotationPeriod mismatch: got {actual_seconds}, want {expected_seconds}"
+
+
+def test_delete_secret_rotation(
+    capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str, topic_name: str
+) -> None:
+
+    create_secret_with_rotation(project_id, secret_id, topic_name)
+
+    # Delete the rotation
+
+    delete_secret_rotation(project_id, secret_id)
+    out, _ = capsys.readouterr()
+    assert "Removed rotation from secret" in out
+    assert secret_id in out
+
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert (
+        retrieved_secret.rotation == secretmanager_v1.types.Rotation()
+    ), f"Rotation is {repr(retrieved_secret.rotation)}, expected None or empty"
+
+
+def test_create_secret_with_topic(
+    capsys, project_id: str, secret_id: str, topic_name: str
+):
+
+    # Call the function being tested
+
+    create_secret_with_topic(project_id, secret_id, topic_name)
+
+    # Check the output contains expected text
+
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out
+
+    retrieved_secret = get_secret(project_id, secret_id)
+
+    assert (
+        len(retrieved_secret.topics) == 1
+    ), f"Expected 1 topic, got {len(retrieved_secret.topics)}"
+    assert (
+        retrieved_secret.topics[0].name == topic_name
+    ), f"Topic mismatch: got {retrieved_secret.topics[0].name}, want {topic_name}"
