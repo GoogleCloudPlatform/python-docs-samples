@@ -11,6 +11,10 @@ This model uses satellite data to predict if a coal plant is turned on and produ
 * **Training the model**: [TensorFlow] in [Vertex AI]
 * **Getting predictions**: [TensorFlow] in [Cloud Run]
 
+## Serving app security configuration
+
+Set the `MODEL_DIR` environment variable to a trusted model artifact location before starting `serving_app`. The prediction endpoint no longer accepts a user-controlled bucket for model loading because loading untrusted TensorFlow/Keras artifacts can execute attacker-controlled code during deserialization.
+
 [Cloud Run]: https://cloud.google.com/run
 [Sentinel-2]: https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
 [Earth Engine]: https://earthengine.google.com/
