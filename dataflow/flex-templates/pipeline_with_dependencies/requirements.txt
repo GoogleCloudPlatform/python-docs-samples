@@ -299,7 +299,7 @@ six==1.16.0
     #   js2py
     #   oauth2client
     #   python-dateutil
-sqlparse==0.5.0
+sqlparse==0.5.4
     # via google-cloud-spanner
 typing-extensions==4.10.0
     # via apache-beam
