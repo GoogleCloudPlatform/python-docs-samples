@@ -25,7 +25,7 @@ import snippets
 TEST_LOGGER_NAME = "example_log_{}".format(uuid.uuid4().hex)
 TEST_TEXT = "Hello, world."
 GOOGLE_CLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
-DEFAULT_LOG_ID = f"projects/{GOOGLE_CLOUD_PROJECT}/logs/python"
+DEFAULT_LOGGER = f"projects/{GOOGLE_CLOUD_PROJECT}/logs/python"
 
 
 @pytest.fixture
@@ -56,18 +56,17 @@ def test_write(capsys):
         # retrieve logs
         client = logging.Client()
 
-        log_filter = DEFAULT_LOG_ID
+        log_filter = DEFAULT_LOGGER
 
         entries = client.list_entries(
             filter_=log_filter, order_by=logging.DESCENDING, max_results=3
         )
 
-        entry_1 = next(entries)
-        assert entry_1.payload["message"] == "This is a JSON log."
-        entry_2 = next(entries)
-        assert entry_2.payload == "Goodbye, world!"
-        entry_3 = next(entries)
-        assert entry_3.payload == "Hello, world!"
+        retrieved_entries = list(entries)
+
+        assert retrieved_entries[0].payload["message"] == "This is a JSON log."
+        assert retrieved_entries[1].payload == "Goodbye, world!"
+        assert retrieved_entries[2].payload == "Hello, world!"
 
     eventually_consistent_test()
 

@@ -24,14 +24,14 @@ documentation at https://cloud.google.com/logging/docs.
 import argparse
 import time
 
-import logging
-
 import google.cloud.logging
+
+import logging
 
 
 # [START logging_write_log_entry]
 def write_entry():
-    """Writes log entries to the given logger."""
+    """Writes log entries to the default logger."""
     logging_client = google.cloud.logging.Client()
 
     # By default, all logs sent through setup_logging()
