@@ -15,10 +15,10 @@
 import asyncio
 import io
 import os
+import sys
 import tempfile
 import time
 import uuid
-import sys
 
 from google.cloud import storage
 import google.cloud.exceptions
@@ -673,6 +673,7 @@ def test_storage_compose_file(test_bucket):
         blob = test_bucket.blob(source)
         blob.upload_from_string(source)
 
+    # Test with delete_source_objects = False (default)
     with tempfile.NamedTemporaryFile() as dest_file:
         destination = storage_compose_file.compose_file(
             test_bucket.name,
@@ -683,6 +684,29 @@ def test_storage_compose_file(test_bucket):
         composed = destination.download_as_bytes()
 
         assert composed.decode("utf-8") == source_files[0] + source_files[1]
+        assert test_bucket.blob(source_files[0]).exists()
+        assert test_bucket.blob(source_files[1]).exists()
+
+    # Clean up destination file
+    destination.delete()
+
+    # Test with delete_source_objects = True
+    with tempfile.NamedTemporaryFile() as dest_file:
+        destination = storage_compose_file.compose_file(
+            test_bucket.name,
+            source_files[0],
+            source_files[1],
+            dest_file.name,
+            delete_source_objects=True,
+        )
+        composed = destination.download_as_bytes()
+
+        assert composed.decode("utf-8") == source_files[0] + source_files[1]
+        assert not test_bucket.blob(source_files[0]).exists()
+        assert not test_bucket.blob(source_files[1]).exists()
+
+    # Clean up destination file
+    destination.delete()
 
 
 def test_cors_configuration(test_bucket, capsys):

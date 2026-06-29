@@ -20,12 +20,19 @@ import sys
 from google.cloud import storage
 
 
-def compose_file(bucket_name, first_blob_name, second_blob_name, destination_blob_name):
+def compose_file(
+    bucket_name,
+    first_blob_name,
+    second_blob_name,
+    destination_blob_name,
+    delete_source_objects=False,
+):
     """Concatenate source blobs into destination blob."""
     # bucket_name = "your-bucket-name"
     # first_blob_name = "first-object-name"
     # second_blob_name = "second-blob-name"
     # destination_blob_name = "destination-object-name"
+    # delete_source_objects = False
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
@@ -44,11 +51,20 @@ def compose_file(bucket_name, first_blob_name, second_blob_name, destination_blo
     # There is also an `if_source_generation_match` parameter, which is not used in this example.
     destination_generation_match_precondition = 0
 
-    destination.compose(sources, if_generation_match=destination_generation_match_precondition)
+    destination.compose(
+        sources,
+        delete_source_objects=delete_source_objects,
+        if_generation_match=destination_generation_match_precondition,
+    )
 
+    suffix = " Source objects were deleted." if delete_source_objects else ""
     print(
-        "New composite object {} in the bucket {} was created by combining {} and {}".format(
-            destination_blob_name, bucket_name, first_blob_name, second_blob_name
+        "New composite object {} in the bucket {} was created by combining {} and {}.{}".format(
+            destination_blob_name,
+            bucket_name,
+            first_blob_name,
+            second_blob_name,
+            suffix,
         )
     )
     return destination
@@ -61,5 +77,5 @@ if __name__ == "__main__":
         bucket_name=sys.argv[1],
         first_blob_name=sys.argv[2],
         second_blob_name=sys.argv[3],
-        destination_blob_name=sys.argv[4],
+        destination_blob_name=sys.argv[4]
     )
