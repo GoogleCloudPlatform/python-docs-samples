@@ -22,8 +22,9 @@ documentation at https://cloud.google.com/logging/docs.
 """
 
 import argparse
-import logging
 import time
+
+import logging
 
 import google.cloud.logging
 
