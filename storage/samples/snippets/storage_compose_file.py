@@ -53,8 +53,8 @@ def compose_file(
 
     destination.compose(
         sources,
-        if_generation_match=destination_generation_match_precondition,
         delete_source_objects=delete_source_objects,
+        if_generation_match=destination_generation_match_precondition,
     )
 
     suffix = " Source objects were deleted." if delete_source_objects else ""
@@ -77,5 +77,5 @@ if __name__ == "__main__":
         bucket_name=sys.argv[1],
         first_blob_name=sys.argv[2],
         second_blob_name=sys.argv[3],
-        destination_blob_name=sys.argv[4],
+        destination_blob_name=sys.argv[4]
     )
