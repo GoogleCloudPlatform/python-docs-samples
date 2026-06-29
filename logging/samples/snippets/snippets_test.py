@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import uuid
+import os
 
 import backoff
 from google.api_core.exceptions import NotFound
@@ -21,9 +22,10 @@ import pytest
 
 import snippets
 
-
 TEST_LOGGER_NAME = "example_log_{}".format(uuid.uuid4().hex)
 TEST_TEXT = "Hello, world."
+GOOGLE_CLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
+DEFAULT_LOG_ID = f"projects/{GOOGLE_CLOUD_PROJECT}/logs/python"
 
 
 @pytest.fixture
@@ -47,13 +49,25 @@ def test_list(example_log, capsys):
 
 def test_write(capsys):
 
-    snippets.write_entry(TEST_LOGGER_NAME)
+    snippets.write_entry()
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def eventually_consistent_test():
-        snippets.list_entries(TEST_LOGGER_NAME)
-        out, _ = capsys.readouterr()
-        assert TEST_TEXT in out
+        # retrieve logs
+        client = logging.Client()
+
+        log_filter = DEFAULT_LOG_ID
+
+        entries = client.list_entries(
+            filter_=log_filter, order_by=logging.DESCENDING, max_results=3
+        )
+
+        entry_1 = next(entries)
+        assert entry_1.payload["message"] == "This is a JSON log."
+        entry_2 = next(entries)
+        assert entry_2.payload == "Goodbye, world!"
+        entry_3 = next(entries)
+        assert entry_3.payload == "Hello, world!"
 
     eventually_consistent_test()
 
