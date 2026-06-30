@@ -22,35 +22,39 @@ documentation at https://cloud.google.com/logging/docs.
 """
 
 import argparse
+import time
 
-from google.cloud import logging
+import google.cloud.logging
+
+import logging
 
 
 # [START logging_write_log_entry]
-def write_entry(logger_name):
-    """Writes log entries to the given logger."""
-    logging_client = logging.Client()
+def write_entry():
+    """Demonstrates how to write log entries to Google Cloud using Python's standard logging library."""
+    logging_client = google.cloud.logging.Client()
 
-    # This log can be found in the Cloud Logging console under 'Custom Logs'.
-    logger = logging_client.logger(logger_name)
+    # By default, logs route to projects/[PROJECT_ID]/logs/python
+    # unless overridden by GCP or custom handlers.
+    logging_client.setup_logging(log_level=logging.INFO)
 
     # Make a simple text log
-    logger.log_text("Hello, world!")
+    logging.info("Hello, world!")
 
     # Simple text log with severity.
-    logger.log_text("Goodbye, world!", severity="WARNING")
+    logging.warning("Goodbye, world!")
 
-    # Struct log. The struct can be any JSON-serializable dictionary.
-    logger.log_struct(
-        {
-            "name": "King Arthur",
-            "quest": "Find the Holy Grail",
-            "favorite_color": "Blue",
-        },
-        severity="INFO",
-    )
+    # Prepare your structured data as a dictionary.
+    json_log = {
+        "name": "King Arthur",
+        "quest": "Find the Holy Grail",
+        "favorite_color": "Blue",
+    }
 
-    print("Wrote logs to {}.".format(logger.name))
+    logging.info("This is a JSON log.", extra={"json_fields": json_log})
+
+    # wait for threads to finish working on the background.
+    time.sleep(5)
 
 
 # [END logging_write_log_entry]
@@ -105,6 +109,6 @@ if __name__ == "__main__":
     if args.command == "list":
         list_entries(args.logger_name)
     elif args.command == "write":
-        write_entry(args.logger_name)
+        write_entry()
     elif args.command == "delete":
         delete_logger(args.logger_name)
