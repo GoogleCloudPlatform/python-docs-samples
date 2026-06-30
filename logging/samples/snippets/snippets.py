@@ -34,8 +34,8 @@ def write_entry():
     """Demonstrates how to write log entries to Google Cloud using Python's standard logging library."""
     logging_client = google.cloud.logging.Client()
 
-    # Logs default to projects/[PROJECT_ID]/logs/python unless routed
-    # differently by a custom handler or managed GCP infrastructure.
+    # By default, logs route to projects/[PROJECT_ID]/logs/python
+    # unless overridden by GCP or custom handlers.
     logging_client.setup_logging(log_level=logging.INFO)
 
     # Make a simple text log
