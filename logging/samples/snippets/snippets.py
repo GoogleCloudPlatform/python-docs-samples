@@ -31,11 +31,11 @@ import logging
 
 # [START logging_write_log_entry]
 def write_entry():
-    """Writes log entries to the default logger."""
+    """Demonstrates how to write log entries to Google Cloud using Python's standard logging library."""
     logging_client = google.cloud.logging.Client()
 
-    # By default, all logs sent through setup_logging()
-    # appear under the log name projects/[PROJECT_ID]/logs/python
+    # Logs default to projects/[PROJECT_ID]/logs/python unless routed
+    # differently by a custom handler or managed GCP infrastructure.
     logging_client.setup_logging(log_level=logging.INFO)
 
     # Make a simple text log
@@ -53,7 +53,7 @@ def write_entry():
 
     logging.info("This is a JSON log.", extra={"json_fields": json_log})
 
-    # wait for threads
+    # wait for threads to finish working on the background.
     time.sleep(5)
 
 
