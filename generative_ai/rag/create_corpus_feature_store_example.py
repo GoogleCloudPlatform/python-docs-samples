@@ -49,11 +49,6 @@ def create_corpus_feature_store(
         )
     )
 
-    # Configure Vector DB
-    client.rag.update_config(
-        updated_config=backend_config
-    )
-
     corpus = client.rag.create_corpus(
         rag_corpus=types.RagCorpus(
             display_name=display_name,

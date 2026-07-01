@@ -59,7 +59,7 @@ def create_corpus_weaviate(
             display_name=display_name,
             description=description,
             rag_embedding_model_config=embedding_model_config,
-            vector_db=types.RagVectorDbConfig(
+            rag_vector_db_config=types.RagVectorDbConfig(
                 weaviate=vector_db
             ),
         )

@@ -48,10 +48,20 @@ def quickstart(
     # Initialize Agent Platform client once per session
     client = agentplatform.Client(project=PROJECT_ID, location="us-east4")
 
+    # Configure embedding model, for example "text-embedding-005".
+    embedding_model_config = types.RagEmbeddingModelConfig(
+        vertex_prediction_endpoint=types.RagEmbeddingModelConfigVertexPredictionEndpoint(
+            endpoint="publishers/google/models/text-embedding-005"
+        ),
+    )
+
     # Create RagCorpus
     rag_corpus = client.rag.create_corpus(
         rag_corpus=types.RagCorpus(
             display_name=display_name,
+            rag_vector_db_config=types.RagVectorDbConfig(
+                rag_embedding_model_config=embedding_model_config
+            )
         )
     )
 

@@ -54,10 +54,7 @@ def generate_content_with_rag(
     # Create a GenAI SDK client to make a generate_content request
     genai_client = genai.Client(enterprise=True, project=PROJECT_ID, location="us-central1")
 
-    rag_model = GenerativeModel(
-        model_name="gemini-2.0-flash-001", tools=[rag_retrieval_tool]
-    )
-    response = client.models.generate_content(
+    response = genai_client.models.generate_content(
         model="gemini-2.5-pro",
         contents="Why is the sky blue?",
         config=genai_types.GenerateContentConfig(
