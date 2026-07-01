@@ -36,7 +36,10 @@ def update_secret_with_delayed_destroy(
     name = client.secret_path(project_id, secret_id)
 
     # Update the version_destroy_ttl.
-    secret = {"name": name, "version_destroy_ttl": Duration(seconds=new_version_destroy_ttl)}
+    secret = {
+        "name": name,
+        "version_destroy_ttl": Duration(seconds=new_version_destroy_ttl),
+    }
     update_mask = {"paths": ["version_destroy_ttl"]}
     response = client.update_secret(
         request={"secret": secret, "update_mask": update_mask}
@@ -46,6 +49,7 @@ def update_secret_with_delayed_destroy(
     print(f"Updated secret: {response.name}")
 
     return response
+
 
 # [END secretmanager_update_secret_with_delayed_destroy]
 
@@ -59,4 +63,6 @@ if __name__ == "__main__":
     parser.add_argument("version_destroy_ttl", "new version destroy ttl to be added")
     args = parser.parse_args()
 
-    update_secret_with_delayed_destroy(args.project_id, args.secret_id, args.version_destroy_ttl)
+    update_secret_with_delayed_destroy(
+        args.project_id, args.secret_id, args.version_destroy_ttl
+    )
