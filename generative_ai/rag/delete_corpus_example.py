@@ -20,17 +20,16 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def delete_corpus(corpus_name: str) -> None:
     # [START generativeaionvertexai_rag_delete_corpus]
 
-    from vertexai import rag
-    import vertexai
+    import agentplatform
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
     # corpus_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
 
-    # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session
+    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
 
-    rag.delete_corpus(name=corpus_name)
+    client.rag.delete_corpus(name=corpus_name)
     print(f"Corpus {corpus_name} deleted.")
     # Example response:
     # Successfully deleted the RagCorpus.

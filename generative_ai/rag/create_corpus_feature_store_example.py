@@ -15,8 +15,6 @@ import os
 
 from typing import Optional
 
-from vertexai.preview.rag import RagCorpus
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
@@ -27,8 +25,8 @@ def create_corpus_feature_store(
 ) -> RagCorpus:
     # [START generativeaionvertexai_rag_create_corpus_feature_store]
 
-    from vertexai.preview import rag
-    import vertexai
+    import agentplatform
+    from agentplatform import types
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
@@ -36,22 +34,31 @@ def create_corpus_feature_store(
     # display_name = "test_corpus"
     # description = "Corpus Description"
 
-    # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session
+    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
 
     # Configure embedding model (Optional)
-    embedding_model_config = rag.EmbeddingModelConfig(
-        publisher_model="publishers/google/models/text-embedding-004"
+    backend_config = types.RagVectorDbConfig(
+        rag_embedding_model_config=types.RagEmbeddingModelConfig(
+            vertex_prediction_endpoint=types.RagEmbeddingModelConfigVertexPredictionEndpoint(
+                endpoint="publishers/google/models/text-embedding-005"
+            ),
+        ),
+        vertex_feature_store=types.RagDbConfigVertexFeatureStore(
+            feature_view_resource_name=feature_view_name
+        )
     )
 
     # Configure Vector DB
-    vector_db = rag.VertexFeatureStore(resource_name=feature_view_name)
+    client.rag.update_config(
+        updated_config=backend_config
+    )
 
-    corpus = rag.create_corpus(
-        display_name=display_name,
-        description=description,
-        embedding_model_config=embedding_model_config,
-        vector_db=vector_db,
+    corpus = client.rag.create_corpus(
+        rag_corpus=types.RagCorpus(
+            display_name=display_name,
+            description=description,
+        )
     )
     print(corpus)
     # Example response:
