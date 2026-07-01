@@ -44,15 +44,13 @@ def create_corpus(
             )
         )
     )
-    client.rag.update_config(
-        updated_config=backend_config
-    )
 
     # Create a corpus
     corpus = client.rag.create_corpus(
         rag_corpus=types.RagCorpus(
             display_name=display_name,
             description=description,
+            rag_vector_db_config=backend_config,
         )
     )
     print(corpus)

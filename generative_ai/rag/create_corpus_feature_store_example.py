@@ -58,6 +58,7 @@ def create_corpus_feature_store(
         rag_corpus=types.RagCorpus(
             display_name=display_name,
             description=description,
+            rag_vector_db_config=backend_config,
         )
     )
     print(corpus)
