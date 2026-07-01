@@ -16,6 +16,7 @@
 command line application and sample code for listing annotations of a
 secret.
 """
+
 # [START secretmanager_view_secret_annotations]
 import argparse
 
