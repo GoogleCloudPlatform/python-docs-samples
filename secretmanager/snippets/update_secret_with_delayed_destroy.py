@@ -60,7 +60,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("secret-id", help="id of the secret to act on")
-    parser.add_argument("version_destroy_ttl", "new version destroy ttl to be added")
+    parser.add_argument("version_destroy_ttl", type=int, help="new version destroy ttl to be added")
     args = parser.parse_args()
 
     update_secret_with_delayed_destroy(
