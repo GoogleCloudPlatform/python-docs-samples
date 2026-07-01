@@ -45,7 +45,7 @@ def quickstart(
     # gcs_path = "gs://my_bucket/my_files_dir/*"
     # google_drive_path ="https://drive.google.com/file/d/123"
 
-    # Initialize Vertex AI API once per session
+    # Initialize Agent Platform client once per session
     client = agentplatform.Client(project=PROJECT_ID, location="us-east4")
 
     # Create RagCorpus
