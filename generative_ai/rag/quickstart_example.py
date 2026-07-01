@@ -104,7 +104,7 @@ def quickstart(
     # Create a RAG retrieval tool
     rag_retrieval_tool = genai_types.Tool(
         retrieval=genai_types.Retrieval(
-            source=genai_types.VertexRagStore(
+            vertex_rag_store=genai_types.VertexRagStore(
                 rag_resources=[
                     genai_types.VertexRagStoreRagResource(
                         rag_corpus=rag_corpus.name,
