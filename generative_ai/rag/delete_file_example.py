@@ -20,17 +20,16 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def delete_file(file_name: str) -> None:
     # [START generativeaionvertexai_rag_delete_file]
 
-    from vertexai import rag
-    import vertexai
+    import agentplatform
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
     # file_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}/ragFiles/{rag_file_id}"
 
-    # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session
+    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
 
-    rag.delete_file(name=file_name)
+    client.rag.delete_file(name=file_name)
     print(f"File {file_name} deleted.")
     # Example response:
     # Successfully deleted the RagFile.

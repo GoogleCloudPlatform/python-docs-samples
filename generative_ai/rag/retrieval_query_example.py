@@ -24,29 +24,38 @@ def retrieval_query(
 ) -> RetrieveContextsResponse:
     # [START generativeaionvertexai_rag_retrieval_query]
 
-    from vertexai import rag
-    import vertexai
+    import agentplatform
+
+    from agentplatform import types
+    from google import genai
+    from google.genai import types as genai_types
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
     # corpus_name = "projects/[PROJECT_ID]/locations/us-central1/ragCorpora/[rag_corpus_id]"
 
-    # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east4")
 
-    response = rag.retrieval_query(
-        rag_resources=[
-            rag.RagResource(
-                rag_corpus=corpus_name,
-                # Optional: supply IDs from `rag.list_files()`.
-                # rag_file_ids=["rag-file-1", "rag-file-2", ...],
-            )
-        ],
-        text="Hello World!",
-        rag_retrieval_config=rag.RagRetrievalConfig(
-            top_k=10,
-            filter=rag.utils.resources.Filter(vector_distance_threshold=0.5),
+    response = client.rag.retrieve_contexts(
+        vertex_rag_store=genai_types.VertexRagStore(
+            rag_resources=[
+                genai_types.VertexRagStoreRagResource(
+                    rag_corpus=corpus_name,
+                    # Optional: supply IDs from `rag.list_files()`.
+                    # rag_file_ids=["rag-file-1", "rag-file-2", ...],
+                )
+            ],
         ),
+        query=types.RagQuery(
+            text="Hello World!",
+            rag_retrieval_config=genai_types.RagRetrievalConfig(
+                top_k=10,
+                filter=genai_types.RagRetrievalConfigFilter(
+                    vector_distance_threshold=0.5
+                ),
+            ),
+        )
     )
     print(response)
     # Example response:
