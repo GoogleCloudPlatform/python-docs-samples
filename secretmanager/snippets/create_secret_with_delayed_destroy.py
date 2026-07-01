@@ -71,7 +71,7 @@ if __name__ == "__main__":
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("secret_id", help="id of the secret to create")
     parser.add_argument(
-        "version_destroy_ttl", help="version_destroy_ttl you want to add"
+        "version_destroy_ttl", type=int, help="version_destroy_ttl you want to add"
     )
     args = parser.parse_args()
 

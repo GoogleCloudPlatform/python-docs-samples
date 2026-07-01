@@ -745,7 +745,7 @@ def test_update_secret_with_alias(secret_version: Tuple[str, str, str, str]) -> 
 
 
 def test_update_secret_with_delayed_destroy(
-    secret_with_delayed_destroy: Tuple[str, str], version_destroy_ttl: str
+    secret_with_delayed_destroy: Tuple[str, str]
 ) -> None:
     project_id, secret_id = secret_with_delayed_destroy
     updated_version_destroy_ttl_value = 118400
