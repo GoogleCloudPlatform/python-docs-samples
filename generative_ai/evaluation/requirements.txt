@@ -3,7 +3,7 @@ pandas==2.2.3; python_version == '3.8'
 pandas==2.2.3; python_version > '3.8'
 pillow==12.2.0
 google-cloud-aiplatform[full]==1.157.0
-sentencepiece==0.2.0
+sentencepiece==0.2.1
 google-auth==2.38.0
 anthropic[vertex]==0.28.0
 langchain-core==1.4.0
