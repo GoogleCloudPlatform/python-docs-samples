@@ -34,7 +34,6 @@ from typing import Any
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
 
-
 # [END compute_usage_report_disable]
 # [END compute_usage_report_get]
 # [END compute_usage_report_set]
