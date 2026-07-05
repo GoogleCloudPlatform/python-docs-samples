@@ -7,13 +7,12 @@
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
+# distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
 import concurrent.futures
-import logging
 import threading
 import time
 
@@ -21,6 +20,8 @@ from google.api_core import exceptions as google_exceptions
 from google.api_core import retry
 from google.cloud import storage_control_v2
 import grpc
+
+import logging
 
 ThreadPoolExecutor = concurrent.futures.ThreadPoolExecutor
 
@@ -79,12 +80,12 @@ storage_control_client = storage_control_v2.StorageControlClient()
 
 
 def _get_simple_path_and_depth(full_resource_name: str) -> tuple[str, int]:
-    """Extracts bucket-relative path and depth from a GCS folder resource name.
+    \"\"\"Extracts bucket-relative path and depth from a GCS folder resource name.
 
-    The "simple path" is relative to the bucket (e.g., 'archive/logs/' for
+    The \"simple path\" is relative to the bucket (e.g., 'archive/logs/' for
     'projects/_/buckets/my-bucket/folders/archive/logs/').
 
-    The "depth" is the number of '/' in the simple path (e.g. 'archive/logs/' is
+    The \"depth\" is the number of '/' in the simple path (e.g. 'archive/logs/' is
     depth 2).
 
     Args:
@@ -98,42 +99,42 @@ def _get_simple_path_and_depth(full_resource_name: str) -> tuple[str, int]:
       ValueError: If the resource name does not match the expected format
         (i.e. start with 'projects/_/buckets/BUCKET_NAME/folders/FOLDER_PREFIX'
         and ends with a trailing slash).
-    """
-    base_folders_prefix = f"projects/_/buckets/{BUCKET_NAME}/folders/"
+    \"\"\"
+    base_folders_prefix = f\"projects/_/buckets/{BUCKET_NAME}/folders/\"
     # The full prefix to validate against, including the global FOLDER_PREFIX.
-    # If FOLDER_PREFIX is "", this is equivalent to base_folders_prefix.
+    # If FOLDER_PREFIX is \"\", this is equivalent to base_folders_prefix.
     expected_validation_prefix = base_folders_prefix + FOLDER_PREFIX
 
     if not full_resource_name.startswith(
         expected_validation_prefix
-    ) or not full_resource_name.endswith("/"):
+    ) or not full_resource_name.endswith(\"/\"):
         raise ValueError(
-            f"Folder resource name '{full_resource_name}' does not match expected"
-            f" prefix '{expected_validation_prefix}' or missing trailing slash."
+            f\"Folder resource name '{full_resource_name}' does not match expected\"
+            f\" prefix '{expected_validation_prefix}' or missing trailing slash.\"
         )
 
     simple_path = full_resource_name[len(base_folders_prefix) :]
-    depth = simple_path.count("/")
+    depth = simple_path.count(\"/\")
     if depth < 1:
         raise ValueError(
-            f"Folder resource name '{full_resource_name}' has invalid depth"
-            f" {depth} (expected at least 1)."
+            f\"Folder resource name '{full_resource_name}' has invalid depth\"
+            f\" {depth} (expected at least 1).\"
         )
     return simple_path, depth
 
 
 def discover_and_partition_folders() -> None:
-    """Discovers all folders in the bucket and partitions them by depth.
+    \"\"\"Discovers all folders in the bucket and partitions them by depth.
 
     Result is stored in the global folders_by_depth dictionary.
-    """
-    parent_resource = f"projects/_/buckets/{BUCKET_NAME}"
+    \"\"\"
+    parent_resource = f\"projects/_/buckets/{BUCKET_NAME}\"
 
     logging.info(
-        "Starting folder discovery and partitioning for bucket '%s'."
-        " Using prefix filter: '%s'.",
+        \"Starting folder discovery and partitioning for bucket '%s'.\"
+        \" Using prefix filter: '%s'.\",
         BUCKET_NAME,
-        FOLDER_PREFIX if FOLDER_PREFIX else "NONE (all folders)",
+        FOLDER_PREFIX if FOLDER_PREFIX else \"NONE (all folders)\",
     )
 
     list_folders_request = storage_control_v2.ListFoldersRequest(
@@ -152,20 +153,20 @@ def discover_and_partition_folders() -> None:
 
             num_folders_found += 1
             with stats_lock:
-                stats["found_total"] = num_folders_found
+                stats[\"found_total\"] = num_folders_found
 
     except Exception as e:
-        logging.error("Failed to list folders: %s", e, exc_info=True)
+        logging.error(\"Failed to list folders: %s\", e, exc_info=True)
         return
 
-    logging.info("Finished discovery. Total folders found: %s.", num_folders_found)
+    logging.info(\"Finished discovery. Total folders found: %s.\", num_folders_found)
     if not folders_by_depth:
-        logging.info("No folders found in the bucket.")
+        logging.info(\"No folders found in the bucket.\")
     else:
-        logging.info("Folders partitioned by depth:")
+        logging.info(\"Folders partitioned by depth:\")
         for depth_val in sorted(folders_by_depth.keys()):
             logging.info(
-                "  Depth %s: %s folders", depth_val, len(folders_by_depth[depth_val])
+                \"  Depth %s: %s folders\", depth_val, len(folders_by_depth[depth_val])
             )
 
 
@@ -193,7 +194,7 @@ def should_retry(exception: Exception) -> int | None:
 
 
 def delete_folder(folder_full_resource_name: str) -> None:
-    """Attempts to delete a single GCS HNS folder.
+    \"\"\"Attempts to delete a single GCS HNS folder.
 
     Includes retry logic for transient errors.
 
@@ -203,7 +204,7 @@ def delete_folder(folder_full_resource_name: str) -> None:
         folder_full_resource_name: The full resource name of the GCS folder to
           delete, e.g.,
           'projects/_/buckets/your-bucket-name/folders/path/to/folder/'.
-    """
+    \"\"\"
     simple_path, _ = _get_simple_path_and_depth(folder_full_resource_name)
 
     retry_policy = retry.Retry(
@@ -219,70 +220,70 @@ def delete_folder(folder_full_resource_name: str) -> None:
         storage_control_client.delete_folder(request=request, retry=retry_policy)
 
         with stats_lock:
-            stats["successful_deletes"] += 1
+            stats[\"successful_deletes\"] += 1
         return  # Success
 
     except google_exceptions.NotFound:
         # This can happen if the folder was deleted by another process.
         logging.warning(
-            "Folder not found for deletion (already gone?): %s", simple_path
+            \"Folder not found for deletion (already gone?): %s\", simple_path
         )
         return  # Not a retriable error
     except google_exceptions.FailedPrecondition as e:
         # This typically means the folder contains objects.
-        logging.warning("Deletion failed for '%s': %s.", simple_path, e.message)
+        logging.warning(\"Deletion failed for '%s': %s.\", simple_path, e.message)
         with stats_lock:
-            stats["failed_deletes_precondition"] += 1
+            stats[\"failed_deletes_precondition\"] += 1
         return  # Not a retriable error
     except Exception as e:
         logging.error(
-            "Failed to delete '%s': %s",
+            \"Failed to delete '%s': %s\",
             simple_path,
             e,
             exc_info=True,
         )
         with stats_lock:
-            stats["failed_deletes_internal"] += 1
+            stats[\"failed_deletes_internal\"] += 1
         return  # All retries exhausted
 
 
 # --- STATS REPORTER THREAD ---
 def stats_reporter_thread_logic(stop_event: threading.Event, start_time: float) -> None:
-    """Logs current statistics periodically."""
-    logging.info("Stats Reporter: Started.")
+    \"\"\"Logs current statistics periodically.\"\"\"
+    logging.info(\"Stats Reporter: Started.\")
     while not stop_event.wait(STATS_REPORT_INTERVAL):
         with stats_lock:
             elapsed = time.time() - start_time
-            rate = stats["successful_deletes"] / elapsed if elapsed > 0 else 0
+            rate = stats[\"successful_deletes\"] / elapsed if elapsed > 0 else 0
             logging.info(
-                "[STATS] Total Folders Found: %s | Successful Deletes: %s | Failed"
-                " Deletes (precondition): %s | Failed Deletes (internal): %s | Rate:"
-                " %.2f folders/sec",
-                stats["found_total"],
-                stats["successful_deletes"],
-                stats["failed_deletes_precondition"],
-                stats["failed_deletes_internal"],
+                \"[STATS] Total Folders Found: %s | Successful Deletes: %s | Failed\"
+                \" Deletes (precondition): %s | Failed Deletes (internal): %s | Rate:\"
+                \" %.2f folders/sec\",
+                stats[\"found_total\"],
+                stats[\"successful_deletes\"],
+                stats[\"failed_deletes_precondition\"],
+                stats[\"failed_deletes_internal\"],
                 rate,
             )
-    logging.info("Stats Reporter: Shutting down.")
+    logging.info(\"Stats Reporter: Shutting down.\")
 
 
 # --- MAIN EXECUTION BLOCK ---
-if __name__ == "__main__":
-    if BUCKET_NAME == "your-gcs-bucket-name":
+if __name__ == \"__main__\":
+    if BUCKET_NAME == \"your-gcs-bucket-name\":
         print(
-            "\nERROR: Please update the BUCKET_NAME variable in the script before"
-            " running."
+            \"\\nERROR: Please update the BUCKET_NAME variable in the script before\"
+            \" running.\"
         )
         exit(1)
 
-    if FOLDER_PREFIX and not FOLDER_PREFIX.endswith("/"):
-        print("\nERROR: FOLDER_PREFIX must end with a '/' if specified.")
+    if FOLDER_PREFIX and not FOLDER_PREFIX.endswith(\"/\"):
+        print(\"\\nERROR: FOLDER_PREFIX must end with a '/' if specified.\")
         exit(1)
 
     start_time = time.time()
 
-    logging.info("Starting GCS HNS folder deletion for bucket: %s", BUCKET_NAME)
+    logging.info(\"Starting GCS HNS folder deletion for bucket: %s\", BUCKET_NAME)
 
     # Event to signal threads to stop gracefully.
     stop_event = threading.Event()
@@ -291,7 +292,7 @@ if __name__ == "__main__":
     stats_thread = threading.Thread(
         target=stats_reporter_thread_logic,
         args=(stop_event, start_time),
-        name="StatsReporter",
+        name=\"StatsReporter\",
         daemon=True,
     )
     stats_thread.start()
@@ -300,12 +301,12 @@ if __name__ == "__main__":
     discover_and_partition_folders()
 
     if not folders_by_depth:
-        logging.info("No folders found to delete. Exiting.")
+        logging.info(\"No folders found to delete. Exiting.\")
         exit(0)
 
     # Prepare for multi-threaded deletion within each depth level.
     deletion_executor = ThreadPoolExecutor(
-        max_workers=MAX_WORKERS, thread_name_prefix="DeleteFolderWorker"
+        max_workers=MAX_WORKERS, thread_name_prefix=\"DeleteFolderWorker\"
     )
 
     try:
@@ -316,12 +317,12 @@ if __name__ == "__main__":
 
             if not folders_at_current_depth:
                 logging.info(
-                    "Skipping depth %s: No folders found at this depth.", current_depth
+                    \"Skipping depth %s: No folders found at this depth.\", current_depth
                 )
                 continue
 
             logging.info(
-                "\nProcessing depth %s: Submitting %s folders for deletion...",
+                \"\\nProcessing depth %s: Submitting %s folders for deletion...\",
                 current_depth,
                 len(folders_at_current_depth),
             )
@@ -337,15 +338,15 @@ if __name__ == "__main__":
             # tackling their parents.
             concurrent.futures.wait(futures)
 
-            logging.info("Finished processing all folders at depth %s.", current_depth)
+            logging.info(\"Finished processing all folders at depth %s.\", current_depth)
 
     except KeyboardInterrupt:
         logging.info(
-            "Main: Keyboard interrupt received. Attempting graceful shutdown..."
+            \"Main: Keyboard interrupt received. Attempting graceful shutdown...\"
         )
     except Exception as e:
         logging.error(
-            "An unexpected error occurred in the main loop: %s", e, exc_info=True
+            \"An unexpected error occurred in the main loop: %s\", e, exc_info=True
         )
     finally:
         # Signal all threads to stop.
@@ -353,7 +354,7 @@ if __name__ == "__main__":
 
         # Shut down deletion executor and wait for any pending tasks to complete.
         logging.info(
-            "Main: Shutting down deletion workers. Waiting for any final tasks..."
+            \"Main: Shutting down deletion workers. Waiting for any final tasks...\"
         )
         deletion_executor.shutdown(wait=True)
 
@@ -365,23 +366,23 @@ if __name__ == "__main__":
 
         # Log final statistics.
         final_elapsed_time = time.time() - start_time
-        logging.info("\n--- FINAL SUMMARY ---")
+        logging.info(\"\\n--- FINAL SUMMARY ---\")
         with stats_lock:
             final_rate = (
-                stats["successful_deletes"] / final_elapsed_time
+                stats[\"successful_deletes\"] / final_elapsed_time
                 if final_elapsed_time > 0
                 else 0
             )
             logging.info(
-                "  - Total Folders Found (Initial Scan): %s\n  - Successful Folder"
-                " Deletes: %s\n  - Failed Folder Deletes (Precondition): %s\n  -"
-                " Failed Folder Deletes (Internal): %s\n  - Total Runtime: %.2f"
-                " seconds\n  - Average Deletion Rate: %.2f folders/sec",
-                stats["found_total"],
-                stats["successful_deletes"],
-                stats["failed_deletes_precondition"],
-                stats["failed_deletes_internal"],
+                \"  - Total Folders Found (Initial Scan): %s\\n  - Successful Folder\"
+                \" Deletes: %s\\n  - Failed Folder Deletes (Precondition): %s\\n  -\"
+                \" Failed Folder Deletes (Internal): %s\\n  - Total Runtime: %.2f\"
+                \" seconds\\n  - Average Deletion Rate: %.2f folders/sec\",
+                stats[\"found_total\"],
+                stats[\"successful_deletes\"],
+                stats[\"failed_deletes_precondition\"],
+                stats[\"failed_deletes_internal\"],
                 final_elapsed_time,
                 final_rate,
             )
-        logging.info("Script execution finished.")
+        logging.info(\"Script execution finished.\")
