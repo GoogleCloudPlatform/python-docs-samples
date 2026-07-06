@@ -58,7 +58,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument("project_id", help="id of the Google Cloud project")
     parser.add_argument("secret-id", help="id of the secret to act on")
     parser.add_argument("version_destroy_ttl", type=int, help="new version destroy ttl to be added")
     args = parser.parse_args()
