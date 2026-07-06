@@ -16,9 +16,6 @@
 import os
 from pathlib import Path
 
-import pytest
-import vertexai
-
 import create_corpus_example
 import create_corpus_feature_store_example
 import create_corpus_pinecone_example
@@ -34,6 +31,7 @@ import import_files_async_example
 import import_files_example
 import list_corpora_example
 import list_files_example
+import pytest
 import quickstart_example
 import retrieval_query_example
 import upload_file_example
@@ -45,9 +43,6 @@ pytest.skip(allow_module_level=True)
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 GCS_FILE = "gs://cloud-samples-data/generative-ai/pdf/earnings_statement.pdf"
-
-
-vertexai.init(project=PROJECT_ID, location=LOCATION)
 
 
 @pytest.fixture(scope="module", name="test_file")
@@ -156,14 +151,14 @@ def test_get_corpus(test_corpus: pytest.fixture) -> None:
 
 def test_list_corpora(test_corpus: pytest.fixture) -> None:
     corpora = list_corpora_example.list_corpora()
-    assert any(c.display_name == test_corpus.display_name for c in corpora)
+    assert any(c.display_name == test_corpus.display_name for c in corpora.rag_corpora)
 
 
 def test_upload_file(test_corpus: pytest.fixture, test_file: pytest.fixture) -> None:
     rag_file = upload_file_example.upload_file(test_corpus.name, test_file)
     assert rag_file
     files = list_files_example.list_files(test_corpus.name)
-    imported_file = next(iter(files))
+    imported_file = next(iter(files.rag_files))
     delete_file_example.delete_file(imported_file.name)
 
 
@@ -171,7 +166,7 @@ def test_import_files(test_corpus: pytest.fixture) -> None:
     response = import_files_example.import_files(test_corpus.name, [GCS_FILE])
     assert response.imported_rag_files_count > 0
     files = list_files_example.list_files(test_corpus.name)
-    imported_file = next(iter(files))
+    imported_file = next(iter(files.rag_files))
     delete_file_example.delete_file(imported_file.name)
 
 
@@ -182,7 +177,7 @@ async def test_import_files_async(test_corpus: pytest.fixture) -> None:
     )
     assert result.imported_rag_files_count > 0
     files = list_files_example.list_files(test_corpus.name)
-    imported_file = next(iter(files))
+    imported_file = next(iter(files.rag_files))
     delete_file_example.delete_file(imported_file.name)
 
 
@@ -193,7 +188,7 @@ def test_get_file(uploaded_file: pytest.fixture) -> None:
 
 def test_list_files(test_corpus: pytest.fixture, uploaded_file: pytest.fixture) -> None:
     files = list_files_example.list_files(test_corpus.name)
-    assert any(f.name == uploaded_file.name for f in files)
+    assert any(f.name == uploaded_file.name for f in files.rag_files)
 
 
 def test_retrieval_query(test_corpus: pytest.fixture) -> None:
@@ -210,7 +205,7 @@ def test_generate_content_with_rag(test_corpus: pytest.fixture) -> None:
 
 def test_quickstart() -> None:
     corpus, response = quickstart_example.quickstart(
-        "test_corpus_quickstart", [GCS_FILE]
+        "test_corpus_quickstart", GCS_FILE
     )
     assert response
     assert response.text

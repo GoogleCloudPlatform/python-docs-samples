@@ -14,28 +14,25 @@
 
 import os
 
-from google.cloud.aiplatform_v1.services.vertex_rag_data_service.pagers import (
-    ListRagFilesPager,
-)
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_files(corpus_name: str) -> ListRagFilesPager:
+def list_files(corpus_name: str) -> types.ListRagFilesResponse:
     # [START generativeaionvertexai_rag_list_files]
 
-    from vertexai import rag
-    import vertexai
+    import agentplatform
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
     # corpus_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
 
-    # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session
+    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
 
-    files = rag.list_files(corpus_name=corpus_name)
-    for file in files:
+    files_response = client.rag.list_files(name=corpus_name)
+    for file in files_response.rag_files:
         print(file.display_name)
         print(file.name)
     # Example response:
@@ -45,7 +42,7 @@ def list_files(corpus_name: str) -> ListRagFilesPager:
     # projects/1234567890/locations/us-central1/ragCorpora/111111111111/ragFiles/333333333333
 
     # [END generativeaionvertexai_rag_list_files]
-    return files
+    return files_response
 
 
 if __name__ == "__main__":

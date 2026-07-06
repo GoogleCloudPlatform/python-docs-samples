@@ -14,49 +14,51 @@
 
 import os
 
-from vertexai.generative_models import GenerationResponse
+from genai import types as genai_types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def generate_content_with_rag(
     corpus_name: str,
-) -> GenerationResponse:
+) -> genai_types.GenerateContentResponse:
     # [START generativeaionvertexai_rag_generate_content]
 
-    from vertexai import rag
-    from vertexai.generative_models import GenerativeModel, Tool
-    import vertexai
+    from google import genai
+    from google.genai import types as genai_types
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
     # corpus_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
 
-    # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
-
-    rag_retrieval_tool = Tool.from_retrieval(
-        retrieval=rag.Retrieval(
-            source=rag.VertexRagStore(
+    rag_retrieval_tool = genai_types.Tool(
+        retrieval=genai_types.Retrieval(
+            vertex_rag_store=genai_types.VertexRagStore(
                 rag_resources=[
-                    rag.RagResource(
-                        rag_corpus=corpus_name,
-                        # Optional: supply IDs from `rag.list_files()`.
-                        # rag_file_ids=["rag-file-1", "rag-file-2", ...],
+                    genai_types.VertexRagStoreRagResource(
+                        rag_corpus=corpus_name
                     )
                 ],
-                rag_retrieval_config=rag.RagRetrievalConfig(
+                rag_retrieval_config=genai_types.RagRetrievalConfig(
                     top_k=10,
-                    filter=rag.utils.resources.Filter(vector_distance_threshold=0.5),
+                    filter=genai_types.RagRetrievalConfigFilter(
+                        vector_distance_threshold=0.5
+                    ),
                 ),
             ),
         )
     )
 
-    rag_model = GenerativeModel(
-        model_name="gemini-2.0-flash-001", tools=[rag_retrieval_tool]
+    # Create a GenAI SDK client to make a generate_content request
+    genai_client = genai.Client(enterprise=True, project=PROJECT_ID, location="us-central1")
+
+    response = genai_client.models.generate_content(
+        model="gemini-2.5-pro",
+        contents="Why is the sky blue?",
+        config=genai_types.GenerateContentConfig(
+            tools=[rag_retrieval_tool]
+        )
     )
-    response = rag_model.generate_content("Why is the sky blue?")
     print(response.text)
     # Example response:
     #   The sky appears blue due to a phenomenon called Rayleigh scattering.

@@ -15,21 +15,20 @@ import os
 
 from typing import Optional
 
-from vertexai.preview.rag import RagCorpus
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-
 
 def create_corpus_vector_search(
     vector_search_index_name: str,
     vector_search_index_endpoint_name: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
-) -> RagCorpus:
+) -> types.RagCorpus:
     # [START generativeaionvertexai_rag_create_corpus_vector_search]
 
-    from vertexai import rag
-    import vertexai
+    import agentplatform
+    from agentplatform import types
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
@@ -38,28 +37,31 @@ def create_corpus_vector_search(
     # display_name = "test_corpus"
     # description = "Corpus Description"
 
-    # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session
+    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
 
     # Configure embedding model (Optional)
-    embedding_model_config = rag.RagEmbeddingModelConfig(
-        vertex_prediction_endpoint=rag.VertexPredictionEndpoint(
-            publisher_model="publishers/google/models/text-embedding-005"
+    embedding_model_config = types.RagEmbeddingModelConfig(
+        vertex_prediction_endpoint=types.RagEmbeddingModelConfigVertexPredictionEndpoint(
+            endpoint="publishers/google/models/text-embedding-005"
         )
     )
 
     # Configure Vector DB
-    vector_db = rag.VertexVectorSearch(
-        index=vector_search_index_name, index_endpoint=vector_search_index_endpoint_name
+    vector_db = types.RagVectorDbConfigVertexVectorSearch(
+        index=vector_search_index_name,
+        index_endpoint=vector_search_index_endpoint_name
     )
 
-    corpus = rag.create_corpus(
-        display_name=display_name,
-        description=description,
-        backend_config=rag.RagVectorDbConfig(
-            rag_embedding_model_config=embedding_model_config,
-            vector_db=vector_db,
-        ),
+    corpus = client.rag.create_corpus(
+        rag_corpus=types.RagCorpus(
+            display_name=display_name,
+            description=description,
+            rag_vector_db_config=types.RagVectorDbConfig(
+                rag_embedding_model_config=embedding_model_config,
+                vertex_vector_search=vector_db,
+            ),
+        )
     )
     print(corpus)
     # Example response:
