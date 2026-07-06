@@ -25,7 +25,6 @@ COPY *.py ./
 RUN apt-get update \
     # Install Python and other system dependencies.
     && apt-get install -y --no-install-recommends \
-        curl g++ python3.13-dev python3.13-venv python3-distutils \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.13 10 \
     && curl https://bootstrap.pypa.io/get-pip.py | python \
