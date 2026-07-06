@@ -14,7 +14,7 @@
 
 import os
 
-from typing import List, Tuple
+from typing import Tuple
 
 from agentplatform import types
 from google.genai import types as genai_types
