@@ -16,7 +16,8 @@ import os
 
 from typing import Optional
 
-from vertexai import rag
+import agentplatform
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -26,7 +27,7 @@ def upload_file(
     path: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
-) -> rag.RagFile:
+) -> types.RagFile:
     # [START generativeaionvertexai_rag_upload_file]
 
     import agentplatform

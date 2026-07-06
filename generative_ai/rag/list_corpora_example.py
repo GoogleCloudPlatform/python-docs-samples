@@ -14,14 +14,13 @@
 
 import os
 
-from google.cloud.aiplatform_v1beta1.services.vertex_rag_data_service.pagers import (
-    ListRagCorporaPager,
-)
+import agentplatform
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_corpora() -> ListRagCorporaPager:
+def list_corpora() -> types.ListRagCorporaResponse:
     # [START generativeaionvertexai_rag_list_corpora]
 
     import agentplatform

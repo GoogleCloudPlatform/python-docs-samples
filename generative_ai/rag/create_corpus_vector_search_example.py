@@ -17,13 +17,15 @@ from typing import Optional
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
+import agentplatform
+from agentplatform import types
 
 def create_corpus_vector_search(
     vector_search_index_name: str,
     vector_search_index_endpoint_name: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
-) -> RagCorpus:
+) -> types.RagCorpus:
     # [START generativeaionvertexai_rag_create_corpus_vector_search]
 
     import agentplatform

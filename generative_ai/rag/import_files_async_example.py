@@ -16,7 +16,8 @@ import os
 
 from typing import List
 
-from google.cloud.aiplatform_v1 import ImportRagFilesResponse
+import agentplatform
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -24,7 +25,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 async def import_files_async(
     corpus_name: str,
     paths: List[str],
-) -> ImportRagFilesResponse:
+) -> types.ImportRagFilesResponse:
     # [START generativeaionvertexai_rag_import_files_async]
 
     import agentplatform

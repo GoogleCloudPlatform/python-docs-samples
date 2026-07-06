@@ -15,6 +15,9 @@ import os
 
 from typing import Optional
 
+import agentplatform
+from agentplatform import types
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
@@ -24,7 +27,7 @@ def create_corpus_weaviate(
     weaviate_api_key_secret_manager_version: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
-) -> RagCorpus:
+) -> types.RagCorpus:
     # [START generativeaionvertexai_rag_create_corpus_weaviate]
 
     import agentplatform

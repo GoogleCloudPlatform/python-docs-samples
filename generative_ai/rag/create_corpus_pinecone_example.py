@@ -17,13 +17,15 @@ from typing import Optional
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
+import agentplatform
+from agentplatform import types
 
 def create_corpus_pinecone(
     pinecone_index_name: str,
     pinecone_api_key_secret_manager_version: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
-) -> RagCorpus:
+) -> types.RagCorpus:
     # [START generativeaionvertexai_rag_create_corpus_pinecone]
 
     import agentplatform

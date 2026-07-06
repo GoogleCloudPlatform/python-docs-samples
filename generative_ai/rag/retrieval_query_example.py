@@ -14,14 +14,15 @@
 
 import os
 
-from google.cloud.aiplatform_v1beta1 import RetrieveContextsResponse
+import agentplatform
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def retrieval_query(
     corpus_name: str,
-) -> RetrieveContextsResponse:
+) -> types.RetrieveContextsResponse:
     # [START generativeaionvertexai_rag_retrieval_query]
 
     import agentplatform

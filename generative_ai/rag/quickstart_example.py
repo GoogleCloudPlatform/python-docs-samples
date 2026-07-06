@@ -27,7 +27,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def quickstart(
     display_name: str,
     paths: List[str],
-) -> Tuple[rag.RagCorpus, GenerationResponse]:
+) -> Tuple[types.RagCorpus, genai_types.GenerateContentResponse]:
     # [START generativeaionvertexai_rag_quickstart]
     import agentplatform
 

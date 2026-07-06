@@ -14,12 +14,15 @@
 
 import os
 
+from google import genai
+from genai import types as genai_types
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def generate_content_with_rag(
     corpus_name: str,
-) -> GenerationResponse:
+) -> genai_types.GenerateContentResponse:
     # [START generativeaionvertexai_rag_generate_content]
 
     import agentplatform

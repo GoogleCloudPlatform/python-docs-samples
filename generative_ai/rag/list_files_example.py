@@ -14,14 +14,13 @@
 
 import os
 
-from google.cloud.aiplatform_v1.services.vertex_rag_data_service.pagers import (
-    ListRagFilesPager,
-)
+import agentplatform
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_files(corpus_name: str) -> ListRagFilesPager:
+def list_files(corpus_name: str) -> types.ListRagFilesResponse:
     # [START generativeaionvertexai_rag_list_files]
 
     import agentplatform

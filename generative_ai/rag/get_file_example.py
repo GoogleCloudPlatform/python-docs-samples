@@ -14,12 +14,13 @@
 
 import os
 
-from google.cloud.aiplatform_v1 import RagFile
+import agentplatform
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_file(file_name: str) -> RagFile:
+def get_file(file_name: str) -> types.RagFile:
     # [START generativeaionvertexai_rag_get_file]
 
     import agentplatform

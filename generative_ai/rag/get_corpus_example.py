@@ -14,12 +14,13 @@
 
 import os
 
-from google.cloud.aiplatform_v1beta1 import RagCorpus
+import agentplatform
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_corpus(corpus_name: str) -> RagCorpus:
+def get_corpus(corpus_name: str) -> types.RagCorpus:
     # [START generativeaionvertexai_rag_get_corpus]
 
     import agentplatform
