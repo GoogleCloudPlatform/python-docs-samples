@@ -13,12 +13,10 @@
 # limitations under the License.
 
 import os
-import agentplatform
 
 from typing import List, Tuple
 
 from agentplatform import types
-from google import genai
 from google.genai import types as genai_types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")

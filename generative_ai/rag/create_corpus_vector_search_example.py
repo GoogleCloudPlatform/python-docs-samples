@@ -17,7 +17,6 @@ from typing import Optional
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-import agentplatform
 from agentplatform import types
 
 def create_corpus_vector_search(

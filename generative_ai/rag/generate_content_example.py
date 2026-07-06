@@ -14,7 +14,6 @@
 
 import os
 
-from google import genai
 from genai import types as genai_types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")

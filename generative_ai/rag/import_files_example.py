@@ -15,7 +15,6 @@
 import os
 from typing import List
 
-import agentplatform
 from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
