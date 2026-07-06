@@ -13,8 +13,9 @@
 # limitations under the License.
 import os
 
-from agentplatform import types
 from typing import Optional
+
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
