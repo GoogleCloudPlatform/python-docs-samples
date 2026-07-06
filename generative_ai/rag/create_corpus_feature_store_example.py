@@ -46,7 +46,7 @@ def create_corpus_feature_store(
                 endpoint="publishers/google/models/text-embedding-005"
             ),
         ),
-        vertex_feature_store=types.RagDbConfigVertexFeatureStore(
+        vertex_feature_store=types.RagVectorDbConfigVertexFeatureStore(
             feature_view_resource_name=feature_view_name
         )
     )

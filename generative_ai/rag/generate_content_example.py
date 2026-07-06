@@ -35,7 +35,9 @@ def generate_content_with_rag(
         retrieval=genai_types.Retrieval(
             vertex_rag_store=genai_types.VertexRagStore(
                 rag_resources=[
-                    genai_types.VertexRagStoreRagResource
+                    genai_types.VertexRagStoreRagResource(
+                        rag_corpus=corpus_name
+                    )
                 ],
                 rag_retrieval_config=genai_types.RagRetrievalConfig(
                     top_k=10,
