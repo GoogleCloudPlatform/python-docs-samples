@@ -42,7 +42,7 @@ def list_files(corpus_name: str) -> types.ListRagFilesResponse:
     # projects/1234567890/locations/us-central1/ragCorpora/111111111111/ragFiles/333333333333
 
     # [END generativeaionvertexai_rag_list_files]
-    return files
+    return files_response
 
 
 if __name__ == "__main__":

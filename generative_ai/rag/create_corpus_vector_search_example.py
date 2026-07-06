@@ -13,11 +13,10 @@
 # limitations under the License.
 import os
 
+from agentplatform import types
 from typing import Optional
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-
-from agentplatform import types
 
 def create_corpus_vector_search(
     vector_search_index_name: str,

@@ -24,18 +24,12 @@ def generate_content_with_rag(
 ) -> genai_types.GenerateContentResponse:
     # [START generativeaionvertexai_rag_generate_content]
 
-    import agentplatform
-
-    from agentplatform import types
     from google import genai
     from google.genai import types as genai_types
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
     # corpus_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
-
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
 
     rag_retrieval_tool = genai_types.Tool(
         retrieval=genai_types.Retrieval(

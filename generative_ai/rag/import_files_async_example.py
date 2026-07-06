@@ -69,7 +69,7 @@ async def import_files_async(
     # Imported 2 files.
 
     # [END generativeaionvertexai_rag_import_files_async]
-    return result
+    return response
 
 
 if __name__ == "__main__":

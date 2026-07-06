@@ -27,7 +27,6 @@ def retrieval_query(
     import agentplatform
 
     from agentplatform import types
-    from google import genai
     from google.genai import types as genai_types
 
     # TODO(developer): Update and un-comment below lines
