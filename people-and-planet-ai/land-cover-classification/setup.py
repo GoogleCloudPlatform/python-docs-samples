@@ -20,8 +20,8 @@ setup(
     url="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/people-and-planet-ai/land-cover-classification",
     packages=["serving"],
     install_requires=[
-        "apache-beam[gcp]==2.46.0",
+        "apache-beam[gcp]==2.74.0",
         "earthengine-api==1.5.9",
-        "tensorflow==2.12.0",
+        "tensorflow==2.21.0",
     ],
 )
