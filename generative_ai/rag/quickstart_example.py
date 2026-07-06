@@ -20,11 +20,12 @@ from agentplatform import types
 from google.genai import types as genai_types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+MODEL_ID = os.getenv("MODEL_ID")
 
 
 def quickstart(
     display_name: str,
-    paths: List[str],
+    gcs_path: str,
 ) -> Tuple[types.RagCorpus, genai_types.GenerateContentResponse]:
     # [START generativeaionvertexai_rag_quickstart]
     import agentplatform
@@ -68,14 +69,6 @@ def quickstart(
         name=rag_corpus.name,
         import_config=types.ImportRagFilesConfig(
             gcs_source=genai_types.GcsSource(uris=[gcs_path]),
-            google_drive_source=types.GoogleDriveSource(
-                resource_ids=[
-                    types.GoogleDriveSourceResourceId(
-                        resource_id=google_drive_path,
-                        resource_type=types.ResourceType.RESOURCE_TYPE_FILE
-                    )
-                ]
-            ), # optional
             rag_file_transformation_config=types.RagFileTransformationConfig(
                 rag_file_chunking_config=types.RagFileChunkingConfig(
                     chunk_size=512,

@@ -210,7 +210,7 @@ def test_generate_content_with_rag(test_corpus: pytest.fixture) -> None:
 
 def test_quickstart() -> None:
     corpus, response = quickstart_example.quickstart(
-        "test_corpus_quickstart", [GCS_FILE]
+        "test_corpus_quickstart", GCS_FILE
     )
     assert response
     assert response.text
