@@ -31,11 +31,10 @@ import import_files_async_example
 import import_files_example
 import list_corpora_example
 import list_files_example
+import pytest
 import quickstart_example
 import retrieval_query_example
 import upload_file_example
-
-import pytest
 
 
 # TODO(https://github.com/GoogleCloudPlatform/python-docs-samples/issues/11557): Remove once Allowlist is removed
