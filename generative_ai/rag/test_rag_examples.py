@@ -16,8 +16,6 @@
 import os
 from pathlib import Path
 
-import pytest
-
 import create_corpus_example
 import create_corpus_feature_store_example
 import create_corpus_pinecone_example
@@ -36,6 +34,8 @@ import list_files_example
 import quickstart_example
 import retrieval_query_example
 import upload_file_example
+
+import pytest
 
 
 # TODO(https://github.com/GoogleCloudPlatform/python-docs-samples/issues/11557): Remove once Allowlist is removed
