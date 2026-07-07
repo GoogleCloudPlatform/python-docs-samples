@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import concurrent.futures
-import logging
 import threading
 import time
 
@@ -21,6 +20,8 @@ from google.api_core import exceptions as google_exceptions
 from google.api_core import retry
 from google.cloud import storage_control_v2
 import grpc
+
+import logging
 
 ThreadPoolExecutor = concurrent.futures.ThreadPoolExecutor
 
