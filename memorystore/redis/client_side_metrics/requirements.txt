@@ -1,0 +1,7 @@
+redis
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-instrumentation-redis
+opentelemetry-exporter-gcp-trace
+opentelemetry-exporter-gcp-monitoring
+pytest
