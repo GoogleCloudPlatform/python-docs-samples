@@ -29,22 +29,11 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 import redis
 from redis.exceptions import ConnectionError, TimeoutError
 
-# Telemetry and Redis Globals (initialized dynamically in production or mocked in tests)
-tracer = None
-rtt_hist = None
-client_block_hist = None
-app_block_hist = None
-retry_counter = None
-conn_error_counter = None
-pool = None
-r = None
+
 
 
 def init_telemetry():
-    """Initializes the OpenTelemetry SDK with Google Cloud Exporters."""
-    global tracer, rtt_hist, client_block_hist, app_block_hist
-    global retry_counter, conn_error_counter
-
+    """Initializes OpenTelemetry with GCP Exporters and returns the SDK objects."""
     # 1. Initialize Tracing
     tracer_provider = TracerProvider()
     tracer_provider.add_span_processor(
@@ -62,58 +51,61 @@ def init_telemetry():
     metrics.set_meter_provider(meter_provider)
     meter = metrics.get_meter("redis.metrics")
 
-    rtt_hist = meter.create_histogram("redis_client_rtt", unit="ms")
-    client_block_hist = meter.create_histogram(
-        "redis_client_blocking_latency", unit="ms"
-    )
-    app_block_hist = meter.create_histogram(
-        "redis_application_blocking_latency", unit="ms"
-    )
-    retry_counter = meter.create_counter("redis_retry_count")
-    conn_error_counter = meter.create_counter(
-        "redis_connectivity_error_count"
-    )
+    # Bundle all metric handlers safely into a dictionary
+    redis_metrics = {
+        "rtt_hist": meter.create_histogram("redis_client_rtt", unit="ms"),
+        "client_block_hist": meter.create_histogram(
+            "redis_client_blocking_latency", unit="ms"
+        ),
+        "app_block_hist": meter.create_histogram(
+            "redis_application_blocking_latency", unit="ms"
+        ),
+        "retry_counter": meter.create_counter("redis_retry_count"),
+        "conn_error_counter": meter.create_counter(
+            "redis_connectivity_error_count"
+        ),
+    }
 
-    retry_counter.add(0, {"operation": "startup"})
-    conn_error_counter.add(0, {"operation": "startup"})
+    redis_metrics["retry_counter"].add(0, {"operation": "startup"})
+    redis_metrics["conn_error_counter"].add(0, {"operation": "startup"})
 
-    # Setup Redis Instrumentation
+    # 3. Setup Redis Auto-Instrumentation
     RedisInstrumentor().instrument()
 
-    return tracer_provider, meter_provider
+    return tracer, redis_metrics, tracer_provider, meter_provider
 
 
 def init_redis_pool():
-    """Initializes the Redis connection pool."""
-    global pool, r
+    """Initializes and returns the Redis ConnectionPool and Client."""
     redis_host = os.environ.get("REDISHOST", "localhost")
     redis_port = int(os.environ.get("REDISPORT", 6379))
 
-    pool = redis.ConnectionPool(
+    redis_pool = redis.ConnectionPool(
         host=redis_host,
         port=redis_port,
         max_connections=10,
         decode_responses=True,
     )
-    r = redis.Redis(connection_pool=pool)
-    return pool, r
+    redis_client = redis.Redis(connection_pool=redis_pool)
+    return redis_pool, redis_client
 
 
-def smart_redis_call(operation_name, func, *args, **kwargs):
-    """Executes a Redis operation with latency metrics and retry handling."""
+def smart_redis_call(
+    operation_name, func, redis_pool, metrics, *args, **kwargs
+):
+    """Executes a Redis operation with metrics and retry handling (No Globals!)."""
     max_retries = 3
     attempt = 0
 
     pool_start = time.time()
     try:
-        # Check connection pool health
-        conn = pool.get_connection("PING")
-        pool.release(conn)
+        conn = redis_pool.get_connection("PING")
+        redis_pool.release(conn)
     except Exception:
         pass
 
-    if client_block_hist:
-        client_block_hist.record(
+    if metrics and metrics.get("client_block_hist"):
+        metrics["client_block_hist"].record(
             (time.time() - pool_start) * 1000, {"operation": operation_name}
         )
 
@@ -121,16 +113,18 @@ def smart_redis_call(operation_name, func, *args, **kwargs):
         try:
             req_start = time.time()
             response = func(*args, **kwargs)
-            if rtt_hist:
-                rtt_hist.record(
+
+            if metrics and metrics.get("rtt_hist"):
+                metrics["rtt_hist"].record(
                     (time.time() - req_start) * 1000,
                     {"operation": operation_name},
                 )
 
             app_start = time.time()
             _ = str(response)
-            if app_block_hist:
-                app_block_hist.record(
+
+            if metrics and metrics.get("app_block_hist"):
+                metrics["app_block_hist"].record(
                     (time.time() - app_start) * 1000,
                     {"operation": operation_name},
                 )
@@ -139,26 +133,40 @@ def smart_redis_call(operation_name, func, *args, **kwargs):
 
         except (ConnectionError, TimeoutError) as e:
             attempt += 1
-            if conn_error_counter:
-                conn_error_counter.add(1, {"operation": operation_name})
-            if retry_counter:
-                retry_counter.add(1, {"operation": operation_name})
+            if metrics and metrics.get("conn_error_counter"):
+                metrics["conn_error_counter"].add(
+                    1, {"operation": operation_name}
+                )
+            if metrics and metrics.get("retry_counter"):
+                metrics["retry_counter"].add(1, {"operation": operation_name})
             if attempt >= max_retries:
                 raise e
             time.sleep((2**attempt) * 0.1)
 
-
 if __name__ == "__main__":
-    tracer_provider, meter_provider = init_telemetry()
-    init_redis_pool()
+    tracer, redis_metrics, tracer_provider, meter_provider = init_telemetry()
+    redis_pool, redis_client = init_redis_pool()
 
     if tracer:
         with tracer.start_as_current_span("process_user_span"):
             try:
                 # Simple write and read operations
-                smart_redis_call("set_user", r.set, "user:123", "active")
+                smart_redis_call(
+                    "set_user",
+                    redis_client.set,
+                    redis_pool,
+                    redis_metrics,
+                    "user:123",
+                    "active",
+                )
 
-                result = smart_redis_call("get_user", r.get, "user:123")
+                result = smart_redis_call(
+                    "get_user",
+                    redis_client.get,
+                    redis_pool,
+                    redis_metrics,
+                    "user:123",
+                )
                 print(f"Retrieved: {result}")
             except Exception as e:
                 print(f"Error: {e}")
