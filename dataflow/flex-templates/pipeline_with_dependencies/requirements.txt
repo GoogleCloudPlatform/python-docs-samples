@@ -4,7 +4,6 @@
 #
 #    pip-compile --output-file=requirements.txt pyproject.toml
 #
---index-url https://us-python.pkg.dev/artifact-foundry-prod/ah-3p-staging-python/simple/
 
 aiofiles==25.1.0
     # via cloud-sql-python-connector
