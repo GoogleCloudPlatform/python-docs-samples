@@ -14,12 +14,9 @@
 
 from unittest import mock
 
-from opentelemetry.instrumentation.redis import RedisInstrumentor
+import main
 import pytest
 from redis.exceptions import ConnectionError
-
-import main
-
 
 @pytest.fixture
 def mock_telemetry(monkeypatch):
