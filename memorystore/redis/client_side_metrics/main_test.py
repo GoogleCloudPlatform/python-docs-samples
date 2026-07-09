@@ -15,10 +15,7 @@
 from unittest import mock
 
 import main
-from opentelemetry.sdk.metrics import MeterProvider
-from opentelemetry.sdk.trace import TracerProvider
 import pytest
-import redis
 from redis.exceptions import ConnectionError
 
 
