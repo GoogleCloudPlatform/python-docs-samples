@@ -161,9 +161,13 @@ def test_init_redis_pool_live(monkeypatch):
 def test_smart_redis_call_live_or_skip():
     """Integration Test: Hits a real Redis endpoint if running locally at localhost:6379."""
     import main as live_main
+    from opentelemetry.sdk.metrics import MeterProvider
+    from opentelemetry.sdk.trace import TracerProvider
+    import pytest
+    import redis
 
-    # Initialize REAL No-op OpenTelemetry SDK providers
-    tp = TracerProvider()
+    # Initialize REAL No-op OpenTelemetry SDK providers (invoked directly)
+    TracerProvider()
     mp = MeterProvider()
 
     try:
@@ -186,8 +190,8 @@ def test_smart_redis_call_live_or_skip():
     }
 
     try:
-        # Run a real Redis write and read hitting the ACTUAL endpoint!
-        result_set = live_main.smart_redis_call(
+        # Run a real Redis write hitting the ACTUAL endpoint (invoked directly)
+        live_main.smart_redis_call(
             "set_test",
             redis_client.set,
             redis_pool,
@@ -195,6 +199,7 @@ def test_smart_redis_call_live_or_skip():
             "test:key",
             "live_val",
         )
+
         result_get = live_main.smart_redis_call(
             "get_test",
             redis_client.get,
