@@ -418,7 +418,7 @@ def list_filtered_findings(source_name):
 
 
 def list_findings_at_time(source_name):
-    # [START securitycenter_list_findings_at_time]
+    # [START securitycenter_list_findings_within_time_range]
     from datetime import datetime, timedelta, timezone
 
     from google.cloud import securitycenter_v1
@@ -441,9 +441,9 @@ def list_findings_at_time(source_name):
 
     five_days_ago = datetime.now(timezone.utc) - timedelta(days=5)
     timestamp_milliseconds = int(five_days_ago.timestamp() * 1000)
-    # [END securitycenter_list_findings_at_time]
+    # [END securitycenter_list_findings_within_time_range]
     i = -1
-    # [START securitycenter_list_findings_at_time]
+    # [START securitycenter_list_findings_within_time_range]
 
     # More details about the request syntax:
     # https://cloud.google.com/security-command-center/docs/reference/rest/v1/folders.sources.findings/list
@@ -460,7 +460,7 @@ def list_findings_at_time(source_name):
                 i, finding_result.finding.name, finding_result.finding.resource_name
             )
         )
-    # [END securitycenter_list_findings_at_time]
+    # [END securitycenter_list_findings_within_time_range]
 
     return i
 
