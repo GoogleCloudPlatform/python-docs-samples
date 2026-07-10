@@ -99,7 +99,7 @@ def smart_redis_call(
 
     pool_start = time.time()
     try:
-        conn = redis_pool.get_connection("PING")
+        conn = redis_pool.get_connection()
         redis_pool.release(conn)
     except Exception:
         pass

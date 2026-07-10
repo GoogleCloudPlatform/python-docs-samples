@@ -240,3 +240,4 @@ def test_init_telemetry_mocks(
     mock_redis_instrumentor.return_value.instrument.assert_called_once()
     mock_cloud_trace.assert_called_once()
     mock_cloud_metrics.assert_called_once()
+    
