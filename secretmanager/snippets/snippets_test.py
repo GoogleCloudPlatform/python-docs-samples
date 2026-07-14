@@ -12,18 +12,16 @@
 # See the License for the specific language governing permissions and
 
 import base64
-from datetime import timedelta
+import uuid
 import os
 import time
+from datetime import timedelta
 from typing import Iterator, Optional, Tuple, Union
-import uuid
 
 from google.api_core import exceptions, retry
 from google.cloud import resourcemanager_v3
 from google.cloud import secretmanager
 from google.protobuf.duration_pb2 import Duration
-
-import pytest
 
 from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version
@@ -63,6 +61,8 @@ from update_secret_with_delayed_destroy import update_secret_with_delayed_destro
 from update_secret_with_etag import update_secret_with_etag
 from view_secret_annotations import view_secret_annotations
 from view_secret_labels import view_secret_labels
+
+import pytest
 
 
 @pytest.fixture()
@@ -468,9 +468,13 @@ def test_create_secret_with_annotations(
 
 def test_create_secret_with_delayed_destroy(
     client: secretmanager.SecretManagerServiceClient,
-    project_id: str, secret_id: str, version_destroy_ttl: int
+    project_id: str,
+    secret_id: str,
+    version_destroy_ttl: int,
 ) -> None:
-    secret = create_secret_with_delayed_destroy(project_id, secret_id, version_destroy_ttl)
+    secret = create_secret_with_delayed_destroy(
+        project_id, secret_id, version_destroy_ttl
+    )
     assert secret_id in secret.name
     assert timedelta(seconds=version_destroy_ttl) == secret.version_destroy_ttl
 
@@ -740,8 +744,14 @@ def test_update_secret_with_alias(secret_version: Tuple[str, str, str, str]) -> 
     assert secret.version_aliases["test"] == 1
 
 
-def test_update_secret_with_delayed_destroy(secret_with_delayed_destroy: Tuple[str, str], version_destroy_ttl: str) -> None:
+def test_update_secret_with_delayed_destroy(
+    secret_with_delayed_destroy: Tuple[str, str]
+) -> None:
     project_id, secret_id = secret_with_delayed_destroy
     updated_version_destroy_ttl_value = 118400
-    updated_secret = update_secret_with_delayed_destroy(project_id, secret_id, updated_version_destroy_ttl_value)
-    assert updated_secret.version_destroy_ttl == timedelta(seconds=updated_version_destroy_ttl_value)
+    updated_secret = update_secret_with_delayed_destroy(
+        project_id, secret_id, updated_version_destroy_ttl_value
+    )
+    assert updated_secret.version_destroy_ttl == timedelta(
+        seconds=updated_version_destroy_ttl_value
+    )

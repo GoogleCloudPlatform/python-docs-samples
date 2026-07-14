@@ -60,6 +60,7 @@ def create_secret_with_delayed_destroy(
 
     return response
 
+
 # [END secretmanager_create_secret_with_delayed_destroy]
 
 
@@ -67,9 +68,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument("project_id", help="id of the Google Cloud project")
     parser.add_argument("secret_id", help="id of the secret to create")
-    parser.add_argument("version_destroy_ttl", help="version_destroy_ttl you want to add")
+    parser.add_argument(
+        "version_destroy_ttl", type=int, help="version_destroy_ttl you want to add"
+    )
     args = parser.parse_args()
 
-    create_secret_with_delayed_destroy(args.project_id, args.secret_id, args.version_destroy_ttl)
+    create_secret_with_delayed_destroy(
+        args.project_id, args.secret_id, args.version_destroy_ttl
+    )

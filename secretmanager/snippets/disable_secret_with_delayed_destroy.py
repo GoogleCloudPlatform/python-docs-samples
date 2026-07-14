@@ -37,12 +37,15 @@ def disable_secret_with_delayed_destroy(
     # Delayed destroy of the secret version.
     secret = {"name": name}
     update_mask = {"paths": ["version_destroy_ttl"]}
-    response = client.update_secret(request={"secret": secret, "update_mask": update_mask})
+    response = client.update_secret(
+        request={"secret": secret, "update_mask": update_mask}
+    )
 
     # Print the new secret name.
     print(f"Disabled delayed destroy on secret: {response.name}")
 
     return response
+
 
 # [END secretmanager_disable_secret_delayed_destroy]
 
@@ -55,6 +58,4 @@ if __name__ == "__main__":
     parser.add_argument("secret_id", help="id of the secret from which to act")
     args = parser.parse_args()
 
-    disable_secret_with_delayed_destroy(
-        args.project_id, args.secret_id
-    )
+    disable_secret_with_delayed_destroy(args.project_id, args.secret_id)

@@ -47,12 +47,7 @@ def create_secret_with_tags(
         request={
             "parent": parent,
             "secret_id": secret_id,
-            "secret": {
-                "replication": {"automatic": {}},
-                "tags": {
-                    tag_key: tag_value
-                }
-            },
+            "secret": {"replication": {"automatic": {}}, "tags": {tag_key: tag_value}},
         }
     )
 
@@ -74,4 +69,6 @@ if __name__ == "__main__":
     parser.add_argument("tag_value", help="value of the tag you want to add")
     args = parser.parse_args()
 
-    create_secret_with_tags(args.project_id, args.secret_id, args.tag_key, args.tag_value)
+    create_secret_with_tags(
+        args.project_id, args.secret_id, args.tag_key, args.tag_value
+    )
