@@ -5,7 +5,7 @@ description = "Example of deploying an MCP server on Cloud Run"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "fastmcp==3.2.0",
+    "fastmcp==3.4.3",
     "opentelemetry-api==1.40.0",
     "opentelemetry-sdk==1.40.0",
     "opentelemetry-exporter-otlp-proto-grpc==1.40.0",
