@@ -80,6 +80,7 @@ export PUBSUB_VERIFICATION_TOKEN=1234abc
 
 # Secret Manager Test Vars
 export GCLOUD_SECRETS_SERVICE_ACCOUNT=
+export GOOGLE_CLOUD_TOPIC_NAME=
 
 # Automl
 # A centralized project is used to remove duplicate work across all 7 languages 
