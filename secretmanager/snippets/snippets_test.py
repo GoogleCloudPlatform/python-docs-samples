@@ -12,18 +12,16 @@
 # See the License for the specific language governing permissions and
 
 import base64
-from datetime import timedelta
+import uuid
 import os
 import time
+from datetime import timedelta
 from typing import Iterator, Optional, Tuple, Union
-import uuid
 
 from google.api_core import exceptions, retry
 from google.cloud import resourcemanager_v3
 from google.cloud import secretmanager
 from google.protobuf.duration_pb2 import Duration
-
-import pytest
 
 from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version
@@ -63,6 +61,8 @@ from update_secret_with_delayed_destroy import update_secret_with_delayed_destro
 from update_secret_with_etag import update_secret_with_etag
 from view_secret_annotations import view_secret_annotations
 from view_secret_labels import view_secret_labels
+
+import pytest
 
 
 @pytest.fixture()
