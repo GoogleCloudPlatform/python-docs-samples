@@ -15,7 +15,7 @@ import os
 
 from typing import Optional
 
-from vertexai.preview.rag import RagCorpus
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -23,33 +23,36 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def create_corpus(
     display_name: Optional[str] = None,
     description: Optional[str] = None,
-) -> RagCorpus:
+) -> types.RagCorpus:
     # [START generativeaionvertexai_rag_create_corpus]
 
-    from vertexai import rag
-    import vertexai
+    import agentplatform
+    from agentplatform import types
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
     # display_name = "test_corpus"
     # description = "Corpus Description"
 
-    # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session
+    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
 
-    # Configure backend_config
-    backend_config = rag.RagVectorDbConfig(
-        rag_embedding_model_config=rag.RagEmbeddingModelConfig(
-            vertex_prediction_endpoint=rag.VertexPredictionEndpoint(
-                publisher_model="publishers/google/models/text-embedding-005"
+    # Configure project-level config
+    backend_config = types.RagVectorDbConfig(
+        rag_embedding_model_config=types.RagEmbeddingModelConfig(
+            vertex_prediction_endpoint=types.RagEmbeddingModelConfigVertexPredictionEndpoint(
+                endpoint="publishers/google/models/text-embedding-005"
             )
         )
     )
 
-    corpus = rag.create_corpus(
-        display_name=display_name,
-        description=description,
-        backend_config=backend_config,
+    # Create a corpus
+    corpus = client.rag.create_corpus(
+        rag_corpus=types.RagCorpus(
+            display_name=display_name,
+            description=description,
+            rag_vector_db_config=backend_config,
+        )
     )
     print(corpus)
     # Example response:

@@ -1,6 +1,6 @@
-protobuf==5.29.4
-pytest==9.0.3; python_version >= "3.10"
-google-api-core==2.23.0
-google-auth==2.38.0
-google-cloud-managedkafka==0.1.12
-googleapis-common-protos==1.66.0
+protobuf==6.33.6
+pytest==9.0.3
+google-api-core==2.31.0
+google-auth==2.55.1
+google-cloud-managedkafka==0.4.1
+googleapis-common-protos==1.75.0

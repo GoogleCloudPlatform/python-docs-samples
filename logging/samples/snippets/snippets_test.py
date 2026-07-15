@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import uuid
 
 import backoff
@@ -21,9 +22,10 @@ import pytest
 
 import snippets
 
-
 TEST_LOGGER_NAME = "example_log_{}".format(uuid.uuid4().hex)
 TEST_TEXT = "Hello, world."
+GOOGLE_CLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
+DEFAULT_LOGGER = f"projects/{GOOGLE_CLOUD_PROJECT}/logs/python"
 
 
 @pytest.fixture
@@ -47,13 +49,24 @@ def test_list(example_log, capsys):
 
 def test_write(capsys):
 
-    snippets.write_entry(TEST_LOGGER_NAME)
+    snippets.write_entry()
 
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def eventually_consistent_test():
-        snippets.list_entries(TEST_LOGGER_NAME)
-        out, _ = capsys.readouterr()
-        assert TEST_TEXT in out
+        # retrieve logs
+        client = logging.Client()
+
+        log_filter = DEFAULT_LOGGER
+
+        entries = client.list_entries(
+            filter_=log_filter, order_by=logging.DESCENDING, max_results=3
+        )
+
+        retrieved_entries = list(entries)
+
+        assert retrieved_entries[0].payload["message"] == "This is a JSON log."
+        assert retrieved_entries[1].payload == "Goodbye, world!"
+        assert retrieved_entries[2].payload == "Hello, world!"
 
     eventually_consistent_test()
 

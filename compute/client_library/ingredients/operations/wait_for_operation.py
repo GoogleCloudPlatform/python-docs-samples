@@ -17,6 +17,7 @@
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
 from google.cloud import compute_v1
+import time
 
 
 # <INGREDIENT wait_for_operation>
@@ -46,7 +47,18 @@ def wait_for_operation(
         kwargs["region"] = operation.region.rsplit("/", maxsplit=1)[1]
     else:
         client = compute_v1.GlobalOperationsClient()
-    return client.wait(**kwargs)
+
+    while True:
+        result = client.get(**kwargs)
+
+        if result.status == compute_v1.Operation.Status.DONE:
+            print("Operation finished.")
+            if result.error:
+                print(f"Error during operation: {result.error}")
+            return result
+
+        print("Waiting for operation to complete...")
+        time.sleep(2)
 
 
 # </INGREDIENT>

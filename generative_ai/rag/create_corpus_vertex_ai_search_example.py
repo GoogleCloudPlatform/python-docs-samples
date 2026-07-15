@@ -15,7 +15,7 @@ import os
 
 from typing import Optional
 
-from vertexai import rag
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -24,11 +24,11 @@ def create_corpus_vertex_ai_search(
     vertex_ai_search_engine_name: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
-) -> rag.RagCorpus:
+) -> types.RagCorpus:
     # [START generativeaionvertexai_rag_create_corpus_vertex_ai_search]
 
-    from vertexai import rag
-    import vertexai
+    import agentplatform
+    from agentplatform import types
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
@@ -36,18 +36,20 @@ def create_corpus_vertex_ai_search(
     # display_name = "test_corpus"
     # description = "Corpus Description"
 
-    # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session
+    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
 
     # Configure Search
-    vertex_ai_search_config = rag.VertexAiSearchConfig(
+    vertex_ai_search_config = types.VertexAiSearchConfig(
         serving_config=f"{vertex_ai_search_engine_name}/servingConfigs/default_search",
     )
 
-    corpus = rag.create_corpus(
-        display_name=display_name,
-        description=description,
-        vertex_ai_search_config=vertex_ai_search_config,
+    corpus = client.rag.create_corpus(
+        rag_corpus=types.RagCorpus(
+            display_name=display_name,
+            description=description,
+            vertex_ai_search_config=vertex_ai_search_config,
+        ),
     )
     print(corpus)
     # Example response:

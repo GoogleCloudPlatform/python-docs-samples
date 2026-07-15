@@ -14,25 +14,24 @@
 
 import os
 
-from google.cloud.aiplatform_v1beta1 import RagCorpus
+from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_corpus(corpus_name: str) -> RagCorpus:
+def get_corpus(corpus_name: str) -> types.RagCorpus:
     # [START generativeaionvertexai_rag_get_corpus]
 
-    from vertexai import rag
-    import vertexai
+    import agentplatform
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
     # corpus_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
 
-    # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session
+    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
 
-    corpus = rag.get_corpus(name=corpus_name)
+    corpus = client.rag.get_corpus(name=corpus_name)
     print(corpus)
     # Example response:
     # RagCorpus(name='projects/[PROJECT_ID]/locations/us-central1/ragCorpora/1234567890',
