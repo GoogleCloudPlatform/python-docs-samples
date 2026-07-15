@@ -1,4 +1,4 @@
 google-cloud-kms==3.11.0
 cryptography==48.0.1
 crcmod==1.7
-jwcrypto==1.5.6
+jwcrypto==1.5.8
