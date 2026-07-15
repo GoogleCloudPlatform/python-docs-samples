@@ -43,7 +43,7 @@ charset-normalizer==3.4.8
     # via requests
 cloud-sql-python-connector==1.20.4
     # via apache-beam
-cryptography==47.0.0
+cryptography==48.0.1
     # via
     #   apache-beam
     #   cloud-sql-python-connector
