@@ -30,7 +30,7 @@ def query_standard_sql():
     df = bpd.read_gbq(sql)
 
     # Run a query after explicitly specifying a project.
-    bpd.options.bigquery.project = "your-project-id"
+    bpd.options.bigquery.project = project_id
     df = bpd.read_gbq(sql)
     # [END bigquery_bigframes_query]
     return df
