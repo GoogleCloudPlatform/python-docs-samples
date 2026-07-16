@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
 import bigframes_queries
+import pytest
 
 
 @pytest.mark.skip(
