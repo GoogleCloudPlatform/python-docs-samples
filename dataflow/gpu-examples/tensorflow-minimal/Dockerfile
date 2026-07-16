@@ -15,7 +15,7 @@
 # NVIDIA CUDA container: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda
 # Supported NVIDIA images: https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/supported-tags.md
 # TensorFlow/CUDA compatibility: https://www.tensorflow.org/install/source#gpu
-FROM nvcr.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+FROM nvcr.io/nvidia/cuda:12.5.1-cudnn-runtime-ubuntu22.04
 
 WORKDIR /pipeline
 
@@ -25,9 +25,8 @@ COPY *.py ./
 RUN apt-get update \
     # Install Python and other system dependencies.
     && apt-get install -y --no-install-recommends \
-        curl g++ python3.14-dev python3.14-venv python3-distutils \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.14 10 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.13 10 \
     && curl https://bootstrap.pypa.io/get-pip.py | python \
     # Install the pipeline requirements.
     && pip install --no-cache-dir -r requirements.txt \
@@ -35,5 +34,5 @@ RUN apt-get update \
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
 # Check this matches the apache-beam version in the requirements.txt
-COPY --from=apache/beam_python3.14_sdk:2.73.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.13_sdk:2.74.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
