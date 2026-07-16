@@ -17,13 +17,17 @@ import pytest
 import bigframes_queries
 
 
-@pytest.mark.skip(reason="Placeholder project ID 'your-project-id' (b/522845525)")
+@pytest.mark.skip(
+    reason="Placeholder project ID 'your-project-id' cannot be executed by pytest, but snippet is required for welcome page documentation."
+)
 def test_query_standard_sql():
     df = bigframes_queries.query_standard_sql()
     assert df is not None
 
 
-@pytest.mark.skip(reason="Legacy SQL syntax not supported by BigQuery DataFrames (b/522845525)")
+@pytest.mark.skip(
+    reason="Legacy SQL syntax is not supported for execution by BigQuery DataFrames, but snippet is required for welcome page documentation."
+)
 def test_query_legacy_sql():
     df = bigframes_queries.query_legacy_sql()
     assert df is not None
@@ -39,7 +43,9 @@ def test_query_parameters():
     assert df is not None
 
 
-@pytest.mark.skip(reason="Requires a writable table destination (b/522845525)")
+@pytest.mark.skip(
+    reason="Requires a writable destination table so pytest skips execution, but snippet is required for welcome page documentation."
+)
 def test_upload_from_dataframe():
     bq_df = bigframes_queries.upload_from_dataframe()
     assert bq_df is not None
