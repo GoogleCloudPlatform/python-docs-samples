@@ -111,7 +111,7 @@ def query_parameters():
     return df
 
 
-def upload_from_dataframe():
+def upload_from_dataframe(table_id: str = "your-project.your_dataset.your_table_name"):
     # [START bigquery_bigframes_upload_from_dataframe]
     import pandas as pd
 
