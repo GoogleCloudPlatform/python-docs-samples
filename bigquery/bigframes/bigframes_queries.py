@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def query_standard_sql():
+def query_standard_sql(project_id: str = "your-project-id"):
     # [START bigquery_bigframes_query]
     import bigframes.pandas as bpd
 
