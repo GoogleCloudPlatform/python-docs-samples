@@ -13,13 +13,15 @@
 # limitations under the License.
 
 
-def query_standard_sql(project_id: str = "your-project-id"):
-    # [START bigquery_bigframes_query]
-    import bigframes.pandas as bpd
+import bigframes.pandas as bpd
+import pandas as pd
 
-    # Set partial ordering mode as the default configuration for BigQuery DataFrames.
-    bpd.options.bigquery.ordering_mode = "partial"
+# Set partial ordering mode as the default configuration for BigQuery DataFrames.
+bpd.options.bigquery.ordering_mode = "partial"
 
+
+# [START bigquery_bigframes_query]
+def query_standard_sql(project_id: str = "your-project-id") -> bpd.DataFrame:
     sql = """
     SELECT name FROM `bigquery-public-data.usa_names.usa_1910_current`
     WHERE state = 'TX'
@@ -30,40 +32,17 @@ def query_standard_sql(project_id: str = "your-project-id"):
     df = bpd.read_gbq(sql)
 
     # Run a query after explicitly specifying a project.
-    project_id = "your-project-id"
+    bpd.close_session()
     bpd.options.bigquery.project = project_id
     df = bpd.read_gbq(sql)
-    # [END bigquery_bigframes_query]
     return df
 
 
-def query_legacy_sql():
-    # [START bigquery_bigframes_query_legacy]
-    import bigframes.pandas as bpd
-
-    # Set partial ordering mode as the default configuration for BigQuery DataFrames.
-    bpd.options.bigquery.ordering_mode = "partial"
-
-    sql = """
-    SELECT name FROM [bigquery-public-data:usa_names.usa_1910_current]
-    WHERE state = 'TX'
-    LIMIT 100
-    """
-
-    # Run a query using legacy SQL syntax.
-    query_config = {"query": {"useLegacySql": True}}
-    df = bpd.read_gbq(sql, configuration=query_config)
-    # [END bigquery_bigframes_query_legacy]
-    return df
+# [END bigquery_bigframes_query]
 
 
-def query_bqstorage():
-    # [START bigquery_bigframes_query_bqstorage]
-    import bigframes.pandas as bpd
-
-    # Set partial ordering mode as the default configuration for BigQuery DataFrames.
-    bpd.options.bigquery.ordering_mode = "partial"
-
+# [START bigquery_bigframes_query_bqstorage]
+def query_bqstorage() -> pd.DataFrame:
     sql = """
     SELECT name FROM `bigquery-public-data.usa_names.usa_1910_current`
     WHERE state = 'TX'
@@ -76,17 +55,14 @@ def query_bqstorage():
     # When downloading results to an in-memory pandas DataFrame, bigquery-dataframes
     # automatically uses the BigQuery Storage API if installed.
     pandas_df = df.to_pandas()
-    # [END bigquery_bigframes_query_bqstorage]
     return pandas_df
 
 
-def query_parameters():
-    # [START bigquery_bigframes_query_parameters]
-    import bigframes.pandas as bpd
+# [END bigquery_bigframes_query_bqstorage]
 
-    # Set partial ordering mode as the default configuration for BigQuery DataFrames.
-    bpd.options.bigquery.ordering_mode = "partial"
 
+# [START bigquery_bigframes_query_parameters]
+def query_parameters() -> bpd.DataFrame:
     sql = """
     SELECT name FROM `bigquery-public-data.usa_names.usa_1910_current`
     WHERE state = @state
@@ -107,19 +83,16 @@ def query_parameters():
     }
 
     df = bpd.read_gbq(sql, configuration=query_config)
-    # [END bigquery_bigframes_query_parameters]
     return df
 
 
-def upload_from_dataframe(table_id: str = "your-project.your_dataset.your_table_name"):
-    # [START bigquery_bigframes_upload_from_dataframe]
-    import pandas as pd
+# [END bigquery_bigframes_query_parameters]
 
-    import bigframes.pandas as bpd
 
-    # Set partial ordering mode as the default configuration for BigQuery DataFrames.
-    bpd.options.bigquery.ordering_mode = "partial"
-
+# [START bigquery_bigframes_upload_from_dataframe]
+def upload_from_dataframe(
+    table_id: str = "your-project.your_dataset.your_table_name",
+) -> bpd.DataFrame:
     # Create a local pandas DataFrame.
     df = pd.DataFrame(
         {
@@ -133,7 +106,8 @@ def upload_from_dataframe(table_id: str = "your-project.your_dataset.your_table_
     bq_df = bpd.read_pandas(df)
 
     # Write the DataFrame to a BigQuery table.
-    table_id = "your-project.your_dataset.your_table_name"
     bq_df.to_gbq(table_id, if_exists="replace")
-    # [END bigquery_bigframes_upload_from_dataframe]
     return bq_df
+
+
+# [END bigquery_bigframes_upload_from_dataframe]

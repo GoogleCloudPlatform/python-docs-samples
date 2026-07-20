@@ -13,38 +13,24 @@
 # limitations under the License.
 
 import bigframes_queries
-import pytest
 
 
-@pytest.mark.skip(
-    reason="Placeholder project ID 'your-project-id' cannot be executed by pytest, but snippet is required for welcome page documentation."
-)
-def test_query_standard_sql():
-    df = bigframes_queries.query_standard_sql()
+def test_query_standard_sql(project_id: str) -> None:
+    df = bigframes_queries.query_standard_sql(project_id=project_id)
     assert df is not None
 
 
-@pytest.mark.skip(
-    reason="Legacy SQL syntax is not supported for execution by BigQuery DataFrames, but snippet is required for welcome page documentation."
-)
-def test_query_legacy_sql():
-    df = bigframes_queries.query_legacy_sql()
-    assert df is not None
-
-
-def test_query_bqstorage():
+def test_query_bqstorage() -> None:
     pandas_df = bigframes_queries.query_bqstorage()
     assert pandas_df is not None
 
 
-def test_query_parameters():
+def test_query_parameters() -> None:
     df = bigframes_queries.query_parameters()
     assert df is not None
 
 
-@pytest.mark.skip(
-    reason="Requires a writable destination table so pytest skips execution, but snippet is required for welcome page documentation."
-)
-def test_upload_from_dataframe():
-    bq_df = bigframes_queries.upload_from_dataframe()
+def test_upload_from_dataframe(project_id: str, dataset_id: str) -> None:
+    table_id = f"{project_id}.{dataset_id}.upload_from_dataframe"
+    bq_df = bigframes_queries.upload_from_dataframe(table_id=table_id)
     assert bq_df is not None
