@@ -11,50 +11,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# [START generativeaionvertexai_evaluation_pairwise_summarization_quality]
-
 import os
 
-import pandas as pd
-
-from google import genai
-from google.genai import types
-
-import vertexai
 from vertexai.preview.evaluation import EvalResult
-from vertexai.evaluation import (
-    EvalTask,
-    PairwiseMetric,
-    MetricPromptTemplateExamples,
-)
 
-# TODO (developer) set GOOGLE_CLOUD_PROJECT and REGION_ID
-# environment variables before running.
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-LOCATION = os.getenv("REGION_ID")
-BASELINE_MODEL = "gemini-2.5-flash"
-
-
-def custom_model_fn(prompt: str) -> str:
-    """Generates text from a prompt using the baseline Gemini model via Vertex AI."""
-
-    genai_client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
-
-    genai_config = types.GenerateContentConfig(temperature=0.4)
-
-    response = genai_client.models.generate_content(
-        model=BASELINE_MODEL, contents=prompt, config=genai_config
-    )
-
-    return response.text
 
 
 def evaluate_output() -> EvalResult:
-    """
-    Evaluates a candidate model's summarization quality
-    against a baseline model using Vertex AI.
-    """
+    # [START generativeaionvertexai_evaluation_pairwise_summarization_quality]
+    import pandas as pd
+
+    import vertexai
+    from vertexai.generative_models import GenerativeModel
+    from vertexai.evaluation import (
+        EvalTask,
+        PairwiseMetric,
+        MetricPromptTemplateExamples,
+    )
+
+    # TODO(developer): Update & uncomment line below
+    # PROJECT_ID = "your-project-id"
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     prompt = """
     Summarize the text such that a five-year-old can understand.
@@ -71,9 +49,15 @@ def evaluate_output() -> EvalResult:
     efficient, environmentally conscious urban transportation.
     """
 
-    vertexai.init(project=PROJECT_ID, location=LOCATION)
-
     eval_dataset = pd.DataFrame({"prompt": [prompt]})
+
+    # Baseline model for pairwise comparison
+    baseline_model = GenerativeModel("gemini-2.0-flash-lite-001")
+
+    # Candidate model for pairwise comparison
+    candidate_model = GenerativeModel(
+        "gemini-2.0-flash-001", generation_config={"temperature": 0.4}
+    )
 
     prompt_template = MetricPromptTemplateExamples.get_prompt_template(
         "pairwise_summarization_quality"
@@ -82,7 +66,7 @@ def evaluate_output() -> EvalResult:
     summarization_quality_metric = PairwiseMetric(
         metric="pairwise_summarization_quality",
         metric_prompt_template=prompt_template,
-        baseline_model=BASELINE_MODEL,
+        baseline_model=baseline_model,
     )
 
     eval_task = EvalTask(
@@ -90,17 +74,13 @@ def evaluate_output() -> EvalResult:
         metrics=[summarization_quality_metric],
         experiment="pairwise-experiment",
     )
-    result = eval_task.evaluate(
-        model=custom_model_fn, experiment_run_name="genai-client-vs-legacy-baseline-6"
-    )
+    result = eval_task.evaluate(model=candidate_model)
 
     baseline_model_response = result.metrics_table["baseline_model_response"].iloc[0]
     candidate_model_response = result.metrics_table["response"].iloc[0]
-
     winner_model = result.metrics_table[
         "pairwise_summarization_quality/pairwise_choice"
     ].iloc[0]
-
     explanation = result.metrics_table[
         "pairwise_summarization_quality/explanation"
     ].iloc[0]

@@ -11,19 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# TODO: to be refactored in b/536110099
+
 import os
 
+import pandas as pd
+
+import vertexai
 from vertexai.preview.evaluation import EvalResult
+from vertexai.preview.evaluation import EvalTask
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def get_rouge_score() -> EvalResult:
-    # TODO To be refactored in b/536110099
-    import pandas as pd
-
-    import vertexai
-    from vertexai.preview.evaluation import EvalTask
 
     # TODO(developer): Update & uncomment line below
     # PROJECT_ID = "your-project-id"
@@ -91,7 +93,7 @@ def get_rouge_score() -> EvalResult:
     # 0  The Great Barrier Reef, the world's ...  \n    The Great Barrier Reef, the ...  ...       0.577320           0.639175
     # 1  The Great Barrier Reef, a vast coral...  \n    The Great Barrier Reef, the ...  ...       0.552381           0.666667
     # 2  The Great Barrier Reef, the world's ...  \n    The Great Barrier Reef, the ...  ...       0.774775           0.774775
-
+    #
     return result
 
 

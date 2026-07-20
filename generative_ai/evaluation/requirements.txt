@@ -1,4 +1,13 @@
-pandas==2.3.3
-google-auth==2.55.2
-google-cloud-aiplatform[full]==1.161.0
-google-genai==2.12.1
+pandas==2.2.3; python_version == '3.7'
+pandas==2.2.3; python_version == '3.8'
+pandas==2.2.3; python_version > '3.8'
+pillow==12.2.0
+google-cloud-aiplatform[full]==1.157.0
+sentencepiece==0.2.1
+google-auth==2.38.0
+anthropic[vertex]==0.28.0
+langchain-core==1.4.0
+langchain-google-vertexai==3.2.3
+numpy<3
+openai==1.68.2
+immutabledict==4.2.0
