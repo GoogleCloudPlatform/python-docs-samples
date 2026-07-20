@@ -16,11 +16,12 @@
 # ALLOYDB_TABLE_NAME within the ALLOYDB_(cluster/instance/database)
 
 import asyncpg  # type: ignore
-import conftest as conftest  # python-docs-samples/alloydb/conftest.py
 from google.cloud.alloydb.connector import AsyncConnector, IPTypes
 import pytest
 import sqlalchemy
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+
+import conftest as conftest  # python-docs-samples/alloydb/conftest.py
 
 
 def preprocess(source: str) -> str:
@@ -93,9 +94,9 @@ async def test_embeddings_batch_processing(
         skip_shell_commands=True,
         replace={
             (
-                "password = input(\"Please provide "
+                'password = input("Please provide '
                 "a password to be used for 'postgres' "
-                "database user: \")"
+                'database user: ")'
             ): f"password = '{password}'",
             (
                 "await create_db("
@@ -141,15 +142,53 @@ async def test_embeddings_batch_processing(
             # Get the table back to the original state
             await conn.execute(
                 sqlalchemy.text(
-                    f"UPDATE {table_name} set "
-                    f"analysis_embedding = NULL"
+                    f"UPDATE {table_name} set " f"analysis_embedding = NULL"
                 )
             )
             await conn.execute(
                 sqlalchemy.text(
-                    f"UPDATE {table_name} set "
-                    f"overview_embedding = NULL"
+                    f"UPDATE {table_name} set " f"overview_embedding = NULL"
                 )
             )
             await conn.commit()
         await pool.dispose()
+
+
+@pytest.mark.asyncio
+async def test_alloydb_vector_search_benchmark(
+    project_id: str,
+    cluster_name: str,
+    instance_name: str,
+    region: str,
+    database_name: str,
+    password: str,
+) -> None:
+    # Run the benchmark notebook with significantly reduced parameters
+    # to allow CI to complete quickly without OOMs or timeouts
+    conftest.run_notebook(
+        "alloydb_vector_search_benchmark.ipynb",
+        variables={
+            "project_id": project_id,
+            "region": region,
+            "cluster_id": cluster_name,
+            "instance_id": instance_name,
+            "db_name": database_name,
+            "db_user": "postgres",
+            "test_queries": 10,
+        },
+        preprocess=preprocess,
+        skip_shell_commands=True,
+        replace={
+            (
+                "db_pass = getpass.getpass("
+                '"🔑 Enter Database Password for AlloyDB: ")'
+            ): f"db_pass = '{password}'",
+            "train_data = f['train'][:]": "train_data = f['train'][:1000]",
+            "test_data = f['test'][:]": "test_data = f['test'][:100]",
+            "neighbors_data = f['neighbors'][:]": (
+                "neighbors_data = f['neighbors'][:100]"
+            ),
+            "ef_values = [40, 100, 200, 400, 800]": "ef_values = [40]",
+        },
+        until_end=True,
+    )
