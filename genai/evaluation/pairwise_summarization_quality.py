@@ -16,17 +16,17 @@
 
 import os
 
-import pandas as pd
-
 from google import genai
 from google.genai import types
 
-from vertexai.preview.evaluation import EvalResult
+import pandas as pd
+
 from vertexai.evaluation import (
     EvalTask,
-    PairwiseMetric,
     MetricPromptTemplateExamples,
+    PairwiseMetric,
 )
+from vertexai.preview.evaluation import EvalResult
 
 # TODO (developer) set GOOGLE_CLOUD_PROJECT and REGION_ID
 # environment variables before running.
@@ -50,6 +50,7 @@ PROMPT = """
     efficient, environmentally conscious urban transportation.
     """
 
+
 def evaluate_output() -> EvalResult:
     """
     Evaluates a candidate model's summarization quality
@@ -64,22 +65,24 @@ def evaluate_output() -> EvalResult:
     baseline_resp = genai_client.models.generate_content(
         model="gemini-2.5-flash",
         contents=PROMPT,
-        config=types.GenerateContentConfig(temperature=0.4)
+        config=types.GenerateContentConfig(temperature=0.4),
     )
     baseline_responses.append(baseline_resp.text)
 
     candidate_resp = genai_client.models.generate_content(
         model="gemini-2.5-pro",
         contents=PROMPT,
-        config=types.GenerateContentConfig(temperature=0.4)
+        config=types.GenerateContentConfig(temperature=0.4),
     )
     candidate_responses.append(candidate_resp.text)
 
-    eval_df = pd.DataFrame({
-        "prompt": PROMPT,
-        "response": candidate_responses,
-        "baseline_model_response": baseline_responses
-    })
+    eval_df = pd.DataFrame(
+        {
+            "prompt": PROMPT,
+            "response": candidate_responses,
+            "baseline_model_response": baseline_responses,
+        }
+    )
 
     prompt_template = MetricPromptTemplateExamples.get_prompt_template(
         "pairwise_summarization_quality"
@@ -93,24 +96,25 @@ def evaluate_output() -> EvalResult:
     eval_task = EvalTask(
         dataset=eval_df,
         metrics=[pairwise_text_quality],
-        experiment="pairwise-benchmark",
+        experiment="pairwise-benchmark2",
     )
 
     comparison_result = eval_task.evaluate()
 
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.max_colwidth', 250)
+    pd.set_option("display.max_columns", None)
+    pd.set_option("display.max_colwidth", 250)
 
     columns_to_print = [
-        "prompt", 
+        "prompt",
         "baseline_model_response",
         "response",
-        "pairwise_summarization_quality/pairwise_choice", 
-        "pairwise_summarization_quality/explanation"
+        "pairwise_summarization_quality/pairwise_choice",
+        "pairwise_summarization_quality/explanation",
     ]
     print(comparison_result.metrics_table[columns_to_print])
 
     return comparison_result
+
 
 # [END aiplatform_genai_evaluation_pairwise_summarization_quality]
 
