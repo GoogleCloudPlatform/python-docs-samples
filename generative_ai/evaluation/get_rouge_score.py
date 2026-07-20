@@ -19,7 +19,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def get_rouge_score() -> EvalResult:
-    # TODO To be refactored in b/536110099
+    # [START generativeaionvertexai_evaluation_get_rouge_score]
     import pandas as pd
 
     import vertexai
@@ -91,7 +91,7 @@ def get_rouge_score() -> EvalResult:
     # 0  The Great Barrier Reef, the world's ...  \n    The Great Barrier Reef, the ...  ...       0.577320           0.639175
     # 1  The Great Barrier Reef, a vast coral...  \n    The Great Barrier Reef, the ...  ...       0.552381           0.666667
     # 2  The Great Barrier Reef, the world's ...  \n    The Great Barrier Reef, the ...  ...       0.774775           0.774775
-
+    # [END generativeaionvertexai_evaluation_get_rouge_score]
     return result
 
 
