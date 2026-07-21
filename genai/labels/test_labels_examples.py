@@ -17,4 +17,4 @@ import labels_example
 
 def test_set_labels() -> None:
     response = labels_example.generate_content()
-    assert response
+    assert response.text
