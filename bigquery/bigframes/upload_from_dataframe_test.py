@@ -12,25 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import bigframes_queries
-
-
-def test_query_standard_sql(project_id: str) -> None:
-    df = bigframes_queries.query_standard_sql(project_id=project_id)
-    assert df is not None
-
-
-def test_query_bqstorage() -> None:
-    pandas_df = bigframes_queries.query_bqstorage()
-    assert pandas_df is not None
-
-
-def test_query_parameters() -> None:
-    df = bigframes_queries.query_parameters()
-    assert df is not None
+import upload_from_dataframe
 
 
 def test_upload_from_dataframe(project_id: str, dataset_id: str) -> None:
     table_id = f"{project_id}.{dataset_id}.upload_from_dataframe"
-    bq_df = bigframes_queries.upload_from_dataframe(table_id=table_id)
+    bq_df = upload_from_dataframe.upload_from_dataframe(table_id=table_id)
     assert bq_df is not None
