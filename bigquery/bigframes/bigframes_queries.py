@@ -36,8 +36,6 @@ def query_standard_sql(project_id: str = "your-project-id") -> bpd.DataFrame:
     bpd.options.bigquery.project = project_id
     df = bpd.read_gbq(sql)
     return df
-
-
 # [END bigquery_bigframes_query]
 
 
@@ -56,8 +54,6 @@ def query_bqstorage() -> pd.DataFrame:
     # automatically uses the BigQuery Storage API if installed.
     pandas_df = df.to_pandas()
     return pandas_df
-
-
 # [END bigquery_bigframes_query_bqstorage]
 
 
@@ -84,8 +80,6 @@ def query_parameters() -> bpd.DataFrame:
 
     df = bpd.read_gbq(sql, configuration=query_config)
     return df
-
-
 # [END bigquery_bigframes_query_parameters]
 
 
@@ -108,6 +102,4 @@ def upload_from_dataframe(
     # Write the DataFrame to a BigQuery table.
     bq_df.to_gbq(table_id, if_exists="replace")
     return bq_df
-
-
 # [END bigquery_bigframes_upload_from_dataframe]
