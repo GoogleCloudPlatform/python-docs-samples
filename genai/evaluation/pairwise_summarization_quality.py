@@ -117,7 +117,3 @@ def evaluate_output() -> EvalResult:
 
 
 # [END aiplatform_genai_evaluation_pairwise_summarization_quality]
-
-
-if __name__ == "__main__":
-    evaluate_output()
