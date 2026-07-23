@@ -41,3 +41,12 @@ def upload_from_dataframe(
     bq_df.to_gbq(table_id, if_exists="replace")
     return bq_df
 # [END bigquery_bigframes_upload_from_dataframe]
+
+
+if __name__ == "__main__":
+    import os
+
+    table_id = os.environ.get(
+        "TABLE_ID", "your-project.your_dataset.your_table_name"
+    )
+    print(upload_from_dataframe(table_id=table_id))

@@ -38,3 +38,7 @@ def query_bqstorage() -> pd.DataFrame:
     pandas_df = df.to_pandas()
     return pandas_df
 # [END bigquery_bigframes_query_bqstorage]
+
+
+if __name__ == "__main__":
+    print(query_bqstorage())

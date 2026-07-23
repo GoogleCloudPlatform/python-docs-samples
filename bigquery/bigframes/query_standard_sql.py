@@ -37,3 +37,10 @@ def query_standard_sql(project_id: str = "your-project-id") -> bpd.DataFrame:
     df = bpd.read_gbq(sql)
     return df
 # [END bigquery_bigframes_query]
+
+
+if __name__ == "__main__":
+    import os
+
+    project = os.environ.get("GOOGLE_CLOUD_PROJECT", "your-project-id")
+    print(query_standard_sql(project_id=project))

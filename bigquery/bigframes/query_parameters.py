@@ -43,3 +43,7 @@ def query_parameters() -> bpd.DataFrame:
     df = bpd.read_gbq(sql, configuration=query_config)
     return df
 # [END bigquery_bigframes_query_parameters]
+
+
+if __name__ == "__main__":
+    print(query_parameters())
