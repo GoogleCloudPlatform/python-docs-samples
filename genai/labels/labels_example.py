@@ -44,7 +44,3 @@ def generate_content() -> genai.types.GenerateContentResponse:
 
 
 # [END aiplatform_genai_gemini_set_labels]
-
-
-if __name__ == "__main__":
-    generate_content()
