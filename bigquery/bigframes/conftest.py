@@ -13,7 +13,9 @@
 # limitations under the License.
 
 import os
+import uuid
 
+from google.cloud import bigquery
 import pytest
 
 
@@ -25,3 +27,14 @@ def project_id() -> str:
 @pytest.fixture(scope="session")
 def location() -> str:
     return "US"
+
+
+@pytest.fixture(scope="session")
+def dataset_id(project_id: str) -> str:
+    client = bigquery.Client(project=project_id)
+    dataset_id = f"bigframes_samples_{uuid.uuid4().hex[:8]}"
+    dataset = bigquery.Dataset(f"{project_id}.{dataset_id}")
+    dataset.location = "US"
+    client.create_dataset(dataset)
+    yield dataset_id
+    client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
