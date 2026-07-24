@@ -1,0 +1,4 @@
+pandas==2.3.3
+google-auth==2.55.2
+google-cloud-aiplatform[evaluation]==1.161.0
+google-genai==2.12.1
