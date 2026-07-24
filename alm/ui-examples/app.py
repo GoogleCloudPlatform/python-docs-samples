@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START apigee_alm_ui_sample]
+# [START alm_ui_sample]
 import os
 import requests
 import subprocess
@@ -156,4 +156,4 @@ if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port, debug=True)
 
-# [END apigee_alm_ui_sample]
+# [END alm_ui_sample]
