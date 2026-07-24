@@ -1,0 +1,2 @@
+google-api-core==2.32.0
+pytest==9.0.3
