@@ -12,20 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import storage
-
-import pytest
-
 import create_folder
 import delete_folder
+import delete_folder_recursive
 import get_folder
+from google.api_core import exceptions
+from google.cloud import storage
 import list_folders
 import managed_folder_create
 import managed_folder_delete
 import managed_folder_get
 import managed_folder_list
+import pytest
 import rename_folder
-
 
 # === Folders === #
 
@@ -65,6 +64,41 @@ def test_folder_create_get_list_rename_delete(
     delete_folder.delete_folder(bucket_name=bucket_name, folder_name=new_name)
     out, _ = capsys.readouterr()
     assert new_name in out
+
+
+def test_delete_folder_recursive(
+    capsys: pytest.LogCaptureFixture, hns_enabled_bucket: storage.Bucket, uuid_name: str
+) -> None:
+    bucket_name = hns_enabled_bucket.name
+    parent_folder = f"parent-{uuid_name}"
+    child_folder = f"parent-{uuid_name}/child-{uuid_name}"
+
+    # Create parent folder
+    create_folder.create_folder(bucket_name=bucket_name, folder_name=parent_folder)
+    # Create child folder
+    create_folder.create_folder(bucket_name=bucket_name, folder_name=child_folder)
+
+    # Call delete folder recursive
+    try:
+        delete_folder_recursive.delete_folder_recursive(
+            bucket_name=bucket_name, folder_name=parent_folder
+        )
+    except exceptions.InvalidArgument as e:
+        if "Recursive folder delete is not enabled for this bucket" in str(e):
+            pytest.skip("Recursive folder delete is not enabled for this bucket.")
+        raise e
+    out, _ = capsys.readouterr()
+    assert (
+        f"Deleted folder recursively: projects/_/buckets/{bucket_name}/folders/{parent_folder}"
+        in out
+    )
+
+    # Verify folders are deleted (NotFound exceptions)
+    with pytest.raises(exceptions.NotFound):
+        get_folder.get_folder(bucket_name=bucket_name, folder_name=parent_folder)
+
+    with pytest.raises(exceptions.NotFound):
+        get_folder.get_folder(bucket_name=bucket_name, folder_name=child_folder)
 
 
 # === Managed Folders === #
