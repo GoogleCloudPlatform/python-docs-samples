@@ -1,0 +1,16 @@
+source .venv/bin/activate
+python app.py
+
+
+
+
+export _REGION="us-central1"
+export _PREFIX="region-deployment"
+export _projectID="fleet-coyote-478218-u8"
+export _version="v2.01.0"
+
+gcloud artifacts repositories create ${_PREFIX} --repository-format=docker --location=$_REGION --project=${_projectID}
+
+docker build  --tag ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest .
+
+docker push ${_REGION}-docker.pkg.dev/${_projectID}/${_PREFIX}/${_version}:latest
