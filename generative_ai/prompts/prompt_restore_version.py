@@ -32,7 +32,7 @@
 #     prompt = Prompt(
 #         prompt_name="zoologist",
 #         prompt_data="Which animal is the fastest on earth?",
-#         model_name="gemini-2.0-flash-001",
+#         model_name="gemini-1.5-flash",
 #         system_instruction="You are a zoologist. Answer in a short sentence.",
 #     )
 #     # Save Prompt to online resource.

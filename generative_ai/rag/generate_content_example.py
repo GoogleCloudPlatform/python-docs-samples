@@ -53,7 +53,7 @@ def generate_content_with_rag(
     genai_client = genai.Client(enterprise=True, project=PROJECT_ID, location="us-central1")
 
     response = genai_client.models.generate_content(
-        model="gemini-2.5-pro",
+        model="gemini-2.5-flash",
         contents="Why is the sky blue?",
         config=genai_types.GenerateContentConfig(
             tools=[rag_retrieval_tool]
