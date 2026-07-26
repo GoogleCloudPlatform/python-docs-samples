@@ -56,7 +56,7 @@ def evaluate_output() -> EvalResult:
 
     # Candidate model for pairwise comparison
     candidate_model = GenerativeModel(
-        "gemini-1.5-flash", generation_config={"temperature": 0.4}
+        "gemini-1.5-pro", generation_config={"temperature": 0.4}
     )
 
     prompt_template = MetricPromptTemplateExamples.get_prompt_template(
