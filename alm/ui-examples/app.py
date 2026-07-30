@@ -16,20 +16,52 @@
 import os
 import subprocess
 
-import requests
 from flask import Flask, make_response, render_template, request
+import requests
 
 app = Flask(__name__)
 
 GCP_REGIONS = [
-    "africa-south1", "asia-east1", "asia-east2", "asia-northeast1", "asia-northeast2",
-    "asia-northeast3", "asia-south1", "asia-south2", "asia-southeast1", "asia-southeast2",
-    "australia-southeast1", "australia-southeast2", "europe-central2", "europe-north1",
-    "europe-southwest1", "europe-west1", "europe-west2", "europe-west3", "europe-west4",
-    "europe-west6", "europe-west8", "europe-west9", "europe-west10", "europe-west12",
-    "me-central1", "me-central2", "me-west1", "northamerica-northeast1", "northamerica-northeast2",
-    "southamerica-east1", "southamerica-west1", "us-central1", "us-east1", "us-east4",
-    "us-east5", "us-south1", "us-west1", "us-west2", "us-west3", "us-west4"
+    "africa-south1",
+    "asia-east1",
+    "asia-east2",
+    "asia-northeast1",
+    "asia-northeast2",
+    "asia-northeast3",
+    "asia-south1",
+    "asia-south2",
+    "asia-southeast1",
+    "asia-southeast2",
+    "australia-southeast1",
+    "australia-southeast2",
+    "europe-central2",
+    "europe-north1",
+    "europe-southwest1",
+    "europe-west1",
+    "europe-west2",
+    "europe-west3",
+    "europe-west4",
+    "europe-west6",
+    "europe-west8",
+    "europe-west9",
+    "europe-west10",
+    "europe-west12",
+    "me-central1",
+    "me-central2",
+    "me-west1",
+    "northamerica-northeast1",
+    "northamerica-northeast2",
+    "southamerica-east1",
+    "southamerica-west1",
+    "us-central1",
+    "us-east1",
+    "us-east4",
+    "us-east5",
+    "us-south1",
+    "us-west1",
+    "us-west2",
+    "us-west3",
+    "us-west4",
 ]
 
 
@@ -54,8 +86,10 @@ def generate_api():
             # --- TOKEN GENERATION ---
             print("Generating gcloud token...")
             token_cmd = [
-                "gcloud", "auth", "print-access-token",
-                f"--impersonate-service-account={service_account}"
+                "gcloud",
+                "auth",
+                "print-access-token",
+                f"--impersonate-service-account={service_account}",
             ]
             token = subprocess.check_output(token_cmd, text=True).strip()
 
@@ -84,7 +118,9 @@ def generate_api():
             # Open the file and send as multipart/form-data
             with open(zip_filename, "rb") as f:
                 files = {"file": (zip_filename, f, "application/zip")}
-                import_response = requests.post(import_url, headers=headers, files=files)
+                import_response = requests.post(
+                    import_url, headers=headers, files=files
+                )
 
             import_response.raise_for_status()
             new_revision = import_response.json().get("revision")
@@ -104,10 +140,15 @@ def generate_api():
             if os.path.exists(zip_filename):
                 os.remove(zip_filename)
 
-            action_result = f"Success! Revision {new_revision} of {apigee_api} deployed to {apigee_env}."
+            action_result = (
+                f"Success! Revision {new_revision} of {apigee_api} "
+                f"deployed to {apigee_env}."
+            )
 
             # Set a cookie just in case Page 2 needs to know what revision was created
-            resp = make_response(render_template("page1.html", action_result=action_result))
+            resp = make_response(
+                render_template("page1.html", action_result=action_result)
+            )
             resp.set_cookie("last_deployed_revision", str(new_revision))
             return resp
 
@@ -125,7 +166,9 @@ def generate_api():
         if "zip_filename" in locals() and os.path.exists(zip_filename):
             os.remove(zip_filename)
 
-    return render_template("page1.html", action_result=action_result, error=error_message)
+    return render_template(
+        "page1.html", action_result=action_result, error=error_message
+    )
 
 
 # --- PAGE 2: GCP Region Selector ---
@@ -170,7 +213,7 @@ def deploy_page():
         regions=GCP_REGIONS,
         selected_region=selected_region,
         api_response=api_response_data,
-        operation_state=operation_state
+        operation_state=operation_state,
     )
 
 
