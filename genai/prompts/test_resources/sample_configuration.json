@@ -1,0 +1,11 @@
+{
+"project": "$PROJECT_ID",
+"system_instruction_path": "gs://$CLOUD_BUCKET/sample_system_instruction.txt",
+"prompt_template_path": "gs://$CLOUD_BUCKET/sample_prompt_template.txt",
+"target_model": "gemini-2.0-flash-001",
+"eval_metrics_types": ["safety"],
+"optimization_mode": "instruction",
+"input_data_path": "gs://$CLOUD_BUCKET/sample_prompts.jsonl",
+"output_path": "gs://$CLOUD_BUCKET",
+"eval_metrics_weights": [1]
+}
