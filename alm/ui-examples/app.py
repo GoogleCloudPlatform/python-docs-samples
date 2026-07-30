@@ -205,7 +205,7 @@ def deploy_page():
                 response = requests.get(url)
                 response.raise_for_status()
                 operation_state = response.json().get("state", "STATE_UNKNOWN")
-            except requests.exceptions.RequestException as e:
+            except requests.exceptions.RequestException:
                 operation_state = "ERROR_FETCHING_STATE"
 
     return render_template(
