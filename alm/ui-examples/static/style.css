@@ -1,0 +1,169 @@
+/* Base Google/Material Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f1f3f4;
+    color: #202124;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Mock GCP Console Header */
+.gcp-header {
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dadce0;
+    padding: 12px 24px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
+}
+
+.gcp-header h1 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #5f6368;
+}
+
+/* Card Container for Content */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+    width: 100%;
+    max-width: 450px;
+    padding: 24px;
+    margin-top: 60px;
+    box-sizing: border-box;
+}
+
+.card h2 {
+    font-size: 22px;
+    font-weight: 400;
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #3c4043;
+}
+
+select {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    color: #202124;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background-color: #fff;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%235f6368%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px top 50%;
+    background-size: 10px auto;
+    transition: border-color 0.2s;
+}
+
+select:focus {
+    outline: none;
+    border-color: #1a73e8;
+    box-shadow: inset 0 0 0 1px #1a73e8;
+}
+
+/* Google Material Button */
+button {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+    background-color: #1b66c9;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+}
+
+/* Success Alert */
+.result-alert {
+    margin-top: 24px;
+    padding: 16px;
+    background-color: #e8f0fe;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #1967d2;
+}
+
+.result-alert svg {
+    margin-right: 12px;
+    fill: #1967d2;
+}
+
+
+/* Text Inputs (Matching your select styles) */
+input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    color: #202124;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background-color: #fff;
+    box-sizing: border-box; /* Prevents it from spilling out of the container */
+    transition: border-color 0.2s;
+    margin-top: 4px;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #1a73e8;
+    box-shadow: inset 0 0 0 1px #1a73e8;
+}
+
+/* Make sure your select also has box-sizing so they align perfectly */
+select {
+    box-sizing: border-box; 
+}
+
+/* Secondary Link Button (Next Page / Back) */
+.secondary-btn {
+    display: inline-block;
+    padding: 10px 24px;
+    background-color: #ffffff;
+    color: #1a73e8;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.2s;
+    font-family: 'Roboto', sans-serif;
+}
+
+.secondary-btn:hover {
+    background-color: #f8f9fa;
+}
