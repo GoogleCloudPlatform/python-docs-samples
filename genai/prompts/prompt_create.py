@@ -18,6 +18,7 @@
 import os
 
 import agentplatform
+from agentplatform.types import Prompt
 
 from google import genai
 
@@ -27,13 +28,14 @@ LOCATION_ID = os.getenv("LOCATION_ID", "us-central1")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 
-def prompt_create_2() -> None:
+def prompt_create() -> None:
     agent_client = agentplatform.Client(project=PROJECT_ID, location=LOCATION_ID)
 
     system_part = genai.types.Part(text="You are a knowledgeable local tour guide.")
 
     user_part = genai.types.Part(
-        text="Write a short, exciting welcome message for a tourist named {name} visiting {city}. Highlight one famous local food."
+        text=("Write a short, exciting welcome message for a tourist"
+              " named {name} visiting {city}. Highlight one famous local food.")
     )
 
     system_content = genai.types.Content(
@@ -80,46 +82,8 @@ def prompt_create_2() -> None:
     )
 
     print(response.text)
-"""
-def prompt_create() -> genai.types.Prompt:
+    return response
 
-    client = agentplatform.Client(project=PROJECT_ID, location=LOCATION_ID)
-
-    # Create local Prompt
-    agentplatform.types.Prompt
-    local_prompt = client.prompts.create(
-        prompt_name="movie-critic",
-        prompt_data="Compare the movies {movie1} and {movie2}.",
-        variables=[
-            {"movie1": "The Lion King", "movie2": "Frozen"},
-            {"movie1": "Inception", "movie2": "Interstellar"},
-        ],
-        model_name=GEMINI_MODEL,
-        system_instruction="You are a movie critic. Answer in a short sentence.",
-        # generation_config=GenerationConfig, # Optional,
-        # safety_settings=SafetySetting, # Optional,
-    )
-
-    # Generate content using the assembled prompt for each variable set.
-    for i in range(len(local_prompt.variables)):
-        response = local_prompt.generate_content(
-            contents=local_prompt.assemble_contents(**local_prompt.variables[i])
-        )
-        print(response)
-
-    # Save a version
-    prompt1 = prompts.create_version(prompt=local_prompt)
-
-    print(prompt1)
-
-    # Example response
-    # Assembled prompt replacing: 1 instances of variable movie1, 1 instances of variable movie2
-    # Assembled prompt replacing: 1 instances of variable movie1, 1 instances of variable movie2
-    # Created prompt resource with id 12345678910.....
-
-    # [END generativeaionvertexai_prompt_template_create_generate_save]
-    return prompt1
-"""
 
 if __name__ == "__main__":
-    prompt_create_2()
+    prompt_create()
