@@ -17,7 +17,6 @@
 import os
 
 from google import genai
-from google.genai import types
 
 
 # TODO (Developer) set the following environment variables.
@@ -36,7 +35,13 @@ SOURCE_CODE = [
 ]
 
 
-def embed_test() -> tuple[types.EmbedContentConfig, types.EmbedContentConfig]:
+def embed_test() -> tuple[genai.types.EmbedContentConfig, genai.types.EmbedContentConfig]:
+    """Generates embeddings for source code indexing and code search queries using the Gemini API.
+
+    Returns:
+        tuple[genai.types.EmbedContentConfig, genai.types.EmbedContentConfig]: A tuple containing 
+        the final source code indexing response and search query embedding response.
+    """
     client = genai.Client(enterprise=True, project=PROJECT_ID, location=LOCATION_ID)
 
     # Index Source Code
@@ -52,8 +57,8 @@ def embed_test() -> tuple[types.EmbedContentConfig, types.EmbedContentConfig]:
         )
 
         print(f"Task: {RETRIEVAL_DOCUMENT} | "
-              f"Vector length: {len(index_response.embedding.values)} | "
-              f"Preview: {index_response.embedding.values[:3]}...")
+              f"Vector length: {len(index_response.embeddings)} | "
+              f"Preview: {index_response.embeddings[:3]}...")
 
     # Embed Search Prompts
     for line in QUERY_LINES:
@@ -68,13 +73,9 @@ def embed_test() -> tuple[types.EmbedContentConfig, types.EmbedContentConfig]:
         )
 
         print(f"Task: {CODE_RETRIEVAL_QUERY} | "
-              f"Vector length: {len(query_response.embedding.values)} | "
-              f"Preview: {query_response.embedding.values[:3]}...")
+              f"Vector length: {len(query_response.embeddings)} | "
+              f"Preview: {query_response.embeddings[:3]}...")
 
     return index_response, query_response
-
-
-if __name__ == "__main__":
-    embed_test()
 
 # [END aiplatform_genai_embedding_code_retrieval]
