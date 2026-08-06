@@ -55,7 +55,6 @@ def tune_embedding_model() -> aiplatform.PipelineJob:
         "queries_path": QUERIES_PATH,
         "train_label_path": TRAIN_LABEL_PATH,
         "test_label_path": TEST_LABEL_PATH,
-        "batch_size": BATCH_SIZE,
         "accelerator_type": ACCELERATOR_TYPE,
     }
 
