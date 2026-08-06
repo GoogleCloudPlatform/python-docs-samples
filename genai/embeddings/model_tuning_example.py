@@ -17,38 +17,39 @@ import os
 
 from google.cloud import aiplatform
 
-
 # TODO (Developer) set the following environment variables.
 PROJECT_ID = os.getenv("PROJECT_ID")
 LOCATION_ID = os.getenv("LOCATION_ID", "us-central1")
-MODEL_NAME = os.getenv("MODEL_NAME", "text-embedding-005")
+MODEL_NAME = os.getenv("MODEL_NAME", "text-embedding-004")
 # A storage bucket: gs://your-bucket-name/embedding-tuning-output
 OUTPUT_URI = os.getenv("OUTPUT_DIR")
 
 API_ENDPOINT = f"{LOCATION_ID}-aiplatform.googleapis.com"
 BATCH_SIZE = 128
 LEARNING_RATE_MULTIPLIER = 1.0
-TRAIN_LABEL_PATH = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/train.tsv"
-TEST_LABEL_PATH = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/test.tsv"
-CORPUS_PATH = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/corpus.jsonl"
-QUERIES_PATH = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/queries.jsonl"
+TRAIN_LABEL_PATH = (
+    "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/train.tsv"
+)
+TEST_LABEL_PATH = (
+    "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/test.tsv"
+)
+CORPUS_PATH = (
+    "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/corpus.jsonl"
+)
+QUERIES_PATH = (
+    "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/queries.jsonl"
+)
 
 ACCELERATOR_TYPE = "NVIDIA_L4"
 
 # Official Google Cloud KFP pipeline template URI for text embedding model tuning
-EMBEDDING_TUNING_PIPELINE_URI = (
-    "https://us-kfp.pkg.dev/ml-pipeline/llm-text-embedding/tune-text-embedding-model/v1.1.3"
-)
+EMBEDDING_TUNING_PIPELINE_URI = "https://us-kfp.pkg.dev/ml-pipeline/llm-text-embedding/tune-text-embedding-model/v1.1.3"
 
 
 def tune_embedding_model() -> aiplatform.PipelineJob:
-    """Tune an embedding model using the specified parameters.
-    """
+    """Tune an embedding model using the specified parameters."""
 
-    aiplatform.init(
-        project=PROJECT_ID,
-        location=LOCATION_ID
-    )
+    aiplatform.init(project=PROJECT_ID, location=LOCATION_ID)
 
     # Configure parameters expected by the embedding tuning pipeline template
     pipeline_parameters = {
@@ -76,5 +77,6 @@ def tune_embedding_model() -> aiplatform.PipelineJob:
     print(f"Pipeline submitted successfully: {pipeline_job.resource_name}")
 
     return pipeline_job
+
 
 # [END aiplatform_genai_embedding_model_tuning]
