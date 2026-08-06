@@ -43,11 +43,14 @@ def output_gcs_uri() -> str:
 
     yield f"gs://{GCS_OUTPUT_BUCKET}/{prefix}"
 
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(GCS_OUTPUT_BUCKET)
-    blobs = bucket.list_blobs(prefix=prefix)
-    for blob in blobs:
-        blob.delete()
+    try:
+        storage_client = storage.Client()
+        bucket = storage_client.get_bucket(GCS_OUTPUT_BUCKET)
+        blobs = bucket.list_blobs(prefix=prefix)
+        for blob in blobs:
+            blob.delete()
+    except Exception:
+        pass
 
 
 @patch("google.genai.Client")
