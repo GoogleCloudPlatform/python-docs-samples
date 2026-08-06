@@ -22,7 +22,6 @@ from google import genai
 PROJECT_ID = os.getenv("PROJECT_ID")
 LOCATION_ID = os.getenv("LOCATION_ID", "us-central1")
 MODEL_NAME = os.getenv("MODEL_NAME", "gemini-embedding-001")
-DIMENSIONALITY = 3072
 
 QUERY_LINES = ["Retrieve a function that adds two numbers"]
 CODE_RETRIEVAL_QUERY = "CODE_RETRIEVAL_QUERY"
@@ -35,7 +34,7 @@ SOURCE_CODE = [
 
 
 def embed_test() -> (
-    tuple[genai.types.EmbedContentConfig, genai.types.EmbedContentConfig]
+    tuple[genai.types.EmbedContentConfig, genai.types.EmbedContentResponse]
 ):
     """Generates embeddings for source code indexing and code search queries using the Gemini API.
 

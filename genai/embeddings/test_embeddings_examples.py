@@ -33,7 +33,7 @@ def test_embeddings_docretrieval_with_txt() -> None:
     assert response
 
 
-def test_code_retrieva_example() -> None:
+def test_code_retrieval_example() -> None:
     response = code_retrieval_example.embed_test()
     assert response
 

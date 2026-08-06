@@ -24,9 +24,6 @@ MODEL_NAME = os.getenv("MODEL_NAME", "text-embedding-004")
 # A storage bucket: gs://your-bucket-name/embedding-tuning-output
 OUTPUT_URI = os.getenv("OUTPUT_DIR")
 
-API_ENDPOINT = f"{LOCATION_ID}-aiplatform.googleapis.com"
-BATCH_SIZE = 128
-LEARNING_RATE_MULTIPLIER = 1.0
 TRAIN_LABEL_PATH = (
     "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/train.tsv"
 )
