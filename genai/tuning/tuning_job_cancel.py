@@ -24,9 +24,4 @@ def cancel_tuning_job(tuning_job_name: str) -> None:
     # Eg. tuning_job_name = "projects/123456789012/locations/us-central1/tuningJobs/123456789012345"
     client.tunings.cancel(name=tuning_job_name)
 
-    # [END googlegenaisdk_tuning_job_cancel]
-
-
-if __name__ == "__main__":
-    input_tuning_job_name = input("Tuning job name: ")
-    cancel_tuning_job(input_tuning_job_name)
+# [END googlegenaisdk_tuning_job_cancel]

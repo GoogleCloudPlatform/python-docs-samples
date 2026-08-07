@@ -18,6 +18,7 @@ from unittest.mock import call, MagicMock, patch
 
 from google.cloud import storage
 from google.genai import types
+from google.api_core import exceptions
 import pytest
 
 import preference_tuning_job_create
@@ -49,7 +50,7 @@ def output_gcs_uri() -> str:
         blobs = bucket.list_blobs(prefix=prefix)
         for blob in blobs:
             blob.delete()
-    except Exception:
+    except exceptions.GoogleAPIError:
         pass
 
 
