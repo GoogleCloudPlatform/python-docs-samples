@@ -13,14 +13,14 @@
 # limitations under the License.
 
 from datetime import datetime as dt
+
 from unittest.mock import call, MagicMock, patch
 
-from google.api_core import exceptions
 from google.cloud import storage
 from google.genai import types
-import preference_tuning_job_create
 import pytest
 
+import preference_tuning_job_create
 import tuning_job_cancel
 import tuning_job_create
 import tuning_job_get
@@ -43,14 +43,11 @@ def output_gcs_uri() -> str:
 
     yield f"gs://{GCS_OUTPUT_BUCKET}/{prefix}"
 
-    try:
-        storage_client = storage.Client()
-        bucket = storage_client.get_bucket(GCS_OUTPUT_BUCKET)
-        blobs = bucket.list_blobs(prefix=prefix)
-        for blob in blobs:
-            blob.delete()
-    except exceptions.GoogleAPIError:
-        pass
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(GCS_OUTPUT_BUCKET)
+    blobs = bucket.list_blobs(prefix=prefix)
+    for blob in blobs:
+        blob.delete()
 
 
 @patch("google.genai.Client")
