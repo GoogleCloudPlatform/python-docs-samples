@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START googlegenaisdk_tuning_job_cancel]
 
+from google import genai
+from google.genai.types import HttpOptions
 def cancel_tuning_job(tuning_job_name: str) -> None:
-    # [START googlegenaisdk_tuning_job_cancel]
-    from google import genai
-    from google.genai.types import HttpOptions
-
+    
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     # Cancel the tuning job.
