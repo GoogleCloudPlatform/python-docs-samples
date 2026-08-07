@@ -41,6 +41,7 @@ def embed_test() -> (
     Returns:
         tuple[genai.types.EmbedContentConfig, genai.types.EmbedContentConfig]: A tuple containing
         the final source code indexing response and search query embedding response.
+        
     """
     client = genai.Client(enterprise=True, project=PROJECT_ID, location=LOCATION_ID)
 
