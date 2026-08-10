@@ -16,13 +16,14 @@
 
 from google import genai
 from google.genai.types import HttpOptions
-def cancel_tuning_job(tuning_job_name: str) -> None:
 
+
+def cancel_tuning_job(tuning_job_name: str) -> None:
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     # Cancel the tuning job.
     # Eg. tuning_job_name = "projects/123456789012/locations/us-central1/tuningJobs/123456789012345"
     client.tunings.cancel(name=tuning_job_name)
 
-    # [END googlegenaisdk_tuning_job_cancel]
-    
+
+# [END googlegenaisdk_tuning_job_cancel]

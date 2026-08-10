@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from datetime import datetime as dt
-
 from unittest.mock import call, MagicMock, patch
 
 from google.cloud import storage
