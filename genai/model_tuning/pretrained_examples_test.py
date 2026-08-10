@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,16 +37,24 @@ def test_tuning_code_generation_model() -> None:
 
     client = genai.Client(enterprise=True, project=PROJECT_ID, location=LOCATION_ID)
 
-    tuned_model = pretrained_codegen_example.tune_code_generation_model()
+    tuned_model = None
+    job_is_finished = False
+    job_is_pending = False
 
-    job_is_pending = tuned_model.state in JOB_STATES_CANCELLABLE
-    job_is_finished = tuned_model.state in JOB_STATES_DELETABLE
-    result = job_is_finished or job_is_pending
+    try:
 
-    assert result
+        tuned_model = pretrained_codegen_example.tune_code_generation_model()
 
-    # cleanup
-    if job_is_pending:
-        client.tunings.cancel(name=tuned_model.name)
-    if job_is_finished:
-        client.models.delete(model=tuned_model.model)
+        job_is_pending = tuned_model.state in JOB_STATES_CANCELLABLE
+        job_is_finished = tuned_model.state in JOB_STATES_DELETABLE
+        result = job_is_finished or job_is_pending
+
+        assert result
+
+    finally:
+
+        # cleanup
+        if job_is_pending:
+            client.tunings.cancel(name=tuned_model.name)
+        if job_is_finished:
+            client.models.delete(model=tuned_model.model)
