@@ -13,14 +13,14 @@
 # limitations under the License.
 
 from datetime import datetime as dt
-
 from unittest.mock import call, MagicMock, patch
 
 from google.cloud import storage
 from google.genai import types
-import pytest
 
 import preference_tuning_job_create
+import pytest
+import tuning_job_cancel
 import tuning_job_create
 import tuning_job_get
 import tuning_job_list
@@ -87,6 +87,14 @@ def test_tuning_job_get(mock_genai_client: MagicMock) -> None:
     mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
     mock_genai_client.return_value.tunings.get.assert_called_once()
     assert response == "test-tuning-job"
+
+
+@patch("google.genai.Client")
+def test_tuning_job_cancel(mock_genai_client: MagicMock) -> None:
+    tuning_job_cancel.cancel_tuning_job("test-tuning-job")
+
+    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
+    mock_genai_client.return_value.tunings.cancel.assert_called_once_with(name="test-tuning-job")
 
 
 @patch("google.genai.Client")
