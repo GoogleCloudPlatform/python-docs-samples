@@ -17,9 +17,9 @@ from unittest.mock import call, MagicMock, patch
 
 from google.cloud import storage
 from google.genai import types
-import pytest
 
 import preference_tuning_job_create
+import pytest
 import tuning_job_cancel
 import tuning_job_create
 import tuning_job_get
