@@ -14,9 +14,8 @@
 
 import backoff
 
-from google.api_core.exceptions import ResourceExhausted
-
 import evaluate_model_example
+from google.api_core.exceptions import ResourceExhausted
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
