@@ -34,14 +34,13 @@ SOURCE_CODE = [
 
 
 def embed_test() -> (
-    tuple[genai.types.EmbedContentConfig, genai.types.EmbedContentResponse]
+    tuple[genai.types.EmbedContentResponse, genai.types.EmbedContentResponse]
 ):
     """Generates embeddings for source code indexing and code search queries using the Gemini API.
 
     Returns:
-        tuple[genai.types.EmbedContentConfig, genai.types.EmbedContentConfig]: A tuple containing
+        tuple[genai.types.EmbedContentResponse, genai.types.EmbedContentResponse]: A tuple containing
         the final source code indexing response and search query embedding response.
-        
     """
     client = genai.Client(enterprise=True, project=PROJECT_ID, location=LOCATION_ID)
 
