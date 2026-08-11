@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_genai_tune_code_generation_model]
+# [START googlegenaisdk_tune_code_generation_model]
 import os
 
 from google import genai
@@ -55,4 +55,4 @@ def tune_code_generation_model() -> genai.types.TuningJob:
     return tuning_job
 
 
-# [END aiplatform_genai_tune_code_generation_model]
+# [END googlegenaisdk_tune_code_generation_model]
