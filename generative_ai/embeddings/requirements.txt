@@ -7,5 +7,5 @@ sentencepiece==0.2.1
 google-auth==2.29.0
 anthropic[vertex]==0.28.0
 numpy<3
-openai==1.68.2
+openai==3.0.0
 immutabledict==4.2.0
