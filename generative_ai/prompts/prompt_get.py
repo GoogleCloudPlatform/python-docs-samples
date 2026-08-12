@@ -33,7 +33,7 @@ def get_prompt() -> Prompt:
     prompt = Prompt(
         prompt_name="meteorologist",
         prompt_data="How should I dress for weather in August?",
-        model_name="gemini-2.0-flash-001",
+        model_name="gemini-1.5-flash",
         system_instruction="You are a meteorologist. Answer in a short sentence.",
 
     )
