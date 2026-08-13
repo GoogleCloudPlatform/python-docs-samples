@@ -33,8 +33,12 @@ def query_dry_run() -> int:
     query_job = session.bqclient.query(sql, job_config=job_config)
 
     # A dry run query completes immediately and returns query metadata.
-    print(f"This query will process {query_job.total_bytes_processed} bytes.")
-    return query_job.total_bytes_processed
+    bytes_processed = query_job.total_bytes_processed
+    if bytes_processed is None:
+        raise RuntimeError("Query dry run did not return the number of bytes processed.")
+
+    print(f"This query will process {bytes_processed} bytes.")
+    return bytes_processed
 # [END bigquery_bigframes_query_dry_run]
 
 
