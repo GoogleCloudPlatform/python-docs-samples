@@ -18,7 +18,9 @@
 
 import os
 
+import code_retrieval_example
 import embeddings_docretrieval_with_txt
+import model_tuning_example
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -28,4 +30,13 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 
 def test_embeddings_docretrieval_with_txt() -> None:
     response = embeddings_docretrieval_with_txt.embed_content()
+    assert response
+
+
+def test_code_retrieval_example() -> None:
+    response = code_retrieval_example.embed_test()
+    assert response
+
+def test_model_tuning_example() -> None:
+    response = model_tuning_example.tune_embedding_model()
     assert response
