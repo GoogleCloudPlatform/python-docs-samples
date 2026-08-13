@@ -17,10 +17,6 @@ import bigframes.pandas as bpd
 
 from google.cloud import bigquery
 
-# Set partial ordering mode as the default configuration for BigQuery
-# DataFrames.
-bpd.options.bigquery.ordering_mode = "partial"
-
 
 def query_dry_run() -> int:
     sql = """
