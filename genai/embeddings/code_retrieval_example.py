@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START aiplatform_genai_embedding_code_retrieval]
-
 import os
 
 from google import genai
