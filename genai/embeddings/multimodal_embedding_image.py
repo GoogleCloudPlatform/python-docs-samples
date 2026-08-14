@@ -17,7 +17,7 @@ from google import genai
 from google.genai import types
 
 
-def embed_content() -> object:
+def embed_content() -> types.EmbedContentResponse:
     client = genai.Client()
 
     content = types.Content(
