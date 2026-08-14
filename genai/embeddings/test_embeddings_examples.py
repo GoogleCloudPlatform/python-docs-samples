@@ -21,9 +21,10 @@ import os
 import code_retrieval_example
 import embeddings_docretrieval_with_txt
 import model_tuning_example
+import multimodal_embedding_image
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
-os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
+os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
@@ -37,6 +38,12 @@ def test_code_retrieval_example() -> None:
     response = code_retrieval_example.embed_test()
     assert response
 
+
 def test_model_tuning_example() -> None:
     response = model_tuning_example.tune_embedding_model()
+    assert response
+
+
+def test_multimodal_embedding_image() -> None:
+    response = multimodal_embedding_image.embed_content()
     assert response
