@@ -19,12 +19,12 @@ from google import genai
 
 # TODO (Developer) Set environment variables
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-LOCATION_ID = os.getenv("LOCATION_ID", "us-central1")
+LOCATION_ID = "global"
 
 # Supported dimensions: 128, 256, 512, 1408 (or up to 3072 for gemini-embedding-2)
 EMBEDDING_DIMENSION = 128
 IMAGE_URI = "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png"
-EMBEDDING_MODEL = "gemini-embedding-2-preview"
+EMBEDDING_MODEL = "gemini-embedding-2"
 CONTEXTUAL_TEXT = "Colosseum"
 
 
@@ -35,7 +35,7 @@ def generate_embeddings_with_lower_dimension() -> genai.types.EmbedContentRespon
     """
 
     client = genai.Client(
-        enterprise=True,
+        vertexai=True,
         project=PROJECT_ID,
         location=LOCATION_ID,
     )
