@@ -15,6 +15,7 @@
 import sys
 
 # [START storage_control_delete_folder_recursive]
+import google.auth
 from google.cloud import storage_control_v2
 
 
@@ -25,7 +26,12 @@ def delete_folder_recursive(bucket_name: str, folder_name: str) -> None:
     # The name of the folder to be deleted recursively
     # folder_name = "folder-name"
 
-    storage_control_client = storage_control_v2.StorageControlClient()
+    credentials, _ = google.auth.default()
+    creds_without_quota_project = credentials.with_quota_project(None)
+
+    storage_control_client = storage_control_v2.StorageControlClient(
+        credentials=creds_without_quota_project
+    )
     # The storage bucket path uses the global access pattern, in which the "_"
     # denotes this bucket exists in the global namespace.
     folder_path = storage_control_client.folder_path(

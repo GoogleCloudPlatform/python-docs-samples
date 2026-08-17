@@ -79,14 +79,9 @@ def test_delete_folder_recursive(
     create_folder.create_folder(bucket_name=bucket_name, folder_name=child_folder)
 
     # Call delete folder recursive
-    try:
-        delete_folder_recursive.delete_folder_recursive(
-            bucket_name=bucket_name, folder_name=parent_folder
-        )
-    except exceptions.InvalidArgument as e:
-        if "Recursive folder delete is not enabled for this bucket" in str(e):
-            pytest.skip("Recursive folder delete is not enabled for this bucket.")
-        raise e
+    delete_folder_recursive.delete_folder_recursive(
+        bucket_name=bucket_name, folder_name=parent_folder
+    )
     out, _ = capsys.readouterr()
     assert (
         f"Deleted folder recursively: projects/_/buckets/{bucket_name}/folders/{parent_folder}"
