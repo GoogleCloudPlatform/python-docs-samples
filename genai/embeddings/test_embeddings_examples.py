@@ -45,5 +45,5 @@ def test_model_tuning_example() -> None:
 
 
 def test_multimodal_example() -> None:
-    response = multimodal_example.get_image_video_text_embeddings
+    response = multimodal_example.get_image_video_text_embeddings()
     assert response
