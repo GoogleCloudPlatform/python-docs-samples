@@ -57,9 +57,13 @@ def generate_embeddings_with_lower_dimension() -> genai.types.EmbedContentRespon
         config=config,
     )
 
-    embeddings = response.embeddings[0].values
+    if response.embeddings:
 
-    print(f"Embeddings (dim={len(embeddings)}): {embeddings[:3]}...")
+        embeddings = response.embeddings[0].values
+
+        print(f"Embeddings (dim={len(embeddings)}): {embeddings[:3]}...\n")
+
+    print(response)
 
     return response
 
