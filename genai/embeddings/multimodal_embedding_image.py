@@ -44,3 +44,4 @@ def embed_content() -> types.EmbedContentResponse:
 
 
 # [END googlegenaisdk_multimodal_embedding_image]
+
