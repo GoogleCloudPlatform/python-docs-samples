@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START googlegenaisdk_multimodal_embedding_video]
+# [START aiplatform_genai_multimodal_embedding_video]
 from google import genai
 from google.genai import types
 
@@ -40,4 +40,4 @@ def embed_content() -> types.EmbedContentResponse:
     return response
 
 
-# [END googlegenaisdk_multimodal_embedding_video]
+# [END aiplatform_genai_multimodal_embedding_video]
