@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START googlegenaisdk_multimodal_embedding_image]
+# [START aiplatform_genai_multimodal_embedding_image]
 from google import genai
 from google.genai import types
 
@@ -43,5 +43,5 @@ def embed_content() -> types.EmbedContentResponse:
     return response
 
 
-# [END googlegenaisdk_multimodal_embedding_image]
+# [END aiplatform_genai_multimodal_embedding_image]
 
