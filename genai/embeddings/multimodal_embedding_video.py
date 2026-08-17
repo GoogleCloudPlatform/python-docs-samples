@@ -20,11 +20,13 @@ from google.genai import types
 def embed_content() -> types.EmbedContentResponse:
     client = genai.Client()
 
-    part = types.Part.from_uri(
-        file_uri="gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4",
-        mime_type="video/mp4",
+    part = types.Part(
+        file_data=types.FileData(
+            file_uri="gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4",
+            mime_type="video/mp4",
+        ),
+        video_metadata=types.VideoMetadata(end_offset="1s"),
     )
-    part.video_metadata = types.VideoMetadata(end_offset="1s")
 
     content = types.Content(parts=[part])
 
