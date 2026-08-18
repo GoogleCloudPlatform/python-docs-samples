@@ -20,6 +20,7 @@ import os
 
 import code_retrieval_example
 import embeddings_docretrieval_with_txt
+import generate_embeddings_with_lower_dimension
 import model_tuning_example
 import multimodal_embedding_image
 import multimodal_embedding_video
@@ -42,6 +43,11 @@ def test_code_retrieval_example() -> None:
 
 def test_model_tuning_example() -> None:
     response = model_tuning_example.tune_embedding_model()
+    assert response
+
+
+def test_generate_embeddings_with_lower_dimension() -> None:
+    response = generate_embeddings_with_lower_dimension.generate_embeddings_with_lower_dimension()
     assert response
 
 
