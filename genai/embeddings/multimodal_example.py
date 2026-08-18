@@ -65,6 +65,3 @@ def get_image_video_text_embeddings() -> genai.types.EmbedContentResponse:
 
 
 # [END aiplatform_genai_multimodal_embedding_image_video_text]
-
-if __name__ == "__main__":
-    get_image_video_text_embeddings()
