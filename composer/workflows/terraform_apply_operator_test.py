@@ -66,6 +66,52 @@ class TestTerraformApplyOperator(unittest.TestCase):
             finally:
                 shutil.rmtree(work_dir, ignore_errors=True)
 
+    def test_custom_binary_path(self):
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+            f.write(b"mock binary")
+            binary_file = f.name
+
+        try:
+            os.chmod(binary_file, 0o755)
+            operator = TerraformApplyOperator(
+                task_id="test_binary",
+                terraform_dir="/tmp/test",
+                binary_path=binary_file,
+            )
+            self.assertEqual(operator._ensure_terraform_binary(), binary_file)
+        finally:
+            if os.path.exists(binary_file):
+                os.remove(binary_file)
+
+    @mock.patch("shutil.which", return_value="/usr/local/bin/terraform")
+    def test_path_binary_detection(self, mock_which):
+        operator = TerraformApplyOperator(
+            task_id="test_path",
+            terraform_dir="/tmp/test",
+        )
+        self.assertEqual(operator._ensure_terraform_binary(), "/usr/local/bin/terraform")
+
+    def test_sha256_verification_success_and_failure(self):
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+            f.write(b"sample data content")
+            sample_file = f.name
+
+        operator = TerraformApplyOperator(
+            task_id="test_hash",
+            terraform_dir="/tmp/test",
+        )
+        try:
+            # Correct SHA-256 for "sample data content"
+            correct_hash = "4a922a0548a2e7d67bbff25c9bc4ea16b08eab6f314d8df525e2f6cef1334166"
+            operator._verify_sha256(sample_file, correct_hash)
+
+            # Incorrect SHA-256 should raise ValueError
+            with self.assertRaises(ValueError):
+                operator._verify_sha256(sample_file, "deadbeef123456")
+        finally:
+            if os.path.exists(sample_file):
+                os.remove(sample_file)
+
     @mock.patch.object(TerraformApplyOperator, "_ensure_terraform_binary", return_value="/tmp/mock_terraform")
     @mock.patch.object(TerraformApplyOperator, "_stage_workspace", return_value="/tmp/mock_workdir")
     @mock.patch.object(TerraformApplyOperator, "_run_command")
@@ -96,4 +142,5 @@ class TestTerraformApplyOperator(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
 

@@ -16,6 +16,7 @@
 
 # [START composer_terraform_apply_operator]
 
+import hashlib
 import logging
 import os
 import platform
@@ -41,10 +42,14 @@ class TerraformApplyOperator(BaseOperator):
     """Airflow Operator to execute `terraform apply` within Google Cloud Composer workers.
 
     Key Features:
-    - Dynamic download and bootstrapping of `terraform` binary into `/tmp/`.
+    - Supports pre-installed Terraform binaries or dynamic download with cryptographic SHA-256 verification.
     - Staging `.tf` files from GCSFuse mount paths to local pod `/tmp/` disk storage to avoid GCSFuse file-locking errors.
     - Streaming real-time `terraform init` and `terraform apply` logs to Airflow task logs.
     - Automatic cleanup of temporary workspace directories upon task completion.
+
+    Security & Reliability Considerations:
+    - Pre-installing Terraform or providing `binary_path` is recommended for Private IP Composer environments.
+    - If dynamically downloading from HashiCorp releases, official SHA-256 checksum verification is enforced.
     """
 
     template_fields: Sequence[str] = ("terraform_dir", "variables", "terraform_version")
@@ -55,6 +60,7 @@ class TerraformApplyOperator(BaseOperator):
         terraform_dir: str,
         variables: Optional[Dict[str, Any]] = None,
         terraform_version: str = "1.5.7",
+        binary_path: Optional[str] = None,
         auto_approve: bool = True,
         **kwargs,
     ):
@@ -62,18 +68,63 @@ class TerraformApplyOperator(BaseOperator):
         self.terraform_dir = terraform_dir
         self.variables = variables or {}
         self.terraform_version = terraform_version
+        self.binary_path = binary_path
         self.auto_approve = auto_approve
 
-    def _ensure_terraform_binary(self) -> str:
-        """Checks if the required terraform binary is available in `/tmp/`.
+    def _fetch_expected_checksum(self, version: str, filename: str) -> Optional[str]:
+        """Downloads the official HashiCorp SHA256SUMS file and extracts the expected hash for filename."""
+        sums_url = f"https://releases.hashicorp.com/terraform/{version}/terraform_{version}_SHA256SUMS"
+        self.log.info("Fetching SHA256 checksums from %s", sums_url)
+        with urllib.request.urlopen(sums_url) as response:
+            content = response.read().decode("utf-8")
 
-        If not, downloads and extracts the specified version from HashiCorp releases.
+        for line in content.splitlines():
+            parts = line.strip().split()
+            if len(parts) >= 2 and parts[1].endswith(filename):
+                return parts[0]
+        return None
+
+    def _verify_sha256(self, file_path: str, expected_checksum: str) -> None:
+        """Verifies that the SHA-256 digest of file_path matches expected_checksum."""
+        sha256_hash = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for byte_block in iter(lambda: f.read(65536), b""):
+                sha256_hash.update(byte_block)
+        calculated_checksum = sha256_hash.hexdigest()
+
+        if calculated_checksum.lower() != expected_checksum.lower():
+            raise ValueError(
+                f"SHA256 checksum verification failed for {file_path}! "
+                f"Expected: {expected_checksum}, Got: {calculated_checksum}"
+            )
+        self.log.info("SHA256 checksum verified successfully (%s)", calculated_checksum)
+
+    def _ensure_terraform_binary(self) -> str:
+        """Finds or bootstraps the terraform executable.
+
+        1. Uses `self.binary_path` if explicitly specified.
+        2. Checks system PATH for pre-installed `terraform`.
+        3. If unavailable, downloads and extracts the verified binary into `/tmp/`.
         """
+        # 1. Check custom binary path
+        if self.binary_path:
+            if os.path.exists(self.binary_path) and os.access(self.binary_path, os.X_OK):
+                self.log.info("Using specified Terraform binary at %s", self.binary_path)
+                return self.binary_path
+            raise FileNotFoundError(f"Specified binary_path not found or executable: {self.binary_path}")
+
+        # 2. Check system PATH (pre-installed in custom worker images)
+        path_binary = shutil.which("terraform")
+        if path_binary:
+            self.log.info("Using system Terraform binary found in PATH at %s", path_binary)
+            return path_binary
+
+        # 3. Dynamic download with SHA-256 verification
         bin_dir = f"/tmp/terraform_bin_{self.terraform_version}"
         binary_path = os.path.join(bin_dir, "terraform")
 
         if os.path.exists(binary_path) and os.access(binary_path, os.X_OK):
-            self.log.info("Found existing Terraform binary at %s", binary_path)
+            self.log.info("Found cached Terraform binary at %s", binary_path)
             return binary_path
 
         os.makedirs(bin_dir, exist_ok=True)
@@ -86,14 +137,18 @@ class TerraformApplyOperator(BaseOperator):
         else:
             platform_arch = "linux_amd64"
 
-        url = (
-            f"https://releases.hashicorp.com/terraform/{self.terraform_version}/"
-            f"terraform_{self.terraform_version}_{platform_arch}.zip"
-        )
-        zip_path = os.path.join(bin_dir, "terraform.zip")
+        zip_filename = f"terraform_{self.terraform_version}_{platform_arch}.zip"
+        url = f"https://releases.hashicorp.com/terraform/{self.terraform_version}/{zip_filename}"
+        zip_path = os.path.join(bin_dir, zip_filename)
 
         self.log.info("Downloading Terraform v%s from %s", self.terraform_version, url)
         urllib.request.urlretrieve(url, zip_path)
+
+        expected_checksum = self._fetch_expected_checksum(self.terraform_version, zip_filename)
+        if expected_checksum:
+            self._verify_sha256(zip_path, expected_checksum)
+        else:
+            self.log.warning("Could not find official checksum for %s in SHA256SUMS file", zip_filename)
 
         self.log.info("Extracting Terraform binary to %s", bin_dir)
         with zipfile.ZipFile(zip_path, "r") as zip_ref:
