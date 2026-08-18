@@ -21,6 +21,7 @@ import os
 import code_retrieval_example
 import embeddings_docretrieval_with_txt
 import model_tuning_example
+import multimodal_embedding_image
 import multimodal_embedding_video
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
@@ -38,11 +39,17 @@ def test_code_retrieval_example() -> None:
     response = code_retrieval_example.embed_test()
     assert response
 
+
 def test_model_tuning_example() -> None:
     response = model_tuning_example.tune_embedding_model()
     assert response
 
 
+def test_multimodal_embedding_image() -> None:
+    response = multimodal_embedding_image.embed_content()
+    assert response
+
+    
 def test_multimodal_embedding_video() -> None:
     response = multimodal_embedding_video.embed_content()
     assert response
