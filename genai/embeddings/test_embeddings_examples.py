@@ -22,9 +22,10 @@ import code_retrieval_example
 import embeddings_docretrieval_with_txt
 import generate_embeddings_with_lower_dimension
 import model_tuning_example
-import multimodal_example
 import multimodal_embedding_image
 import multimodal_embedding_video
+import multimodal_example
+
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
