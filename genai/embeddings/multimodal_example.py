@@ -15,6 +15,7 @@
 # [START aiplatform_genai_multimodal_embedding_image_video_text]
 
 import os
+
 from google import genai
 
 # Environment configuration
