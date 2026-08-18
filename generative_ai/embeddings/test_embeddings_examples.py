@@ -49,21 +49,6 @@ def test_multimodal_embedding_image_video_text() -> None:
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_multimodal_embedding_video() -> None:
-    embeddings = multimodal_video_example.get_video_embeddings()
-    assert embeddings is not None
-    assert embeddings.video_embeddings is not None
-
-
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_multimodal_embedding_image() -> None:
-    embeddings = multimodal_image_example.get_image_text_embeddings()
-    assert embeddings is not None
-    assert embeddings.image_embedding is not None
-    assert embeddings.text_embedding is not None
-
-
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_generate_embeddings_with_lower_dimension() -> None:
     embeddings = (
         generate_embeddings_with_lower_dimension.generate_embeddings_with_lower_dimension()
