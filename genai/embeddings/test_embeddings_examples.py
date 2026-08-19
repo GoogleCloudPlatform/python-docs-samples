@@ -24,6 +24,8 @@ import generate_embeddings_with_lower_dimension
 import model_tuning_example
 import multimodal_embedding_image
 import multimodal_embedding_video
+import multimodal_example
+
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
@@ -43,6 +45,11 @@ def test_code_retrieval_example() -> None:
 
 def test_model_tuning_example() -> None:
     response = model_tuning_example.tune_embedding_model()
+    assert response
+
+
+def test_multimodal_example() -> None:
+    response = multimodal_example.get_image_video_text_embeddings()
     assert response
 
 
