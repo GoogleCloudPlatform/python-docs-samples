@@ -14,26 +14,23 @@
 import os
 
 import backoff
-
-from google.api_core.exceptions import FailedPrecondition, ResourceExhausted
-
-import google.auth
-
-from google.cloud import aiplatform
-from google.cloud.aiplatform import initializer as aiplatform_init
-
-
 import batch_example
 import code_retrieval_example
 import document_retrieval_example
 import generate_embeddings_with_lower_dimension
+from google.api_core.exceptions import FailedPrecondition, ResourceExhausted
+import google.auth
+from google.cloud import aiplatform
+from google.cloud.aiplatform import initializer as aiplatform_init
 import model_tuning_example
 import multimodal_example
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_embed_text_batch() -> None:
-    batch_prediction_job = batch_example.embed_text_batch("gs://python-docs-samples-tests/")
+    batch_prediction_job = batch_example.embed_text_batch(
+        "gs://python-docs-samples-tests/"
+    )
     assert batch_prediction_job
 
 
