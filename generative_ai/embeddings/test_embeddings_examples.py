@@ -29,8 +29,6 @@ import document_retrieval_example
 import generate_embeddings_with_lower_dimension
 import model_tuning_example
 import multimodal_example
-import multimodal_image_example
-import multimodal_video_example
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
