@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,22 +14,17 @@
 
 import sys
 
-# [START storage_control_rename_folder]
+# [START storage_control_delete_folder_recursive]
 import google.auth
 from google.cloud import storage_control_v2
 
 
-def rename_folder(
-    bucket_name: str, source_folder_name: str, destination_folder_name: str
-) -> None:
+def delete_folder_recursive(bucket_name: str, folder_name: str) -> None:
     # The ID of your GCS bucket
     # bucket_name = "your-unique-bucket-name"
-    #
-    # The source folder ID
-    # source_folder_name = "current-folder-name"
-    #
-    # The destination folder ID
-    # destination_folder_name = "new-folder-name"
+
+    # The name of the folder to be deleted recursively
+    # folder_name = "folder-name"
 
     credentials, _ = google.auth.default()
     creds_without_quota_project = credentials.with_quota_project(None)
@@ -39,27 +34,21 @@ def rename_folder(
     )
     # The storage bucket path uses the global access pattern, in which the "_"
     # denotes this bucket exists in the global namespace.
-    source_folder_path = storage_control_client.folder_path(
-        project="_", bucket=bucket_name, folder=source_folder_name
+    folder_path = storage_control_client.folder_path(
+        project="_", bucket=bucket_name, folder=folder_name
     )
 
-    request = storage_control_v2.RenameFolderRequest(
-        name=source_folder_path,
-        destination_folder_id=destination_folder_name,
+    request = storage_control_v2.DeleteFolderRecursiveRequest(
+        name=folder_path,
     )
+    operation = storage_control_client.delete_folder_recursive(request=request)
+    operation.result()
 
-    operation = storage_control_client.rename_folder(request=request)
-    operation.result(60)
-
-    print(f"Renamed folder {source_folder_name} to {destination_folder_name}")
+    print(f"Deleted folder recursively: {folder_path}")
 
 
-# [END storage_control_rename_folder]
+# [END storage_control_delete_folder_recursive]
 
 
 if __name__ == "__main__":
-    rename_folder(
-        bucket_name=sys.argv[1],
-        source_folder_name=sys.argv[2],
-        destination_folder_name=sys.argv[3],
-    )
+    delete_folder_recursive(bucket_name=sys.argv[1], folder_name=sys.argv[2])
