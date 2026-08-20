@@ -5,7 +5,7 @@ pillow==12.3.0
 google-cloud-aiplatform[full]==1.157.0
 sentencepiece==0.2.1
 google-auth==2.29.0
-anthropic[vertex]==0.28.0
+anthropic[vertex]==1.0.0
 numpy<3
 openai==1.68.2
 immutabledict==4.2.0
