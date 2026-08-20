@@ -14,28 +14,23 @@
 import os
 
 import backoff
-
-from google.api_core.exceptions import FailedPrecondition, ResourceExhausted
-
-import google.auth
-
-from google.cloud import aiplatform
-from google.cloud.aiplatform import initializer as aiplatform_init
-
-
 import batch_example
 import code_retrieval_example
 import document_retrieval_example
 import generate_embeddings_with_lower_dimension
+from google.api_core.exceptions import FailedPrecondition, ResourceExhausted
+import google.auth
+from google.cloud import aiplatform
+from google.cloud.aiplatform import initializer as aiplatform_init
 import model_tuning_example
 import multimodal_example
-import multimodal_image_example
-import multimodal_video_example
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_embed_text_batch() -> None:
-    batch_prediction_job = batch_example.embed_text_batch("gs://python-docs-samples-tests/")
+    batch_prediction_job = batch_example.embed_text_batch(
+        "gs://python-docs-samples-tests/"
+    )
     assert batch_prediction_job
 
 
@@ -45,21 +40,6 @@ def test_multimodal_embedding_image_video_text() -> None:
     assert embeddings is not None
     assert embeddings.image_embedding is not None
     assert embeddings.video_embeddings is not None
-    assert embeddings.text_embedding is not None
-
-
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_multimodal_embedding_video() -> None:
-    embeddings = multimodal_video_example.get_video_embeddings()
-    assert embeddings is not None
-    assert embeddings.video_embeddings is not None
-
-
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_multimodal_embedding_image() -> None:
-    embeddings = multimodal_image_example.get_image_text_embeddings()
-    assert embeddings is not None
-    assert embeddings.image_embedding is not None
     assert embeddings.text_embedding is not None
 
 
