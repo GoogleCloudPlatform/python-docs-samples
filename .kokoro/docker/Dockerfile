@@ -14,7 +14,7 @@
 
 # We want to use LTS ubuntu from our mirror because dockerhub has a
 # rate limit.
-FROM mirror.gcr.io/library/ubuntu:24.04
+FROM mirror.gcr.io/library/ubuntu:26.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
