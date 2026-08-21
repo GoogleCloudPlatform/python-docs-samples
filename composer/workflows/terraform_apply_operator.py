@@ -64,6 +64,17 @@ class TerraformApplyOperator(BaseOperator):
         auto_approve: bool = True,
         **kwargs,
     ):
+        """Initializes the TerraformApplyOperator.
+
+        :param terraform_dir: Directory containing Terraform configuration (.tf) files.
+        :param variables: Key-value dictionary passed to `terraform apply -var key=val`.
+        :param terraform_version: Terraform version to dynamically download if no local binary
+            is present. Note: This parameter is ignored if `binary_path` is explicitly provided
+            or if a `terraform` executable is already found in system PATH.
+        :param binary_path: Path to a pre-installed Terraform executable. Overrides
+            `terraform_version` and system PATH.
+        :param auto_approve: Whether to execute `terraform apply -auto-approve` (default True).
+        """
         super().__init__(**kwargs)
         self.terraform_dir = terraform_dir
         self.variables = variables or {}
@@ -102,21 +113,30 @@ class TerraformApplyOperator(BaseOperator):
     def _ensure_terraform_binary(self) -> str:
         """Finds or bootstraps the terraform executable.
 
-        1. Uses `self.binary_path` if explicitly specified.
-        2. Checks system PATH for pre-installed `terraform`.
-        3. If unavailable, downloads and extracts the verified binary into `/tmp/`.
+        Precedence:
+        1. Explicit `binary_path` argument (overrides `terraform_version` and system PATH).
+        2. System PATH (pre-installed binary in custom worker image, overrides `terraform_version`).
+        3. Dynamic download of `terraform_version` from HashiCorp with SHA-256 verification.
         """
         # 1. Check custom binary path
         if self.binary_path:
             if os.path.exists(self.binary_path) and os.access(self.binary_path, os.X_OK):
-                self.log.info("Using specified Terraform binary at %s", self.binary_path)
+                self.log.info(
+                    "Using specified Terraform binary at %s (ignoring terraform_version=%s)",
+                    self.binary_path,
+                    self.terraform_version,
+                )
                 return self.binary_path
             raise FileNotFoundError(f"Specified binary_path not found or executable: {self.binary_path}")
 
         # 2. Check system PATH (pre-installed in custom worker images)
         path_binary = shutil.which("terraform")
         if path_binary:
-            self.log.info("Using system Terraform binary found in PATH at %s", path_binary)
+            self.log.info(
+                "Using system Terraform binary found in PATH at %s (ignoring terraform_version=%s)",
+                path_binary,
+                self.terraform_version,
+            )
             return path_binary
 
         # 3. Dynamic download with SHA-256 verification
