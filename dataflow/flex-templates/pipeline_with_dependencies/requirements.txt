@@ -231,7 +231,7 @@ grpclib==0.4.9
     # via betterproto
 h11==0.16.0
     # via httpcore
-h2==4.3.0
+h2==4.4.1
     # via grpclib
 hpack==4.2.0
     # via h2
