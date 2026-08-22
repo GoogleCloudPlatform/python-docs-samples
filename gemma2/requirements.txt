@@ -1,2 +1,2 @@
 google-cloud-aiplatform==1.158.0
-protobuf==6.33.6
+protobuf==7.35.1
