@@ -4,4 +4,4 @@ pg8000==1.31.5
 gunicorn==23.0.0
 firebase-admin==7.0.0
 structlog==25.1.0
-urllib3<2.0.0 #https://stackoverflow.com/questions/76175361/firebase-authentication-httpresponse-object-has-no-attribute-strict-status
+urllib3<2.7.1 #https://stackoverflow.com/questions/76175361/firebase-authentication-httpresponse-object-has-no-attribute-strict-status
