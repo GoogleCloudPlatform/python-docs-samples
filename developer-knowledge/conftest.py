@@ -43,7 +43,12 @@ except ImportError:
             self.filter = filter
 
     class DocumentChunk:
-        def __init__(self, parent="documents/docs.cloud.google.com/storage/docs/creating-buckets", id="chunk-1", content="To create a bucket, use the Google Cloud console or gcloud CLI."):
+        def __init__(
+            self,
+            parent="documents/docs.cloud.google.com/storage/docs/creating-buckets",
+            id="chunk-1",
+            content="To create a bucket, use the Google Cloud console or gcloud CLI.",
+        ):
             self.parent = parent
             self.id = id
             self.content = content
@@ -68,7 +73,10 @@ except ImportError:
     class Answer:
         def __init__(
             self,
-            answer_text="Use `gcloud storage buckets create` to create a new storage bucket.",
+            answer_text=(
+                "Use `gcloud storage buckets create` to create a new storage"
+                " bucket."
+            ),
             citations=None,
             references=None,
         ):
@@ -95,7 +103,11 @@ except ImportError:
             return SearchDocumentChunksResponse()
 
         def get_document(self, request=None):
-            name = request.name if request and request.name else "documents/docs.cloud.google.com/storage/docs/creating-buckets"
+            name = (
+                request.name
+                if request and request.name
+                else "documents/docs.cloud.google.com/storage/docs/creating-buckets"
+            )
             return Document(name=name)
 
         def batch_get_documents(self, request=None):

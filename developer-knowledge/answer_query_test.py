@@ -17,7 +17,7 @@ import answer_query
 
 def test_answer_query(capsys):
     response = answer_query.answer_query(
-        query="How to create a Cloud Storage bucket"
+        query="How to create a Cloud Storage bucket",
     )
     out, _ = capsys.readouterr()
 

@@ -14,6 +14,7 @@
 
 # [START developerknowledge_batch_get_documents]
 from typing import List, Optional
+
 from google.cloud import developer_knowledge_v1
 
 

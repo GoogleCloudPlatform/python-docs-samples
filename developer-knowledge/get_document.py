@@ -22,7 +22,8 @@ def get_document(
     """Retrieves a single developer documentation page by its resource name.
 
     Args:
-        name: The resource name of the document in format 'documents/{uri_without_scheme}'.
+        name: The resource name of the document in format
+            'documents/{uri_without_scheme}'.
 
     Returns:
         The Document containing the full Markdown content and metadata.

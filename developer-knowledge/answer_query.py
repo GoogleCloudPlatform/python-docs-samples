@@ -25,7 +25,8 @@ def answer_query(
         query: The technical question to answer.
 
     Returns:
-        The AnswerQueryResponse containing the grounded answer, citations, and references.
+        The AnswerQueryResponse containing the grounded answer,
+        citations, and references.
     """
     client = developer_knowledge_v1.DeveloperKnowledgeClient()
 
