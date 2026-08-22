@@ -24,5 +24,5 @@ This directory contains Python code samples demonstrating how to use the [Google
 ## Running Tests
 
 ```bash
-pytest samples_test.py
+pytest
 ```
