@@ -32,8 +32,13 @@ logger = logging.getLogger(__name__)
 class DAG:
     """Provides necessary utils for Composer DAGs."""
 
+    # The Composer portion of the image version (e.g. "2.9.1" or just "3") and
+    # the Airflow patch number (e.g. the trailing ".3" in "2.9.3") are both
+    # optional in some image version strings, such as "composer-3-airflow-2.10"
+    # or "composer-2.9.1-airflow-2.9". Both are matched as optional groups so
+    # the regex still matches those versions instead of returning None.
     COMPOSER_AF_VERSION_RE = re.compile(
-        "composer-(\d+)(?:\.(\d+)\.(\d+))?.*?-airflow-(\d+)\.(\d+)\.(\d+)"
+        r"composer-(\d+)(?:\.(\d+)\.(\d+))?.*?-airflow-(\d+)\.(\d+)(?:\.(\d+))?"
     )
 
     @staticmethod
@@ -162,14 +167,17 @@ def main(
         location=location,
         sdk_endpoint=sdk_endpoint,
     )
-    versions = DAG.COMPOSER_AF_VERSION_RE.match(
-        environment_info["config"]["softwareConfig"]["imageVersion"]
-    ).groups()
-    logger.info(
-        "Image version: %s",
-        environment_info["config"]["softwareConfig"]["imageVersion"],
-    )
-    airflow_version = (int(versions[3]), int(versions[4]), int(versions[5]))
+    image_version = environment_info["config"]["softwareConfig"]["imageVersion"]
+    version_match = DAG.COMPOSER_AF_VERSION_RE.match(image_version)
+    if not version_match:
+        raise ValueError(
+            f"Could not parse Airflow version out of image version: {image_version!r}"
+        )
+    versions = version_match.groups()
+    logger.info("Image version: %s", image_version)
+    # The Airflow patch number is optional in the image version string, so it
+    # may be None; default it to 0 in that case (e.g. "2.9" -> (2, 9, 0)).
+    airflow_version = (int(versions[3]), int(versions[4]), int(versions[5] or 0))
     list_of_dags = DAG.get_list_of_dags(
         project_name=project_name,
         environment=environment,
