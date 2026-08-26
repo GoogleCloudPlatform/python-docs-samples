@@ -27,8 +27,8 @@ as covered below.
 
 We recommend referencing the following samples and sample tests:
 
-* [Storage client
-   samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/storage/cloud-client)
+* [BigQuery client
+   samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/bigquery/cloud-client)
 
 ### Where should I put my samples?
 

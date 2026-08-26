@@ -1,0 +1,1 @@
+google-cloud-logging>=3.4.0
