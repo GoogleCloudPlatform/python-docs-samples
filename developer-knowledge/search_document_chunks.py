@@ -19,7 +19,9 @@ from google.cloud import developer_knowledge_v1
 def search_document_chunks(
     query: str = "How to create a Cloud Storage bucket",
     page_size: int = 5,
-) -> developer_knowledge_v1.SearchDocumentChunksResponse:
+) -> (
+    developer_knowledge_v1.services.developer_knowledge.pagers.SearchDocumentChunksPager
+):
     """Searches developer documentation chunks for a given query.
 
     Args:
@@ -27,7 +29,7 @@ def search_document_chunks(
         page_size: The maximum number of document chunks to return.
 
     Returns:
-        The SearchDocumentChunksResponse containing relevant document chunks.
+        The SearchDocumentChunksPager containing relevant document chunks.
     """
     client = developer_knowledge_v1.DeveloperKnowledgeClient()
 
@@ -38,10 +40,14 @@ def search_document_chunks(
 
     response = client.search_document_chunks(request=request)
 
-    for chunk in response.results:
+    count = 0
+    for chunk in response:
         print(f"Parent Document: {chunk.parent}")
         print(f"Chunk ID: {chunk.id}")
         print(f"Content: {chunk.content[:100]}...\n")
+        count += 1
+        if page_size > 0 and count >= page_size:
+            break
 
     return response
 

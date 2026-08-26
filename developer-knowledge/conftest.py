@@ -20,6 +20,16 @@ from unittest.mock import MagicMock
 try:
     from google.cloud import developer_knowledge_v1  # noqa: F401
 except ImportError:
+    try:
+        import google.cloud
+        import google.developer_knowledge_v1 as dk
+
+        google.cloud.developer_knowledge_v1 = dk
+        sys.modules["google.cloud.developer_knowledge_v1"] = dk
+    except ImportError:
+        pass
+
+if "google.cloud.developer_knowledge_v1" not in sys.modules:
     mock_dk = MagicMock()
 
     class SearchDocumentChunksRequest:
@@ -74,8 +84,7 @@ except ImportError:
         def __init__(
             self,
             answer_text=(
-                "Use `gcloud storage buckets create` to create a new storage"
-                " bucket."
+                "Use `gcloud storage buckets create` to create a new storage" " bucket."
             ),
             citations=None,
             references=None,
@@ -86,9 +95,7 @@ except ImportError:
 
     class SearchDocumentChunksResponse:
         def __init__(self, results=None):
-            self.results = results or [
-                DocumentChunk()
-            ]
+            self.results = results or [DocumentChunk()]
 
     class BatchGetDocumentsResponse:
         def __init__(self, documents=None):
@@ -129,6 +136,14 @@ except ImportError:
     mock_dk.Document = Document
     mock_dk.DocumentChunk = DocumentChunk
 
+    mock_services = MagicMock()
+    mock_dk_service = MagicMock()
+    mock_pagers = MagicMock()
+    mock_pagers.SearchDocumentChunksPager = SearchDocumentChunksResponse
+    mock_dk_service.pagers = mock_pagers
+    mock_services.developer_knowledge = mock_dk_service
+    mock_dk.services = mock_services
+
     mock_google = MagicMock()
     mock_cloud = MagicMock()
     mock_cloud.developer_knowledge_v1 = mock_dk
@@ -137,3 +152,10 @@ except ImportError:
     sys.modules["google"] = mock_google
     sys.modules["google.cloud"] = mock_cloud
     sys.modules["google.cloud.developer_knowledge_v1"] = mock_dk
+    sys.modules["google.cloud.developer_knowledge_v1.services"] = mock_services
+    sys.modules["google.cloud.developer_knowledge_v1.services.developer_knowledge"] = (
+        mock_dk_service
+    )
+    sys.modules[
+        "google.cloud.developer_knowledge_v1.services.developer_knowledge.pagers"
+    ] = mock_pagers
