@@ -12,25 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.api_core import exceptions
+from google.cloud import storage
+import pytest
+
 import create_folder
 import delete_folder
 import delete_folder_recursive
 import get_folder
-from google.api_core import exceptions
-from google.cloud import storage
 import list_folders
 import managed_folder_create
 import managed_folder_delete
 import managed_folder_get
 import managed_folder_list
-import pytest
 import rename_folder
 
 # === Folders === #
 
 
 def test_folder_create_get_list_rename_delete(
-    capsys: pytest.LogCaptureFixture, hns_enabled_bucket: storage.Bucket, uuid_name: str
+    capsys: pytest.CaptureFixture[str],
+    hns_enabled_bucket: storage.Bucket,
+    uuid_name: str,
 ) -> None:
     bucket_name = hns_enabled_bucket.name
     folder_name = uuid_name
@@ -67,7 +70,9 @@ def test_folder_create_get_list_rename_delete(
 
 
 def test_delete_folder_recursive(
-    capsys: pytest.LogCaptureFixture, hns_enabled_bucket: storage.Bucket, uuid_name: str
+    capsys: pytest.CaptureFixture[str],
+    hns_enabled_bucket: storage.Bucket,
+    uuid_name: str,
 ) -> None:
     bucket_name = hns_enabled_bucket.name
     parent_folder = f"parent-{uuid_name}"
@@ -83,10 +88,11 @@ def test_delete_folder_recursive(
         bucket_name=bucket_name, folder_name=parent_folder
     )
     out, _ = capsys.readouterr()
-    assert (
-        f"Deleted folder recursively: projects/_/buckets/{bucket_name}/folders/{parent_folder}"
-        in out
+    expected_msg = (
+        f"Deleted folder recursively: "
+        f"projects/_/buckets/{bucket_name}/folders/{parent_folder}"
     )
+    assert expected_msg in out
 
     # Verify folders are deleted (NotFound exceptions)
     with pytest.raises(exceptions.NotFound):

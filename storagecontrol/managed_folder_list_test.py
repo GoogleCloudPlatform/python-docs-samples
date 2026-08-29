@@ -13,8 +13,9 @@
 # limitations under the License.
 
 from google.cloud import storage
-import managed_folder_list
 import pytest
+
+import managed_folder_list
 
 
 def test_storage_control_managed_folder_list(
