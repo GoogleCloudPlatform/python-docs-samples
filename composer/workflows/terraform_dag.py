@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample Airflow DAG demonstrating TerraformApplyOperator usage in Google Cloud Composer."""
+"""Sample Airflow DAG demonstrating TerraformApplyOperator usage in Managed Service for Apache Airflow (formerly Cloud Composer)."""
 
 # [START composer_terraform_dag]
 

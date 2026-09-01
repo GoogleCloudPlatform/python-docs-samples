@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Custom Airflow Operator for executing Terraform in Google Cloud Composer environments."""
+"""Custom Airflow Operator for executing Terraform in Managed Service for Apache Airflow (formerly Cloud Composer)."""
 
 # [START composer_terraform_apply_operator]
 
@@ -39,16 +39,16 @@ except ImportError:
 
 
 class TerraformApplyOperator(BaseOperator):
-    """Airflow Operator to execute `terraform apply` within Google Cloud Composer workers.
+    """Airflow Operator to execute `terraform apply` within Managed Airflow workers.
 
     Key Features:
-    - Supports pre-installed Terraform binaries or dynamic download with cryptographic SHA-256 verification.
-    - Staging `.tf` files from GCSFuse mount paths to local pod `/tmp/` disk storage to avoid GCSFuse file-locking errors.
+    - Supports provided Terraform binaries (e.g. via Cloud Storage /data folder) or dynamic download with cryptographic SHA-256 verification.
+    - Staging `.tf` files from Cloud Storage FUSE mount paths to local pod `/tmp/` disk storage to avoid GCSFuse file-locking errors.
     - Streaming real-time `terraform init` and `terraform apply` logs to Airflow task logs.
     - Automatic cleanup of temporary workspace directories upon task completion.
 
     Security & Reliability Considerations:
-    - Pre-installing Terraform or providing `binary_path` is recommended for Private IP Composer environments.
+    - Providing a Terraform binary in the `/data` folder or via `binary_path` is recommended for Private IP environments.
     - If dynamically downloading from HashiCorp releases, official SHA-256 checksum verification is enforced.
     """
 
@@ -71,8 +71,8 @@ class TerraformApplyOperator(BaseOperator):
         :param terraform_version: Terraform version to dynamically download if no local binary
             is present. Note: This parameter is ignored if `binary_path` is explicitly provided
             or if a `terraform` executable is already found in system PATH.
-        :param binary_path: Path to a pre-installed Terraform executable. Overrides
-            `terraform_version` and system PATH.
+        :param binary_path: Path to a provided Terraform executable (e.g. `/home/airflow/gcs/data/binaries/terraform`).
+            Overrides `terraform_version` and system PATH.
         :param auto_approve: Whether to execute `terraform apply -auto-approve` (default True).
         """
         super().__init__(**kwargs)
