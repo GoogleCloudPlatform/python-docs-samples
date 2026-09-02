@@ -39,7 +39,9 @@ def list_managed_folders(bucket_name: str = "your-bucket-name") -> None:
     # The storage bucket path uses the global access pattern,
     # in which the "_" denotes this bucket exists in the global namespace.
     GLOBAL_NAMESPACE_PATTERN = "_"
-    bucket_resource_name = f"projects/{GLOBAL_NAMESPACE_PATTERN}/buckets/{bucket_name}"
+    bucket_resource_name = (
+        f"projects/{GLOBAL_NAMESPACE_PATTERN}/buckets/{bucket_name}"
+    )
 
     managed_folders = client.list_managed_folders(parent=bucket_resource_name)
 

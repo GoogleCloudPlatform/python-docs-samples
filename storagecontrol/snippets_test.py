@@ -38,7 +38,9 @@ def test_folder_create_get_list_rename_delete(
     folder_name = uuid_name
 
     # Test create folder
-    create_folder.create_folder(bucket_name=bucket_name, folder_name=folder_name)
+    create_folder.create_folder(
+        bucket_name=bucket_name, folder_name=folder_name
+    )
     out, _ = capsys.readouterr()
     assert folder_name in out
 
@@ -78,9 +80,13 @@ def test_delete_folder_recursive(
     child_folder = f"parent-{uuid_name}/child-{uuid_name}"
 
     # Create parent folder
-    create_folder.create_folder(bucket_name=bucket_name, folder_name=parent_folder)
+    create_folder.create_folder(
+        bucket_name=bucket_name, folder_name=parent_folder
+    )
     # Create child folder
-    create_folder.create_folder(bucket_name=bucket_name, folder_name=child_folder)
+    create_folder.create_folder(
+        bucket_name=bucket_name, folder_name=child_folder
+    )
 
     # Call delete folder recursive
     delete_folder_recursive.delete_folder_recursive(
@@ -95,10 +101,14 @@ def test_delete_folder_recursive(
 
     # Verify folders are deleted (NotFound exceptions)
     with pytest.raises(exceptions.NotFound):
-        get_folder.get_folder(bucket_name=bucket_name, folder_name=parent_folder)
+        get_folder.get_folder(
+            bucket_name=bucket_name, folder_name=parent_folder
+        )
 
     with pytest.raises(exceptions.NotFound):
-        get_folder.get_folder(bucket_name=bucket_name, folder_name=child_folder)
+        get_folder.get_folder(
+            bucket_name=bucket_name, folder_name=child_folder
+        )
 
 
 # === Managed Folders === #
