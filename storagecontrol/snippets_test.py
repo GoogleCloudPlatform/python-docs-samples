@@ -16,6 +16,13 @@ from google.cloud import storage
 
 import pytest
 
+import anywhere_cache_create
+import anywhere_cache_disable
+import anywhere_cache_get
+import anywhere_cache_list
+import anywhere_cache_pause
+import anywhere_cache_resume
+import anywhere_cache_update
 import create_folder
 import delete_folder
 import get_folder
@@ -25,6 +32,8 @@ import managed_folder_delete
 import managed_folder_get
 import managed_folder_list
 import rename_folder
+import time
+
 
 
 # === Folders === #
@@ -103,3 +112,77 @@ def test_managed_folder_create_get_list_delete(
     )
     out, _ = capsys.readouterr()
     assert folder_name in out
+
+
+# === Anywhere Cache === #
+
+
+def test_anywhere_cache_lifecycle(
+    capsys: pytest.LogCaptureFixture, gcs_bucket: storage.Bucket
+) -> None:
+    bucket_name = gcs_bucket.name
+    zone = "us-central1-f"
+    cache_name = f"projects/_/buckets/{bucket_name}/anywhereCaches/{zone}"
+
+    try:
+        # Create
+        anywhere_cache_create.create_anywhere_cache(
+            bucket_name=bucket_name, zone=zone
+        )
+        out, _ = capsys.readouterr()
+        assert f"Created anywhere cache: {cache_name}" in out
+
+        # Pace calls due to Anywhere Cache rate limit constraints
+        time.sleep(1)
+
+        # Get
+        anywhere_cache_get.get_anywhere_cache(bucket_name=bucket_name, zone=zone)
+        out, _ = capsys.readouterr()
+        assert f"Got anywhere cache: {cache_name}" in out
+
+        time.sleep(1)
+
+        # List
+        anywhere_cache_list.list_anywhere_caches(bucket_name=bucket_name)
+        out, _ = capsys.readouterr()
+        assert cache_name in out
+
+        time.sleep(1)
+
+        # Update
+        anywhere_cache_update.update_anywhere_cache(
+            bucket_name=bucket_name, zone=zone, ttl_seconds=86400
+        )
+        out, _ = capsys.readouterr()
+        assert f"Updated anywhere cache: {cache_name}" in out
+
+        time.sleep(1)
+
+        # Pause
+        anywhere_cache_pause.pause_anywhere_cache(
+            bucket_name=bucket_name, zone=zone
+        )
+        out, _ = capsys.readouterr()
+        assert f"Paused anywhere cache: {cache_name}" in out
+
+        time.sleep(1)
+
+        # Resume
+        anywhere_cache_resume.resume_anywhere_cache(
+            bucket_name=bucket_name, zone=zone
+        )
+        out, _ = capsys.readouterr()
+        assert f"Resumed anywhere cache: {cache_name}" in out
+
+        time.sleep(1)
+
+    finally:
+        # Cleanup: Must disable the cache before bucket deletion
+        try:
+            anywhere_cache_disable.disable_anywhere_cache(
+                bucket_name=bucket_name, zone=zone
+            )
+            out, _ = capsys.readouterr()
+            assert f"Disabled anywhere cache: {cache_name}" in out
+        except Exception as e:
+            print(f"Error disabling cache during cleanup: {e}")
