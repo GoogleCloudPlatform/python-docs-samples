@@ -1,0 +1,12 @@
+[
+  {
+    "name": "name",
+    "type": "STRING",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "post_abbr",
+    "type": "STRING",
+    "mode": "NULLABLE"
+  }
+]

@@ -1,0 +1,44 @@
+attrs==25.4.0
+certifi==2025.10.5
+cffi==2.0.0
+charset-normalizer==3.4.3
+click===8.1.8; python_version == '3.9'
+click==8.3.0; python_version >= '3.10'
+click-plugins==1.1.1.2
+cligj==0.7.2
+db-dtypes==1.4.3
+Fiona==1.10.1
+geojson==3.2.0
+geopandas===1.0.1; python_version <= '3.9'
+geopandas==1.1.2; python_version >= '3.10'
+google-api-core==2.25.2
+google-auth==2.41.1
+google-cloud-bigquery==3.38.0
+google-cloud-bigquery-storage==2.33.1
+google-cloud-core==2.4.3
+google-crc32c==1.7.1
+google-resumable-media==2.7.2
+googleapis-common-protos==1.70.0
+grpcio==1.75.1
+idna==3.10
+munch==4.0.0
+mypy-extensions==1.1.0
+packaging==25.0
+pandas==2.3.3
+proto-plus==1.26.1
+pyarrow==21.0.0
+pyasn1==0.6.2
+pyasn1-modules==0.4.2
+pycparser==2.23
+pyparsing==3.2.5
+python-dateutil==2.9.0.post0
+pytz==2025.2
+PyYAML==6.0.3
+requests==2.32.5
+rsa==4.9.1
+Shapely===2.0.7; python_version == '3.9'
+Shapely==2.1.2; python_version >= '3.10'
+six==1.17.0
+typing-extensions==4.15.0
+typing-inspect==0.9.0
+urllib3==2.6.3
