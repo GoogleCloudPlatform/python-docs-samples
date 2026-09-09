@@ -66,12 +66,8 @@ def write_user_event_with_attribution(
   )
 
   # Set accurate UTC event timestamp
-  current_time = time.time()
-  event_time = timestamp_pb2.Timestamp(
-      seconds=int(current_time),
-      nanos=int((current_time - int(current_time)) * 1e9),
-  )
-
+  event_time = timestamp_pb2.Timestamp()
+  event_time.GetCurrentTime()
   # Build DocumentInfo reference for the clicked/viewed item
   if document_id.startswith("projects/"):
     document_info = discoveryengine.DocumentInfo(name=document_id)
