@@ -94,6 +94,9 @@ def search_with_extractive_segments(
 
   for result in response.results:
     doc = result.document
+    if not doc:
+      print("\n- (No document returned)")
+      continue
     print(f"\n- Document ID: {doc.id}")
     print(f"  Name: {doc.name}")
 

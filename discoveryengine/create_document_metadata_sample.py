@@ -100,10 +100,12 @@ def create_structured_document_with_metadata(
 
   print(f"Created Document ID: {response.id}")
   print(f"  Name: {response.name}")
-  print(f"  Metadata URL (exact): {response.struct_data.get('url')}")
-  print(f"  Category: {response.struct_data.get('category')}")
-  print(f"  Rating: {response.struct_data.get('rating')}")
-  print(f"  Tags: {response.struct_data.get('tags')}")
+  struct_data = response.struct_data
+  if struct_data:
+    print(f"  Metadata URL (exact): {struct_data.get('url')}")
+    print(f"  Category: {struct_data.get('category')}")
+    print(f"  Rating: {struct_data.get('rating')}")
+    print(f"  Tags: {struct_data.get('tags')}")
 
   return response
 
