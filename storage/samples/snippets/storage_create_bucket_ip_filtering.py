@@ -49,6 +49,11 @@ def create_bucket_ip_filtering(bucket_name, public_cidr_range="192.0.2.0/24"):
 # [END storage_create_bucket_ip_filtering]
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print(
+            "Usage: python storage_create_bucket_ip_filtering.py <bucket_name> [public_cidr_range]"
+        )
+        sys.exit(1)
     if len(sys.argv) > 2:
         create_bucket_ip_filtering(
             bucket_name=sys.argv[1], public_cidr_range=sys.argv[2]

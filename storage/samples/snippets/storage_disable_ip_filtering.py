@@ -32,8 +32,11 @@ def disable_ip_filtering(bucket_name):
         print(f"No IP filter configuration found for bucket {bucket_name}.")
         return bucket
 
-    bucket.ip_filter.mode = "Disabled"
-    bucket.ip_filter = bucket.ip_filter
+    ip_filter = bucket.ip_filter
+    ip_filter.mode = "Disabled"
+    # Re-assign to the bucket property to force google-cloud-storage to register
+    # the nested changes for the patch() call.
+    bucket.ip_filter = ip_filter
     bucket.patch()
     print(f"IP filtering disabled for bucket {bucket_name}.")
     return bucket
@@ -42,4 +45,7 @@ def disable_ip_filtering(bucket_name):
 # [END storage_disable_ip_filtering]
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python storage_disable_ip_filtering.py <bucket_name>")
+        sys.exit(1)
     disable_ip_filtering(bucket_name=sys.argv[1])

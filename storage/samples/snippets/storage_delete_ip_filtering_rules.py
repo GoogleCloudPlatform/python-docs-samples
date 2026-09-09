@@ -39,7 +39,7 @@ def delete_ip_filtering_rules(
     modified = False
     if public_range_to_delete and bucket.ip_filter.public_network_source:
         ranges = bucket.ip_filter.public_network_source.allowed_ip_cidr_ranges
-        if public_range_to_delete in ranges:
+        if ranges and public_range_to_delete in ranges:
             ranges.remove(public_range_to_delete)
             modified = True
 
@@ -54,7 +54,10 @@ def delete_ip_filtering_rules(
             modified = True
 
     if modified:
-        bucket.ip_filter = bucket.ip_filter
+        # Re-assign to a local variable and back to the bucket property to force
+        # google-cloud-storage to register the nested changes for the patch() call.
+        ip_filter = bucket.ip_filter
+        bucket.ip_filter = ip_filter
         bucket.patch()
         print(f"Updated IP filtering rules for bucket {bucket_name}.")
     else:
@@ -66,6 +69,11 @@ def delete_ip_filtering_rules(
 # [END storage_delete_ip_filtering_rules]
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print(
+            "Usage: python storage_delete_ip_filtering_rules.py <bucket_name> [public_range_to_delete] [vpc_network_to_delete]"
+        )
+        sys.exit(1)
     delete_ip_filtering_rules(
         bucket_name=sys.argv[1],
         public_range_to_delete=sys.argv[2] if len(sys.argv) > 2 else None,

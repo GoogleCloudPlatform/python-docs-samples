@@ -55,4 +55,7 @@ def get_ip_filtering(bucket_name):
 # [END storage_get_ip_filtering]
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python storage_get_ip_filtering.py <bucket_name>")
+        sys.exit(1)
     get_ip_filtering(bucket_name=sys.argv[1])

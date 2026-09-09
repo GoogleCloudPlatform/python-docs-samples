@@ -43,6 +43,9 @@ def enable_ip_filtering(bucket_name, public_range, vpc_network, vpc_range):
 
     if ip_filter.public_network_source is None:
         ip_filter.public_network_source = PublicNetworkSource(allowed_ip_cidr_ranges=[])
+    elif ip_filter.public_network_source.allowed_ip_cidr_ranges is None:
+        ip_filter.public_network_source.allowed_ip_cidr_ranges = []
+
     if (
         public_range
         and public_range not in ip_filter.public_network_source.allowed_ip_cidr_ranges
@@ -57,6 +60,8 @@ def enable_ip_filtering(bucket_name, public_range, vpc_network, vpc_range):
         None,
     )
     if existing_vpc:
+        if existing_vpc.allowed_ip_cidr_ranges is None:
+            existing_vpc.allowed_ip_cidr_ranges = []
         if vpc_range and vpc_range not in existing_vpc.allowed_ip_cidr_ranges:
             existing_vpc.allowed_ip_cidr_ranges.append(vpc_range)
     elif vpc_network:
@@ -75,6 +80,11 @@ def enable_ip_filtering(bucket_name, public_range, vpc_network, vpc_range):
 # [END storage_enable_ip_filtering]
 
 if __name__ == "__main__":
+    if len(sys.argv) < 5:
+        print(
+            "Usage: python storage_enable_ip_filtering.py <bucket_name> <public_range> <vpc_network> <vpc_range>"
+        )
+        sys.exit(1)
     enable_ip_filtering(
         bucket_name=sys.argv[1],
         public_range=sys.argv[2],
