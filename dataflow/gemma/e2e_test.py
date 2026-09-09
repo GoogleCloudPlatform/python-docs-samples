@@ -40,9 +40,9 @@ TODO(developer): For the tests to find the conftest in the testing infrastructur
       add the PYTHONPATH to the "env" in your noxfile_config.py file.
 """
 
-import os
-
 from collections.abc import Callable, Iterator
+
+import os
 
 import conftest  # python-docs-samples/dataflow/conftest.py
 from conftest import Utils
