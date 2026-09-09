@@ -95,15 +95,12 @@ def multi_turn_conversational_search(
   response = client.converse_conversation(request=request)
 
   reply_text = ""
+
   if response.reply:
-    if (
-        hasattr(response.reply, "summary")
-        and response.reply.summary
-        and response.reply.summary.summary_text
-    ):
-      reply_text = response.reply.summary.summary_text
-    elif hasattr(response.reply, "reply") and response.reply.reply:
-      reply_text = response.reply.reply
+     if response.reply.summary and response.reply.summary.summary_text:
+         reply_text = response.reply.summary.summary_text
+     elif response.reply.reply:
+         reply_text = response.reply.reply       
 
   print(f"\nUser Query: {query_text}")
   print(f"AI Generated Reply: {reply_text}")
