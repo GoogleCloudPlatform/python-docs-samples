@@ -4,22 +4,22 @@
 #
 #    pip-compile --output-file=requirements.txt pyproject.toml
 #
+--index-url http://airlock-proxy.uplink.goog:999/python/artifact-foundry-prod/ah-3p-staging-python/simple/
+--trusted-host airlock-proxy.uplink.goog
 
-aiofiles==25.1.0
-    # via cloud-sql-python-connector
 aiohappyeyeballs==2.7.1
     # via aiohttp
-aiohttp==3.14.1
+aiohttp==3.14.3
     # via cloud-sql-python-connector
 aiosignal==1.4.0
     # via aiohttp
-annotated-types==0.7.0
+annotated-types==0.8.0
     # via pydantic
-anyio==4.14.1
+anyio==4.15.1
     # via
     #   google-genai
     #   httpx
-apache-beam[gcp]==2.73.0
+apache-beam[gcp]==2.76.0
     # via my_package (pyproject.toml)
 asn1crypto==1.5.1
     # via scramp
@@ -27,28 +27,25 @@ attrs==26.1.0
     # via aiohttp
 beartype==0.22.9
     # via apache-beam
-betterproto==2.0.0b6
-    # via envoy-data-plane
 cachetools==6.2.6
     # via apache-beam
-certifi==2026.6.17
+certifi==2026.7.22
     # via
     #   google-cloud-aiplatform
     #   httpcore
     #   httpx
     #   requests
-cffi==2.1.0
+cffi==2.1.1
     # via cryptography
-charset-normalizer==3.4.8
+charset-normalizer==3.5.1
     # via requests
-cloud-sql-python-connector==1.20.4
+cloud-sql-python-connector==1.22.0
     # via apache-beam
-cryptography==47.0.0
+cryptography==50.0.1
     # via
     #   apache-beam
     #   cloud-sql-python-connector
     #   google-auth
-    #   pyopenssl
     #   secretstorage
 distro==1.9.0
     # via google-genai
@@ -58,8 +55,6 @@ dnspython==2.8.0
     #   pymongo
 docstring-parser==0.18.0
     # via google-cloud-aiplatform
-envoy-data-plane==1.0.3
-    # via apache-beam
 fastavro==1.12.2
     # via apache-beam
 fasteners==0.20
@@ -70,7 +65,7 @@ frozenlist==1.8.0
     # via
     #   aiohttp
     #   aiosignal
-google-api-core[grpc]==2.31.0
+google-api-core[grpc]==2.36.0
     # via
     #   apache-beam
     #   google-cloud-aiplatform
@@ -79,6 +74,7 @@ google-api-core[grpc]==2.31.0
     #   google-cloud-bigtable
     #   google-cloud-build
     #   google-cloud-core
+    #   google-cloud-dataflow-client
     #   google-cloud-datastore
     #   google-cloud-dlp
     #   google-cloud-kms
@@ -94,7 +90,7 @@ google-api-core[grpc]==2.31.0
     #   google-cloud-vision
 google-apitools==0.5.35
     # via apache-beam
-google-auth[pyopenssl,requests]==2.55.1
+google-auth[pyopenssl,requests]==2.57.1
     # via
     #   apache-beam
     #   cloud-sql-python-connector
@@ -106,6 +102,7 @@ google-auth[pyopenssl,requests]==2.55.1
     #   google-cloud-bigtable
     #   google-cloud-build
     #   google-cloud-core
+    #   google-cloud-dataflow-client
     #   google-cloud-datastore
     #   google-cloud-dlp
     #   google-cloud-kms
@@ -123,19 +120,19 @@ google-auth[pyopenssl,requests]==2.55.1
     #   keyrings-google-artifactregistry-auth
 google-auth-httplib2==0.2.1
     # via apache-beam
-google-cloud-aiplatform==1.148.1
+google-cloud-aiplatform==1.165.1
     # via apache-beam
-google-cloud-bigquery==3.42.1
+google-cloud-bigquery==3.45.0
     # via
     #   apache-beam
     #   google-cloud-aiplatform
-google-cloud-bigquery-storage==2.39.0
+google-cloud-bigquery-storage==2.41.0
     # via apache-beam
-google-cloud-bigtable==2.40.0
+google-cloud-bigtable==2.44.0
     # via apache-beam
-google-cloud-build==3.38.0
+google-cloud-build==3.39.0
     # via apache-beam
-google-cloud-core==2.6.0
+google-cloud-core==2.7.0
     # via
     #   apache-beam
     #   google-cloud-bigquery
@@ -143,27 +140,33 @@ google-cloud-core==2.6.0
     #   google-cloud-datastore
     #   google-cloud-spanner
     #   google-cloud-storage
-google-cloud-datastore==2.25.0
+google-cloud-dataflow-client==0.13.0
     # via apache-beam
-google-cloud-dlp==3.38.0
+google-cloud-datastore==2.26.1
     # via apache-beam
-google-cloud-kms==3.14.0
+google-cloud-dlp==3.39.0
+    # via apache-beam
+google-cloud-kms==3.16.0
     # via apache-beam
 google-cloud-language==2.21.0
     # via apache-beam
 google-cloud-monitoring==2.31.0
-    # via google-cloud-spanner
-google-cloud-pubsub==2.39.0
+    # via
+    #   google-cloud-bigtable
+    #   google-cloud-spanner
+google-cloud-pubsub==2.40.0
     # via apache-beam
 google-cloud-recommendations-ai==0.10.18
     # via apache-beam
 google-cloud-resource-manager==1.18.0
-    # via google-cloud-aiplatform
-google-cloud-secret-manager==2.29.0
+    # via
+    #   apache-beam
+    #   google-cloud-aiplatform
+google-cloud-secret-manager==2.30.0
     # via apache-beam
-google-cloud-spanner==3.69.0
+google-cloud-spanner==3.71.0
     # via apache-beam
-google-cloud-storage==2.19.0
+google-cloud-storage==3.13.1
     # via
     #   apache-beam
     #   google-cloud-aiplatform
@@ -176,18 +179,19 @@ google-crc32c==1.8.0
     #   google-cloud-bigtable
     #   google-cloud-storage
     #   google-resumable-media
-google-genai==1.75.0
+google-genai==2.22.0
     # via google-cloud-aiplatform
-google-resumable-media==2.10.0
+google-resumable-media==2.10.2
     # via
     #   google-cloud-bigquery
     #   google-cloud-storage
-googleapis-common-protos[grpc]==1.75.0
+googleapis-common-protos[grpc]==1.75.3
     # via
+    #   cloud-sql-python-connector
     #   google-api-core
     #   grpc-google-iam-v1
     #   grpcio-status
-grpc-google-iam-v1==0.14.4
+grpc-google-iam-v1==0.14.5
     # via
     #   google-cloud-bigtable
     #   google-cloud-build
@@ -198,13 +202,15 @@ grpc-google-iam-v1==0.14.4
     #   google-cloud-spanner
 grpc-interceptor==0.15.4
     # via google-cloud-spanner
-grpcio==1.82.0
+grpcio==1.83.1
     # via
     #   apache-beam
+    #   cloud-sql-python-connector
     #   google-api-core
     #   google-cloud-bigquery-storage
     #   google-cloud-bigtable
     #   google-cloud-build
+    #   google-cloud-dataflow-client
     #   google-cloud-datastore
     #   google-cloud-dlp
     #   google-cloud-kms
@@ -220,24 +226,15 @@ grpcio==1.82.0
     #   grpc-google-iam-v1
     #   grpc-interceptor
     #   grpcio-status
-    #   grpcio-tools
-grpcio-status==1.82.0
+grpcio-status==1.83.1
     # via
     #   google-api-core
     #   google-cloud-pubsub
-grpcio-tools==1.82.0
-    # via envoy-data-plane
-grpclib==0.4.9
-    # via betterproto
 h11==0.16.0
     # via httpcore
-h2==4.3.0
-    # via grpclib
-hpack==4.2.0
-    # via h2
 httpcore==1.0.9
     # via httpx
-httplib2==0.31.2
+httplib2==0.32.0
     # via
     #   apache-beam
     #   google-apitools
@@ -245,9 +242,7 @@ httplib2==0.31.2
     #   oauth2client
 httpx==0.28.1
     # via google-genai
-hyperframe==6.1.0
-    # via h2
-idna==3.18
+idna==3.19
     # via
     #   anyio
     #   httpx
@@ -257,19 +252,19 @@ jaraco-classes==3.4.0
     # via keyring
 jaraco-context==6.1.2
     # via keyring
-jaraco-functools==4.5.0
+jaraco-functools==4.6.0
     # via keyring
 jeepney==0.9.0
     # via
     #   keyring
     #   secretstorage
-jsonpickle==3.4.2
+jsonpickle==4.1.2
     # via apache-beam
 keyring==25.7.0
     # via keyrings-google-artifactregistry-auth
 keyrings-google-artifactregistry-auth==1.1.2
     # via apache-beam
-mmh3==5.2.1
+mmh3==5.3.0
     # via google-cloud-spanner
 more-itertools==11.1.0
     # via
@@ -278,7 +273,6 @@ more-itertools==11.1.0
 multidict==6.7.1
     # via
     #   aiohttp
-    #   grpclib
     #   yarl
 numpy==2.4.6
     # via apache-beam
@@ -286,27 +280,30 @@ oauth2client==4.1.3
     # via google-apitools
 objsize==0.7.1
     # via apache-beam
-opentelemetry-api==1.43.0
+opentelemetry-api==1.44.0
     # via
+    #   google-api-core
+    #   google-cloud-bigtable
     #   google-cloud-pubsub
     #   google-cloud-spanner
     #   opentelemetry-resourcedetector-gcp
     #   opentelemetry-sdk
     #   opentelemetry-semantic-conventions
-opentelemetry-resourcedetector-gcp==1.12.0a0
+opentelemetry-resourcedetector-gcp==1.14.0
     # via google-cloud-spanner
-opentelemetry-sdk==1.43.0
+opentelemetry-sdk==1.44.0
     # via
+    #   google-cloud-bigtable
     #   google-cloud-pubsub
     #   google-cloud-spanner
     #   opentelemetry-resourcedetector-gcp
-opentelemetry-semantic-conventions==0.64b0
+opentelemetry-semantic-conventions==0.65b0
     # via
     #   google-cloud-spanner
     #   opentelemetry-sdk
-orjson==3.11.9
+orjson==3.12.0
     # via apache-beam
-packaging==26.2
+packaging==26.3
     # via
     #   apache-beam
     #   google-cloud-aiplatform
@@ -321,7 +318,7 @@ propcache==0.5.2
     # via
     #   aiohttp
     #   yarl
-proto-plus==1.28.0
+proto-plus==1.28.4
     # via
     #   apache-beam
     #   google-api-core
@@ -329,6 +326,7 @@ proto-plus==1.28.0
     #   google-cloud-bigquery-storage
     #   google-cloud-bigtable
     #   google-cloud-build
+    #   google-cloud-dataflow-client
     #   google-cloud-datastore
     #   google-cloud-dlp
     #   google-cloud-kms
@@ -344,11 +342,13 @@ proto-plus==1.28.0
 protobuf==6.33.6
     # via
     #   apache-beam
+    #   cloud-sql-python-connector
     #   google-api-core
     #   google-cloud-aiplatform
     #   google-cloud-bigquery-storage
     #   google-cloud-bigtable
     #   google-cloud-build
+    #   google-cloud-dataflow-client
     #   google-cloud-datastore
     #   google-cloud-dlp
     #   google-cloud-kms
@@ -364,13 +364,10 @@ protobuf==6.33.6
     #   googleapis-common-protos
     #   grpc-google-iam-v1
     #   grpcio-status
-    #   grpcio-tools
     #   proto-plus
-pyarrow==23.0.1
+pyarrow==25.0.1
     # via apache-beam
-pyarrow-hotfix==0.7
-    # via apache-beam
-pyasn1==0.6.3
+pyasn1==0.6.4
     # via
     #   oauth2client
     #   pyasn1-modules
@@ -381,35 +378,32 @@ pyasn1-modules==0.4.2
     #   oauth2client
 pycparser==3.0
     # via cffi
-pydantic==2.13.4
+pydantic==2.13.5
     # via
     #   google-cloud-aiplatform
     #   google-genai
-pydantic-core==2.46.4
+pydantic-core==2.46.5
     # via pydantic
 pyfiglet==1.0.4
     # via my_package (pyproject.toml)
-pymongo==4.17.0
+pymongo==4.18.0
     # via apache-beam
 pymysql==1.2.0
     # via apache-beam
-pyopenssl==26.2.0
-    # via google-auth
 pyparsing==3.3.2
     # via httplib2
 python-dateutil==2.9.0.post0
     # via
     #   apache-beam
-    #   betterproto
     #   google-cloud-bigquery
     #   pg8000
 python-tds==1.17.1
     # via apache-beam
-pytz==2026.2
+pytz==2026.3.post1
     # via apache-beam
 pyyaml==6.0.3
     # via apache-beam
-regex==2026.6.28
+regex==2026.9.3
     # via apache-beam
 requests==2.34.2
     # via
@@ -424,7 +418,7 @@ requests==2.34.2
     #   opentelemetry-resourcedetector-gcp
 rsa==4.9.1
     # via oauth2client
-scramp==1.4.12
+scramp==1.4.17
     # via pg8000
 secretstorage==3.5.0
     # via keyring
@@ -437,33 +431,30 @@ sniffio==1.3.1
     # via google-genai
 sortedcontainers==2.4.0
     # via apache-beam
-sqlparse==0.5.5
+sqlparse==0.6.0
     # via google-cloud-spanner
 tenacity==9.1.4
     # via google-genai
 typing-extensions==4.16.0
     # via
+    #   anyio
     #   apache-beam
     #   google-cloud-aiplatform
     #   google-genai
     #   grpcio
     #   opentelemetry-api
-    #   opentelemetry-resourcedetector-gcp
     #   opentelemetry-sdk
     #   opentelemetry-semantic-conventions
     #   pydantic
     #   pydantic-core
     #   typing-inspection
-typing-inspection==0.4.2
+typing-inspection==0.4.4
     # via pydantic
 urllib3==2.7.0
     # via requests
-websockets==16.0
+websockets==16.1.1
     # via google-genai
-yarl==1.24.2
+yarl==1.24.5
     # via aiohttp
 zstandard==0.25.0
     # via apache-beam
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
