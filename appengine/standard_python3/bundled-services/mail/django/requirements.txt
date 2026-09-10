@@ -1,4 +1,4 @@
-Django==6.0.5; python_version >= "3.12"
+Django==6.1.1; python_version >= "3.12"
 django-environ==0.13.0
 google-cloud-logging==3.5.0
 appengine-python-standard>=0.2.3
