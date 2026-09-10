@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
+import os
+
 import flask
 
 app = flask.Flask(__name__)
@@ -28,15 +31,21 @@ def run_root() -> str:
     }
 
 
+def get_trusted_model_dir() -> str:
+    model_dir = os.environ.get("MODEL_DIR")
+    if not model_dir:
+        raise RuntimeError("MODEL_DIR must be set to a trusted model location.")
+    return model_dir
+
+
 @app.route("/predict", methods=["POST"])
 def run_predict() -> dict:
     import predict
 
     try:
         args = flask.request.get_json() or {}
-        bucket = args["bucket"]
-        model_dir = f"gs://{bucket}/model_output"
         data = args["data"]
+        model_dir = get_trusted_model_dir()
         predictions = predict.run(data, model_dir)
 
         return {
@@ -45,10 +54,9 @@ def run_predict() -> dict:
             "predictions": predictions,
         }
     except Exception as e:
-        return {"error": f"{type(e).__name__}: {e}"}
+        logging.exception(e)
+        return ({"error": f"{type(e).__name__}: {e}"}, 500)
 
 
 if __name__ == "__main__":
-    import os
-
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
