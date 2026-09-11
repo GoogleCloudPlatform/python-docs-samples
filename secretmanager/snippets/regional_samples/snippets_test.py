@@ -20,6 +20,7 @@ import uuid
 from google.api_core import exceptions, retry
 from google.cloud import resourcemanager_v3
 from google.cloud import secretmanager_v1
+from google.iam.v1 import policy_pb2
 from google.protobuf.duration_pb2 import Duration
 import pytest
 
@@ -28,6 +29,7 @@ from regional_samples import add_regional_secret_version
 from regional_samples import bind_tags_to_regional_secret
 from regional_samples import create_regional_secret
 from regional_samples import create_regional_secret_with_annotations
+from regional_samples import create_regional_secret_with_cloud_sql_credentials
 from regional_samples import create_regional_secret_with_delayed_destroy
 from regional_samples import create_regional_secret_with_labels
 from regional_samples import create_regional_secret_with_tags
@@ -42,6 +44,7 @@ from regional_samples import disable_regional_secret_version
 from regional_samples import disable_regional_secret_version_with_etag
 from regional_samples import edit_regional_secret_annotations
 from regional_samples import edit_regional_secret_label
+from regional_samples import enable_regional_secret_managed_rotation
 from regional_samples import enable_regional_secret_version
 from regional_samples import enable_regional_secret_version_with_etag
 from regional_samples import get_regional_secret
@@ -53,6 +56,7 @@ from regional_samples import list_regional_secret_versions_with_filter
 from regional_samples import list_regional_secrets
 from regional_samples import list_regional_secrets_with_filter
 from regional_samples import regional_quickstart
+from regional_samples import rotate_regional_secret
 from regional_samples import update_regional_secret
 from regional_samples import update_regional_secret_with_delayed_destroy
 from regional_samples import update_regional_secret_with_etag
@@ -94,6 +98,18 @@ def tag_values_client() -> resourcemanager_v3.TagValuesClient:
 
 
 @pytest.fixture()
+def projects_client() -> resourcemanager_v3.ProjectsClient:
+    return resourcemanager_v3.ProjectsClient()
+
+
+# Role granted to a Cloud SQL DB credentials secret's built-in identity so
+# that managed rotation can update the Cloud SQL user's password. This grant
+# is per-secret (the member is the secret's own generated principal), so it
+# has to be made fresh for every secret managed_rotation tests create.
+CLOUD_SQL_ROLE = "roles/cloudsql.admin"
+
+
+@pytest.fixture()
 def project_id() -> str:
     return os.environ["GOOGLE_CLOUD_PROJECT"]
 
@@ -101,6 +117,16 @@ def project_id() -> str:
 @pytest.fixture()
 def iam_user() -> str:
     return "serviceAccount:" + os.environ["GCLOUD_SECRETS_SERVICE_ACCOUNT"]
+
+
+@pytest.fixture()
+def cloud_sql_instance_id() -> str:
+    return os.environ["CLOUD_SQL_INSTANCE"]
+
+
+@pytest.fixture()
+def cloud_sql_username() -> str:
+    return os.environ["CLOUD_SQL_USER"]
 
 
 @pytest.fixture()
@@ -205,6 +231,55 @@ def retry_client_delete_tag_key(
     operation = tag_keys_client.delete_tag_key(request=request)
     response = operation.result()
     return response.name
+
+
+@retry.Retry(predicate=retry.if_exception_type(exceptions.Aborted))
+def grant_cloud_sql_role(
+    projects_client: resourcemanager_v3.ProjectsClient,
+    project_id: str,
+    member: str,
+) -> None:
+    """
+    Grants CLOUD_SQL_ROLE to member on the project. SetIamPolicy replaces
+    the whole policy, so this reads the current policy, adds the member to
+    the existing (or a new) binding for the role, and writes it back with
+    the same etag -- retrying the whole read-modify-write if another writer
+    raced us (Aborted, from an etag mismatch).
+    """
+    resource = f"projects/{project_id}"
+    policy = projects_client.get_iam_policy(request={"resource": resource})
+
+    for binding in policy.bindings:
+        if binding.role == CLOUD_SQL_ROLE:
+            if member not in binding.members:
+                binding.members.append(member)
+            break
+    else:
+        policy.bindings.append(
+            policy_pb2.Binding(role=CLOUD_SQL_ROLE, members=[member])
+        )
+
+    projects_client.set_iam_policy(request={"resource": resource, "policy": policy})
+
+
+@retry.Retry(predicate=retry.if_exception_type(exceptions.Aborted))
+def revoke_cloud_sql_role(
+    projects_client: resourcemanager_v3.ProjectsClient,
+    project_id: str,
+    member: str,
+) -> None:
+    """Removes member from CLOUD_SQL_ROLE on the project, added by grant_cloud_sql_role."""
+    resource = f"projects/{project_id}"
+    policy = projects_client.get_iam_policy(request={"resource": resource})
+
+    changed = False
+    for binding in policy.bindings:
+        if binding.role == CLOUD_SQL_ROLE and member in binding.members:
+            binding.members.remove(member)
+            changed = True
+
+    if changed:
+        projects_client.set_iam_policy(request={"resource": resource, "policy": policy})
 
 
 @pytest.fixture()
@@ -355,6 +430,33 @@ def regional_secret_with_delayed_destroy(
     yield secret_id
 
 
+@pytest.fixture()
+def regional_secret_with_cloud_sql_credentials(
+    projects_client: resourcemanager_v3.ProjectsClient,
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+) -> Iterator[str]:
+    print(f"creating cloud sql credentials secret {secret_id}")
+    secret = create_regional_secret_with_cloud_sql_credentials.create_regional_secret_with_cloud_sql_credentials(
+        project_id, location_id, secret_id
+    )
+
+    # enable_managed_rotation needs this secret's own built-in identity
+    # granted Cloud SQL IAM permissions first -- there's no broader grant
+    # that covers a secret before it exists, so every secret created here
+    # needs its own grant/revoke around the test that uses it.
+    member = secret.policy_member.iam_policy_uid_principal
+    grant_cloud_sql_role(projects_client, project_id, member)
+    # IAM grants are eventually consistent; give it a moment before a caller
+    # tries to use it for managed rotation.
+    time.sleep(10)
+
+    yield secret_id
+
+    revoke_cloud_sql_role(projects_client, project_id, member)
+
+
 def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
     regional_quickstart.regional_quickstart(project_id, location_id, secret_id)
 
@@ -440,6 +542,55 @@ def test_create_regional_secret_with_annotations(
         )
     )
     assert secret_id in secret.name
+
+
+def test_create_regional_secret_with_cloud_sql_credentials(
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+) -> None:
+    secret = create_regional_secret_with_cloud_sql_credentials.create_regional_secret_with_cloud_sql_credentials(
+        project_id, location_id, secret_id
+    )
+    assert secret_id in secret.name
+    assert (
+        secret.secret_type
+        == secretmanager_v1.Secret.SecretType.CLOUD_SQL_DB_CREDENTIALS
+    )
+
+
+def test_enable_regional_secret_managed_rotation(
+    regional_secret_with_cloud_sql_credentials: str,
+    project_id: str,
+    location_id: str,
+    cloud_sql_instance_id: str,
+    cloud_sql_username: str,
+) -> None:
+    secret_id = regional_secret_with_cloud_sql_credentials
+    version = enable_regional_secret_managed_rotation.enable_regional_secret_managed_rotation(
+        project_id, location_id, secret_id, cloud_sql_instance_id, cloud_sql_username
+    )
+    assert secret_id in version.name
+    assert version.state == secretmanager_v1.SecretVersion.State.ENABLED
+
+
+def test_rotate_regional_secret(
+    regional_secret_with_cloud_sql_credentials: str,
+    project_id: str,
+    location_id: str,
+    cloud_sql_instance_id: str,
+    cloud_sql_username: str,
+) -> None:
+    secret_id = regional_secret_with_cloud_sql_credentials
+    first_version = enable_regional_secret_managed_rotation.enable_regional_secret_managed_rotation(
+        project_id, location_id, secret_id, cloud_sql_instance_id, cloud_sql_username
+    )
+    rotated_version = rotate_regional_secret.rotate_regional_secret(
+        project_id, location_id, secret_id
+    )
+    assert secret_id in rotated_version.name
+    assert rotated_version.name != first_version.name
+    assert rotated_version.state == secretmanager_v1.SecretVersion.State.ENABLED
 
 
 def test_create_regional_secret_with_delayed_destroy(
