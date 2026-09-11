@@ -34,5 +34,5 @@ RUN apt-get update \
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
 # Check this matches the apache-beam version in the requirements.txt
-COPY --from=apache/beam_python3.13_sdk:2.74.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.13_sdk:2.75.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
