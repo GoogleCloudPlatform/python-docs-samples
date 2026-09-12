@@ -1,0 +1,69 @@
+<!--  Copyright 2026 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License. -->
+
+<!-- [START alm_ui_sample] -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate API</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="gcp-header">
+        <h1>Market Place Integration</h1>
+    </div>
+
+    <div class="card" style="max-width: 550px;">
+        <h2>Step 1: Generate API</h2>
+        
+        <form method="POST" action="/">
+            
+            <div class="form-group">
+                <label for="apigee_org">Apigee Organization (APIGEE_ORG)</label>
+                <input type="text" name="apigee_org" id="apigee_org" value="PROJECT_ID" required>
+            </div>
+
+            <div class="form-group">
+                <label for="service_account">Service Account (For gcloud Impersonation)</label>
+                <input type="text" name="service_account" id="service_account" value="SERVICE_ACCOUNT" required>
+            </div>
+            
+            <button type="submit">Generate API</button>
+        </form>
+
+        {% if action_result %}
+            <div class="result-alert">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
+                <span><strong>{{ action_result }}</strong></span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div class="result-alert" style="background-color: #fce8e6; color: #c5221f;">
+                <span><strong>Deployment Failed:</strong> {{ error }}</span>
+            </div>
+        {% endif %}
+
+        <hr style="margin: 30px 0 20px 0; border: 0; border-top: 1px solid #dadce0;">
+        
+        <a href="{{ url_for('deploy_page') }}" class="secondary-btn">Next Page &rarr;</a>
+    </div>
+
+</body>
+</html>
+<!-- [END alm_ui_sample] -->
