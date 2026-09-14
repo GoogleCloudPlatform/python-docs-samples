@@ -75,7 +75,7 @@ def vm_instance():
     boot_disk.auto_delete = True
     boot_disk.boot = True
     boot_disk.initialize_params = compute_v1.AttachedDiskInitializeParams(
-        source_image="projects/debian-cloud/global/images/family/debian-11"
+        source_image="projects/debian-cloud/global/images/family/debian-13"
     )
 
     additional_disk = compute_v1.AttachedDisk()

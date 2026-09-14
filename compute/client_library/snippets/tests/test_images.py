@@ -37,9 +37,9 @@ ZONE = "europe-west2-c"
 @pytest.fixture
 def test_disk():
     """
-    Get the newest version of debian 11 and make a disk from it.
+    Get the newest version of debian 13 and make a disk from it.
     """
-    new_debian = get_image_from_family("debian-cloud", "debian-11")
+    new_debian = get_image_from_family("debian-cloud", "debian-13")
     test_disk_name = "test-disk-" + uuid.uuid4().hex[:10]
     disk = create_disk_from_image(
         PROJECT,
@@ -82,7 +82,7 @@ def autodelete_image(autodelete_image_name):
     """
     An image that will be deleted after the test is done.
     """
-    src_img = get_image_from_family("debian-cloud", "debian-11")
+    src_img = get_image_from_family("debian-cloud", "debian-13")
     new_image = create_image_from_image(
         PROJECT,
         src_img.name,

@@ -47,7 +47,7 @@ def test_main():
     project = os.environ["GOOGLE_CLOUD_PROJECT"]
     test_id = f"oslogin-test-{str(random.randint(0, 1000000))}"
     zone = "us-east1-d"
-    image_family = "projects/debian-cloud/global/images/family/debian-11"
+    image_family = "projects/debian-cloud/global/images/family/debian-13"
     machine_type = f"zones/{zone}/machineTypes/f1-micro"
     account_email = "{test_id}@{project}.iam.gserviceaccount.com".format(
         test_id=test_id, project=project
