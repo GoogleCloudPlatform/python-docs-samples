@@ -41,7 +41,7 @@ REGION = "europe-west1"
 
 @pytest.fixture
 def test_disk():
-    debian_image = get_image_from_family("debian-cloud", "debian-11")
+    debian_image = get_image_from_family("debian-cloud", "debian-13")
     test_disk_name = "test-disk-" + uuid.uuid4().hex[:10]
 
     disk_type = f"zones/{ZONE}/diskTypes/pd-standard"

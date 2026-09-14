@@ -45,7 +45,7 @@ def get_regional_instance_template(
     # Example response:
     # test-regional-template
     # https://www.googleapis.com/compute/v1/projects/[PROJECT_ID]/regions/[REGION]
-    # projects/debian-cloud/global/images/family/debian-11
+    # projects/debian-cloud/global/images/family/debian-13
     return template
 
 

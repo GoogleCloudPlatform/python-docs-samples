@@ -35,7 +35,7 @@ def create_instance_custom_hostname(
     Returns:
         Instance object.
     """
-    newest_debian = get_image_from_family(project="debian-cloud", family="debian-11")
+    newest_debian = get_image_from_family(project="debian-cloud", family="debian-13")
     disk_type = f"zones/{zone}/diskTypes/pd-standard"
     disks = [disk_from_image(disk_type, 10, True, newest_debian.self_link)]
     instance = create_instance(

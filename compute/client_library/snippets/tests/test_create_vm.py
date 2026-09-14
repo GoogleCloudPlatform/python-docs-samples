@@ -60,7 +60,7 @@ INSTANCE_ZONE_SECOND = "europe-west2-b"
 def get_active_debian():
     image_client = compute_v1.ImagesClient()
 
-    return image_client.get_from_family(project="debian-cloud", family="debian-11")
+    return image_client.get_from_family(project="debian-cloud", family="debian-13")
 
 
 @pytest.fixture()
