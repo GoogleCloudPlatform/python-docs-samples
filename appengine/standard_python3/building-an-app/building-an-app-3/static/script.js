@@ -67,7 +67,7 @@ window.addEventListener('load', function () {
         // SECURITY NOTE: As cookies can easily be modified, only put the
         // token (which is verified server-side) in a cookie; do not add other
         // user information.
-        document.cookie = "token=" + token + ";path=/";
+        document.cookie = "token=" + token + ";path=/;SameSite=Lax";
       });
     } else {
       // User is signed out.
