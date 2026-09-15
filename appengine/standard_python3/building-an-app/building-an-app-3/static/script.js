@@ -77,7 +77,7 @@ window.addEventListener('load', function () {
       document.getElementById('sign-out').hidden = true;
       document.getElementById('login-info').hidden = true;
       // Clear the token cookie safely.
-      document.cookie = "token=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+      document.cookie = "token=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Lax";
     }
   }, function (error) {
     console.log(error);
