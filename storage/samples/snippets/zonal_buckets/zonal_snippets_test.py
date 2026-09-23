@@ -1,4 +1,4 @@
-# Copyright 2025 Google, Inc.
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +13,16 @@
 # limitations under the License.
 
 import asyncio
-import uuid
-import os
-
-import pytest
-from google.cloud.storage import Client
 import contextlib
+import os
+import uuid
 
-from google.cloud.storage.asyncio.async_grpc_client import AsyncGrpcClient
+from google.cloud.storage import Client
 from google.cloud.storage.asyncio.async_appendable_object_writer import (
     AsyncAppendableObjectWriter,
 )
+from google.cloud.storage.asyncio.async_grpc_client import AsyncGrpcClient
+import pytest
 
 # Import all the snippets
 import storage_create_and_write_appendable_object
@@ -32,6 +31,7 @@ import storage_open_multiple_objects_ranged_read
 import storage_open_object_multiple_ranged_read
 import storage_open_object_read_full_object
 import storage_open_object_single_ranged_read
+import storage_optimize_write_latency_pool
 import storage_pause_and_resume_appendable_upload
 import storage_read_appendable_object_tail
 
@@ -258,3 +258,19 @@ def test_storage_open_multiple_objects_ranged_read(
     blob2 = json_client.bucket(_ZONAL_BUCKET).blob(blob2_name)
     blob1.delete()
     blob2.delete()
+
+
+def test_storage_optimize_write_latency_pool(
+    async_grpc_client, json_client, event_loop, capsys
+):
+    key_prefix = f"test-writer-pool-{uuid.uuid4()}"
+    event_loop.run_until_complete(
+        storage_optimize_write_latency_pool.storage_optimize_write_latency_pool(
+            _ZONAL_BUCKET, key_prefix, pool_size=3, grpc_client=async_grpc_client
+        )
+    )
+    out, _ = capsys.readouterr()
+    assert f"Read unfinalized object {key_prefix}_0: 0123456789" in out
+    bucket = json_client.bucket(_ZONAL_BUCKET)
+    for i in range(4):
+        bucket.blob(f"{key_prefix}_{i}").delete()
