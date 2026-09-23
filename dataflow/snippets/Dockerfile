@@ -18,17 +18,17 @@
 # on the host machine. This Dockerfile is derived from the
 # dataflow/custom-containers/ubuntu sample.
 
-FROM python:3.14-slim
+FROM python:3.13-slim
 
 # Install JRE
-COPY --from=openjdk:8-jre-slim /usr/local/openjdk-8 /usr/local/openjdk-8
-ENV JAVA_HOME /usr/local/openjdk-8
-RUN update-alternatives --install /usr/bin/java java /usr/local/openjdk-8/bin/java 10 
+COPY --from=eclipse-temurin:17-jre /opt/java/openjdk /opt/java/openjdk
+ENV JAVA_HOME /opt/java/openjdk
+RUN update-alternatives --install /usr/bin/java java /opt/java/openjdk/bin/java 10
 
 WORKDIR /pipeline
 
 # Copy files from official SDK image.
-COPY --from=apache/beam_python3.14_sdk:2.73.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.13_sdk:2.76.0 /opt/apache/beam /opt/apache/beam
 # Set the entrypoint to Apache Beam SDK launcher.
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
 
@@ -37,8 +37,8 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends docker.io
 
 # Install dependencies.
-RUN pip3 install --no-cache-dir apache-beam[gcp]==2.73.0
-RUN pip install --no-cache-dir kafka-python==2.0.6
+RUN pip3 install --no-cache-dir apache-beam[gcp]==2.76.0
+RUN pip install --no-cache-dir kafka-python==3.0.11
 
 # Verify that the image does not have conflicting dependencies.
 RUN pip check
