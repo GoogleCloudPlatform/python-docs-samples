@@ -17,7 +17,7 @@ FROM ubuntu:focal
 WORKDIR /pipeline
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
-COPY --from=apache/beam_python3.14_sdk:2.73.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.14_sdk:2.76.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
 
 # Install Python with pip, dev tools, distutils, and a C++ compiler.
