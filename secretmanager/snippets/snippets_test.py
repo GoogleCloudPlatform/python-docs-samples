@@ -32,6 +32,7 @@ from create_secret_with_annotations import create_secret_with_annotations
 from create_secret_with_delayed_destroy import create_secret_with_delayed_destroy
 from create_secret_with_labels import create_secret_with_labels
 from create_secret_with_tags import create_secret_with_tags
+from create_secret_with_type import create_secret_with_type
 from create_secret_with_user_managed_replication import create_ummr_secret
 from create_update_secret_label import create_update_secret_label
 from delete_secret import delete_secret
@@ -47,6 +48,7 @@ from edit_secret_annotations import edit_secret_annotations
 from enable_secret_version import enable_secret_version
 from enable_secret_version_with_etag import enable_secret_version_with_etag
 from get_secret import get_secret
+from get_secret_type import get_secret_type
 from get_secret_version import get_secret_version
 from iam_grant_access import iam_grant_access
 from iam_revoke_access import iam_revoke_access
@@ -420,6 +422,17 @@ def test_bind_tags_to_secret(
     assert tag_value in tag_resp.tag_value
 
 
+def test_create_secret_with_type(
+    project_id: str,
+    secret_id: str,
+) -> None:
+    secret = create_secret_with_type(
+        project_id, secret_id, secretmanager.Secret.SecretType.ACCESS_KEY
+    )
+    assert secret_id in secret.name
+    assert secret.secret_type == secretmanager.Secret.SecretType.ACCESS_KEY
+
+
 def test_create_secret_without_ttl(
     project_id: str,
     secret_id: str,
@@ -593,6 +606,19 @@ def test_get_secret(
     project_id, secret_id, _ = secret
     snippet_secret = get_secret(project_id, secret_id)
     assert secret_id in snippet_secret.name
+
+
+def test_get_secret_type(
+    client: secretmanager.SecretManagerServiceClient,
+    project_id: str,
+    secret_id: str,
+) -> None:
+    create_secret_with_type(
+        project_id, secret_id, secretmanager.Secret.SecretType.ACCESS_KEY
+    )
+    secret = get_secret_type(project_id, secret_id)
+    assert secret_id in secret.name
+    assert secret.secret_type == secretmanager.Secret.SecretType.ACCESS_KEY
 
 
 def test_iam_grant_access(
