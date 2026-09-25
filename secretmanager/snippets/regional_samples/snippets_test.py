@@ -48,6 +48,7 @@ from regional_samples import enable_regional_secret_managed_rotation
 from regional_samples import enable_regional_secret_version
 from regional_samples import enable_regional_secret_version_with_etag
 from regional_samples import get_regional_secret
+from regional_samples import get_regional_secret_type
 from regional_samples import get_regional_secret_version
 from regional_samples import iam_grant_access_with_regional_secret
 from regional_samples import iam_revoke_access_with_regional_secret
@@ -60,6 +61,7 @@ from regional_samples import rotate_regional_secret
 from regional_samples import update_regional_secret
 from regional_samples import update_regional_secret_with_delayed_destroy
 from regional_samples import update_regional_secret_with_etag
+from regional_samples import update_regional_secret_with_managed_rotation_schedule
 from regional_samples import view_regional_secret_annotations
 from regional_samples import view_regional_secret_labels
 
@@ -591,6 +593,48 @@ def test_rotate_regional_secret(
     assert secret_id in rotated_version.name
     assert rotated_version.name != first_version.name
     assert rotated_version.state == secretmanager_v1.SecretVersion.State.ENABLED
+
+
+def test_update_regional_secret_with_managed_rotation_schedule(
+    regional_secret_with_cloud_sql_credentials: str,
+    project_id: str,
+    location_id: str,
+    cloud_sql_instance_id: str,
+    cloud_sql_username: str,
+) -> None:
+    secret_id = regional_secret_with_cloud_sql_credentials
+    enable_regional_secret_managed_rotation.enable_regional_secret_managed_rotation(
+        project_id, location_id, secret_id, cloud_sql_instance_id, cloud_sql_username
+    )
+    before = int(time.time())
+    rotation_period_seconds = 3600
+    secret = update_regional_secret_with_managed_rotation_schedule.update_regional_secret_with_managed_rotation_schedule(
+        project_id,
+        location_id,
+        secret_id,
+        rotation_period_seconds,
+    )
+    assert secret_id in secret.name
+    assert (
+        secret.rotation.next_rotation_time.timestamp()
+        >= before + rotation_period_seconds
+    )
+    assert secret.rotation.rotation_period.seconds == rotation_period_seconds
+
+
+def test_get_regional_secret_type(
+    project_id: str,
+    location_id: str,
+    regional_secret_with_cloud_sql_credentials: str,
+) -> None:
+    secret_id = regional_secret_with_cloud_sql_credentials
+    secret = get_regional_secret_type.get_regional_secret_type(
+        project_id, location_id, secret_id
+    )
+    assert secret_id in secret.name
+    assert (
+        secret.secret_type == secretmanager_v1.Secret.SecretType.CLOUD_SQL_DB_CREDENTIALS
+    )
 
 
 def test_create_regional_secret_with_delayed_destroy(
