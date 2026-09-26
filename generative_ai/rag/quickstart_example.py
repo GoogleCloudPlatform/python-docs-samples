@@ -142,9 +142,8 @@ def quickstart(
 
 
 if __name__ == "__main__":
-    gdrive_path = "https://drive.google.com/file/1234567890"
     gcloud_path = "gs://your-bucket-name/file.txt"
     quickstart(
         display_name="test_corpus",
-        paths=[gdrive_path, gcloud_path],
+        gcs_path=gcloud_path,
     )
