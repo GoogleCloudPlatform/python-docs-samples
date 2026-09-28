@@ -21,7 +21,7 @@ import docker
 from docker import DockerClient
 from kafka import KafkaProducer
 from kafka.admin import KafkaAdminClient, NewTopic
-from kafka.errors import NoBrokersAvailable
+from kafka.errors import KafkaTimeoutError
 
 import pytest
 
@@ -67,7 +67,7 @@ def create_topics() -> None:
             topics.append(NewTopic(name=TOPIC_NAMES[1], num_partitions=1, replication_factor=1))
             client.create_topics(topics)
             break
-        except NoBrokersAvailable:
+        except KafkaTimeoutError:
             time.sleep(5)
 
 
