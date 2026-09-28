@@ -17,12 +17,16 @@
 import sys
 
 # [START storage_delete_ip_filtering_rules]
+from typing import Optional
+
 from google.cloud import storage
 
 
 def delete_ip_filtering_rules(
-    bucket_name, public_range_to_delete=None, vpc_network_to_delete=None
-):
+    bucket_name: str,
+    public_range_to_delete: Optional[str] = None,
+    vpc_network_to_delete: Optional[str] = None,
+) -> storage.Bucket:
     """Selectively removes specific public CIDR ranges or VPC network sources."""
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
@@ -32,31 +36,31 @@ def delete_ip_filtering_rules(
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
 
-    if not bucket.ip_filter:
+    ip_filter = bucket.ip_filter
+    if not ip_filter:
         print(f"Bucket {bucket_name} has no IP Filter configuration.")
         return bucket
 
     modified = False
-    if public_range_to_delete and bucket.ip_filter.public_network_source:
-        ranges = bucket.ip_filter.public_network_source.allowed_ip_cidr_ranges
+    if public_range_to_delete and ip_filter.public_network_source:
+        ranges = ip_filter.public_network_source.allowed_ip_cidr_ranges
         if ranges and public_range_to_delete in ranges:
             ranges.remove(public_range_to_delete)
             modified = True
 
-    if vpc_network_to_delete and bucket.ip_filter.vpc_network_sources:
-        initial_len = len(bucket.ip_filter.vpc_network_sources)
-        bucket.ip_filter.vpc_network_sources = [
+    if vpc_network_to_delete and ip_filter.vpc_network_sources:
+        initial_len = len(ip_filter.vpc_network_sources)
+        ip_filter.vpc_network_sources = [
             v
-            for v in bucket.ip_filter.vpc_network_sources
+            for v in ip_filter.vpc_network_sources
             if v.network != vpc_network_to_delete
         ]
-        if len(bucket.ip_filter.vpc_network_sources) != initial_len:
+        if len(ip_filter.vpc_network_sources) != initial_len:
             modified = True
 
     if modified:
-        # Re-assign to a local variable and back to the bucket property to force
-        # google-cloud-storage to register the nested changes for the patch() call.
-        ip_filter = bucket.ip_filter
+        # Re-assign to the bucket property to force google-cloud-storage to register
+        # the nested changes for the patch() call.
         bucket.ip_filter = ip_filter
         bucket.patch()
         print(f"Updated IP filtering rules for bucket {bucket_name}.")

@@ -20,7 +20,7 @@ import sys
 from google.cloud import storage
 
 
-def disable_ip_filtering(bucket_name):
+def disable_ip_filtering(bucket_name: str) -> storage.Bucket:
     """Disables IP filtering on a bucket without deleting existing rules."""
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
@@ -28,11 +28,11 @@ def disable_ip_filtering(bucket_name):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
 
-    if not bucket.ip_filter:
+    ip_filter = bucket.ip_filter
+    if not ip_filter:
         print(f"No IP filter configuration found for bucket {bucket_name}.")
         return bucket
 
-    ip_filter = bucket.ip_filter
     ip_filter.mode = "Disabled"
     # Re-assign to the bucket property to force google-cloud-storage to register
     # the nested changes for the patch() call.

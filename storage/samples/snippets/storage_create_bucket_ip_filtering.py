@@ -21,7 +21,9 @@ from google.cloud import storage
 from google.cloud.storage.ip_filter import IPFilter, PublicNetworkSource
 
 
-def create_bucket_ip_filtering(bucket_name, public_cidr_range="192.0.2.0/24"):
+def create_bucket_ip_filtering(
+    bucket_name: str, public_cidr_range: str
+) -> storage.Bucket:
     """Creates a new bucket with initial IP filtering rules pre-configured."""
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
@@ -49,14 +51,9 @@ def create_bucket_ip_filtering(bucket_name, public_cidr_range="192.0.2.0/24"):
 # [END storage_create_bucket_ip_filtering]
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         print(
-            "Usage: python storage_create_bucket_ip_filtering.py <bucket_name> [public_cidr_range]"
+            "Usage: python storage_create_bucket_ip_filtering.py <bucket_name> <public_cidr_range>"
         )
         sys.exit(1)
-    if len(sys.argv) > 2:
-        create_bucket_ip_filtering(
-            bucket_name=sys.argv[1], public_cidr_range=sys.argv[2]
-        )
-    else:
-        create_bucket_ip_filtering(bucket_name=sys.argv[1])
+    create_bucket_ip_filtering(bucket_name=sys.argv[1], public_cidr_range=sys.argv[2])

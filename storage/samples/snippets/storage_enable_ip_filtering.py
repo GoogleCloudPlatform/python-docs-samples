@@ -25,7 +25,9 @@ from google.cloud.storage.ip_filter import (
 )
 
 
-def enable_ip_filtering(bucket_name, public_range, vpc_network, vpc_range):
+def enable_ip_filtering(
+    bucket_name: str, public_range: str, vpc_network: str, vpc_range: str
+) -> storage.Bucket:
     """Enables and configures IP filtering rules on an existing bucket."""
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"

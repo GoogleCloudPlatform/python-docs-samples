@@ -17,10 +17,13 @@
 import sys
 
 # [START storage_get_ip_filtering]
+from typing import Optional
+
 from google.cloud import storage
+from google.cloud.storage.ip_filter import IPFilter
 
 
-def get_ip_filtering(bucket_name):
+def get_ip_filtering(bucket_name: str) -> Optional[IPFilter]:
     """Retrieves and prints the IP filtering configuration of a bucket."""
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
