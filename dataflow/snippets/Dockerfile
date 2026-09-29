@@ -21,7 +21,7 @@
 FROM python:3.13-slim
 
 # Install JRE
-COPY --from=eclipse-temurin:17-jre /opt/java/openjdk /opt/java/openjdk
+COPY --from=eclipse-temurin:25-jre /opt/java/openjdk /opt/java/openjdk
 ENV JAVA_HOME /opt/java/openjdk
 RUN update-alternatives --install /usr/bin/java java /opt/java/openjdk/bin/java 10
 
