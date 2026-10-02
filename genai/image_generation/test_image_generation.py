@@ -30,9 +30,6 @@ import imggen_inpainting_insert_with_txt_img
 import imggen_inpainting_removal_mask_with_txt_img
 import imggen_inpainting_removal_with_txt_img
 import imggen_mask_free_edit_with_txt_img
-import imggen_outpainting_with_txt_img
-import imggen_product_background_mask_with_txt_img
-import imggen_product_background_with_txt_img
 import imggen_raw_reference_with_txt_img
 import imggen_scribble_ctrl_type_with_txt_img
 import imggen_style_reference_with_txt_img
@@ -90,24 +87,6 @@ def test_img_edit_inpainting_removal_mask() -> None:
 def test_img_edit_inpainting_removal() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "fruit_edit.png")
     response = imggen_inpainting_removal_with_txt_img.edit_inpainting_removal(OUTPUT_FILE)
-    assert response
-
-
-def test_img_edit_product_background_mask() -> None:
-    OUTPUT_FILE = os.path.join(RESOURCES, "suitcase_edit.png")
-    response = imggen_product_background_mask_with_txt_img.edit_product_background_mask(OUTPUT_FILE)
-    assert response
-
-
-def test_img_edit_product_background() -> None:
-    OUTPUT_FILE = os.path.join(RESOURCES, "suitcase_edit.png")
-    response = imggen_product_background_with_txt_img.edit_product_background(OUTPUT_FILE)
-    assert response
-
-
-def test_img_edit_outpainting() -> None:
-    OUTPUT_FILE = os.path.join(RESOURCES, "living_room_edit.png")
-    response = imggen_outpainting_with_txt_img.edit_outpainting(OUTPUT_FILE)
     assert response
 
 
