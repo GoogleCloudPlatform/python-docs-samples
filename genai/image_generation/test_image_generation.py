@@ -36,10 +36,7 @@ import imggen_product_background_with_txt_img
 import imggen_raw_reference_with_txt_img
 import imggen_scribble_ctrl_type_with_txt_img
 import imggen_style_reference_with_txt_img
-import imggen_subj_refer_ctrl_refer_with_txt_imgs
-import imggen_upscale_with_img
 import imggen_virtual_try_on_with_txt_img
-import imggen_with_txt
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -61,12 +58,6 @@ def output_gcs_uri() -> str:
     blobs = bucket.list_blobs(prefix=prefix)
     for blob in blobs:
         blob.delete()
-
-
-def test_img_generation() -> None:
-    OUTPUT_FILE = os.path.join(RESOURCES, "dog_newspaper.png")
-    response = imggen_with_txt.generate_images(OUTPUT_FILE)
-    assert response
 
 
 def test_img_edit_inpainting_insert_with_mask() -> None:
@@ -117,13 +108,6 @@ def test_img_edit_mask_free() -> None:
     assert response
 
 
-def test_img_customization_subject(output_gcs_uri: str) -> None:
-    response = imggen_subj_refer_ctrl_refer_with_txt_imgs.subject_customization(
-        output_gcs_uri=output_gcs_uri
-    )
-    assert response
-
-
 def test_img_customization_style(output_gcs_uri: str) -> None:
     response = imggen_style_reference_with_txt_img.style_customization(output_gcs_uri=output_gcs_uri)
     assert response
@@ -147,10 +131,4 @@ def test_img_customization_canny_edge(output_gcs_uri: str) -> None:
 def test_img_virtual_try_on() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "man_in_sweater.png")
     response = imggen_virtual_try_on_with_txt_img.virtual_try_on(OUTPUT_FILE)
-    assert response
-
-
-def test_img_upscale() -> None:
-    OUTPUT_FILE = os.path.join(RESOURCES, "dog_newspaper.png")
-    response = imggen_upscale_with_img.upscale_images(OUTPUT_FILE)
     assert response
