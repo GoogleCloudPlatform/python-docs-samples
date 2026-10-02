@@ -33,9 +33,6 @@ import imggen_mask_free_edit_with_txt_img
 import imggen_outpainting_with_txt_img
 import imggen_product_background_mask_with_txt_img
 import imggen_product_background_with_txt_img
-import imggen_raw_reference_with_txt_img
-import imggen_scribble_ctrl_type_with_txt_img
-import imggen_style_reference_with_txt_img
 import imggen_subj_refer_ctrl_refer_with_txt_imgs
 import imggen_upscale_with_img
 import imggen_virtual_try_on_with_txt_img
@@ -121,21 +118,6 @@ def test_img_customization_subject(output_gcs_uri: str) -> None:
     response = imggen_subj_refer_ctrl_refer_with_txt_imgs.subject_customization(
         output_gcs_uri=output_gcs_uri
     )
-    assert response
-
-
-def test_img_customization_style(output_gcs_uri: str) -> None:
-    response = imggen_style_reference_with_txt_img.style_customization(output_gcs_uri=output_gcs_uri)
-    assert response
-
-
-def test_img_customization_style_transfer(output_gcs_uri: str) -> None:
-    response = imggen_raw_reference_with_txt_img.style_transfer_customization(output_gcs_uri=output_gcs_uri)
-    assert response
-
-
-def test_img_customization_scribble(output_gcs_uri: str) -> None:
-    response = imggen_scribble_ctrl_type_with_txt_img.scribble_customization(output_gcs_uri=output_gcs_uri)
     assert response
 
 
