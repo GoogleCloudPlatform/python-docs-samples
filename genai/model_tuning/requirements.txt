@@ -1,0 +1,2 @@
+google-genai==2.16.0
+google-cloud-aiplatform[pipelines, evaluation]==1.163.0

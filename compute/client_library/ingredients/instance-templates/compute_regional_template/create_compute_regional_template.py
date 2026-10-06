@@ -34,7 +34,7 @@ def create_regional_instance_template(
     disk = compute_v1.AttachedDisk()
     initialize_params = compute_v1.AttachedDiskInitializeParams()
     initialize_params.source_image = (
-        "projects/debian-cloud/global/images/family/debian-11"
+        "projects/debian-cloud/global/images/family/debian-13"
     )
     initialize_params.disk_size_gb = 250
     disk.initialize_params = initialize_params
@@ -80,7 +80,7 @@ def create_regional_instance_template(
     # Example response:
     # test-regional-template
     # https://www.googleapis.com/compute/v1/projects/[PROJECT_ID]/regions/[REGION]
-    # projects/debian-cloud/global/images/family/debian-11
+    # projects/debian-cloud/global/images/family/debian-13
 
     return template
 

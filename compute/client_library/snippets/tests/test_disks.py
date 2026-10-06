@@ -103,9 +103,9 @@ def kms_key():
 @pytest.fixture
 def test_disk():
     """
-    Get the newest version of debian 11 and make a disk from it.
+    Get the newest version of debian 13 and make a disk from it.
     """
-    new_debian = get_image_from_family("debian-cloud", "debian-11")
+    new_debian = get_image_from_family("debian-cloud", "debian-13")
     test_disk_name = "test-disk-" + uuid.uuid4().hex[:10]
     disk = create_disk_from_image(
         PROJECT,
@@ -179,7 +179,7 @@ autodelete_disk_name2 = autodelete_disk_name
 @pytest.fixture()
 def autodelete_src_disk(autodelete_disk_name):
     disk_type = f"zones/{ZONE}/diskTypes/pd-standard"
-    debian_image = get_image_from_family("debian-cloud", "debian-11")
+    debian_image = get_image_from_family("debian-cloud", "debian-13")
     disk = create_disk_from_image(
         PROJECT, ZONE, autodelete_disk_name, disk_type, 24, debian_image.self_link
     )
@@ -264,7 +264,7 @@ def autodelete_hyperdisk_pool():
 
 def test_disk_create_delete(autodelete_disk_name):
     disk_type = f"zones/{ZONE}/diskTypes/pd-standard"
-    debian_image = get_image_from_family("debian-cloud", "debian-11")
+    debian_image = get_image_from_family("debian-cloud", "debian-13")
 
     disk = create_disk_from_image(
         PROJECT, ZONE, autodelete_disk_name, disk_type, 17, debian_image.self_link
@@ -293,7 +293,7 @@ def test_create_and_clone_encrypted_disk(
     # cloudkms.cryptoKeyVersions.useToEncrypt permission to execute this test.
     # Best way is to give this account the cloudkms.cryptoKeyEncrypterDecrypter role.
     disk_type = f"zones/{ZONE}/diskTypes/pd-standard"
-    debian_image = get_image_from_family("debian-cloud", "debian-11")
+    debian_image = get_image_from_family("debian-cloud", "debian-13")
 
     disk = create_kms_encrypted_disk(
         PROJECT,

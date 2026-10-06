@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 'use strict';
 
 // [START gae_python38_auth_javascript]
@@ -21,6 +20,10 @@ window.addEventListener('load', function () {
   document.getElementById('sign-out').onclick = function () {
     firebase.auth().signOut();
   };
+
+  // Initialize the FirebaseUI Widget outside of onAuthStateChanged
+  // to avoid multiple instantiation errors when logging out and back in.
+  var ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
 
   // FirebaseUI config.
   var uiConfig = {
@@ -34,10 +37,22 @@ window.addEventListener('load', function () {
       //firebase.auth.TwitterAuthProvider.PROVIDER_ID,
       //firebase.auth.GithubAuthProvider.PROVIDER_ID,
       //firebase.auth.PhoneAuthProvider.PROVIDER_ID
-
     ],
     // Terms of service url.
-    tosUrl: '<your-tos-url>'
+    tosUrl: '<your-tos-url>',
+    // Add callbacks to handle successful sign in before redirecting
+    callbacks: {
+      signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+        // Wait for the token to be fetched before redirecting to ensure the backend gets it.
+        authResult.user.getIdToken().then(function (token) {
+          // Set the cookie with a path so it applies globally
+          document.cookie = "token=" + token + ";path=/";
+          window.location.assign(redirectUrl || '/');
+        });
+        // Return false to prevent Firebase UI from redirecting automatically
+        return false; 
+      }
+    }
   };
 
   firebase.auth().onAuthStateChanged(function (user) {
@@ -52,19 +67,17 @@ window.addEventListener('load', function () {
         // SECURITY NOTE: As cookies can easily be modified, only put the
         // token (which is verified server-side) in a cookie; do not add other
         // user information.
-        document.cookie = "token=" + token;
+        document.cookie = "token=" + token + ";path=/;SameSite=Lax";
       });
     } else {
       // User is signed out.
-      // Initialize the FirebaseUI Widget using Firebase.
-      var ui = new firebaseui.auth.AuthUI(firebase.auth());
       // Show the Firebase login button.
       ui.start('#firebaseui-auth-container', uiConfig);
       // Update the login state indicators.
       document.getElementById('sign-out').hidden = true;
       document.getElementById('login-info').hidden = true;
-      // Clear the token cookie.
-      document.cookie = "token=";
+      // Clear the token cookie safely.
+      document.cookie = "token=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Lax";
     }
   }, function (error) {
     console.log(error);

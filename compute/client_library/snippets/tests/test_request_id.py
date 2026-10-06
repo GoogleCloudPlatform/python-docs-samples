@@ -36,7 +36,7 @@ def test_request_id():
     disk.name = "test-disk-" + uuid.uuid4().hex[:10]
     disk.zone = ZONE
     disk.type_ = f"zones/{ZONE}/diskTypes/pd-standard"
-    disk.source_image = get_image_from_family("debian-cloud", "debian-11").self_link
+    disk.source_image = get_image_from_family("debian-cloud", "debian-13").self_link
 
     disk2 = deepcopy(disk)
     disk2.name = "test-disk-" + uuid.uuid4().hex[:10]
@@ -80,7 +80,7 @@ def test_request_id_op_id():
     disk.name = "test-disk-" + uuid.uuid4().hex[:10]
     disk.zone = ZONE
     disk.type_ = f"zones/{ZONE}/diskTypes/pd-standard"
-    disk.source_image = get_image_from_family("debian-cloud", "debian-11").self_link
+    disk.source_image = get_image_from_family("debian-cloud", "debian-13").self_link
 
     request = compute_v1.InsertDiskRequest()
     request.request_id = str(uuid.uuid4())

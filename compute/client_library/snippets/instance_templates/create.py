@@ -94,7 +94,7 @@ def create_template(project_id: str, template_name: str) -> compute_v1.InstanceT
     disk = compute_v1.AttachedDisk()
     initialize_params = compute_v1.AttachedDiskInitializeParams()
     initialize_params.source_image = (
-        "projects/debian-cloud/global/images/family/debian-11"
+        "projects/debian-cloud/global/images/family/debian-13"
     )
     initialize_params.disk_size_gb = 250
     disk.initialize_params = initialize_params

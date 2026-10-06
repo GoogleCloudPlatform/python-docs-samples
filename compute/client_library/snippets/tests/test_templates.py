@@ -55,7 +55,7 @@ def test_create_template_and_list(deletable_template_name):
         for template in list_instance_templates(PROJECT)
     )
     assert template.properties.disks[0].initialize_params.disk_size_gb == 250
-    assert "debian-11" in template.properties.disks[0].initialize_params.source_image
+    assert "debian-13" in template.properties.disks[0].initialize_params.source_image
     assert template.properties.network_interfaces[0].name == "nic0"
     assert template.properties.network_interfaces[0].network.endswith(
         "global/networks/default"

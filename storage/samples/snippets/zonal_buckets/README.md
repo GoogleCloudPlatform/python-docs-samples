@@ -76,3 +76,11 @@ This snippet downloads a range of bytes from multiple objects concurrently.
 ```bash
 python samples/snippets/zonal_buckets/storage_open_multiple_objects_ranged_read.py --bucket_name <bucket_name> --object_names <object_name_1> <object_name_2>
 ```
+
+### Optimize write latency with a pre-warmed writer pool
+
+This snippet uses a pre-warmed pool of writers for a zonal bucket.
+
+```bash
+python samples/snippets/zonal_buckets/storage_optimize_write_latency_pool.py --bucket_name <bucket_name> --key_prefix <key_prefix>
+```

@@ -135,7 +135,7 @@ def consume_any_project_reservation(
             boot=True,  # Indicates that this is a boot disk
             auto_delete=True,  # The disk will be deleted when the instance is deleted
             initialize_params=compute_v1.AttachedDiskInitializeParams(
-                source_image="projects/debian-cloud/global/images/family/debian-11",
+                source_image="projects/debian-cloud/global/images/family/debian-13",
                 disk_size_gb=10,
             ),
         )
