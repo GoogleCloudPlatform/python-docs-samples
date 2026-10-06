@@ -42,7 +42,7 @@ import imggen_virtual_try_on_with_txt_img
 import imggen_with_txt
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
-os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
+os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
