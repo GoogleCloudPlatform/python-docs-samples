@@ -22,6 +22,7 @@ import google_crc32c
 import pytest
 
 # Import the methods to be tested
+from regional_samples import bind_tags_to_regional_param
 from regional_samples import create_regional_param
 from regional_samples import create_regional_param_version
 from regional_samples import (
@@ -37,6 +38,7 @@ from regional_samples import delete_regional_param_version
 from regional_samples import disable_regional_param_version
 from regional_samples import enable_regional_param_version
 from regional_samples import get_regional_param
+from regional_samples import get_regional_param_tags
 from regional_samples import get_regional_param_version
 from regional_samples import list_regional_param_versions
 from regional_samples import list_regional_params
@@ -1108,3 +1110,37 @@ def test_create_param_version_with_mismatched_checksum(
         getattr(detail, "reason", "") == "CHECKSUM_MISMATCH"
         for detail in exc_info.value.details
     )
+
+
+def test_bind_tags_to_regional_param(
+    location_id: str,
+    parameter_id: Tuple[str, str],
+    tag_key_value: Tuple[str, str],
+    project_id: str,
+) -> None:
+    param_id, _ = parameter_id
+    _, tag_value = tag_key_value
+    binding = bind_tags_to_regional_param.bind_tags_to_regional_param(project_id, location_id, param_id, tag_value)
+    assert binding.tag_value == tag_value
+    assert param_id in binding.parent
+
+
+def test_get_regional_param_tags(
+    client: parametermanager_v1.ParameterManagerClient,
+    location_id: str,
+    parameter_id: Tuple[str, str],
+    tag_key_value: Tuple[str, str],
+    project_id: str,
+) -> None:
+    param_id, _ = parameter_id
+    tag_key, tag_value = tag_key_value
+    _ = retry_client_create_parameter(
+        client,
+        request={
+            "parent": client.common_location_path(project_id, location_id),
+            "parameter_id": param_id,
+            "parameter": {"tags": {tag_key: tag_value}},
+        },
+    )
+    bindings = get_regional_param_tags.get_regional_param_tags(project_id, location_id, param_id)
+    assert tag_value in [binding.tag_value for binding in bindings]

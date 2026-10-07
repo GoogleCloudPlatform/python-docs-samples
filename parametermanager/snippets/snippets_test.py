@@ -22,6 +22,7 @@ import google_crc32c
 import pytest
 
 # Import the methods to be tested
+from bind_tags_to_param import bind_tags_to_param
 from create_param import create_param
 from create_param_version import create_param_version
 from create_param_version_with_secret import create_param_version_with_secret
@@ -33,6 +34,7 @@ from delete_param_version import delete_param_version
 from disable_param_version import disable_param_version
 from enable_param_version import enable_param_version
 from get_param import get_param
+from get_param_tags import get_param_tags
 from get_param_version import get_param_version
 from list_param_versions import list_param_versions
 from list_params import list_params
@@ -1050,3 +1052,37 @@ def test_create_param_version_with_mismatched_checksum(
         getattr(detail, "reason", "") == "CHECKSUM_MISMATCH"
         for detail in exc_info.value.details
     )
+
+
+def test_bind_tags_to_param(
+    location_id: str,
+    parameter_id: Tuple[str, str],
+    tag_key_value: Tuple[str, str],
+    project_id: str,
+) -> None:
+    param_id, _ = parameter_id
+    _, tag_value = tag_key_value
+    binding = bind_tags_to_param(project_id, param_id, tag_value)
+    assert binding.tag_value == tag_value
+    assert param_id in binding.parent
+
+
+def test_get_param_tags(
+    client: parametermanager_v1.ParameterManagerClient,
+    location_id: str,
+    parameter_id: Tuple[str, str],
+    tag_key_value: Tuple[str, str],
+    project_id: str,
+) -> None:
+    param_id, _ = parameter_id
+    tag_key, tag_value = tag_key_value
+    _ = retry_client_create_parameter(
+        client,
+        request={
+            "parent": client.common_location_path(project_id, location_id),
+            "parameter_id": param_id,
+            "parameter": {"tags": {tag_key: tag_value}},
+        },
+    )
+    bindings = get_param_tags(project_id, param_id)
+    assert tag_value in [binding.tag_value for binding in bindings]
