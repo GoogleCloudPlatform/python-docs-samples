@@ -569,8 +569,14 @@ def test_enable_regional_secret_managed_rotation(
     cloud_sql_username: str,
 ) -> None:
     secret_id = regional_secret_with_cloud_sql_credentials
-    version = enable_regional_secret_managed_rotation.enable_regional_secret_managed_rotation(
-        project_id, location_id, secret_id, cloud_sql_instance_id, cloud_sql_username
+    version = (
+        enable_regional_secret_managed_rotation.enable_regional_secret_managed_rotation(
+            project_id,
+            location_id,
+            secret_id,
+            cloud_sql_instance_id,
+            cloud_sql_username,
+        )
     )
     assert secret_id in version.name
     assert version.state == secretmanager_v1.SecretVersion.State.ENABLED
@@ -584,8 +590,14 @@ def test_rotate_regional_secret(
     cloud_sql_username: str,
 ) -> None:
     secret_id = regional_secret_with_cloud_sql_credentials
-    first_version = enable_regional_secret_managed_rotation.enable_regional_secret_managed_rotation(
-        project_id, location_id, secret_id, cloud_sql_instance_id, cloud_sql_username
+    first_version = (
+        enable_regional_secret_managed_rotation.enable_regional_secret_managed_rotation(
+            project_id,
+            location_id,
+            secret_id,
+            cloud_sql_instance_id,
+            cloud_sql_username,
+        )
     )
     rotated_version = rotate_regional_secret.rotate_regional_secret(
         project_id, location_id, secret_id
@@ -633,7 +645,8 @@ def test_get_regional_secret_type(
     )
     assert secret_id in secret.name
     assert (
-        secret.secret_type == secretmanager_v1.Secret.SecretType.CLOUD_SQL_DB_CREDENTIALS
+        secret.secret_type
+        == secretmanager_v1.Secret.SecretType.CLOUD_SQL_DB_CREDENTIALS
     )
 
 
@@ -644,7 +657,9 @@ def test_create_regional_secret_with_delayed_destroy(
     secret_id: str,
     version_destroy_ttl: int,
 ) -> None:
-    secret = create_regional_secret_with_delayed_destroy.create_regional_secret_with_delayed_destroy(project_id, location_id, secret_id, version_destroy_ttl)
+    secret = create_regional_secret_with_delayed_destroy.create_regional_secret_with_delayed_destroy(
+        project_id, location_id, secret_id, version_destroy_ttl
+    )
     assert secret_id in secret.name
     assert timedelta(seconds=version_destroy_ttl) == secret.version_destroy_ttl
 
@@ -747,7 +762,11 @@ def test_disable_regional_secret_delayed_destroy(
     location_id: str,
 ) -> None:
     secret_id = regional_secret_with_delayed_destroy
-    updated_secret = disable_regional_secret_delayed_destroy.disable_regional_secret_delayed_destroy(project_id, location_id, secret_id)
+    updated_secret = (
+        disable_regional_secret_delayed_destroy.disable_regional_secret_delayed_destroy(
+            project_id, location_id, secret_id
+        )
+    )
     assert updated_secret.version_destroy_ttl == timedelta(0)
 
 
@@ -1031,12 +1050,16 @@ def test_update_regional_secret_with_delayed_destroy(
     regional_secret_with_delayed_destroy: str,
     project_id: str,
     location_id: str,
-    version_destroy_ttl: int
+    version_destroy_ttl: int,
 ) -> None:
     secret_id = regional_secret_with_delayed_destroy
     updated_version_delayed_destroy = 118400
-    updated_secret = update_regional_secret_with_delayed_destroy.update_regional_secret_with_delayed_destroy(project_id, location_id, secret_id, updated_version_delayed_destroy)
-    assert updated_secret.version_destroy_ttl == timedelta(seconds=updated_version_delayed_destroy)
+    updated_secret = update_regional_secret_with_delayed_destroy.update_regional_secret_with_delayed_destroy(
+        project_id, location_id, secret_id, updated_version_delayed_destroy
+    )
+    assert updated_secret.version_destroy_ttl == timedelta(
+        seconds=updated_version_delayed_destroy
+    )
 
 
 def test_view_regional_secret_labels(

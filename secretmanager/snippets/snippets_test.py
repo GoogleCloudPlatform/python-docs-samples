@@ -12,16 +12,11 @@
 # See the License for the specific language governing permissions and
 
 import base64
-import uuid
+from datetime import timedelta
 import os
 import time
-from datetime import timedelta
 from typing import Iterator, Optional, Tuple, Union
-
-from google.api_core import exceptions, retry
-from google.cloud import resourcemanager_v3
-from google.cloud import secretmanager
-from google.protobuf.duration_pb2 import Duration
+import uuid
 
 from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version
@@ -50,12 +45,17 @@ from enable_secret_version_with_etag import enable_secret_version_with_etag
 from get_secret import get_secret
 from get_secret_type import get_secret_type
 from get_secret_version import get_secret_version
+from google.api_core import exceptions, retry
+from google.cloud import resourcemanager_v3
+from google.cloud import secretmanager
+from google.protobuf.duration_pb2 import Duration
 from iam_grant_access import iam_grant_access
 from iam_revoke_access import iam_revoke_access
 from list_secret_versions import list_secret_versions
 from list_secret_versions_with_filter import list_secret_versions_with_filter
 from list_secrets import list_secrets
 from list_secrets_with_filter import list_secrets_with_filter
+import pytest
 from quickstart import quickstart
 from update_secret import update_secret
 from update_secret_with_alias import update_secret_with_alias
@@ -63,8 +63,6 @@ from update_secret_with_delayed_destroy import update_secret_with_delayed_destro
 from update_secret_with_etag import update_secret_with_etag
 from view_secret_annotations import view_secret_annotations
 from view_secret_labels import view_secret_labels
-
-import pytest
 
 
 @pytest.fixture()
@@ -771,7 +769,7 @@ def test_update_secret_with_alias(secret_version: Tuple[str, str, str, str]) -> 
 
 
 def test_update_secret_with_delayed_destroy(
-    secret_with_delayed_destroy: Tuple[str, str]
+    secret_with_delayed_destroy: Tuple[str, str],
 ) -> None:
     project_id, secret_id = secret_with_delayed_destroy
     updated_version_destroy_ttl_value = 118400
