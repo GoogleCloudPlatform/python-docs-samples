@@ -17,7 +17,8 @@ from typing import Iterator, Optional, Tuple, Union
 import uuid
 
 from google.api_core import exceptions, retry
-from google.cloud import kms, parametermanager_v1, secretmanager
+from google.cloud import kms, parametermanager_v1, resourcemanager_v3, secretmanager
+import google_crc32c
 import pytest
 
 # Import the methods to be tested
@@ -43,6 +44,23 @@ from regional_samples import regional_quickstart
 from regional_samples import remove_regional_param_kms_key
 from regional_samples import render_regional_param_version
 from regional_samples import update_regional_param_kms_key
+
+from regional_samples import create_regional_param_template
+from regional_samples import create_regional_param_template_version
+from regional_samples import create_regional_param_version_with_checksum
+from regional_samples import create_regional_param_with_tags
+from regional_samples import delete_regional_param_template
+from regional_samples import delete_regional_param_template_version
+from regional_samples import disable_regional_param_template_version
+from regional_samples import enable_regional_param_template_version
+from regional_samples import get_regional_param_template
+from regional_samples import get_regional_param_template_version
+from regional_samples import get_regional_param_version_verify_checksum
+from regional_samples import list_regional_param_template_versions
+from regional_samples import list_regional_param_templates
+from regional_samples import regional_template_quickstart
+from regional_samples import render_regional_param_template_version
+from regional_samples import update_regional_param_template_labels
 
 
 @pytest.fixture()
@@ -712,3 +730,381 @@ def wait_for_ready(
             return
         time.sleep((i + 1) ** 2)
     pytest.fail(f"{key_version_name} not ready")
+
+
+@retry.Retry()
+def retry_client_delete_template(
+    client: parametermanager_v1.ParameterManagerClient,
+    request: Optional[Union[parametermanager_v1.DeleteTemplateRequest, dict]],
+) -> None:
+    # Retry to avoid 503 error & flaky issues
+    return client.delete_template(request=request)
+
+
+@retry.Retry()
+def retry_client_delete_template_version(
+    client: parametermanager_v1.ParameterManagerClient,
+    request: Optional[Union[parametermanager_v1.DeleteTemplateVersionRequest, dict]],
+) -> None:
+    # Retry to avoid 503 error & flaky issues
+    return client.delete_template_version(request=request)
+
+
+@retry.Retry()
+def retry_client_create_template(
+    client: parametermanager_v1.ParameterManagerClient,
+    request: Optional[Union[parametermanager_v1.CreateTemplateRequest, dict]],
+) -> parametermanager_v1.Template:
+    # Retry to avoid 503 error & flaky issues
+    return client.create_template(request=request)
+
+
+@pytest.fixture()
+def template_id(
+    client: parametermanager_v1.ParameterManagerClient,
+    project_id: str,
+    location_id: str,
+) -> Iterator[Tuple[str, str]]:
+    tmpl_id = f"python-template-{uuid.uuid4()}"
+    tmpl_version_id = f"python-template-version-{uuid.uuid4()}"
+
+    yield tmpl_id, tmpl_version_id
+    tmpl_path = client.template_path(project_id, location_id, tmpl_id)
+    print(f"Deleting template {tmpl_id}")
+    try:
+        time.sleep(5)
+        for version in client.list_template_versions(request={"parent": tmpl_path}):
+            print(f"Deleting template version {version.name}")
+            retry_client_delete_template_version(client, request={"name": version.name})
+        retry_client_delete_template(client, request={"name": tmpl_path})
+    except exceptions.NotFound:
+        # Template was already deleted, probably in the test
+        print(f"Template {tmpl_id} was not found.")
+
+
+@pytest.fixture()
+def template(
+    client: parametermanager_v1.ParameterManagerClient,
+    project_id: str,
+    location_id: str,
+    template_id: Tuple[str, str],
+) -> Iterator[Tuple[str, str, str]]:
+    tmpl_id, version_id = template_id
+    print(f"Creating template {tmpl_id}")
+
+    parent = client.common_location_path(project_id, location_id)
+    time.sleep(5)
+    _ = retry_client_create_template(
+        client,
+        request={
+            "parent": parent,
+            "template_id": tmpl_id,
+            "template": {"format": parametermanager_v1.TemplateFormat.TEMPLATE_FORMAT_JSON},
+        },
+    )
+
+    yield project_id, tmpl_id, version_id
+
+
+@pytest.fixture()
+def template_version(
+    client: parametermanager_v1.ParameterManagerClient,
+    location_id: str,
+    template: Tuple[str, str, str],
+) -> Iterator[Tuple[str, str, str, bytes]]:
+    project_id, tmpl_id, version_id = template
+
+    print(f"Adding template version to {tmpl_id}")
+    parent = client.template_path(project_id, location_id, tmpl_id)
+    payload = b'{"username": "{{.username}}", "host": "{{.host}}"}'
+    time.sleep(5)
+    _ = client.create_template_version(
+        request={
+            "parent": parent,
+            "template_version_id": version_id,
+            "template_version": {"payload": {"data": payload}},
+        }
+    )
+
+    yield project_id, tmpl_id, version_id, payload
+
+
+@pytest.fixture()
+def json_parameter_version(
+    client: parametermanager_v1.ParameterManagerClient,
+    project_id: str,
+    location_id: str,
+    parameter_id: Tuple[str, str],
+) -> Iterator[Tuple[str, str, str, dict]]:
+    param_id, version_id = parameter_id
+    print(f"Creating JSON parameter {param_id}")
+
+    parent = client.common_location_path(project_id, location_id)
+    time.sleep(5)
+    _ = retry_client_create_parameter(
+        client,
+        request={
+            "parent": parent,
+            "parameter_id": param_id,
+            "parameter": {"format": parametermanager_v1.ParameterFormat.JSON.name},
+        },
+    )
+    values = {"username": "test-user", "host": "localhost"}
+    _ = client.create_parameter_version(
+        request={
+            "parent": client.parameter_path(project_id, location_id, param_id),
+            "parameter_version_id": version_id,
+            "parameter_version": {"payload": {"data": json.dumps(values).encode("utf-8")}},
+        }
+    )
+
+    yield project_id, param_id, version_id, values
+
+
+@pytest.fixture()
+def tag_key_value() -> Tuple[str, str]:
+    # Tags are created outside of the tests (they require Resource Manager
+    # permissions), so the IDs are supplied through the environment.
+    tag_key = os.environ.get("PARAMETER_MANAGER_TAG_KEY")
+    tag_value = os.environ.get("PARAMETER_MANAGER_TAG_VALUE")
+    if not tag_key or not tag_value:
+        pytest.skip("PARAMETER_MANAGER_TAG_KEY and PARAMETER_MANAGER_TAG_VALUE are not set")
+    return tag_key, tag_value
+
+
+def test_regional_template_quickstart(
+    project_id: str, location_id: str, template_id: Tuple[str, str], parameter_id: Tuple[str, str]
+) -> None:
+    tmpl_id, version_id = template_id
+    param_id, _ = parameter_id
+    regional_template_quickstart.regional_template_quickstart(project_id, location_id, tmpl_id, param_id, version_id)
+
+
+def test_create_regional_param_template(
+    project_id: str, location_id: str, template_id: Tuple[str, str]
+) -> None:
+    tmpl_id, _ = template_id
+    tmpl = create_regional_param_template.create_regional_param_template(
+        project_id, location_id, tmpl_id, parametermanager_v1.TemplateFormat.TEMPLATE_FORMAT_JSON
+    )
+    assert tmpl_id in tmpl.name
+    assert tmpl.format_ == parametermanager_v1.TemplateFormat.TEMPLATE_FORMAT_JSON
+
+
+def test_create_regional_param_template_version(
+    client: parametermanager_v1.ParameterManagerClient,
+    location_id: str,
+    template: Tuple[str, str, str],
+) -> None:
+    project_id, tmpl_id, version_id = template
+    version = create_regional_param_template_version.create_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    assert tmpl_id in version.name
+    assert version_id in version.name
+    got = client.get_template_version(request={"name": version.name})
+    assert b"{{.username}}" in got.payload.data
+
+
+def test_get_regional_param_template(location_id: str, template: Tuple[str, str, str]) -> None:
+    project_id, tmpl_id, _ = template
+    tmpl = get_regional_param_template.get_regional_param_template(project_id, location_id, tmpl_id)
+    assert tmpl_id in tmpl.name
+
+
+def test_list_regional_param_templates(
+    capsys: pytest.LogCaptureFixture,
+    location_id: str,
+    template: Tuple[str, str, str],
+) -> None:
+    project_id, tmpl_id, _ = template
+    got = get_regional_param_template.get_regional_param_template(project_id, location_id, tmpl_id)
+    list_regional_param_templates.list_regional_param_templates(project_id, location_id)
+
+    out, _ = capsys.readouterr()
+    assert f"Found regional template {got.name} with format {got.format_.name}" in out
+
+
+def test_get_regional_param_template_version(
+    location_id: str, template_version: Tuple[str, str, str, bytes]
+) -> None:
+    project_id, tmpl_id, version_id, payload = template_version
+    version = get_regional_param_template_version.get_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    assert tmpl_id in version.name
+    assert version_id in version.name
+    assert version.payload.data == payload
+
+
+def test_list_regional_param_template_versions(
+    capsys: pytest.LogCaptureFixture,
+    location_id: str,
+    template_version: Tuple[str, str, str, bytes],
+) -> None:
+    project_id, tmpl_id, version_id, _ = template_version
+    version = get_regional_param_template_version.get_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    list_regional_param_template_versions.list_regional_param_template_versions(project_id, location_id, tmpl_id)
+
+    out, _ = capsys.readouterr()
+    assert f"Found regional template version: {version.name}" in out
+
+
+def test_update_regional_param_template_labels(
+    location_id: str, template: Tuple[str, str, str], label_key: str, label_value: str
+) -> None:
+    project_id, tmpl_id, _ = template
+    tmpl = update_regional_param_template_labels.update_regional_param_template_labels(
+        project_id, location_id, tmpl_id, label_key, label_value
+    )
+    assert tmpl.labels[label_key] == label_value
+    got = get_regional_param_template.get_regional_param_template(project_id, location_id, tmpl_id)
+    assert got.labels[label_key] == label_value
+
+
+def test_delete_regional_param_template(
+    client: parametermanager_v1.ParameterManagerClient,
+    location_id: str,
+    template: Tuple[str, str, str],
+) -> None:
+    project_id, tmpl_id, _ = template
+    delete_regional_param_template.delete_regional_param_template(project_id, location_id, tmpl_id)
+    with pytest.raises(exceptions.NotFound):
+        client.get_template(
+            request={"name": client.template_path(project_id, location_id, tmpl_id)}
+        )
+
+
+def test_disable_regional_param_template_version(
+    location_id: str, template_version: Tuple[str, str, str, bytes]
+) -> None:
+    project_id, tmpl_id, version_id, _ = template_version
+    version = disable_regional_param_template_version.disable_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    assert version.disabled is True
+
+
+def test_enable_regional_param_template_version(
+    client: parametermanager_v1.ParameterManagerClient,
+    location_id: str,
+    template_version: Tuple[str, str, str, bytes],
+) -> None:
+    project_id, tmpl_id, version_id, _ = template_version
+    name = client.template_version_path(project_id, location_id, tmpl_id, version_id)
+    version = client.get_template_version(request={"name": name})
+    version.disabled = True
+    client.update_template_version(
+        request={"template_version": version, "update_mask": {"paths": ["disabled"]}}
+    )
+    version = enable_regional_param_template_version.enable_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    assert version.disabled is False
+
+
+def test_delete_regional_param_template_version(
+    client: parametermanager_v1.ParameterManagerClient,
+    location_id: str,
+    template_version: Tuple[str, str, str, bytes],
+) -> None:
+    project_id, tmpl_id, version_id, _ = template_version
+    delete_regional_param_template_version.delete_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    with pytest.raises(exceptions.NotFound):
+        client.get_template_version(
+            request={
+                "name": client.template_version_path(
+                    project_id, location_id, tmpl_id, version_id
+                )
+            }
+        )
+
+
+def test_render_regional_param_template_version(
+    location_id: str,
+    template_version: Tuple[str, str, str, bytes],
+    json_parameter_version: Tuple[str, str, str, dict],
+) -> None:
+    project_id, tmpl_id, version_id, payload = template_version
+    _, param_id, param_version_id, values = json_parameter_version
+    response = render_regional_param_template_version.render_regional_param_template_version(
+        project_id, location_id, tmpl_id, version_id, param_id, param_version_id
+    )
+    assert response.payload.data == payload
+    assert param_id in response.parameter_version
+    assert json.loads(response.rendered_payload.decode("utf-8")) == values
+
+
+def test_create_regional_param_with_tags(
+    location_id: str,
+    parameter_id: Tuple[str, str],
+    tag_key_value: Tuple[str, str],
+    project_id: str,
+) -> None:
+    param_id, _ = parameter_id
+    tag_key, tag_value = tag_key_value
+    parameter = create_regional_param_with_tags.create_regional_param_with_tags(
+        project_id, location_id, param_id, tag_key, tag_value
+    )
+    assert param_id in parameter.name
+
+    # Tags are input-only, so confirm them through Resource Manager tag bindings.
+    bindings_client = resourcemanager_v3.TagBindingsClient(client_options={"api_endpoint": f"{location_id}-cloudresourcemanager.googleapis.com"})
+    bindings = bindings_client.list_tag_bindings(
+        request={"parent": f"//parametermanager.googleapis.com/{parameter.name}"}
+    )
+    assert tag_value in [binding.tag_value for binding in bindings]
+
+
+def test_create_regional_param_version_with_checksum(
+    client: parametermanager_v1.ParameterManagerClient,
+    location_id: str,
+    parameter: Tuple[str, str, str],
+) -> None:
+    project_id, param_id, version_id = parameter
+    version = create_regional_param_version_with_checksum.create_regional_param_version_with_checksum(
+        project_id, location_id, param_id, version_id
+    )
+    assert param_id in version.name
+    assert (
+        version.checksum_source
+        == parametermanager_v1.ParameterVersion.ChecksumSource.USER_SPECIFIED
+    )
+    got = client.get_parameter_version(
+        request={"name": version.name, "view": parametermanager_v1.View.FULL}
+    )
+    assert got.payload.data_crc32c == google_crc32c.value(got.payload.data)
+
+
+def test_get_regional_param_version_verify_checksum(
+    capsys: pytest.LogCaptureFixture,
+    location_id: str,
+    parameter_version: Tuple[str, str, str, bytes],
+) -> None:
+    project_id, param_id, version_id, payload = parameter_version
+    version = get_regional_param_version_verify_checksum.get_regional_param_version_verify_checksum(
+        project_id, location_id, param_id, version_id
+    )
+    assert version.payload.data == payload
+    assert version.payload.data_crc32c == google_crc32c.value(payload)
+
+    out, _ = capsys.readouterr()
+    assert "Checksum source: SERVER_GENERATED" in out
+
+
+def test_create_param_version_with_mismatched_checksum(
+    client: parametermanager_v1.ParameterManagerClient,
+    location_id: str,
+    parameter: Tuple[str, str, str],
+) -> None:
+    project_id, param_id, version_id = parameter
+    payload = b"hello world!"
+    wrong_crc32c = (google_crc32c.value(payload) + 1) % (2**32)
+    parent = client.parameter_path(project_id, location_id, param_id)
+
+    with pytest.raises(exceptions.InvalidArgument) as exc_info:
+        client.create_parameter_version(
+            request={
+                "parent": parent,
+                "parameter_version_id": version_id,
+                "parameter_version": {
+                    "payload": {"data": payload, "data_crc32c": wrong_crc32c}
+                },
+            }
+        )
+    assert "CHECKSUM_MISMATCH" in str(exc_info.value) or any(
+        getattr(detail, "reason", "") == "CHECKSUM_MISMATCH"
+        for detail in exc_info.value.details
+    )
