@@ -230,7 +230,7 @@ def parameter_with_kms(
     location_id: str,
     project_id: str,
     parameter_id: str,
-    hsm_key_id: str
+    hsm_key_id: str,
 ) -> Iterator[Tuple[str, str, str, parametermanager_v1.Parameter]]:
     param_id, version_id = parameter_id
     print(f"Creating parameter {param_id} with kms {hsm_key_id}")
@@ -412,7 +412,11 @@ def key_ring_id(
     key_id = f"{uuid.uuid4()}"
     try:
         key_ring = kms_key_client.create_key_ring(
-            request={"parent": location_name, "key_ring_id": key_ring_id, "key_ring": {}}
+            request={
+                "parent": location_name,
+                "key_ring_id": key_ring_id,
+                "key_ring": {},
+            }
         )
         yield key_ring.name, key_id
     except exceptions.AlreadyExists:
@@ -436,8 +440,7 @@ def hsm_key_id(
             "crypto_key": {
                 "purpose": kms.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT,
                 "version_template": {
-                    "algorithm":
-                        kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION,
+                    "algorithm": kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION,
                     "protection_level": kms.ProtectionLevel.HSM,
                 },
                 "labels": {"foo": "bar", "zip": "zap"},
@@ -449,9 +452,13 @@ def hsm_key_id(
     print(f"Destroying the key version {key.name}")
     try:
         time.sleep(5)
-        for key_version in kms_key_client.list_crypto_key_versions(request={"parent": key.name}):
+        for key_version in kms_key_client.list_crypto_key_versions(
+            request={"parent": key.name}
+        ):
             if key_version.state == key_version.state.ENABLED:
-                retry_client_destroy_crypto_key(kms_key_client, request={"name": key_version.name})
+                retry_client_destroy_crypto_key(
+                    kms_key_client, request={"name": key_version.name}
+                )
     except exceptions.NotFound:
         # KMS key was already deleted, probably in the test
         print(f"KMS Key {key.name} was not found.")
@@ -473,8 +480,7 @@ def updated_hsm_key_id(
             "crypto_key": {
                 "purpose": kms.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT,
                 "version_template": {
-                    "algorithm":
-                        kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION,
+                    "algorithm": kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION,
                     "protection_level": kms.ProtectionLevel.HSM,
                 },
                 "labels": {"foo": "bar", "zip": "zap"},
@@ -486,9 +492,13 @@ def updated_hsm_key_id(
     print(f"Destroying the key version {key.name}")
     try:
         time.sleep(5)
-        for key_version in kms_key_client.list_crypto_key_versions(request={"parent": key.name}):
+        for key_version in kms_key_client.list_crypto_key_versions(
+            request={"parent": key.name}
+        ):
             if key_version.state == key_version.state.ENABLED:
-                retry_client_destroy_crypto_key(kms_key_client, request={"name": key_version.name})
+                retry_client_destroy_crypto_key(
+                    kms_key_client, request={"name": key_version.name}
+                )
     except exceptions.NotFound:
         # KMS key was already deleted, probably in the test
         print(f"KMS Key {key.name} was not found.")
@@ -498,7 +508,9 @@ def test_regional_quickstart(
     project_id: str, location_id: str, parameter_id: Tuple[str, str]
 ) -> None:
     param_id, version_id = parameter_id
-    regional_quickstart.regional_quickstart(project_id, location_id, param_id, version_id)
+    regional_quickstart.regional_quickstart(
+        project_id, location_id, param_id, version_id
+    )
 
 
 def test_create_regional_param(
@@ -507,15 +519,14 @@ def test_create_regional_param(
     parameter_id: str,
 ) -> None:
     param_id, _ = parameter_id
-    parameter = create_regional_param.create_regional_param(project_id, location_id, param_id)
+    parameter = create_regional_param.create_regional_param(
+        project_id, location_id, param_id
+    )
     assert param_id in parameter.name
 
 
 def test_create_regional_param_with_kms_key(
-    project_id: str,
-    location_id: str,
-    parameter_id: str,
-    hsm_key_id: str
+    project_id: str, location_id: str, parameter_id: str, hsm_key_id: str
 ) -> None:
     param_id, _ = parameter_id
     parameter = create_regional_param_with_kms_key.create_regional_param_with_kms_key(
@@ -529,7 +540,7 @@ def test_update_regional_param_kms_key(
     project_id: str,
     location_id: str,
     parameter_with_kms: Tuple[str, str, str, str],
-    updated_hsm_key_id: str
+    updated_hsm_key_id: str,
 ) -> None:
     project_id, param_id, _, kms_key = parameter_with_kms
     parameter = update_regional_param_kms_key.update_regional_param_kms_key(
@@ -544,7 +555,7 @@ def test_remove_regional_param_kms_key(
     project_id: str,
     location_id: str,
     parameter_with_kms: Tuple[str, str, str, str],
-    hsm_key_id: str
+    hsm_key_id: str,
 ) -> None:
     project_id, param_id, _, kms_key = parameter_with_kms
     parameter = remove_regional_param_kms_key.remove_regional_param_kms_key(
@@ -625,7 +636,9 @@ def test_delete_regional_param_version(
     parameter_version: Tuple[str, str, str, str],
 ) -> None:
     project_id, param_id, version_id, _ = parameter_version
-    delete_regional_param_version.delete_regional_param_version(project_id, location_id, param_id, version_id)
+    delete_regional_param_version.delete_regional_param_version(
+        project_id, location_id, param_id, version_id
+    )
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
         name = client.parameter_version_path(
@@ -656,7 +669,9 @@ def test_enable_regional_param_version(
 
 def test_get_regional_param(parameter: Tuple[str, str, str], location_id: str) -> None:
     project_id, param_id, _ = parameter
-    snippet_param = get_regional_param.get_regional_param(project_id, location_id, param_id)
+    snippet_param = get_regional_param.get_regional_param(
+        project_id, location_id, param_id
+    )
     assert param_id in snippet_param.name
 
 
@@ -664,7 +679,9 @@ def test_get_regional_param_version(
     parameter_version: Tuple[str, str, str, str], location_id: str
 ) -> None:
     project_id, param_id, version_id, payload = parameter_version
-    version = get_regional_param_version.get_regional_param_version(project_id, location_id, param_id, version_id)
+    version = get_regional_param_version.get_regional_param_version(
+        project_id, location_id, param_id, version_id
+    )
     assert param_id in version.name
     assert version_id in version.name
     assert version.payload.data == payload
@@ -680,7 +697,10 @@ def test_list_regional_params(
     list_regional_params.list_regional_params(project_id, location_id)
 
     out, _ = capsys.readouterr()
-    assert f"Found regional parameter {got_param.name} with format {got_param.format_.name}" in out
+    assert (
+        f"Found regional parameter {got_param.name} with format {got_param.format_.name}"
+        in out
+    )
 
 
 def test_list_param_regional_versions(
@@ -692,7 +712,9 @@ def test_list_param_regional_versions(
     version_1 = get_regional_param_version.get_regional_param_version(
         project_id, location_id, param_id, version_id
     )
-    list_regional_param_versions.list_regional_param_versions(project_id, location_id, param_id)
+    list_regional_param_versions.list_regional_param_versions(
+        project_id, location_id, param_id
+    )
 
     out, _ = capsys.readouterr()
     assert param_id in out
@@ -726,7 +748,9 @@ def wait_for_ready(
     kms_key_client: kms.KeyManagementServiceClient, key_version_name: str
 ) -> None:
     for i in range(4):
-        key_version = kms_key_client.get_crypto_key_version(request={"name": key_version_name})
+        key_version = kms_key_client.get_crypto_key_version(
+            request={"name": key_version_name}
+        )
         if key_version.state == kms.CryptoKeyVersion.CryptoKeyVersionState.ENABLED:
             return
         time.sleep((i + 1) ** 2)
@@ -800,7 +824,9 @@ def template(
         request={
             "parent": parent,
             "template_id": tmpl_id,
-            "template": {"format": parametermanager_v1.TemplateFormat.TEMPLATE_FORMAT_JSON},
+            "template": {
+                "format": parametermanager_v1.TemplateFormat.TEMPLATE_FORMAT_JSON
+            },
         },
     )
 
@@ -855,7 +881,9 @@ def json_parameter_version(
         request={
             "parent": client.parameter_path(project_id, location_id, param_id),
             "parameter_version_id": version_id,
-            "parameter_version": {"payload": {"data": json.dumps(values).encode("utf-8")}},
+            "parameter_version": {
+                "payload": {"data": json.dumps(values).encode("utf-8")}
+            },
         }
     )
 
@@ -869,16 +897,23 @@ def tag_key_value() -> Tuple[str, str]:
     tag_key = os.environ.get("PARAMETER_MANAGER_TAG_KEY")
     tag_value = os.environ.get("PARAMETER_MANAGER_TAG_VALUE")
     if not tag_key or not tag_value:
-        pytest.skip("PARAMETER_MANAGER_TAG_KEY and PARAMETER_MANAGER_TAG_VALUE are not set")
+        pytest.skip(
+            "PARAMETER_MANAGER_TAG_KEY and PARAMETER_MANAGER_TAG_VALUE are not set"
+        )
     return tag_key, tag_value
 
 
 def test_regional_template_quickstart(
-    project_id: str, location_id: str, template_id: Tuple[str, str], parameter_id: Tuple[str, str]
+    project_id: str,
+    location_id: str,
+    template_id: Tuple[str, str],
+    parameter_id: Tuple[str, str],
 ) -> None:
     tmpl_id, version_id = template_id
     param_id, _ = parameter_id
-    regional_template_quickstart.regional_template_quickstart(project_id, location_id, tmpl_id, param_id, version_id)
+    regional_template_quickstart.regional_template_quickstart(
+        project_id, location_id, tmpl_id, param_id, version_id
+    )
 
 
 def test_create_regional_param_template(
@@ -886,7 +921,10 @@ def test_create_regional_param_template(
 ) -> None:
     tmpl_id, _ = template_id
     tmpl = create_regional_param_template.create_regional_param_template(
-        project_id, location_id, tmpl_id, parametermanager_v1.TemplateFormat.TEMPLATE_FORMAT_JSON
+        project_id,
+        location_id,
+        tmpl_id,
+        parametermanager_v1.TemplateFormat.TEMPLATE_FORMAT_JSON,
     )
     assert tmpl_id in tmpl.name
     assert tmpl.format_ == parametermanager_v1.TemplateFormat.TEMPLATE_FORMAT_JSON
@@ -898,16 +936,24 @@ def test_create_regional_param_template_version(
     template: Tuple[str, str, str],
 ) -> None:
     project_id, tmpl_id, version_id = template
-    version = create_regional_param_template_version.create_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    version = (
+        create_regional_param_template_version.create_regional_param_template_version(
+            project_id, location_id, tmpl_id, version_id
+        )
+    )
     assert tmpl_id in version.name
     assert version_id in version.name
     got = client.get_template_version(request={"name": version.name})
     assert b"{{.username}}" in got.payload.data
 
 
-def test_get_regional_param_template(location_id: str, template: Tuple[str, str, str]) -> None:
+def test_get_regional_param_template(
+    location_id: str, template: Tuple[str, str, str]
+) -> None:
     project_id, tmpl_id, _ = template
-    tmpl = get_regional_param_template.get_regional_param_template(project_id, location_id, tmpl_id)
+    tmpl = get_regional_param_template.get_regional_param_template(
+        project_id, location_id, tmpl_id
+    )
     assert tmpl_id in tmpl.name
 
 
@@ -917,7 +963,9 @@ def test_list_regional_param_templates(
     template: Tuple[str, str, str],
 ) -> None:
     project_id, tmpl_id, _ = template
-    got = get_regional_param_template.get_regional_param_template(project_id, location_id, tmpl_id)
+    got = get_regional_param_template.get_regional_param_template(
+        project_id, location_id, tmpl_id
+    )
     list_regional_param_templates.list_regional_param_templates(project_id, location_id)
 
     out, _ = capsys.readouterr()
@@ -928,7 +976,9 @@ def test_get_regional_param_template_version(
     location_id: str, template_version: Tuple[str, str, str, bytes]
 ) -> None:
     project_id, tmpl_id, version_id, payload = template_version
-    version = get_regional_param_template_version.get_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    version = get_regional_param_template_version.get_regional_param_template_version(
+        project_id, location_id, tmpl_id, version_id
+    )
     assert tmpl_id in version.name
     assert version_id in version.name
     assert version.payload.data == payload
@@ -940,8 +990,12 @@ def test_list_regional_param_template_versions(
     template_version: Tuple[str, str, str, bytes],
 ) -> None:
     project_id, tmpl_id, version_id, _ = template_version
-    version = get_regional_param_template_version.get_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
-    list_regional_param_template_versions.list_regional_param_template_versions(project_id, location_id, tmpl_id)
+    version = get_regional_param_template_version.get_regional_param_template_version(
+        project_id, location_id, tmpl_id, version_id
+    )
+    list_regional_param_template_versions.list_regional_param_template_versions(
+        project_id, location_id, tmpl_id
+    )
 
     out, _ = capsys.readouterr()
     assert f"Found regional template version: {version.name}" in out
@@ -955,7 +1009,9 @@ def test_update_regional_param_template_labels(
         project_id, location_id, tmpl_id, label_key, label_value
     )
     assert tmpl.labels[label_key] == label_value
-    got = get_regional_param_template.get_regional_param_template(project_id, location_id, tmpl_id)
+    got = get_regional_param_template.get_regional_param_template(
+        project_id, location_id, tmpl_id
+    )
     assert got.labels[label_key] == label_value
 
 
@@ -965,7 +1021,9 @@ def test_delete_regional_param_template(
     template: Tuple[str, str, str],
 ) -> None:
     project_id, tmpl_id, _ = template
-    delete_regional_param_template.delete_regional_param_template(project_id, location_id, tmpl_id)
+    delete_regional_param_template.delete_regional_param_template(
+        project_id, location_id, tmpl_id
+    )
     with pytest.raises(exceptions.NotFound):
         client.get_template(
             request={"name": client.template_path(project_id, location_id, tmpl_id)}
@@ -976,7 +1034,11 @@ def test_disable_regional_param_template_version(
     location_id: str, template_version: Tuple[str, str, str, bytes]
 ) -> None:
     project_id, tmpl_id, version_id, _ = template_version
-    version = disable_regional_param_template_version.disable_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    version = (
+        disable_regional_param_template_version.disable_regional_param_template_version(
+            project_id, location_id, tmpl_id, version_id
+        )
+    )
     assert version.disabled is True
 
 
@@ -992,7 +1054,11 @@ def test_enable_regional_param_template_version(
     client.update_template_version(
         request={"template_version": version, "update_mask": {"paths": ["disabled"]}}
     )
-    version = enable_regional_param_template_version.enable_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    version = (
+        enable_regional_param_template_version.enable_regional_param_template_version(
+            project_id, location_id, tmpl_id, version_id
+        )
+    )
     assert version.disabled is False
 
 
@@ -1002,7 +1068,9 @@ def test_delete_regional_param_template_version(
     template_version: Tuple[str, str, str, bytes],
 ) -> None:
     project_id, tmpl_id, version_id, _ = template_version
-    delete_regional_param_template_version.delete_regional_param_template_version(project_id, location_id, tmpl_id, version_id)
+    delete_regional_param_template_version.delete_regional_param_template_version(
+        project_id, location_id, tmpl_id, version_id
+    )
     with pytest.raises(exceptions.NotFound):
         client.get_template_version(
             request={
@@ -1020,8 +1088,10 @@ def test_render_regional_param_template_version(
 ) -> None:
     project_id, tmpl_id, version_id, payload = template_version
     _, param_id, param_version_id, values = json_parameter_version
-    response = render_regional_param_template_version.render_regional_param_template_version(
-        project_id, location_id, tmpl_id, version_id, param_id, param_version_id
+    response = (
+        render_regional_param_template_version.render_regional_param_template_version(
+            project_id, location_id, tmpl_id, version_id, param_id, param_version_id
+        )
     )
     assert response.payload.data == payload
     assert param_id in response.parameter_version
@@ -1042,7 +1112,11 @@ def test_create_regional_param_with_tags(
     assert param_id in parameter.name
 
     # Tags are input-only, so confirm them through Resource Manager tag bindings.
-    bindings_client = resourcemanager_v3.TagBindingsClient(client_options={"api_endpoint": f"{location_id}-cloudresourcemanager.googleapis.com"})
+    bindings_client = resourcemanager_v3.TagBindingsClient(
+        client_options={
+            "api_endpoint": f"{location_id}-cloudresourcemanager.googleapis.com"
+        }
+    )
     bindings = bindings_client.list_tag_bindings(
         request={"parent": f"//parametermanager.googleapis.com/{parameter.name}"}
     )
@@ -1119,7 +1193,9 @@ def test_bind_tags_to_regional_param(
 ) -> None:
     param_id, _ = parameter_id
     _, tag_value = tag_key_value
-    binding = bind_tags_to_regional_param.bind_tags_to_regional_param(project_id, location_id, param_id, tag_value)
+    binding = bind_tags_to_regional_param.bind_tags_to_regional_param(
+        project_id, location_id, param_id, tag_value
+    )
     assert binding.tag_value == tag_value
     assert param_id in binding.parent
 
@@ -1141,5 +1217,7 @@ def test_get_regional_param_tags(
             "parameter": {"tags": {tag_key: tag_value}},
         },
     )
-    bindings = get_regional_param_tags.get_regional_param_tags(project_id, location_id, param_id)
+    bindings = get_regional_param_tags.get_regional_param_tags(
+        project_id, location_id, param_id
+    )
     assert tag_value in [binding.tag_value for binding in bindings]

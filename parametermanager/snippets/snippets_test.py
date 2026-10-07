@@ -741,7 +741,9 @@ def template(
         request={
             "parent": parent,
             "template_id": tmpl_id,
-            "template": {"format": parametermanager_v1.TemplateFormat.TEMPLATE_FORMAT_JSON},
+            "template": {
+                "format": parametermanager_v1.TemplateFormat.TEMPLATE_FORMAT_JSON
+            },
         },
     )
 
@@ -796,7 +798,9 @@ def json_parameter_version(
         request={
             "parent": client.parameter_path(project_id, location_id, param_id),
             "parameter_version_id": version_id,
-            "parameter_version": {"payload": {"data": json.dumps(values).encode("utf-8")}},
+            "parameter_version": {
+                "payload": {"data": json.dumps(values).encode("utf-8")}
+            },
         }
     )
 
@@ -810,12 +814,17 @@ def tag_key_value() -> Tuple[str, str]:
     tag_key = os.environ.get("PARAMETER_MANAGER_TAG_KEY")
     tag_value = os.environ.get("PARAMETER_MANAGER_TAG_VALUE")
     if not tag_key or not tag_value:
-        pytest.skip("PARAMETER_MANAGER_TAG_KEY and PARAMETER_MANAGER_TAG_VALUE are not set")
+        pytest.skip(
+            "PARAMETER_MANAGER_TAG_KEY and PARAMETER_MANAGER_TAG_VALUE are not set"
+        )
     return tag_key, tag_value
 
 
 def test_template_quickstart(
-    project_id: str, location_id: str, template_id: Tuple[str, str], parameter_id: Tuple[str, str]
+    project_id: str,
+    location_id: str,
+    template_id: Tuple[str, str],
+    parameter_id: Tuple[str, str],
 ) -> None:
     tmpl_id, version_id = template_id
     param_id, _ = parameter_id
@@ -892,9 +901,7 @@ def test_update_param_template_labels(
     location_id: str, template: Tuple[str, str, str], label_key: str, label_value: str
 ) -> None:
     project_id, tmpl_id, _ = template
-    tmpl = update_param_template_labels(
-        project_id, tmpl_id, label_key, label_value
-    )
+    tmpl = update_param_template_labels(project_id, tmpl_id, label_key, label_value)
     assert tmpl.labels[label_key] == label_value
     got = get_param_template(project_id, tmpl_id)
     assert got.labels[label_key] == label_value
@@ -977,9 +984,7 @@ def test_create_param_with_tags(
 ) -> None:
     param_id, _ = parameter_id
     tag_key, tag_value = tag_key_value
-    parameter = create_param_with_tags(
-        project_id, param_id, tag_key, tag_value
-    )
+    parameter = create_param_with_tags(project_id, param_id, tag_key, tag_value)
     assert param_id in parameter.name
 
     # Tags are input-only, so confirm them through Resource Manager tag bindings.
@@ -996,9 +1001,7 @@ def test_create_param_version_with_checksum(
     parameter: Tuple[str, str, str],
 ) -> None:
     project_id, param_id, version_id = parameter
-    version = create_param_version_with_checksum(
-        project_id, param_id, version_id
-    )
+    version = create_param_version_with_checksum(project_id, param_id, version_id)
     assert param_id in version.name
     assert (
         version.checksum_source
@@ -1016,9 +1019,7 @@ def test_get_param_version_verify_checksum(
     parameter_version: Tuple[str, str, str, bytes],
 ) -> None:
     project_id, param_id, version_id, payload = parameter_version
-    version = get_param_version_verify_checksum(
-        project_id, param_id, version_id
-    )
+    version = get_param_version_verify_checksum(project_id, param_id, version_id)
     assert version.payload.data == payload
     assert version.payload.data_crc32c == google_crc32c.value(payload)
 
