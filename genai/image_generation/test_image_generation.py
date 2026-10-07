@@ -22,8 +22,6 @@ import os
 
 from google.cloud import storage
 
-import pytest
-
 import imggen_canny_ctrl_type_with_txt_img
 import imggen_inpainting_insert_mask_with_txt_img
 import imggen_inpainting_insert_with_txt_img
@@ -37,6 +35,8 @@ import imggen_subj_refer_ctrl_refer_with_txt_imgs
 import imggen_upscale_with_img
 import imggen_virtual_try_on_with_txt_img
 import imggen_with_txt
+
+import pytest
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
