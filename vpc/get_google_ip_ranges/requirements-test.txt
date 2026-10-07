@@ -1,0 +1,6 @@
+pytest==8.3.4
+pytest-mock==3.15.1
+flake8==7.3.0
+flake8-annotations==3.2.0
+flake8-import-order==0.19.2
+black==26.5.1
