@@ -23,10 +23,14 @@ from google.cloud import storage
 def list_buckets_ip_filtering() -> List[storage.Bucket]:
     """Lists all buckets in the project with their IP filtering status."""
     storage_client = storage.Client()
-    buckets = list(storage_client.list_buckets(projection="full"))
+    buckets = list(storage_client.list_buckets())
 
     for bucket in buckets:
-        status = bucket.ip_filter.mode if bucket.ip_filter else "Not Configured"
+        status = (
+            bucket.ip_filter.mode
+            if bucket.ip_filter and bucket.ip_filter.mode
+            else "Not Configured"
+        )
         print(f"Bucket: {bucket.name}, IP Filter Mode: {status}")
 
     return buckets

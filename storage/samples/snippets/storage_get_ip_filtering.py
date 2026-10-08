@@ -36,21 +36,8 @@ def get_ip_filtering(bucket_name: str) -> Optional[IPFilter]:
         print(f"Bucket {bucket_name} has no IP Filter configured.")
         return None
 
-    print(f"IP Filter Configuration for {bucket_name}:")
-    print(f"Mode: {ip_filter.mode}")
-    print(f"Allow All Service Agent Access: {ip_filter.allow_all_service_agent_access}")
-    print(f"Allow Cross Org VPCs: {ip_filter.allow_cross_org_vpcs}")
-
-    if ip_filter.public_network_source:
-        print(
-            f"Public CIDR Ranges: {ip_filter.public_network_source.allowed_ip_cidr_ranges}"
-        )
-
-    if ip_filter.vpc_network_sources:
-        for vpc in ip_filter.vpc_network_sources:
-            print(
-                f"VPC Network: {vpc.network}, CIDR Ranges: {vpc.allowed_ip_cidr_ranges}"
-            )
+    print(f"IP Filter mode: {ip_filter.mode}")
+    print(f"IP Filter configuration: {ip_filter._to_api_resource()}")
 
     return ip_filter
 

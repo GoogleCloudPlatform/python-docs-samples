@@ -38,35 +38,25 @@ def delete_ip_filtering_rules(
 
     ip_filter = bucket.ip_filter
     if not ip_filter:
-        print(f"Bucket {bucket_name} has no IP Filter configuration.")
+        print(f"No IP filter configuration found for bucket {bucket_name}.")
         return bucket
 
-    modified = False
     if public_range_to_delete and ip_filter.public_network_source:
         ranges = ip_filter.public_network_source.allowed_ip_cidr_ranges
         if ranges and public_range_to_delete in ranges:
             ranges.remove(public_range_to_delete)
-            modified = True
 
     if vpc_network_to_delete and ip_filter.vpc_network_sources:
-        initial_len = len(ip_filter.vpc_network_sources)
         ip_filter.vpc_network_sources = [
             v
             for v in ip_filter.vpc_network_sources
             if v.network != vpc_network_to_delete
         ]
-        if len(ip_filter.vpc_network_sources) != initial_len:
-            modified = True
 
-    if modified:
-        # Re-assign to the bucket property to force google-cloud-storage to register
-        # the nested changes for the patch() call.
-        bucket.ip_filter = ip_filter
-        bucket.patch()
-        print(f"Updated IP filtering rules for bucket {bucket_name}.")
-    else:
-        print("No changes were made to the bucket's IP filters.")
+    bucket.ip_filter = ip_filter
+    bucket.patch()
 
+    print(f"Updated IP filtering rules for bucket {bucket_name}.")
     return bucket
 
 
@@ -75,7 +65,8 @@ def delete_ip_filtering_rules(
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(
-            "Usage: python storage_delete_ip_filtering_rules.py <bucket_name> [public_range_to_delete] [vpc_network_to_delete]"
+            "Usage: python storage_delete_ip_filtering_rules.py <bucket_name> "
+            "[public_range_to_delete] [vpc_network_to_delete]"
         )
         sys.exit(1)
     delete_ip_filtering_rules(

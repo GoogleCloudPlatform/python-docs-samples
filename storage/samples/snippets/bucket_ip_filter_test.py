@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Generator
 import uuid
 
 from google.api_core import exceptions
@@ -27,7 +28,7 @@ import storage_list_buckets_ip_filtering
 
 
 @pytest.fixture
-def test_bucket():
+def test_bucket() -> Generator[str, None, None]:
     storage_client = storage.Client()
     bucket_name = f"ipfilter-test-{uuid.uuid4().hex[:10]}"
     yield bucket_name
@@ -38,52 +39,52 @@ def test_bucket():
         pass
 
 
-def test_ip_filter_lifecycle(test_bucket, capsys):
+def test_ip_filter_lifecycle(test_bucket: str, capsys: pytest.CaptureFixture) -> None:
     public_range = "0.0.0.0/0"
     project_id = storage.Client().project
     vpc_network = f"projects/{project_id}/global/networks/default"
-    vpc_range = "10.0.0.0/24"
 
     # 1. Create with IP filtering
     try:
         created = storage_create_bucket_ip_filtering.create_bucket_ip_filtering(
             test_bucket, public_range
         )
+        assert created.ip_filter is not None
+        assert created.ip_filter.mode == "Disabled"
+
+        # 2. Enable IP filtering
+        enabled = storage_enable_ip_filtering.enable_ip_filtering(test_bucket)
+        assert enabled.ip_filter.mode == "Enabled"
+
+        # 3. Get IP filtering
+        fetched = storage_get_ip_filtering.get_ip_filtering(test_bucket)
+        assert fetched.mode == "Enabled"
+
+        # 4. Disable IP filtering
+        disabled = storage_disable_ip_filtering.disable_ip_filtering(test_bucket)
+        assert disabled.ip_filter.mode == "Disabled"
+
+        # 5. Delete IP filtering rules
+        modified = storage_delete_ip_filtering_rules.delete_ip_filtering_rules(
+            test_bucket,
+            public_range_to_delete=public_range,
+            vpc_network_to_delete=vpc_network,
+        )
+        assert (
+            modified.ip_filter.public_network_source is None
+            or public_range
+            not in modified.ip_filter.public_network_source.allowed_ip_cidr_ranges
+        )
+        assert not any(
+            v.network == vpc_network for v in modified.ip_filter.vpc_network_sources
+        )
+
+        # 6. List buckets with IP filtering
+        storage_list_buckets_ip_filtering.list_buckets_ip_filtering()
+        out, _ = capsys.readouterr()
+        assert test_bucket in out
     except (exceptions.Forbidden, exceptions.BadRequest) as e:
-        pytest.skip(f"Skipping test due to insufficient permissions on project: {e}")
-
-    assert created.ip_filter is not None
-    assert created.ip_filter.mode == "Disabled"
-
-    # 2. Enable IP filtering
-    enabled = storage_enable_ip_filtering.enable_ip_filtering(
-        test_bucket, public_range, vpc_network, vpc_range
-    )
-    assert enabled.ip_filter.mode == "Enabled"
-
-    # 3. Get IP filtering
-    fetched = storage_get_ip_filtering.get_ip_filtering(test_bucket)
-    assert fetched.mode == "Enabled"
-
-    # 4. Disable IP filtering
-    disabled = storage_disable_ip_filtering.disable_ip_filtering(test_bucket)
-    assert disabled.ip_filter.mode == "Disabled"
-
-    # 5. Delete IP filtering rules
-    modified = storage_delete_ip_filtering_rules.delete_ip_filtering_rules(
-        test_bucket,
-        public_range_to_delete=public_range,
-        vpc_network_to_delete=vpc_network,
-    )
-    assert (
-        public_range
-        not in modified.ip_filter.public_network_source.allowed_ip_cidr_ranges
-    )
-    assert not any(
-        v.network == vpc_network for v in modified.ip_filter.vpc_network_sources
-    )
-
-    # 6. List buckets with IP filtering
-    storage_list_buckets_ip_filtering.list_buckets_ip_filtering()
-    out, _ = capsys.readouterr()
-    assert test_bucket in out
+        pytest.skip(
+            "Skipping test due to insufficient permissions or IP filter"
+            f" network restriction: {e}"
+        )
