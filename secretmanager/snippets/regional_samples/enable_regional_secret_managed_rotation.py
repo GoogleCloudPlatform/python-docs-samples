@@ -51,8 +51,7 @@ def enable_regional_secret_managed_rotation(
     # Build the resource name of the secret.
     parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
-    # Enable managed rotation. Leaving password unset lets Secret Manager
-    # generate a secure password itself.
+    # Enable managed rotation.
     response = client.enable_managed_rotation(
         request={
             "parent": parent,

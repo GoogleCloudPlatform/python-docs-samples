@@ -28,10 +28,7 @@ def get_regional_secret_type(
     project_id: str, location_id: str, secret_id: str
 ) -> secretmanager_v1.Secret:
     """
-    Get and print the secret type (e.g. CLOUD_SQL_DB_CREDENTIALS,
-    ACCESS_KEY, CERTIFICATE, OTHER_DB_CREDENTIALS, OTHER, or
-    SECRET_TYPE_UNSPECIFIED for a secret with no type restriction) of the
-    given secret.
+    Gets the secret type of the given regional secret.
     """
 
     # Endpoint to call the regional Secret Manager API.

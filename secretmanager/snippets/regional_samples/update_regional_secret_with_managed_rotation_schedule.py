@@ -48,11 +48,11 @@ def update_regional_secret_with_managed_rotation_schedule(
     # Build the resource name of the secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
-    # The rotation schedule can be configured before or after enabling managed
-    # rotation; EnableManagedRotation does not need to be called first. Setting
-    # rotation also works on other secret types if Pub/Sub topics are
-    # configured; what is unique to CLOUD_SQL_DB_CREDENTIALS is that Pub/Sub
-    # topics are not required.
+    # The rotation schedule of a CLOUD_SQL_DB_CREDENTIALS secret can be set
+    # before or after enabling managed rotation; EnableManagedRotation does not
+    # need to be called first. Other secret types also support a rotation
+    # schedule, but only when Pub/Sub topics are configured. Pub/Sub topics are
+    # not required for CLOUD_SQL_DB_CREDENTIALS.
     # next_rotation_time and rotation_period must be set together.
     next_rotation_timestamp = int(time.time()) + rotation_period_seconds
 
