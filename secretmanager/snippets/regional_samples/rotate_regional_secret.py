@@ -13,8 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for triggering a managed
-rotation of a Cloud SQL DB credentials secret.
+Command line application and sample code for triggering an adhoc rotation for
+the managed CLOUD_SQL_DB_CREDENTIALS typed secret.
 """
 
 # [START secretmanager_rotate_regional_secret]
@@ -30,11 +30,8 @@ def rotate_regional_secret(
     secret_id: str,
 ) -> secretmanager_v1.SecretVersion:
     """
-    Trigger a managed rotation for a Cloud SQL DB credentials secret.
-    Managed rotation must already be enabled on the secret (see
-    enable_regional_secret_managed_rotation.py). Each call generates a new
-    password, updates the Cloud SQL user, and adds the result as a new
-    secret version.
+    Triggers an adhoc rotation for the managed CLOUD_SQL_DB_CREDENTIALS
+    typed secret.
     """
 
     # Endpoint to call the regional Secret Manager API.

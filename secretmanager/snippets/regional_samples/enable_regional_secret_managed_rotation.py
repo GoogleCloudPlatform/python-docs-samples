@@ -13,8 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for enabling managed rotation of
-a Cloud SQL DB credentials secret.
+Command line application and sample code to enable managed rotation of a
+CLOUD_SQL_DB_CREDENTIALS typed secret.
 """
 
 # [START secretmanager_enable_regional_secret_managed_rotation]
@@ -32,21 +32,12 @@ def enable_regional_secret_managed_rotation(
     username: str,
 ) -> secretmanager_v1.SecretVersion:
     """
-    Enable managed rotation for a Cloud SQL DB credentials secret. This
-    links the secret to a Cloud SQL instance and database user, and can
-    only be called once per secret. It adds the secret's first version and
-    sets the matching password on the Cloud SQL user, taking the place of
-    a manually added secret version, which this secret type doesn't
-    support. Afterwards, use rotate_regional_secret.py to trigger further
-    rotations.
-
-    instance_id is the bare Cloud SQL instance ID (e.g. "my-instance") --
-    not a connection name. Neither the project nor the region should be
-    included: passing "PROJECT_ID:INSTANCE_ID" (as gcloud's own
-    `enable-managed-rotation --help` examples misleadingly show) or the
-    full "PROJECT_ID:LOCATION_ID:INSTANCE_ID" connection name both fail --
-    the service already knows the project from the secret's own path, and
-    prepends it internally, so a qualified value ends up double-prefixed.
+    Enables managed rotation of a CLOUD_SQL_DB_CREDENTIALS typed secret.
+    It validates and enables the rotation, adding a version and sets the
+    passed password (optional).
+    Note: AddSecretVersion is disabled on the CLOUD_SQL_DB_CREDENTIALS
+    currently and for any necessary manual rotations please trigger
+    rotate_secret.
     """
 
     # Endpoint to call the regional Secret Manager API.

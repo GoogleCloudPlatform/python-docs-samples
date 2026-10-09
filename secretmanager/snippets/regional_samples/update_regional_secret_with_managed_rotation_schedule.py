@@ -13,8 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for reconfiguring the recurring
-rotation schedule on a Cloud SQL DB credentials secret.
+Command line application and sample code for updating the rotation schedule
+of a CLOUD_SQL_DB_CREDENTIALS typed secret.
 """
 
 # [START secretmanager_update_regional_secret_with_managed_rotation_schedule]
@@ -34,18 +34,7 @@ def update_regional_secret_with_managed_rotation_schedule(
     rotation_period_seconds: int,
 ) -> secretmanager_v1.Secret:
     """
-    Reconfigure the recurring rotation schedule on a secret that already
-    has Cloud SQL managed rotation enabled (see
-    enable_regional_secret_managed_rotation.py). This only applies to
-    regional secrets of the CLOUD_SQL_DB_CREDENTIALS type -- calling it on
-    any other secret type, or before managed rotation has been enabled,
-    fails.
-
-    rotation_period_seconds is the interval between rotations, in whole
-    seconds. The service requires it to be at least 3600 (1 hour), and the
-    derived next_rotation_time (now + rotation_period_seconds) must be at
-    least 300 seconds (5 minutes) in the future -- both are enforced by the
-    API, not checked client-side here.
+    Updates the rotation schedule of a CLOUD_SQL_DB_CREDENTIALS typed secret.
     """
 
     # Endpoint to call the regional Secret Manager API.
@@ -59,6 +48,11 @@ def update_regional_secret_with_managed_rotation_schedule(
     # Build the resource name of the secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
+    # The rotation schedule can be configured before or after enabling managed
+    # rotation; EnableManagedRotation does not need to be called first. Setting
+    # rotation also works on other secret types if Pub/Sub topics are
+    # configured; what is unique to CLOUD_SQL_DB_CREDENTIALS is that Pub/Sub
+    # topics are not required.
     # next_rotation_time and rotation_period must be set together.
     next_rotation_timestamp = int(time.time()) + rotation_period_seconds
 
@@ -71,11 +65,8 @@ def update_regional_secret_with_managed_rotation_schedule(
         },
     }
 
-    # Mask only the two subfields being set here, not the whole "rotation"
-    # submessage -- that would also include managed_rotation_status, which
-    # is output-only and rejects a whole-submessage replace with "immutable
-    # and cannot be updated" (confirmed empirically against a live
-    # project).
+    # Mask only the rotation subfields being set, not the whole "rotation"
+    # submessage.
     update_mask = {"paths": ["rotation.next_rotation_time", "rotation.rotation_period"]}
 
     # Update the secret.

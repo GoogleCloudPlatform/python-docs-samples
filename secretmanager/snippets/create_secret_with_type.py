@@ -30,13 +30,8 @@ def create_secret_with_type(
     secret_type: secretmanager.Secret.SecretType,
 ) -> secretmanager.Secret:
     """
-    Create a new secret with the given secret type restriction (e.g.
-    ACCESS_KEY, CERTIFICATE, OTHER_DB_CREDENTIALS, or OTHER -- use
-    CLOUD_SQL_DB_CREDENTIALS only for a regional secret that will go
-    through enable_regional_secret_managed_rotation; see the
-    regional_samples directory). Unlike CLOUD_SQL_DB_CREDENTIALS, these
-    other secret types are plain metadata tags: they don't require any
-    additional credentials payload at creation time.
+    Creates a new secret with the given secret type.
+    Note: CLOUD_SQL_DB_CREDENTIALS is only supported in the regional secret.
     """
 
     # Create the Secret Manager client.

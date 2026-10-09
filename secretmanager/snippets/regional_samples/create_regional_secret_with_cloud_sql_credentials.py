@@ -13,8 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for creating a new secret that is
-eligible for Cloud SQL managed rotation.
+Command line application and sample code for creating a new secret with type
+CLOUD_SQL_DB_CREDENTIALS, eligible for managed rotation.
 """
 
 # [START secretmanager_create_regional_secret_with_cloud_sql_credentials]
@@ -30,11 +30,7 @@ def create_regional_secret_with_cloud_sql_credentials(
     secret_id: str,
 ) -> secretmanager_v1.Secret:
     """
-    Create a new secret with the Cloud SQL DB credentials secret type. This
-    type is required to enable Secret Manager's automatic rotation of Cloud
-    SQL passwords. It can only be set when the secret is created, and the
-    secret's location must match the region of the target Cloud SQL
-    instance.
+    Creates a new regional secret with type CLOUD_SQL_DB_CREDENTIALS.
     """
 
     # Endpoint to call the regional Secret Manager API.
@@ -62,11 +58,11 @@ def create_regional_secret_with_cloud_sql_credentials(
     # Print the new secret name.
     print(f"Created secret: {response.name}")
 
-    # This built-in identity is what you grant Cloud SQL IAM permissions to,
-    # so that Secret Manager can rotate the database password on its behalf.
+    # Grant this identity the Cloud SQL User rotate IAM permissions to enable
+    # managed rotation.
     print(
-        "Grant this identity Cloud SQL IAM permissions to enable rotation: "
-        f"{response.policy_member.iam_policy_uid_principal}"
+        "Grant the Cloud SQL User rotate IAM permissions to enable managed "
+        f"rotation to: {response.policy_member.iam_policy_uid_principal}"
     )
 
     return response
