@@ -25,11 +25,7 @@ def create_regional_param_template_version(
     project_id: str, location_id: str, template_id: str, version_id: str
 ) -> parametermanager_v1.TemplateVersion:
     """
-    Creates a new version of an existing template in the specified region of the
-    specified project using the Google Cloud Parameter Manager SDK. The payload
-    is a JSON document with a placeholder, {{.variableName}}, for each value
-    that is resolved from a parameter version when the template version is
-    rendered.
+    Creates a new template version with placeholders in its payload.
 
     Args:
         project_id (str): The ID of the project.
@@ -63,8 +59,7 @@ def create_regional_param_template_version(
     # Build the resource name of the template.
     parent = client.template_path(project_id, location_id, template_id)
 
-    # Define the template payload. Each {{.variableName}} placeholder is
-    # replaced with the matching key of the parameter version at render time.
+    # Define the template payload.
     payload_data = {"username": "{{.username}}", "host": "{{.host}}"}
     payload = parametermanager_v1.TemplateVersionPayload(
         data=json.dumps(payload_data).encode("utf-8")

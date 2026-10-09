@@ -25,8 +25,7 @@ def bind_tags_to_param(
     project_id: str, parameter_id: str, tag_value: str
 ) -> resourcemanager_v3.TagBinding:
     """
-    Creates a parameter in the global location of the specified project and then
-    binds an existing tag value to it through the Resource Manager API.
+    Creates a parameter and binds a tag value to it.
 
     Args:
         project_id (str): The ID of the project.

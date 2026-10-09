@@ -25,9 +25,7 @@ def get_param_version_verify_checksum(
     project_id: str, parameter_id: str, version_id: str
 ) -> parametermanager_v1.ParameterVersion:
     """
-    Retrieves a specific version of an existing parameter in the global location
-    of the specified project and verifies the returned payload against the
-    returned CRC32C checksum using the Google Cloud Parameter Manager SDK.
+    Gets a parameter version and verifies its payload checksum.
 
     Args:
         project_id (str): The ID of the project.
@@ -61,8 +59,7 @@ def get_param_version_verify_checksum(
     )
     response = client.get_parameter_version(request=request)
 
-    # Recompute the CRC32C checksum of the payload and compare it with the
-    # checksum returned by the server.
+    # Verify the payload checksum.
     computed_crc32c = google_crc32c.value(response.payload.data)
     if computed_crc32c != response.payload.data_crc32c:
         raise ValueError(f"Checksum mismatch for {response.name}: data corrupted")

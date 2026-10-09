@@ -25,10 +25,7 @@ def get_regional_param_tags(
     project_id: str, location_id: str, parameter_id: str
 ) -> list[resourcemanager_v3.TagBinding]:
     """
-    Gets the tags bound to an existing parameter in the specified region of the
-    specified project.
-    Tags are input-only on the parameter itself, so they are read as
-    tag bindings through the Resource Manager API.
+    Gets the tag bindings of a parameter.
 
     Args:
         project_id (str): The ID of the project.
@@ -62,8 +59,7 @@ def get_regional_param_tags(
         }
     )
 
-    # Build the resource name of the parameter and get it. The parameter name
-    # contains the project number, which the tag bindings parent requires.
+    # Get the parameter.
     name = client.parameter_path(project_id, location_id, parameter_id)
     parameter = client.get_parameter(request={"name": name})
 

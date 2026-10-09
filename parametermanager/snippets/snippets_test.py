@@ -810,8 +810,7 @@ def json_parameter_version(
 
 @pytest.fixture()
 def tag_key_value() -> Tuple[str, str]:
-    # Tags are created outside of the tests (they require Resource Manager
-    # permissions), so the IDs are supplied through the environment.
+    # Read the tag key and value from the environment.
     tag_key = os.environ.get("PARAMETER_MANAGER_TAG_KEY")
     tag_value = os.environ.get("PARAMETER_MANAGER_TAG_VALUE")
     if not tag_key or not tag_value:
@@ -988,7 +987,7 @@ def test_create_param_with_tags(
     parameter = create_param_with_tags(project_id, param_id, tag_key, tag_value)
     assert param_id in parameter.name
 
-    # Tags are input-only, so confirm them through Resource Manager tag bindings.
+    # Check the tag bindings of the parameter.
     bindings_client = resourcemanager_v3.TagBindingsClient()
     bindings = bindings_client.list_tag_bindings(
         request={"parent": f"//parametermanager.googleapis.com/{parameter.name}"}

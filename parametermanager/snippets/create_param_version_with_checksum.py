@@ -25,10 +25,7 @@ def create_param_version_with_checksum(
     project_id: str, parameter_id: str, version_id: str
 ) -> parametermanager_v1.ParameterVersion:
     """
-    Creates a new version of an existing parameter in the global location of the
-    specified project, sending a CRC32C checksum of the payload so that the
-    server can verify the data it received, using the Google Cloud Parameter
-    Manager SDK.
+    Creates a parameter version with a CRC32C checksum of the payload.
 
     Args:
         project_id (str): The ID of the project.
@@ -57,7 +54,7 @@ def create_param_version_with_checksum(
     # Build the resource name of the parameter.
     parent = client.parameter_path(project_id, "global", parameter_id)
 
-    # Define the payload and compute its CRC32C checksum (Castagnoli).
+    # Define the payload and compute its checksum.
     payload_data = b"hello world!"
     data_crc32c = google_crc32c.value(payload_data)
 
@@ -72,8 +69,7 @@ def create_param_version_with_checksum(
         ),
     )
 
-    # Create the parameter version. The request fails with a
-    # CHECKSUM_MISMATCH error if the checksum does not match the payload.
+    # Create the parameter version.
     response = client.create_parameter_version(request=request)
 
     # Print the newly created parameter version name and checksum source.

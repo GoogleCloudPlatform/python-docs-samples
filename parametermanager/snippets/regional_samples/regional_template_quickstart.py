@@ -27,9 +27,7 @@ def regional_template_quickstart(
     version_id: str,
 ) -> None:
     """
-    Quickstart example for using Google Cloud Parameter Manager templates to
-    create a regional template and a template version with placeholders, create a
-    parameter version that holds the values, and render the template version.
+    Creates a template, a parameter version and renders the template version.
 
     Args:
         project_id (str): The ID of the project.

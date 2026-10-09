@@ -25,10 +25,7 @@ def create_regional_param_with_tags(
     project_id: str, location_id: str, parameter_id: str, tag_key: str, tag_value: str
 ) -> parametermanager_v1.Parameter:
     """
-    Creates a parameter with a tag in the specified region of the specified
-    project using the Google Cloud Parameter Manager SDK. Tags can only be set
-    when the parameter is created. They are not returned when the parameter is
-    retrieved. To view a tag binding, use the Resource Manager API.
+    Creates a parameter with a tag.
 
     Args:
         project_id (str): The ID of the project.

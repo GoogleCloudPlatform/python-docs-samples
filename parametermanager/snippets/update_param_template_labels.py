@@ -69,8 +69,7 @@ def update_param_template_labels(
     )
     client.update_template(request=request)
 
-    # The update response does not include the labels, so get the template
-    # again to read the stored labels.
+    # Get the updated template.
     response = client.get_template(request={"name": name})
 
     # Print the updated labels.

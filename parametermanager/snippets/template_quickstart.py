@@ -23,9 +23,7 @@ def template_quickstart(
     project_id: str, template_id: str, parameter_id: str, version_id: str
 ) -> None:
     """
-    Quickstart example for using Google Cloud Parameter Manager templates to
-    create a template and a template version with placeholders, create a
-    parameter version that holds the values, and render the template version.
+    Creates a template, a parameter version and renders the template version.
 
     Args:
         project_id (str): The ID of the project.
