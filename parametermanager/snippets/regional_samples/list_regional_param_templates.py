@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,27 +13,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for listing regional parameters.
+command line application and sample code for
+listing templates.
 """
 
 
-# [START parametermanager_list_regional_params]
-def list_regional_params(project_id: str, location_id: str) -> None:
+# [START parametermanager_list_regional_param_templates]
+def list_regional_param_templates(project_id: str, location_id: str) -> None:
     """
-    Lists all parameters in the specified region for the specified
-    project using the Google Cloud Parameter Manager SDK.
+    Lists all templates in the specified region of the specified project using
+    the Google Cloud Parameter Manager SDK.
 
     Args:
-        project_id (str): The ID of the project where
-        the parameters are located.
-        location_id (str): The ID of the region where
-        the parameters are located.
+        project_id (str): The ID of the project.
+        location_id (str): The region where the resources are located.
 
     Returns:
         None
 
     Example:
-        list_regional_params(
+        list_regional_param_templates(
             "my-project",
             "us-central1"
         )
@@ -50,10 +49,9 @@ def list_regional_params(project_id: str, location_id: str) -> None:
     # Build the resource name of the parent project in the specified region.
     parent = client.common_location_path(project_id, location_id)
 
-    # List all parameters in the specified parent project and region.
-    for parameter in client.list_parameters(parent=parent):
+    # List all templates in the parent project and location.
+    for template in client.list_templates(parent=parent):
         print(
-            f"Found regional parameter {parameter.name} with format {parameter.format_.name}"
+            f"Found regional template {template.name} with format {template.format_.name}"
         )
-
-    # [END parametermanager_list_regional_params]
+    # [END parametermanager_list_regional_param_templates]
