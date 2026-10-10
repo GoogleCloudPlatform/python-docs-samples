@@ -97,6 +97,9 @@ if "google.cloud.developer_knowledge_v1" not in sys.modules:
         def __init__(self, results=None):
             self.results = results or [DocumentChunk()]
 
+        def __iter__(self):
+            return iter(self.results)
+
     class BatchGetDocumentsResponse:
         def __init__(self, documents=None):
             self.documents = documents or []
