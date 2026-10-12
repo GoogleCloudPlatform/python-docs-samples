@@ -34,11 +34,11 @@ _Note: you may need to install `pytest` using `pip install pytest`._
 export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 
 # Submit a build using Google Cloud Build
-gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/logging-manual
+gcloud builds submit --tag REGION-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/logging-manual
 
 # Deploy to Cloud Run
 gcloud run deploy logging-manual \
---image gcr.io/${GOOGLE_CLOUD_PROJECT}/logging-manual \
+--image REGION-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/logging-manual \
 --set-env-vars GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
 ```
 
