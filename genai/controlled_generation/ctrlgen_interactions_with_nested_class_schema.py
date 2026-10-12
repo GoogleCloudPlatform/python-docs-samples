@@ -1,0 +1,54 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+def generate_content() -> str:
+    # [START googlegenaisdk_interactions_ctrlgen_with_nested_class_schema]
+    import enum
+    from google import genai
+    from pydantic import BaseModel
+
+    class Grade(str, enum.Enum):
+        A_PLUS = "a+"
+        A = "a"
+        B = "b"
+        C = "c"
+        D = "d"
+        F = "f"
+
+    class Recipe(BaseModel):
+        recipe_name: str
+        rating: Grade
+
+    client = genai.Client()
+    interaction = client.interactions.create(
+        model="gemini-3.8-flash",
+        input="List about 10 home-baked cookies and give them grades based on tastiness.",
+        response_format={
+            "type": "text",
+            "mime_type": "application/json",
+            "schema": {
+                "type": "array",
+                "items": Recipe.model_json_schema(),
+            },
+        },
+    )
+
+    print(interaction.output_text)
+    # [END googlegenaisdk_interactions_ctrlgen_with_nested_class_schema]
+    return interaction.output_text
+
+
+if __name__ == "__main__":
+    generate_content()
