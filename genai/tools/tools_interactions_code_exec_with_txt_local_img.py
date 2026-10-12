@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.genai._gaos.types.interactions import Interaction
+from typing import Any
 
 
-def generate_content() -> Interaction:
+def generate_content() -> Any:
     # [START googlegenaisdk_interactions_tools_code_exec_with_txt_local_img]
     import base64
     from google import genai
