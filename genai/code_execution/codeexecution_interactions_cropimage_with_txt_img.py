@@ -20,6 +20,7 @@ def generate_content() -> bool:
     import requests
     from PIL import Image
     from google import genai
+    from google.genai.interactions import CodeExecution, ImageContent, TextContent
 
     # Download the input image
     image_path = "https://storage.googleapis.com/cloud-samples-data/generative-ai/image/chips.jpeg"
@@ -31,10 +32,10 @@ def generate_content() -> bool:
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input=[
-            {"type": "image", "data": b64_image, "mime_type": "image/jpeg"},
-            "Locate the ESMT chip. What are the numbers on the chip?",
+            ImageContent(data=b64_image, mime_type="image/jpeg"),
+            TextContent(text="Locate the ESMT chip. What are the numbers on the chip?"),
         ],
-        tools=[{"type": "code_execution"}],
+        tools=[CodeExecution()],
     )
 
     for step in interaction.steps:

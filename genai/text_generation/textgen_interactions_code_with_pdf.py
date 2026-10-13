@@ -16,6 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_textgen_code_with_pdf]
     from google import genai
+    from google.genai.interactions import DocumentContent, TextContent
 
     client = genai.Client()
     model_id = "gemini-3.8-flash"
@@ -26,12 +27,11 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model=model_id,
         input=[
-            {
-                "type": "document",
-                "uri": pdf_uri,
-                "mime_type": "application/pdf",
-            },
-            {"text": prompt},
+            DocumentContent(
+                uri=pdf_uri,
+                mime_type="application/pdf",
+            ),
+            TextContent(text=prompt),
         ],
     )
 

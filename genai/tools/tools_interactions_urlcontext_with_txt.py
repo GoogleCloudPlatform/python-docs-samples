@@ -16,6 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_tools_urlcontext_with_txt]
     from google import genai
+    from google.genai.interactions import URLContext
 
     client = genai.Client()
     model_id = "gemini-3.8-flash"
@@ -27,7 +28,7 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model=model_id,
         input=f"Compare the content, purpose, and audiences of {url1} and {url2}.",
-        tools=[{"type": "url_context"}],
+        tools=[URLContext()],
     )
 
     print(interaction.output_text)

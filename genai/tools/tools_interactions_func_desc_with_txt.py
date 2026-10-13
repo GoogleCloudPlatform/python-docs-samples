@@ -16,15 +16,15 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_tools_func_desc_with_txt]
     from google import genai
+    from google.genai.interactions import Function
 
     client = genai.Client()
     model_id = "gemini-3.8-flash"
 
-    get_album_sales_tool = {
-        "type": "function",
-        "name": "get_album_sales",
-        "description": "Gets the number of albums sold",
-        "parameters": {
+    get_album_sales_tool = Function(
+        name="get_album_sales",
+        description="Gets the number of albums sold",
+        parameters={
             "type": "object",
             "properties": {
                 "albums": {
@@ -47,7 +47,7 @@ def generate_content() -> str:
                 },
             },
         },
-    }
+    )
 
     interaction = client.interactions.create(
         model=model_id,

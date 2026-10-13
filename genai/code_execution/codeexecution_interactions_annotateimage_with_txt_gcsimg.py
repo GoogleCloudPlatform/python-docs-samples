@@ -19,20 +19,22 @@ def generate_content() -> bool:
     import io
     from PIL import Image
     from google import genai
+    from google.genai.interactions import CodeExecution, ImageContent, TextContent
 
     client = genai.Client()
 
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input=[
-            {
-                "type": "image",
-                "uri": "https://storage.googleapis.com/cloud-samples-data/generative-ai/image/robotic.jpeg",
-                "mime_type": "image/jpeg",
-            },
-            "Annotate on the image with arrows of different colors, which object should go into which bin.",
+            ImageContent(
+                uri="https://storage.googleapis.com/cloud-samples-data/generative-ai/image/robotic.jpeg",
+                mime_type="image/jpeg",
+            ),
+            TextContent(
+                text="Annotate on the image with arrows of different colors, which object should go into which bin."
+            ),
         ],
-        tools=[{"type": "code_execution"}],
+        tools=[CodeExecution()],
     )
 
     img_count = 0

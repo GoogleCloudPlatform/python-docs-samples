@@ -18,6 +18,11 @@ def generate_content() -> str:
     import json
     import requests
     from google import genai
+    from google.genai.interactions import (
+        ImageContent,
+        TextContent,
+        TextResponseFormat,
+    )
     from PIL import Image, ImageColor, ImageDraw
     from pydantic import BaseModel
 
@@ -86,21 +91,21 @@ def generate_content() -> str:
         model="gemini-3.8-flash",
         system_instruction=system_instruction,
         input=[
-            {
-                "type": "image",
-                "uri": image_uri,
-                "mime_type": "image/jpeg",
-            },
-            "Output the positions of the socks with a face. Label according to position in the image.",
+            ImageContent(
+                uri=image_uri,
+                mime_type="image/jpeg",
+            ),
+            TextContent(
+                text="Output the positions of the socks with a face. Label according to position in the image."
+            ),
         ],
-        response_format={
-            "type": "text",
-            "mime_type": "application/json",
-            "schema": {
+        response_format=TextResponseFormat(
+            mime_type="application/json",
+            schema={
                 "type": "array",
                 "items": BoundingBox.model_json_schema(),
             },
-        },
+        ),
     )
 
     print(interaction.output_text)

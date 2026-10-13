@@ -17,6 +17,7 @@ def generate_content(image_path_1: str, image_path_2: str) -> str:
     # [START googlegenaisdk_interactions_textgen_with_multi_local_img]
     import base64
     from google import genai
+    from google.genai.interactions import ImageContent, TextContent
 
     client = genai.Client()
     # TODO(Developer): Update the below file paths to your images
@@ -33,17 +34,15 @@ def generate_content(image_path_1: str, image_path_2: str) -> str:
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input=[
-            {"text": "Generate a list of all the objects contained in both images."},
-            {
-                "type": "image",
-                "data": image_1_b64,
-                "mime_type": "image/jpeg",
-            },
-            {
-                "type": "image",
-                "data": image_2_b64,
-                "mime_type": "image/jpeg",
-            },
+            TextContent(text="Generate a list of all the objects contained in both images."),
+            ImageContent(
+                data=image_1_b64,
+                mime_type="image/jpeg",
+            ),
+            ImageContent(
+                data=image_2_b64,
+                mime_type="image/jpeg",
+            ),
         ],
     )
     print(interaction.output_text)

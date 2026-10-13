@@ -17,6 +17,7 @@ def generate_content() -> str:
     # [START googlegenaisdk_interactions_ctrlgen_with_enum_class_schema]
     import enum
     from google import genai
+    from google.genai.interactions import TextResponseFormat
 
     class InstrumentClass(enum.Enum):
         PERCUSSION = "Percussion"
@@ -29,14 +30,13 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input="What type of instrument is a guitar?",
-        response_format={
-            "type": "text",
-            "mime_type": "text/x.enum",
-            "schema": {
+        response_format=TextResponseFormat(
+            mime_type="text/x.enum",
+            schema={
                 "type": "string",
                 "enum": [e.value for e in InstrumentClass],
             },
-        },
+        ),
     )
 
     print(interaction.output_text)

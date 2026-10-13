@@ -19,6 +19,7 @@ def generate_content() -> Any:
     # [START googlegenaisdk_interactions_tools_code_exec_with_txt_local_img]
     import base64
     from google import genai
+    from google.genai.interactions import CodeExecution, ImageContent, TextContent
 
     client = genai.Client()
 
@@ -40,10 +41,10 @@ def generate_content() -> Any:
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input=[
-            {"type": "image", "data": b64_image, "mime_type": "image/png"},
-            prompt,
+            ImageContent(data=b64_image, mime_type="image/png"),
+            TextContent(text=prompt),
         ],
-        tools=[{"type": "code_execution"}],
+        tools=[CodeExecution()],
     )
 
     for step in interaction.steps:

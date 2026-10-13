@@ -19,6 +19,7 @@ def generate_content() -> bool:
     from io import BytesIO
     import os
     from google import genai
+    from google.genai.interactions import ImageResponseFormat, TextResponseFormat
     from PIL import Image
 
     client = genai.Client()
@@ -30,8 +31,8 @@ def generate_content() -> bool:
             "Create images to go alongside the text as you generate the recipe."
         ),
         response_format=[
-            {"type": "text"},
-            {"type": "image"},
+            TextResponseFormat(),
+            ImageResponseFormat(),
         ],
     )
 

@@ -17,6 +17,7 @@ def generate_content() -> str:
     # [START googlegenaisdk_interactions_ctrlgen_with_class_schema]
     import json
     from google import genai
+    from google.genai.interactions import TextResponseFormat
     from pydantic import BaseModel
 
     class Recipe(BaseModel):
@@ -27,14 +28,13 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input="List a few popular cookie recipes.",
-        response_format={
-            "type": "text",
-            "mime_type": "application/json",
-            "schema": {
+        response_format=TextResponseFormat(
+            mime_type="application/json",
+            schema={
                 "type": "array",
                 "items": Recipe.model_json_schema(),
             },
-        },
+        ),
     )
 
     # Use the response as a JSON string

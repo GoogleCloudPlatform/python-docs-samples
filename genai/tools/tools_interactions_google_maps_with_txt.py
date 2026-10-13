@@ -16,13 +16,14 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_tools_google_maps_with_txt]
     from google import genai
+    from google.genai.interactions import GoogleMaps
 
     client = genai.Client()
 
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input="Recommend a good restaurant in San Francisco.",
-        tools=[{"type": "google_maps"}],
+        tools=[GoogleMaps()],
     )
 
     print(interaction.output_text)

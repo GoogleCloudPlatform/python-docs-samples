@@ -16,6 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_textgen_with_gcs_audio]
     from google import genai
+    from google.genai.interactions import AudioContent, TextContent
 
     client = genai.Client()
     prompt = """
@@ -24,12 +25,11 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input=[
-            {
-                "type": "audio",
-                "uri": "gs://cloud-samples-data/generative-ai/audio/pixel.mp3",
-                "mime_type": "audio/mpeg",
-            },
-            {"text": prompt},
+            AudioContent(
+                uri="gs://cloud-samples-data/generative-ai/audio/pixel.mp3",
+                mime_type="audio/mpeg",
+            ),
+            TextContent(text=prompt),
         ],
     )
     print(interaction.output_text)

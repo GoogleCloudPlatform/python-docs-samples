@@ -18,6 +18,7 @@ def generate_content() -> str:
     import base64
     from io import BytesIO
     from google import genai
+    from google.genai.interactions import ImageResponseFormat, TextContent, VideoContent
     from PIL import Image
 
     client = genai.Client()
@@ -28,14 +29,13 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model="gemini-nano-banana-2.1",
         input=[
-            {
-                "type": "video",
-                "uri": video,
-                "mime_type": "video/mp4",
-            },
-            "Generate an infographic of the topics covered in this video.",
+            VideoContent(
+                uri=video,
+                mime_type="video/mp4",
+            ),
+            TextContent(text="Generate an infographic of the topics covered in this video."),
         ],
-        response_format={"type": "image"},
+        response_format=ImageResponseFormat(),
     )
 
     if interaction.output_text:

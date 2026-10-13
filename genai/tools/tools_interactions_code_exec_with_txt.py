@@ -16,6 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_tools_code_exec_with_txt]
     from google import genai
+    from google.genai.interactions import CodeExecution
 
     client = genai.Client()
     model_id = "gemini-3.8-flash"
@@ -23,7 +24,7 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model=model_id,
         input="Calculate 20th fibonacci number. Then find the nearest palindrome to it.",
-        tools=[{"type": "code_execution"}],
+        tools=[CodeExecution()],
     )
 
     executable_code = None

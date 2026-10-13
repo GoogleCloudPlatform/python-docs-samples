@@ -16,6 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_textgen_with_youtube_video]
     from google import genai
+    from google.genai.interactions import TextContent, VideoContent
 
     client = genai.Client()
     model_id = "gemini-3.8-flash"
@@ -23,12 +24,11 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model=model_id,
         input=[
-            {
-                "type": "video",
-                "uri": "https://www.youtube.com/watch?v=3KtWfp0UopM",
-                "mime_type": "video/mp4",
-            },
-            {"text": "Write a short and engaging blog post based on this video."},
+            VideoContent(
+                uri="https://www.youtube.com/watch?v=3KtWfp0UopM",
+                mime_type="video/mp4",
+            ),
+            TextContent(text="Write a short and engaging blog post based on this video."),
         ],
     )
 

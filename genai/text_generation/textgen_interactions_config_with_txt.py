@@ -16,18 +16,19 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_textgen_config_with_txt]
     from google import genai
+    from google.genai.interactions import GenerationConfig
 
     client = genai.Client()
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input="Why is the sky blue?",
-        generation_config={
-            "temperature": 0,
-            "top_p": 0.95,
-            "seed": 5,
-            "max_output_tokens": 500,
-            "stop_sequences": ["STOP!"],
-        },
+        generation_config=GenerationConfig(
+            temperature=0,
+            top_p=0.95,
+            seed=5,
+            max_output_tokens=500,
+            stop_sequences=["STOP!"],
+        ),
         response_mime_type="application/json",
     )
     print(interaction.output_text)

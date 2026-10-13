@@ -17,6 +17,7 @@ def generate_content() -> str:
     # [START googlegenaisdk_interactions_ctrlgen_with_nested_class_schema]
     import enum
     from google import genai
+    from google.genai.interactions import TextResponseFormat
     from pydantic import BaseModel
 
     class Grade(str, enum.Enum):
@@ -35,14 +36,13 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input="List about 10 home-baked cookies and give them grades based on tastiness.",
-        response_format={
-            "type": "text",
-            "mime_type": "application/json",
-            "schema": {
+        response_format=TextResponseFormat(
+            mime_type="application/json",
+            schema={
                 "type": "array",
                 "items": Recipe.model_json_schema(),
             },
-        },
+        ),
     )
 
     print(interaction.output_text)

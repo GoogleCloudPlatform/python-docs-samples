@@ -19,21 +19,23 @@ def generate_content() -> bool:
     import io
     from PIL import Image
     from google import genai
+    from google.genai.interactions import CodeExecution, ImageContent, TextContent
 
     client = genai.Client()
 
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input=[
-            {
-                "type": "image",
-                "uri": "https://storage.googleapis.com/cloud-samples-data/generative-ai/image/benchmark.jpeg",
-                "mime_type": "image/jpeg",
-            },
-            "Make a bar chart of per-category performance, normalize prior SOTA as 1.0 for each task,"
-            "then take average per-category. Plot using matplotlib with nice style.",
+            ImageContent(
+                uri="https://storage.googleapis.com/cloud-samples-data/generative-ai/image/benchmark.jpeg",
+                mime_type="image/jpeg",
+            ),
+            TextContent(
+                text="Make a bar chart of per-category performance, normalize prior SOTA as 1.0 for each task,"
+                "then take average per-category. Plot using matplotlib with nice style."
+            ),
         ],
-        tools=[{"type": "code_execution"}],
+        tools=[CodeExecution()],
     )
 
     img_count = 0

@@ -18,6 +18,7 @@ def generate_content() -> str:
     import base64
     from io import BytesIO
     from google import genai
+    from google.genai.interactions import ImageContent, ImageResponseFormat, TextContent
     from PIL import Image
 
     client = genai.Client()
@@ -29,10 +30,10 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model="gemini-nano-banana-2.1",
         input=[
-            {"type": "image", "data": b64_image, "mime_type": "image/png"},
-            "Edit this image to make it look like a cartoon.",
+            ImageContent(data=b64_image, mime_type="image/png"),
+            TextContent(text="Edit this image to make it look like a cartoon."),
         ],
-        response_format={"type": "image"},
+        response_format=ImageResponseFormat(),
     )
 
     if interaction.output_text:

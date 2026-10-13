@@ -16,14 +16,15 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_thinking_includethoughts_with_txt]
     from google import genai
+    from google.genai.interactions import GenerationConfig
 
     client = genai.Client()
     interaction = client.interactions.create(
         model="gemini-3.1-pro-preview",
         input="solve x^2 + 4x + 4 = 0",
-        generation_config={
-            "thinking_summaries": "auto",
-        },
+        generation_config=GenerationConfig(
+            thinking_summaries="auto",
+        ),
     )
 
     print(interaction.output_text)

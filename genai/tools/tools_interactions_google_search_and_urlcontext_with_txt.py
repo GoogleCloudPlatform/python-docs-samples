@@ -16,13 +16,14 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_tools_google_search_and_urlcontext_with_txt]
     from google import genai
+    from google.genai.interactions import GoogleSearch, URLContext
 
     client = genai.Client()
     model_id = "gemini-3.8-flash"
 
     tools = [
-        {"type": "url_context"},
-        {"type": "google_search"},
+        URLContext(),
+        GoogleSearch(),
     ]
 
     # TODO(developer): Here put your URLs!

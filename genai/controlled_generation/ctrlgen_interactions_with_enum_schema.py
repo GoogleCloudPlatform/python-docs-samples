@@ -16,19 +16,19 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_ctrlgen_with_enum_schema]
     from google import genai
+    from google.genai.interactions import TextResponseFormat
 
     client = genai.Client()
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input="What type of instrument is an oboe?",
-        response_format={
-            "type": "text",
-            "mime_type": "text/x.enum",
-            "schema": {
+        response_format=TextResponseFormat(
+            mime_type="text/x.enum",
+            schema={
                 "type": "string",
                 "enum": ["Percussion", "String", "Woodwind", "Brass", "Keyboard"],
             },
-        },
+        ),
     )
 
     print(interaction.output_text)

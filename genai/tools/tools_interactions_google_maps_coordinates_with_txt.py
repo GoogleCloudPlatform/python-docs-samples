@@ -16,19 +16,14 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_tools_google_maps_coordinates_with_txt]
     from google import genai
+    from google.genai.interactions import GoogleMaps
 
     client = genai.Client()
 
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input="Where can I get the best espresso near me?",
-        tools=[
-            {
-                "type": "google_maps",
-                "latitude": 40.7128,
-                "longitude": -74.006,
-            }
-        ],
+        tools=[GoogleMaps(latitude=40.7128, longitude=-74.006)],
     )
 
     print(interaction.output_text)

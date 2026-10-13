@@ -16,6 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_tools_func_def_with_txt]
     from google import genai
+    from google.genai.interactions import Function
 
     def get_current_weather(location: str) -> str:
         """Example method. Returns the current weather.
@@ -36,11 +37,10 @@ def generate_content() -> str:
     model_id = "gemini-3.8-flash"
 
     # Define function tool declaration for the Interactions API
-    weather_tool = {
-        "type": "function",
-        "name": "get_current_weather",
-        "description": "Returns the current weather for a given city and state.",
-        "parameters": {
+    weather_tool = Function(
+        name="get_current_weather",
+        description="Returns the current weather for a given city and state.",
+        parameters={
             "type": "object",
             "properties": {
                 "location": {
@@ -50,7 +50,7 @@ def generate_content() -> str:
             },
             "required": ["location"],
         },
-    }
+    )
 
     interaction = client.interactions.create(
         model=model_id,

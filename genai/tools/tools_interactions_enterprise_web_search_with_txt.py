@@ -16,18 +16,14 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_tools_enterprise_web_search_with_txt]
     from google import genai
+    from google.genai.interactions import GoogleSearch
 
     client = genai.Client()
 
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input="When is the next total solar eclipse in the United States?",
-        tools=[
-            {
-                "type": "google_search",
-                "search_types": ["enterprise_web_search"],
-            }
-        ],
+        tools=[GoogleSearch(search_types=["enterprise_web_search"])],
     )
 
     print(interaction.output_text)

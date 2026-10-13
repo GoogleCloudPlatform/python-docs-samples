@@ -17,6 +17,7 @@ def generate_content() -> str:
     # [START googlegenaisdk_interactions_textgen_with_local_video]
     import base64
     from google import genai
+    from google.genai.interactions import TextContent, VideoContent
 
     client = genai.Client()
     model_id = "gemini-3.8-flash"
@@ -30,13 +31,12 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model=model_id,
         input=[
-            {"text": "hello-world"},
-            {
-                "type": "video",
-                "data": video_b64,
-                "mime_type": "video/mp4",
-            },
-            {"text": "Write a short and engaging blog post based on this video."},
+            TextContent(text="hello-world"),
+            VideoContent(
+                data=video_b64,
+                mime_type="video/mp4",
+            ),
+            TextContent(text="Write a short and engaging blog post based on this video."),
         ],
     )
 

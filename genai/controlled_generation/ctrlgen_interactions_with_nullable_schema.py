@@ -16,6 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_ctrlgen_with_nullable_schema]
     from google import genai
+    from google.genai.interactions import TextResponseFormat
 
     response_schema = {
         "type": "object",
@@ -52,11 +53,10 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input=prompt,
-        response_format={
-            "type": "text",
-            "mime_type": "application/json",
-            "schema": response_schema,
-        },
+        response_format=TextResponseFormat(
+            mime_type="application/json",
+            schema=response_schema,
+        ),
     )
 
     print(interaction.output_text)

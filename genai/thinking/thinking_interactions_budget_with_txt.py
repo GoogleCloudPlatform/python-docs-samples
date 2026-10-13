@@ -16,6 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_thinking_budget_with_txt]
     from google import genai
+    from google.genai.interactions import GenerationConfig
 
     client = genai.Client()
 
@@ -23,9 +24,9 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input="solve x^2 + 4x + 4 = 0",
-        generation_config={
-            "thinking_level": "medium",
-        },
+        generation_config=GenerationConfig(
+            thinking_level="medium",
+        ),
     )
 
     print(interaction.output_text)

@@ -20,6 +20,7 @@ def generate_content() -> str:
     from io import BytesIO
 
     from google import genai
+    from google.genai.interactions import ImageResponseFormat
     from PIL import Image
 
     client = genai.Client()
@@ -27,7 +28,7 @@ def generate_content() -> str:
     interaction = client.interactions.create(
         model="gemini-nano-banana-2.1",
         input="Generate an image of the Eiffel tower with fireworks in the background.",
-        response_format={"type": "image"},
+        response_format=ImageResponseFormat(),
     )
 
     if interaction.output_text:

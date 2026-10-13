@@ -16,6 +16,7 @@
 def generate_content(datastore: str) -> bool:
     # [START googlegenaisdk_interactions_tools_vais_with_txt]
     from google import genai
+    from google.genai.interactions import Retrieval, VertexAISearchConfig
 
     client = genai.Client()
 
@@ -26,12 +27,11 @@ def generate_content(datastore: str) -> bool:
         model="gemini-3.8-flash",
         input="How do I make an appointment to renew my driver's license?",
         tools=[
-            {
-                "type": "retrieval",
-                "vertex_ai_search_config": {
-                    "datastores": [datastore],
-                },
-            }
+            Retrieval(
+                vertex_ai_search_config=VertexAISearchConfig(
+                    datastores=[datastore],
+                )
+            )
         ],
     )
 

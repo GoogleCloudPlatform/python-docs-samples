@@ -16,17 +16,17 @@
 def generate_content() -> str:
     # [START googlegenaisdk_interactions_textgen_with_txt_img]
     from google import genai
+    from google.genai.interactions import ImageContent, TextContent
 
     client = genai.Client()
     interaction = client.interactions.create(
         model="gemini-3.8-flash",
         input=[
-            {"text": "What is shown in this image?"},
-            {
-                "type": "image",
-                "uri": "gs://cloud-samples-data/generative-ai/image/scones.jpg",
-                "mime_type": "image/jpeg",
-            },
+            TextContent(text="What is shown in this image?"),
+            ImageContent(
+                uri="gs://cloud-samples-data/generative-ai/image/scones.jpg",
+                mime_type="image/jpeg",
+            ),
         ],
     )
     print(interaction.output_text)

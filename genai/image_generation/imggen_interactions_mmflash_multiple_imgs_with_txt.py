@@ -18,6 +18,7 @@ def generate_content() -> list[str]:
     import base64
     from io import BytesIO
     from google import genai
+    from google.genai.interactions import ImageResponseFormat, TextResponseFormat
     from PIL import Image
 
     client = genai.Client()
@@ -26,8 +27,8 @@ def generate_content() -> list[str]:
         model="gemini-nano-banana-2.1",
         input="Generate 3 images of a cat sitting on a chair.",
         response_format=[
-            {"type": "image"},
-            {"type": "text"},
+            ImageResponseFormat(),
+            TextResponseFormat(),
         ],
     )
 
