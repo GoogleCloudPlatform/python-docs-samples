@@ -39,11 +39,16 @@ def restore_multiple_tables(
         FROM
             `{project_id}`.`{region}`.INFORMATION_SCHEMA.TABLE_STORAGE
         WHERE
-            table_schema = '{dataset_id}'
+            table_schema = @dataset_id
             AND deleted = True
         """
         print("Querying INFORMATION_SCHEMA for deleted tables...")
-        query_job = client.query(query)
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("dataset_id", "STRING", dataset_id)
+            ]
+        )
+        query_job = client.query(query, job_config=job_config)
         return list(query_job.result())
 
     def copy_table(row):
