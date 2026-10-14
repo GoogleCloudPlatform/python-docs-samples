@@ -19,18 +19,18 @@ import concurrent.futures
 import os
 from unittest import mock
 
-import grpc
-import pytest
 from google.api_core.gapic_v1 import method
 from google.cloud import secretmanager
 from google.cloud.secretmanager_v1.services.secret_manager_service.transports.grpc import (
     SecretManagerServiceGrpcTransport,
 )
+import grpc
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
     InMemorySpanExporter,
 )
+import pytest
 
 from secretmanager_trace_client_options import access_secret_version_with_client_options
 

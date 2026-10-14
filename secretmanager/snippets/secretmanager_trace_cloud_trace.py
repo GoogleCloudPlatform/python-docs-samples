@@ -40,6 +40,11 @@ def access_secret_version_cloud_trace(
     Returns:
         The secret payload decoded as a UTF-8 string.
     """
+    # NOTE: In standalone scripts or CLI tools, initialize and shut down the
+    # TracerProvider within the script workflow. In long-running production
+    # applications (e.g., web servers), configure the TracerProvider once at
+    # application startup.
+    #
     # 1. Initialize OpenTelemetry TracerProvider with CloudTraceSpanExporter and BatchSpanProcessor
     provider = TracerProvider()
     cloud_exporter = CloudTraceSpanExporter()
@@ -73,9 +78,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Access a Secret Manager secret version and export traces to Google Cloud Trace."
     )
-    parser.add_argument("--project-id", required=True, help="Google Cloud Project ID")
-    parser.add_argument("--secret-id", required=True, help="Secret ID")
-    parser.add_argument("--version-id", default="latest", help="Secret version ID")
+    parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument("secret_id", help="id of the secret to access")
+    parser.add_argument(
+        "version_id", default="latest", nargs="?", help="version to access"
+    )
 
     args = parser.parse_args()
     secret_data = access_secret_version_cloud_trace(

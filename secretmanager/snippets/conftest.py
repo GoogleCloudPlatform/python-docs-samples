@@ -15,8 +15,8 @@
 
 """Shared test fixtures for Secret Manager tracing snippets."""
 
-import pytest
 from opentelemetry import trace
+import pytest
 
 
 @pytest.fixture(autouse=True)

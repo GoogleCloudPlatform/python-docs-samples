@@ -40,6 +40,11 @@ async def access_secret_version_with_tracing_async(
     Returns:
         The secret payload decoded as a UTF-8 string.
     """
+    # NOTE: In standalone scripts or CLI tools, initialize and shut down the
+    # TracerProvider within the script workflow. In long-running production
+    # applications (e.g., web servers), configure the TracerProvider once at
+    # application startup.
+    #
     # 1. Initialize the OpenTelemetry TracerProvider with a Console exporter
     provider = TracerProvider()
     provider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))
@@ -72,9 +77,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Access a Secret Manager secret version asynchronously with OpenTelemetry tracing."
     )
-    parser.add_argument("--project-id", required=True, help="Google Cloud Project ID")
-    parser.add_argument("--secret-id", required=True, help="Secret ID")
-    parser.add_argument("--version-id", default="latest", help="Secret version ID")
+    parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument("secret_id", help="id of the secret to access")
+    parser.add_argument(
+        "version_id", default="latest", nargs="?", help="version to access"
+    )
 
     args = parser.parse_args()
     secret_data = asyncio.run(

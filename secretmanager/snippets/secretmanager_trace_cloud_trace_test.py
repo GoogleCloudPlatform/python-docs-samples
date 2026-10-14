@@ -20,13 +20,13 @@ import os
 import sys
 from unittest import mock
 
-import grpc
-import pytest
 from google.cloud import secretmanager
 from google.cloud.secretmanager_v1.services.secret_manager_service.transports.grpc import (
     SecretManagerServiceGrpcTransport,
 )
+import grpc
 from opentelemetry.sdk.trace.export import SpanExporter, SpanExportResult
+import pytest
 
 
 # Mock opentelemetry.exporter.cloud_trace if not installed in the environment
