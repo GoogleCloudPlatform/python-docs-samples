@@ -4,4 +4,4 @@ SQLAlchemy==2.0.40
 cloud-sql-python-connector==1.20.1
 gunicorn==23.0.0
 functions-framework==3.9.2
-Werkzeug==3.1.8; python_version >= '3.9'
+Werkzeug==3.1.9; python_version >= '3.10'
