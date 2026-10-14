@@ -35,6 +35,7 @@
 /securitycenter/**/*                   @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers @GoogleCloudPlatform/gcp-security-command-center
 /service_extensions/**/*               @GoogleCloudPlatform/service-extensions-samples-reviewers @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /tpu/**/*                              @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
+/vpc/**/* @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /vmwareengine/**/*                     @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /webrisk/**/*                          @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 
