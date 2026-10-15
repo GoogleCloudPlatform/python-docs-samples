@@ -62,25 +62,25 @@ def test_ctrlgen_with_resp_schema() -> None:
 
 
 def test_ctrlgen_interactions_with_class_schema() -> None:
-    assert ctrlgen_interactions_with_class_schema.generate_content()
+    assert ctrlgen_interactions_with_class_schema.create_interaction()
 
 
 def test_ctrlgen_interactions_with_enum_class_schema() -> None:
-    assert ctrlgen_interactions_with_enum_class_schema.generate_content()
+    assert ctrlgen_interactions_with_enum_class_schema.create_interaction()
 
 
 def test_ctrlgen_interactions_with_enum_schema() -> None:
-    assert ctrlgen_interactions_with_enum_schema.generate_content()
+    assert ctrlgen_interactions_with_enum_schema.create_interaction()
 
 
 def test_ctrlgen_interactions_with_nested_class_schema() -> None:
-    assert ctrlgen_interactions_with_nested_class_schema.generate_content()
+    assert ctrlgen_interactions_with_nested_class_schema.create_interaction()
 
 
 def test_ctrlgen_interactions_with_nullable_schema() -> None:
-    assert ctrlgen_interactions_with_nullable_schema.generate_content()
+    assert ctrlgen_interactions_with_nullable_schema.create_interaction()
 
 
 def test_ctrlgen_interactions_with_resp_schema() -> None:
-    assert ctrlgen_interactions_with_resp_schema.generate_content()
+    assert ctrlgen_interactions_with_resp_schema.create_interaction()
 

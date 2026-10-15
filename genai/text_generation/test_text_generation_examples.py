@@ -163,57 +163,57 @@ def test_textgen_code_with_pdf() -> None:
 
 
 def test_textgen_interactions_with_txt_stream() -> None:
-    response = textgen_interactions_with_txt_stream.generate_content()
+    response = textgen_interactions_with_txt_stream.create_interaction()
     assert response
 
 
 def test_textgen_interactions_with_txt() -> None:
-    response = textgen_interactions_with_txt.generate_content()
+    response = textgen_interactions_with_txt.create_interaction()
     assert response
 
 
 def test_textgen_interactions_chat_with_txt() -> None:
-    response = textgen_interactions_chat_with_txt.generate_content()
+    response = textgen_interactions_chat_with_txt.create_interaction()
     assert response
 
 
 def test_textgen_interactions_chat_stream_with_txt() -> None:
-    response = textgen_interactions_chat_stream_with_txt.generate_content()
+    response = textgen_interactions_chat_stream_with_txt.create_interaction()
     assert response
 
 
 def test_textgen_interactions_config_with_txt() -> None:
-    response = textgen_interactions_config_with_txt.generate_content()
+    response = textgen_interactions_config_with_txt.create_interaction()
     assert response
 
 
 def test_textgen_interactions_sys_instr_with_txt() -> None:
-    response = textgen_interactions_sys_instr_with_txt.generate_content()
+    response = textgen_interactions_sys_instr_with_txt.create_interaction()
     assert response
 
 
 def test_textgen_interactions_with_pdf() -> None:
-    response = textgen_interactions_with_pdf.generate_content()
+    response = textgen_interactions_with_pdf.create_interaction()
     assert response
 
 
 def test_textgen_interactions_with_txt_img() -> None:
-    response = textgen_interactions_with_txt_img.generate_content()
+    response = textgen_interactions_with_txt_img.create_interaction()
     assert response
 
 
 def test_textgen_interactions_with_txt_thinking() -> None:
-    response = thinking_textgen_interactions_with_txt.generate_content()
+    response = thinking_textgen_interactions_with_txt.create_interaction()
     assert response
 
 
 def test_textgen_interactions_with_multi_img() -> None:
-    response = textgen_interactions_with_multi_img.generate_content()
+    response = textgen_interactions_with_multi_img.create_interaction()
     assert response
 
 
 def test_textgen_interactions_with_multi_local_img() -> None:
-    response = textgen_interactions_with_multi_local_img.generate_content(
+    response = textgen_interactions_with_multi_local_img.create_interaction(
         "./test_data/latte.jpg",
         "./test_data/scones.jpg",
     )
@@ -221,42 +221,42 @@ def test_textgen_interactions_with_multi_local_img() -> None:
 
 
 def test_textgen_interactions_with_mute_video() -> None:
-    response = textgen_interactions_with_mute_video.generate_content()
+    response = textgen_interactions_with_mute_video.create_interaction()
     assert response
 
 
 def test_textgen_interactions_with_gcs_audio() -> None:
-    response = textgen_interactions_with_gcs_audio.generate_content()
+    response = textgen_interactions_with_gcs_audio.create_interaction()
     assert response
 
 
 def test_textgen_interactions_transcript_with_gcs_audio() -> None:
-    response = textgen_interactions_transcript_with_gcs_audio.generate_content()
+    response = textgen_interactions_transcript_with_gcs_audio.create_interaction()
     assert response
 
 
 def test_textgen_interactions_with_video() -> None:
-    response = textgen_interactions_with_video.generate_content()
+    response = textgen_interactions_with_video.create_interaction()
     assert response
 
 
 def test_textgen_interactions_async_with_txt() -> None:
-    response = textgen_interactions_async_with_txt.generate_content()
+    response = textgen_interactions_async_with_txt.create_interaction()
     assert response
 
 
 def test_textgen_interactions_with_local_video() -> None:
-    response = textgen_interactions_with_local_video.generate_content()
+    response = textgen_interactions_with_local_video.create_interaction()
     assert response
 
 
 def test_textgen_interactions_with_youtube_video() -> None:
-    response = textgen_interactions_with_youtube_video.generate_content()
+    response = textgen_interactions_with_youtube_video.create_interaction()
     assert response
 
 
 def test_textgen_interactions_code_with_pdf() -> None:
-    response = textgen_interactions_code_with_pdf.generate_content()
+    response = textgen_interactions_code_with_pdf.create_interaction()
     assert response
 
 # Migrated to Model Optimser Folder

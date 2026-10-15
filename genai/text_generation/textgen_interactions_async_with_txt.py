@@ -15,7 +15,7 @@
 import asyncio
 
 
-async def generate_content() -> str:
+async def create_interaction() -> str:
     # [START googlegenaisdk_interactions_textgen_async_with_txt]
     from google import genai
 
@@ -39,4 +39,4 @@ async def generate_content() -> str:
 
 
 if __name__ == "__main__":
-    asyncio.run(generate_content())
+    asyncio.run(create_interaction())

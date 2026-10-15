@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content(datastore: str) -> bool:
+def create_interaction(datastore: str) -> bool:
     # [START googlegenaisdk_interactions_tools_vais_with_txt]
     from google import genai
     from google.genai.interactions import Retrieval, VertexAISearchConfig
@@ -42,4 +42,4 @@ def generate_content(datastore: str) -> bool:
 
 if __name__ == "__main__":
     datastore = input("Data Store ID: ")
-    generate_content(datastore)
+    create_interaction(datastore)

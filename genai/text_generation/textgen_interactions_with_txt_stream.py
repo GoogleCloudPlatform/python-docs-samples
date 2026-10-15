@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content() -> bool:
+def create_interaction() -> bool:
     # [START googlegenaisdk_interactions_textgen_with_txt_stream]
     from google import genai
 
@@ -41,4 +41,4 @@ def generate_content() -> bool:
 
 
 if __name__ == "__main__":
-    generate_content()
+    create_interaction()

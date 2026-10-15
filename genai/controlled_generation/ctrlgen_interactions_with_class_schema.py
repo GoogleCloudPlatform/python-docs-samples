@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content() -> str:
+def create_interaction() -> str:
     # [START googlegenaisdk_interactions_ctrlgen_with_class_schema]
     import json
     from google import genai
@@ -47,4 +47,4 @@ def generate_content() -> str:
 
 
 if __name__ == "__main__":
-    generate_content()
+    create_interaction()

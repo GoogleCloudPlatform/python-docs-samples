@@ -15,7 +15,7 @@
 from typing import Any
 
 
-def generate_content() -> Any:
+def create_interaction() -> Any:
     # [START googlegenaisdk_interactions_tools_code_exec_with_txt_local_img]
     import base64
     from google import genai
@@ -61,4 +61,4 @@ def generate_content() -> Any:
 
 
 if __name__ == "__main__":
-    generate_content()
+    create_interaction()

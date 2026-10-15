@@ -33,6 +33,6 @@ def test_boundingbox_with_txt_img() -> None:
 
 
 def test_boundingbox_interactions_with_txt_img() -> None:
-    response = boundingbox_interactions_with_txt_img.generate_content()
+    response = boundingbox_interactions_with_txt_img.create_interaction()
     assert response
 

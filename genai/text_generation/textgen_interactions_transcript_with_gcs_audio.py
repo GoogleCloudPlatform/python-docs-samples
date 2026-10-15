@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content() -> str:
+def create_interaction() -> str:
     # [START googlegenaisdk_interactions_textgen_transcript_with_gcs_audio]
     from google import genai
     from google.genai.interactions import AudioContent, TextContent
@@ -45,4 +45,4 @@ def generate_content() -> str:
 
 
 if __name__ == "__main__":
-    generate_content()
+    create_interaction()

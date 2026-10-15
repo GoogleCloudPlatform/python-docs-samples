@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content() -> str:
+def create_interaction() -> str:
     # [START googlegenaisdk_interactions_tools_google_search_and_urlcontext_with_txt]
     from google import genai
     from google.genai.interactions import GoogleSearch, URLContext
@@ -47,4 +47,4 @@ def generate_content() -> str:
 
 
 if __name__ == "__main__":
-    generate_content()
+    create_interaction()

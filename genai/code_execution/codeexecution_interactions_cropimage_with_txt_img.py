@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content() -> bool:
+def create_interaction() -> bool:
     # [START googlegenaisdk_interactions_codeexecution_cropimage_with_txt_img]
     import base64
     import io
@@ -62,4 +62,4 @@ def generate_content() -> bool:
 
 
 if __name__ == "__main__":
-    generate_content()
+    create_interaction()

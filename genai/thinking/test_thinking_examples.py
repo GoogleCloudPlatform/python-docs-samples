@@ -39,13 +39,13 @@ def test_thinking_with_txt() -> None:
 
 
 def test_thinking_interactions_budget_with_txt() -> None:
-    assert thinking_interactions_budget_with_txt.generate_content()
+    assert thinking_interactions_budget_with_txt.create_interaction()
 
 
 def test_thinking_interactions_includethoughts_with_txt() -> None:
-    assert thinking_interactions_includethoughts_with_txt.generate_content()
+    assert thinking_interactions_includethoughts_with_txt.create_interaction()
 
 
 def test_thinking_interactions_with_txt() -> None:
-    assert thinking_interactions_with_txt.generate_content()
+    assert thinking_interactions_with_txt.create_interaction()
 

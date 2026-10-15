@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content() -> str:
+def create_interaction() -> str:
     # [START googlegenaisdk_interactions_thinking_textgen_with_txt]
     from google import genai
 
@@ -74,4 +74,4 @@ def generate_content() -> str:
 
 
 if __name__ == "__main__":
-    generate_content()
+    create_interaction()

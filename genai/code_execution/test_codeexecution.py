@@ -39,13 +39,13 @@ def test_codeexecution_cropimage_with_txt_img() -> None:
 
 
 def test_codeexecution_interactions_annotateimage_with_txt_gcsimg() -> None:
-    assert codeexecution_interactions_annotateimage_with_txt_gcsimg.generate_content()
+    assert codeexecution_interactions_annotateimage_with_txt_gcsimg.create_interaction()
 
 
 def test_codeexecution_interactions_barplot_with_txt_img() -> None:
-    assert codeexecution_interactions_barplot_with_txt_img.generate_content()
+    assert codeexecution_interactions_barplot_with_txt_img.create_interaction()
 
 
 def test_codeexecution_interactions_cropimage_with_txt_img() -> None:
-    assert codeexecution_interactions_cropimage_with_txt_img.generate_content()
+    assert codeexecution_interactions_cropimage_with_txt_img.create_interaction()
 

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content(image_path_1: str, image_path_2: str) -> str:
+def create_interaction(image_path_1: str, image_path_2: str) -> str:
     # [START googlegenaisdk_interactions_textgen_with_multi_local_img]
     import base64
     from google import genai
@@ -54,7 +54,7 @@ def generate_content(image_path_1: str, image_path_2: str) -> str:
 
 
 if __name__ == "__main__":
-    generate_content(
+    create_interaction(
         "./test_data/latte.jpg",
         "./test_data/scones.jpg",
     )
