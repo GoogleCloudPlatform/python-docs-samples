@@ -15,8 +15,6 @@ import os
 
 import thinking_budget_with_txt
 import thinking_includethoughts_with_txt
-import thinking_interactions_budget_with_txt
-import thinking_interactions_includethoughts_with_txt
 import thinking_interactions_with_txt
 import thinking_with_txt
 
@@ -38,14 +36,6 @@ def test_thinking_with_txt() -> None:
     assert thinking_with_txt.generate_content()
 
 
-def test_thinking_interactions_budget_with_txt() -> None:
-    assert thinking_interactions_budget_with_txt.create_interaction()
-
-
-def test_thinking_interactions_includethoughts_with_txt() -> None:
-    assert thinking_interactions_includethoughts_with_txt.create_interaction()
-
 
 def test_thinking_interactions_with_txt() -> None:
     assert thinking_interactions_with_txt.create_interaction()
-

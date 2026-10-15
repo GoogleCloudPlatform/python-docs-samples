@@ -23,11 +23,7 @@ def create_interaction() -> str:
         model="gemini-3.8-flash",
         input="Why is the sky blue?",
         generation_config=GenerationConfig(
-            temperature=0,
-            top_p=0.95,
-            seed=5,
             max_output_tokens=500,
-            stop_sequences=["STOP!"],
         ),
         response_mime_type="application/json",
     )
