@@ -24,6 +24,23 @@ import textgen_chat_stream_with_txt
 import textgen_chat_with_txt
 import textgen_code_with_pdf
 import textgen_config_with_txt
+import textgen_interactions_async_with_txt
+import textgen_interactions_chat_stream_with_txt
+import textgen_interactions_chat_with_txt
+import textgen_interactions_code_with_pdf
+import textgen_interactions_config_with_txt
+import textgen_interactions_sys_instr_with_txt
+import textgen_interactions_transcript_with_gcs_audio
+import textgen_interactions_with_gcs_audio
+import textgen_interactions_with_local_video
+import textgen_interactions_with_multi_img
+import textgen_interactions_with_multi_local_img
+import textgen_interactions_with_pdf
+import textgen_interactions_with_txt
+import textgen_interactions_with_txt_img
+import textgen_interactions_with_txt_stream
+import textgen_interactions_with_video
+import textgen_interactions_with_youtube_video
 import textgen_sys_instr_with_txt
 import textgen_transcript_with_gcs_audio
 import textgen_with_gcs_audio
@@ -37,6 +54,7 @@ import textgen_with_txt_img
 import textgen_with_txt_stream
 import textgen_with_video
 import textgen_with_youtube_video
+import thinking_textgen_interactions_with_txt
 import thinking_textgen_with_txt
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
@@ -140,6 +158,99 @@ def test_textgen_with_youtube_video() -> None:
 
 def test_textgen_code_with_pdf() -> None:
     response = textgen_code_with_pdf.generate_content()
+    assert response
+
+
+def test_textgen_interactions_with_txt_stream() -> None:
+    response = textgen_interactions_with_txt_stream.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_with_txt() -> None:
+    response = textgen_interactions_with_txt.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_chat_with_txt() -> None:
+    response = textgen_interactions_chat_with_txt.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_chat_stream_with_txt() -> None:
+    response = textgen_interactions_chat_stream_with_txt.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_config_with_txt() -> None:
+    response = textgen_interactions_config_with_txt.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_sys_instr_with_txt() -> None:
+    response = textgen_interactions_sys_instr_with_txt.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_with_pdf() -> None:
+    response = textgen_interactions_with_pdf.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_with_txt_img() -> None:
+    response = textgen_interactions_with_txt_img.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_with_txt_thinking() -> None:
+    response = thinking_textgen_interactions_with_txt.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_with_multi_img() -> None:
+    response = textgen_interactions_with_multi_img.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_with_multi_local_img() -> None:
+    response = textgen_interactions_with_multi_local_img.create_interaction(
+        "./test_data/latte.jpg",
+        "./test_data/scones.jpg",
+    )
+    assert response
+
+
+def test_textgen_interactions_with_gcs_audio() -> None:
+    response = textgen_interactions_with_gcs_audio.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_transcript_with_gcs_audio() -> None:
+    response = textgen_interactions_transcript_with_gcs_audio.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_with_video() -> None:
+    response = textgen_interactions_with_video.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_async_with_txt() -> None:
+    response = textgen_interactions_async_with_txt.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_with_local_video() -> None:
+    response = textgen_interactions_with_local_video.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_with_youtube_video() -> None:
+    response = textgen_interactions_with_youtube_video.create_interaction()
+    assert response
+
+
+def test_textgen_interactions_code_with_pdf() -> None:
+    response = textgen_interactions_code_with_pdf.create_interaction()
     assert response
 
 # Migrated to Model Optimser Folder
