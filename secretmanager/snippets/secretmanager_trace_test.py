@@ -102,14 +102,14 @@ def test_access_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
         with mock.patch.object(
             SecretManagerServiceGrpcTransport, "__init__", patched_init
         ):
-            payload = access_secret_version_with_tracing(
+            version_name = access_secret_version_with_tracing(
                 project_id="test-project",
                 secret_id="my-secret",
                 version_id="1",
             )
 
-    # 1. Verify returned payload
-    assert payload == "mock-secret-token-123"
+    # 1. Verify returned version resource name
+    assert version_name == "projects/test-project/secrets/my-secret/versions/1"
 
     # 2. Inspect emitted spans
     spans = exporter.get_finished_spans()

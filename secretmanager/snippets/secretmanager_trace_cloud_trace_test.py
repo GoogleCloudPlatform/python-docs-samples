@@ -107,11 +107,11 @@ def test_access_secret_version_cloud_trace(mock_grpc_server, monkeypatch):
         instance = MockCloudTraceSpanExporter()
         mock_cloud_exporter_cls.return_value = instance
 
-        payload = access_secret_version_cloud_trace(
+        version_name = access_secret_version_cloud_trace(
             project_id="test-project",
             secret_id="my-secret",
             version_id="1",
         )
 
-        assert payload == "mock-cloud-trace-secret"
+        assert version_name == "projects/test-project/secrets/my-secret/versions/1"
         mock_cloud_exporter_cls.assert_called_once()

@@ -19,7 +19,7 @@
 import asyncio
 import os
 
-from google.cloud import secretmanager_v1
+from google.cloud import secretmanager
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
@@ -38,7 +38,7 @@ async def access_secret_version_with_tracing_async(
         version_id: ID of the secret version to access (defaults to "latest").
 
     Returns:
-        The secret payload decoded as a UTF-8 string.
+        The resource name of the accessed secret version.
     """
     # NOTE: In standalone scripts or CLI tools, initialize and shut down the
     # TracerProvider within the script workflow. In long-running production
@@ -54,15 +54,14 @@ async def access_secret_version_with_tracing_async(
     os.environ["GOOGLE_SDK_PYTHON_TRACING_ENABLED"] = "true"
 
     # 3. Instantiate the async client
-    client = secretmanager_v1.SecretManagerServiceAsyncClient()
+    client = secretmanager.SecretManagerServiceAsyncClient()
 
     # 4. Construct resource name and invoke the async RPC
     name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
 
     try:
         response = await client.access_secret_version(request={"name": name})
-        payload = response.payload.data.decode("UTF-8")
-        return payload
+        return response.name
     finally:
         # Flush buffered spans before program completion
         provider.shutdown()
@@ -84,11 +83,11 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    secret_data = asyncio.run(
+    version_name = asyncio.run(
         access_secret_version_with_tracing_async(
             project_id=args.project_id,
             secret_id=args.secret_id,
             version_id=args.version_id,
         )
     )
-    print(f"Retrieved secret payload asynchronously: {secret_data}")
+    print(f"Successfully accessed secret version: {version_name}")

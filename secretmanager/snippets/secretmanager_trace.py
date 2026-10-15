@@ -37,7 +37,7 @@ def access_secret_version_with_tracing(
         version_id: ID of the secret version to access (defaults to "latest").
 
     Returns:
-        The secret payload decoded as a UTF-8 string.
+        The resource name of the accessed secret version.
     """
     # NOTE: In standalone scripts or CLI tools, initialize and shut down the
     # TracerProvider within the script workflow. In long-running production
@@ -60,8 +60,7 @@ def access_secret_version_with_tracing(
 
     try:
         response = client.access_secret_version(request={"name": name})
-        payload = response.payload.data.decode("UTF-8")
-        return payload
+        return response.name
     finally:
         # Flush buffered spans before program completion
         provider.shutdown()
@@ -83,9 +82,9 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    secret_data = access_secret_version_with_tracing(
+    version_name = access_secret_version_with_tracing(
         project_id=args.project_id,
         secret_id=args.secret_id,
         version_id=args.version_id,
     )
-    print(f"Retrieved secret payload: {secret_data}")
+    print(f"Successfully accessed secret version: {version_name}")

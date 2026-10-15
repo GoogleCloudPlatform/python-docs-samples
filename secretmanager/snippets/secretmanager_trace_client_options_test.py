@@ -95,13 +95,13 @@ def test_access_secret_version_with_client_options(mock_grpc_server, monkeypatch
     with mock.patch(
         "secretmanager_trace_client_options.TracerProvider", return_value=provider
     ):
-        payload = access_secret_version_with_client_options(
+        version_name = access_secret_version_with_client_options(
             project_id="test-project",
             secret_id="my-secret",
             version_id="1",
         )
 
-    assert payload == "mock-client-options-token"
+    assert version_name == "projects/test-project/secrets/my-secret/versions/1"
 
     spans = exporter.get_finished_spans()
     assert len(spans) >= 1
