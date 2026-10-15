@@ -1,0 +1,12 @@
+.gcloudignore
+.git
+.gitignore
+.nox/
+.pytest_cache/
+__pycache__/
+**/*.egg-info/
+*sponge_log.xml
+noxfile.py
+noxfile_config.py
+e2e_test.py
+requirements-test.txt
