@@ -334,6 +334,8 @@ class Utils:
     @staticmethod
     def storage_bucket(name: str) -> str:
         if bucket_name := os.environ.get("GOOGLE_CLOUD_BUCKET"):
+            if bucket_name.startswith("gs://"):
+                bucket_name = bucket_name.replace("gs://", "", 1)
             logging.warning(f"Using bucket from GOOGLE_CLOUD_BUCKET: {bucket_name}")
             yield bucket_name
             return  # don't delete
