@@ -24,20 +24,20 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
 
 
-def access_secret_version_with_tracing(
+def get_secret_version_with_tracing(
     project_id: str,
     secret_id: str,
     version_id: str = "latest",
-) -> str:
-    """Access a secret version in Secret Manager with OpenTelemetry tracing enabled.
+) -> secretmanager.SecretVersion:
+    """Get a secret version in Secret Manager with OpenTelemetry tracing enabled.
 
     Args:
         project_id: Google Cloud project ID.
-        secret_id: ID of the secret to access.
-        version_id: ID of the secret version to access (defaults to "latest").
+        secret_id: ID of the secret.
+        version_id: ID of the secret version (defaults to "latest").
 
     Returns:
-        The resource name of the accessed secret version.
+        The SecretVersion metadata object.
     """
     # NOTE: In standalone scripts or CLI tools, initialize and shut down the
     # TracerProvider within the script workflow. In long-running production
@@ -59,8 +59,13 @@ def access_secret_version_with_tracing(
     name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
 
     try:
-        response = client.access_secret_version(request={"name": name})
-        return response.name
+        print("--- OpenTelemetry Trace Spans (JSON) ---")
+        response = client.get_secret_version(request={"name": name})
+        state_name = response.state.name
+        print(
+            f"\nAPI Result: Retrieved secret version {response.name} (state: {state_name})"
+        )
+        return response
     finally:
         # Flush buffered spans before program completion
         provider.shutdown()
@@ -73,16 +78,16 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Access a Secret Manager secret version with OpenTelemetry tracing."
+        description="Get a Secret Manager secret version with OpenTelemetry tracing."
     )
     parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument("secret_id", help="id of the secret to access")
+    parser.add_argument("secret_id", help="id of the secret")
     parser.add_argument(
-        "version_id", default="latest", nargs="?", help="version to access"
+        "version_id", default="latest", nargs="?", help="version to get"
     )
 
     args = parser.parse_args()
-    access_secret_version_with_tracing(
+    get_secret_version_with_tracing(
         project_id=args.project_id,
         secret_id=args.secret_id,
         version_id=args.version_id,

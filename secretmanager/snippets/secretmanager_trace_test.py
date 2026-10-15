@@ -33,7 +33,7 @@ from opentelemetry.sdk.trace.export.in_memory_span_exporter import (
 )
 import pytest
 
-from secretmanager_trace import access_secret_version_with_tracing
+from secretmanager_trace import get_secret_version_with_tracing
 
 # Ensure OTel tracing capabilities are enabled in the environment
 os.environ["GOOGLE_SDK_EXPERIMENTAL_PYTHON_TRACING_ENABLED"] = "true"
@@ -46,18 +46,16 @@ def mock_grpc_server():
     server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=2))
     port = server.add_insecure_port("127.0.0.1:0")
 
-    mock_resp = secretmanager.AccessSecretVersionResponse(
+    mock_resp = secretmanager.SecretVersion(
         name="projects/test-project/secrets/my-secret/versions/1",
-        payload=secretmanager.SecretPayload(data=b"mock-secret-token-123"),
+        state=secretmanager.SecretVersion.State.ENABLED,
     )
 
     generic_handler = grpc.method_handlers_generic_handler(
         "google.cloud.secretmanager.v1.SecretManagerService",
         {
-            "AccessSecretVersion": grpc.unary_unary_rpc_method_handler(
-                lambda r, c: secretmanager.AccessSecretVersionResponse.serialize(
-                    mock_resp
-                ),
+            "GetSecretVersion": grpc.unary_unary_rpc_method_handler(
+                lambda r, c: secretmanager.SecretVersion.serialize(mock_resp),
                 request_deserializer=lambda b: b,
                 response_serializer=lambda b: b,
             )
@@ -80,8 +78,8 @@ def otel_setup():
     return provider, exporter
 
 
-def test_access_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
-    """Verifies that access_secret_version_with_tracing emits T3 and T4 spans."""
+def test_get_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
+    """Verifies that get_secret_version_with_tracing emits T3 and T4 spans."""
     port = mock_grpc_server
     provider, exporter = otel_setup
 
@@ -91,9 +89,9 @@ def test_access_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
         kwargs["channel"] = grpc.insecure_channel(f"127.0.0.1:{port}")
         orig_init(self, *args, **kwargs)
         # Ensure modern GAPIC tracing wrapper is attached to the transport callable
-        self._wrapped_methods[self.access_secret_version] = method.wrap_method(
-            self.access_secret_version,
-            method_name="/google.cloud.secretmanager.v1.SecretManagerService/AccessSecretVersion",
+        self._wrapped_methods[self.get_secret_version] = method.wrap_method(
+            self.get_secret_version,
+            method_name="/google.cloud.secretmanager.v1.SecretManagerService/GetSecretVersion",
             client_options=ClientOptions(tracer_provider=provider),
             kind="grpc",
         )
@@ -102,14 +100,15 @@ def test_access_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
         with mock.patch.object(
             SecretManagerServiceGrpcTransport, "__init__", patched_init
         ):
-            version_name = access_secret_version_with_tracing(
+            version = get_secret_version_with_tracing(
                 project_id="test-project",
                 secret_id="my-secret",
                 version_id="1",
             )
 
-    # 1. Verify returned version resource name
-    assert version_name == "projects/test-project/secrets/my-secret/versions/1"
+    # 1. Verify returned SecretVersion metadata
+    assert version.name == "projects/test-project/secrets/my-secret/versions/1"
+    assert version.state == secretmanager.SecretVersion.State.ENABLED
 
     # 2. Inspect emitted spans
     spans = exporter.get_finished_spans()
@@ -127,7 +126,7 @@ def test_access_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
     # 3. Verify T3 logical client span attributes
     assert (
         t3_span.name
-        == "google.cloud.secretmanager.v1.SecretManagerService/AccessSecretVersion"
+        == "google.cloud.secretmanager.v1.SecretManagerService/GetSecretVersion"
     )
     assert t3_span.attributes.get("rpc.system.name") == "grpc"
     assert t3_span.attributes.get("rpc.response.status_code") == "OK"
@@ -135,7 +134,7 @@ def test_access_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
     # 4. Verify T4 wire attempt span attributes
     assert (
         t4_span.name
-        == "google.cloud.secretmanager.v1.SecretManagerService/AccessSecretVersion"
+        == "google.cloud.secretmanager.v1.SecretManagerService/GetSecretVersion"
     )
     assert (
         t4_span.attributes.get("rpc.service")

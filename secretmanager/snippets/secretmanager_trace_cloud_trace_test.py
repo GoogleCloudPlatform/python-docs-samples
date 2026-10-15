@@ -51,7 +51,7 @@ if "opentelemetry.exporter.cloud_trace" not in sys.modules:
 # CloudTraceSpanExporter before importing the snippet module in environments
 # where opentelemetry-exporter-gcp-trace is not installed.
 from secretmanager_trace_cloud_trace import (  # noqa: E402
-    access_secret_version_cloud_trace,
+    get_secret_version_cloud_trace,
 )
 
 os.environ["GOOGLE_SDK_EXPERIMENTAL_PYTHON_TRACING_ENABLED"] = "true"
@@ -64,18 +64,16 @@ def mock_grpc_server():
     server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=2))
     port = server.add_insecure_port("127.0.0.1:0")
 
-    mock_resp = secretmanager.AccessSecretVersionResponse(
+    mock_resp = secretmanager.SecretVersion(
         name="projects/test-project/secrets/my-secret/versions/1",
-        payload=secretmanager.SecretPayload(data=b"mock-cloud-trace-secret"),
+        state=secretmanager.SecretVersion.State.ENABLED,
     )
 
     generic_handler = grpc.method_handlers_generic_handler(
         "google.cloud.secretmanager.v1.SecretManagerService",
         {
-            "AccessSecretVersion": grpc.unary_unary_rpc_method_handler(
-                lambda r, c: secretmanager.AccessSecretVersionResponse.serialize(
-                    mock_resp
-                ),
+            "GetSecretVersion": grpc.unary_unary_rpc_method_handler(
+                lambda r, c: secretmanager.SecretVersion.serialize(mock_resp),
                 request_deserializer=lambda b: b,
                 response_serializer=lambda b: b,
             )
@@ -89,8 +87,8 @@ def mock_grpc_server():
         server.stop(grace=None)
 
 
-def test_access_secret_version_cloud_trace(mock_grpc_server, monkeypatch):
-    """Verifies that access_secret_version_cloud_trace initializes CloudTraceSpanExporter and runs."""
+def test_get_secret_version_cloud_trace(mock_grpc_server, monkeypatch):
+    """Verifies that get_secret_version_cloud_trace initializes CloudTraceSpanExporter and runs."""
     port = mock_grpc_server
 
     orig_init = SecretManagerServiceGrpcTransport.__init__
@@ -107,11 +105,12 @@ def test_access_secret_version_cloud_trace(mock_grpc_server, monkeypatch):
         instance = MockCloudTraceSpanExporter()
         mock_cloud_exporter_cls.return_value = instance
 
-        version_name = access_secret_version_cloud_trace(
+        version = get_secret_version_cloud_trace(
             project_id="test-project",
             secret_id="my-secret",
             version_id="1",
         )
 
-        assert version_name == "projects/test-project/secrets/my-secret/versions/1"
+        assert version.name == "projects/test-project/secrets/my-secret/versions/1"
+        assert version.state == secretmanager.SecretVersion.State.ENABLED
         mock_cloud_exporter_cls.assert_called_once()
