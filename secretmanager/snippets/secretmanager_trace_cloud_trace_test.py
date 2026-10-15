@@ -15,7 +15,6 @@
 
 """Unit tests for secretmanager_trace_cloud_trace snippet."""
 
-import concurrent.futures
 import os
 import sys
 from unittest import mock
@@ -26,7 +25,6 @@ from google.cloud.secretmanager_v1.services.secret_manager_service.transports.gr
 )
 import grpc
 from opentelemetry.sdk.trace.export import SpanExporter, SpanExportResult
-import pytest
 
 
 # Mock opentelemetry.exporter.cloud_trace if not installed in the environment
@@ -56,35 +54,6 @@ from secretmanager_trace_cloud_trace import (  # noqa: E402
 
 os.environ["GOOGLE_SDK_EXPERIMENTAL_PYTHON_TRACING_ENABLED"] = "true"
 os.environ["GOOGLE_SDK_PYTHON_TRACING_ENABLED"] = "true"
-
-
-@pytest.fixture
-def mock_grpc_server():
-    """Starts an in-memory gRPC server returning mock responses."""
-    server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=2))
-    port = server.add_insecure_port("127.0.0.1:0")
-
-    mock_resp = secretmanager.SecretVersion(
-        name="projects/test-project/secrets/my-secret/versions/1",
-        state=secretmanager.SecretVersion.State.ENABLED,
-    )
-
-    generic_handler = grpc.method_handlers_generic_handler(
-        "google.cloud.secretmanager.v1.SecretManagerService",
-        {
-            "GetSecretVersion": grpc.unary_unary_rpc_method_handler(
-                lambda r, c: secretmanager.SecretVersion.serialize(mock_resp),
-                request_deserializer=lambda b: b,
-                response_serializer=lambda b: b,
-            )
-        },
-    )
-    server.add_generic_rpc_handlers((generic_handler,))
-    server.start()
-    try:
-        yield port
-    finally:
-        server.stop(grace=None)
 
 
 def test_get_secret_version_cloud_trace(mock_grpc_server, monkeypatch):
