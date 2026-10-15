@@ -52,6 +52,12 @@ authentication:
     # Replace SERVICE-ACCOUNT-ID with your service account's email address.
     issuer: SERVICE-ACCOUNT-ID
     jwks_uri: https://www.googleapis.com/robot/v1/metadata/x509/SERVICE-ACCOUNT-ID
+    # Optional: if the JWTs you send (e.g. via jwt_token_gen.py's
+    # --audiences flag) use a custom "aud" claim instead of your Endpoints
+    # service name, uncomment this and set it to that same value, or ESP
+    # will reject the token with a JWT validation error. See
+    # https://cloud.google.com/endpoints/docs/grpc/troubleshoot-jwt
+    # audiences: YOUR-AUDIENCE-VALUE
   rules:
   # This auth rule will apply to all methods.
   - selector: "*"
