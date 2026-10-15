@@ -15,7 +15,6 @@ import os
 
 import thinking_budget_with_txt
 import thinking_includethoughts_with_txt
-import thinking_interactions_with_txt
 import thinking_with_txt
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
@@ -34,8 +33,3 @@ def test_thinking_includethoughts_with_txt() -> None:
 
 def test_thinking_with_txt() -> None:
     assert thinking_with_txt.generate_content()
-
-
-
-def test_thinking_interactions_with_txt() -> None:
-    assert thinking_interactions_with_txt.create_interaction()

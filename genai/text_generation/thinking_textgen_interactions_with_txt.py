@@ -16,12 +16,29 @@
 def create_interaction() -> str:
     # [START googlegenaisdk_interactions_thinking_textgen_with_txt]
     from google import genai
+    from google.genai.interactions import GenerationConfig
 
     client = genai.Client()
     interaction = client.interactions.create(
-        model="gemini-3.1-pro-preview",
+        model="gemini-4-argon",
         input="solve x^2 + 4x + 4 = 0",
+        generation_config=GenerationConfig(
+            thinking_level="high",
+            thinking_summaries="auto",
+        ),
     )
+
+    # Print the model's thoughts if available
+    for step in interaction.steps:
+        if step.type == "thought" and step.summary:
+            print("--- Thoughts ---")
+            for item in step.summary:
+                if hasattr(item, "text"):
+                    print(item.text)
+                else:
+                    print(item)
+
+    print("--- Answer ---")
     print(interaction.output_text)
     # Example Response:
     #     Okay, let's solve the quadratic equation x² + 4x + 4 = 0.
