@@ -53,6 +53,8 @@ def delete_ip_filtering_rules(
             if v.network != vpc_network_to_delete
         ]
 
+    # Re-assign to the bucket property to force google-cloud-storage to register
+    # the nested changes for the patch() call.
     bucket.ip_filter = ip_filter
     bucket.patch()
 

@@ -34,6 +34,9 @@ def test_bucket() -> Generator[str, None, None]:
     yield bucket_name
     try:
         bucket = storage_client.get_bucket(bucket_name)
+        if bucket.ip_filter and bucket.ip_filter.mode != "Disabled":
+            bucket.ip_filter.mode = "Disabled"
+            bucket.patch()
         bucket.delete(force=True)
     except Exception:
         pass
@@ -53,7 +56,12 @@ def test_ip_filter_lifecycle(test_bucket: str, capsys: pytest.CaptureFixture) ->
         assert created.ip_filter.mode == "Disabled"
 
         # 2. Enable IP filtering
-        enabled = storage_enable_ip_filtering.enable_ip_filtering(test_bucket)
+        enabled = storage_enable_ip_filtering.enable_ip_filtering(
+            test_bucket,
+            public_range=public_range,
+            vpc_network=vpc_network,
+            vpc_range="10.0.0.0/24",
+        )
         assert enabled.ip_filter.mode == "Enabled"
 
         # 3. Get IP filtering
@@ -83,7 +91,7 @@ def test_ip_filter_lifecycle(test_bucket: str, capsys: pytest.CaptureFixture) ->
         storage_list_buckets_ip_filtering.list_buckets_ip_filtering()
         out, _ = capsys.readouterr()
         assert test_bucket in out
-    except (exceptions.Forbidden, exceptions.BadRequest) as e:
+    except exceptions.Forbidden as e:
         pytest.skip(
             "Skipping test due to insufficient permissions or IP filter"
             f" network restriction: {e}"
