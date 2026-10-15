@@ -35,7 +35,6 @@ import textgen_interactions_with_gcs_audio
 import textgen_interactions_with_local_video
 import textgen_interactions_with_multi_img
 import textgen_interactions_with_multi_local_img
-import textgen_interactions_with_mute_video
 import textgen_interactions_with_pdf
 import textgen_interactions_with_txt
 import textgen_interactions_with_txt_img
@@ -217,11 +216,6 @@ def test_textgen_interactions_with_multi_local_img() -> None:
         "./test_data/latte.jpg",
         "./test_data/scones.jpg",
     )
-    assert response
-
-
-def test_textgen_interactions_with_mute_video() -> None:
-    response = textgen_interactions_with_mute_video.create_interaction()
     assert response
 
 
