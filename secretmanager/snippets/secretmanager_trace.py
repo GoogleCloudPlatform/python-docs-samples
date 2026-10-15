@@ -82,9 +82,8 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    version_name = access_secret_version_with_tracing(
+    access_secret_version_with_tracing(
         project_id=args.project_id,
         secret_id=args.secret_id,
         version_id=args.version_id,
     )
-    print(f"Successfully accessed secret version: {version_name}")
