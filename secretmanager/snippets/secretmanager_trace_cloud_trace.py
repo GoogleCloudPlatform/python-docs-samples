@@ -49,7 +49,8 @@ def get_secret_version_cloud_trace(
     # applications (e.g., web servers), configure the TracerProvider once at
     # application startup.
     #
-    # 1. Initialize OpenTelemetry TracerProvider with CloudTraceSpanExporter and ConsoleSpanExporter
+    # 1. Initialize OpenTelemetry TracerProvider with CloudTraceSpanExporter
+    # NOTE: We also initialize ConsoleSpanExporter to display results from this sample directly.
     provider = TracerProvider()
     cloud_exporter = CloudTraceSpanExporter()
     provider.add_span_processor(BatchSpanProcessor(cloud_exporter))
