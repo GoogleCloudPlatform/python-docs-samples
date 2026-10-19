@@ -34,8 +34,10 @@ def test_bucket() -> Generator[str, None, None]:
     yield bucket_name
     try:
         bucket = storage_client.get_bucket(bucket_name)
-        if bucket.ip_filter and bucket.ip_filter.mode != "Disabled":
-            bucket.ip_filter.mode = "Disabled"
+        ip_filter = bucket.ip_filter
+        if ip_filter and ip_filter.mode != "Disabled":
+            ip_filter.mode = "Disabled"
+            bucket.ip_filter = ip_filter
             bucket.patch()
         bucket.delete(force=True)
     except Exception:
