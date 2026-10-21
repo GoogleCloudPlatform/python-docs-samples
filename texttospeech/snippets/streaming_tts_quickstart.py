@@ -58,8 +58,19 @@ def run_streaming_tts_quickstart():
 
     streaming_responses = client.streaming_synthesize(request_generator())
 
-    for response in streaming_responses:
-        print(f"Audio content size in bytes is: {len(response.audio_content)}")
+    # The response stream contains headerless linear PCM (LINEAR16) audio
+    # sampled at 24000 Hz. Write it to a standard playable .wav file by
+    # adding a proper WAV header with the stdlib `wave` module, rather than
+    # a hand-rolled byte header.
+    import wave
+
+    with wave.open("streaming_tts_quickstart_output.wav", "wb") as wav_file:
+        wav_file.setnchannels(1)  # LINEAR16 audio from this API is mono.
+        wav_file.setsampwidth(2)  # 16-bit samples (LINEAR16) = 2 bytes/sample.
+        wav_file.setframerate(24000)  # Sample rate used above.
+        for response in streaming_responses:
+            print(f"Audio content size in bytes is: {len(response.audio_content)}")
+            wav_file.writeframes(response.audio_content)
     # [END tts_synthezise_streaming]
 
 
