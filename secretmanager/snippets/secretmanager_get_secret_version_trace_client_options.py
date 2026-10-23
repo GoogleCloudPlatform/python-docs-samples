@@ -13,23 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample demonstrating OpenTelemetry distributed tracing with SecretManagerServiceClient."""
+"""Sample demonstrating programmatic OpenTelemetry configuration via ClientOptions with SecretManagerServiceClient."""
 
-# [START secretmanager_enable_tracing]
-import os
-
+# [START secretmanager_trace_client_options]
+from google.api_core.client_options import ClientOptions
 from google.cloud import secretmanager
-from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
 
 
-def get_secret_version_with_tracing(
+def get_secret_version_with_client_options(
     project_id: str,
     secret_id: str,
     version_id: str = "latest",
 ) -> secretmanager.SecretVersion:
-    """Get a secret version in Secret Manager with OpenTelemetry tracing enabled.
+    """Get a secret version configuring tracing programmatically via ClientOptions.
 
     Args:
         project_id: Google Cloud project ID.
@@ -39,23 +37,17 @@ def get_secret_version_with_tracing(
     Returns:
         The SecretVersion metadata object.
     """
-    # NOTE: In standalone scripts or CLI tools, initialize and shut down the
-    # TracerProvider within the script workflow. In long-running production
-    # applications (e.g., web servers), configure the TracerProvider once at
-    # application startup.
-    #
-    # 1. Initialize the OpenTelemetry TracerProvider with a Console exporter
+    # Initialize an independent TracerProvider (no global registration required)
     provider = TracerProvider()
     provider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))
-    trace.set_tracer_provider(provider)
 
-    # 2. Enable Google Cloud client library tracing
-    os.environ["GOOGLE_SDK_PYTHON_TRACING_ENABLED"] = "true"
+    # Pass the TracerProvider directly via ClientOptions
+    # Tracing is activated specifically for this client instance, even without
+    # setting the GOOGLE_SDK_PYTHON_TRACING_ENABLED environment variable.
+    options = ClientOptions(tracer_provider=provider)
+    client = secretmanager.SecretManagerServiceClient(client_options=options)
 
-    # 3. Instantiate the client (automatically discovers the active TracerProvider)
-    client = secretmanager.SecretManagerServiceClient()
-
-    # 4. Construct the resource name and invoke the RPC
+    # Construct resource name and invoke RPC
     name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
 
     try:
@@ -71,14 +63,14 @@ def get_secret_version_with_tracing(
         provider.shutdown()
 
 
-# [END secretmanager_enable_tracing]
+# [END secretmanager_trace_client_options]
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Get a Secret Manager secret version with OpenTelemetry tracing."
+        description="Get a Secret Manager secret version with ClientOptions-configured tracing."
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("secret_id", help="id of the secret")
@@ -87,7 +79,7 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    get_secret_version_with_tracing(
+    get_secret_version_with_client_options(
         project_id=args.project_id,
         secret_id=args.secret_id,
         version_id=args.version_id,

@@ -13,11 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for secretmanager_trace_client_options snippet."""
+"""Unit tests for secretmanager_get_secret_version_trace_client_options snippet."""
 
 import os
 from unittest import mock
 
+from google.api_core.client_options import ClientOptions
 from google.api_core.gapic_v1 import method
 from google.cloud import secretmanager
 from google.cloud.secretmanager_v1.services.secret_manager_service.transports.grpc import (
@@ -25,7 +26,7 @@ from google.cloud.secretmanager_v1.services.secret_manager_service.transports.gr
 )
 import grpc
 
-from secretmanager_trace_client_options import (
+from secretmanager_get_secret_version_trace_client_options import (
     get_secret_version_with_client_options,
 )
 
@@ -43,7 +44,9 @@ def test_get_secret_version_with_client_options(
 
     def patched_init(self, *args, **kwargs):
         kwargs["channel"] = grpc.insecure_channel(f"127.0.0.1:{port}")
-        client_opts = kwargs.get("client_options")
+        client_opts = kwargs.get("client_options") or ClientOptions(
+            tracer_provider=provider
+        )
         orig_init(self, *args, **kwargs)
         if client_opts and client_opts.tracer_provider:
             self._wrapped_methods[self.get_secret_version] = method.wrap_method(
@@ -57,7 +60,8 @@ def test_get_secret_version_with_client_options(
     monkeypatch.delenv("GOOGLE_SDK_PYTHON_TRACING_ENABLED", raising=False)
 
     with mock.patch(
-        "secretmanager_trace_client_options.TracerProvider", return_value=provider
+        "secretmanager_get_secret_version_trace_client_options.TracerProvider",
+        return_value=provider,
     ):
         version = get_secret_version_with_client_options(
             project_id="test-project",

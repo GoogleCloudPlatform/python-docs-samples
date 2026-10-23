@@ -13,23 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for secretmanager_trace_async snippet."""
+"""Unit tests for secretmanager_get_secret_version_trace snippet."""
 
 import os
 from unittest import mock
 
 from google.api_core import _observability
 from google.api_core.client_options import ClientOptions
-from google.api_core.gapic_v1 import method_async
+from google.api_core.gapic_v1 import method
 from google.cloud import secretmanager
-from google.cloud.secretmanager_v1.services.secret_manager_service.transports.grpc_asyncio import (
-    SecretManagerServiceGrpcAsyncIOTransport,
+from google.cloud.secretmanager_v1.services.secret_manager_service.transports.grpc import (
+    SecretManagerServiceGrpcTransport,
 )
 import grpc
-import pytest
 
-from secretmanager_trace_async import (
-    get_secret_version_with_tracing_async,
+from secretmanager_get_secret_version_trace import (
+    get_secret_version_with_tracing,
 )
 
 # Ensure OTel tracing capabilities are enabled in the environment
@@ -37,46 +36,47 @@ os.environ["GOOGLE_SDK_EXPERIMENTAL_PYTHON_TRACING_ENABLED"] = "true"
 os.environ["GOOGLE_SDK_PYTHON_TRACING_ENABLED"] = "true"
 
 
-@pytest.mark.asyncio
-async def test_get_secret_version_with_tracing_async_spans(
-    mock_grpc_server, otel_setup
-):
-    """Verifies that get_secret_version_with_tracing_async emits T3 and T4 spans."""
+def test_get_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
+    """Verifies that get_secret_version_with_tracing emits T3 and T4 spans."""
     port = mock_grpc_server
     provider, exporter = otel_setup
 
-    orig_init = SecretManagerServiceGrpcAsyncIOTransport.__init__
+    orig_init = SecretManagerServiceGrpcTransport.__init__
 
     def patched_init(self, *args, **kwargs):
         opts = ClientOptions(api_endpoint=f"127.0.0.1:{port}", tracer_provider=provider)
-        interceptors = _observability.get_otel_async_interceptor(opts)
-        kwargs["channel"] = grpc.aio.insecure_channel(
-            f"127.0.0.1:{port}", interceptors=interceptors
-        )
+        interceptor = _observability.get_otel_interceptor(opts)
+        channel = grpc.insecure_channel(f"127.0.0.1:{port}")
+        if interceptor:
+            channel = interceptor(channel)
+        kwargs["channel"] = channel
         orig_init(self, *args, **kwargs)
-        # Ensure modern GAPIC async tracing wrapper is attached
-        self._wrapped_methods[self.get_secret_version] = method_async.wrap_method(
+        # Ensure modern GAPIC tracing wrapper is attached to the transport callable
+        self._wrapped_methods[self.get_secret_version] = method.wrap_method(
             self.get_secret_version,
             method_name="/google.cloud.secretmanager.v1.SecretManagerService/GetSecretVersion",
             client_options=opts,
-            kind="grpc_asyncio",
+            kind="grpc",
         )
 
-    with mock.patch("secretmanager_trace_async.TracerProvider", return_value=provider):
+    with mock.patch(
+        "secretmanager_get_secret_version_trace.TracerProvider",
+        return_value=provider,
+    ):
         with mock.patch.object(
-            SecretManagerServiceGrpcAsyncIOTransport, "__init__", patched_init
+            SecretManagerServiceGrpcTransport, "__init__", patched_init
         ):
-            version = await get_secret_version_with_tracing_async(
+            version = get_secret_version_with_tracing(
                 project_id="test-project",
                 secret_id="my-secret",
                 version_id="1",
             )
 
-    # 1. Verify returned SecretVersion metadata
+    # Verify returned SecretVersion metadata
     assert version.name == "projects/test-project/secrets/my-secret/versions/1"
     assert version.state == secretmanager.SecretVersion.State.ENABLED
 
-    # 2. Inspect emitted spans
+    # Inspect emitted spans
     spans = exporter.get_finished_spans()
     assert len(spans) == 2, f"Expected 2 spans (T3 + T4), but got {len(spans)}"
 
@@ -89,7 +89,7 @@ async def test_get_secret_version_with_tracing_async_spans(
     t3_span = t3_spans[0]
     t4_span = t4_spans[0]
 
-    # 3. Verify T3 logical client span attributes
+    # Verify T3 logical client span attributes
     assert (
         t3_span.name
         == "google.cloud.secretmanager.v1.SecretManagerService/GetSecretVersion"
@@ -97,7 +97,7 @@ async def test_get_secret_version_with_tracing_async_spans(
     assert t3_span.attributes.get("rpc.system.name") == "grpc"
     assert t3_span.attributes.get("rpc.response.status_code") == "OK"
 
-    # 4. Verify T4 wire attempt span attributes
+    # Verify T4 wire attempt span attributes
     assert (
         t4_span.name
         == "google.cloud.secretmanager.v1.SecretManagerService/GetSecretVersion"
@@ -109,5 +109,5 @@ async def test_get_secret_version_with_tracing_async_spans(
     assert t4_span.attributes.get("rpc.grpc.status_code") == 0
     assert t4_span.attributes.get("rpc.response.status_code") == "OK"
 
-    # 5. Verify span hierarchy / parent-child linkage
+    # Verify span hierarchy / parent-child linkage
     assert t4_span.parent.span_id == t3_span.context.span_id

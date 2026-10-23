@@ -13,21 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample demonstrating programmatic OpenTelemetry configuration via ClientOptions with SecretManagerServiceClient."""
+"""Sample demonstrating exporting OpenTelemetry traces to Google Cloud Trace with SecretManagerServiceClient."""
 
-# [START secretmanager_trace_client_options]
-from google.api_core.client_options import ClientOptions
+# [START secretmanager_trace_cloud_trace]
+import os
+
 from google.cloud import secretmanager
+from opentelemetry import trace
+from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
+from opentelemetry.sdk.trace.export import (
+    BatchSpanProcessor,
+    ConsoleSpanExporter,
+    SimpleSpanProcessor,
+)
 
 
-def get_secret_version_with_client_options(
+def get_secret_version_cloud_trace(
     project_id: str,
     secret_id: str,
     version_id: str = "latest",
 ) -> secretmanager.SecretVersion:
-    """Get a secret version configuring tracing programmatically via ClientOptions.
+    """Get a secret version in Secret Manager exporting traces to Google Cloud Trace.
 
     Args:
         project_id: Google Cloud project ID.
@@ -37,17 +44,26 @@ def get_secret_version_with_client_options(
     Returns:
         The SecretVersion metadata object.
     """
-    # 1. Initialize an independent TracerProvider (no global registration required)
+    # NOTE: In standalone scripts or CLI tools, initialize and shut down the
+    # TracerProvider within the script workflow. In long-running production
+    # applications (e.g., web servers), configure the TracerProvider once at
+    # application startup.
+    #
+    # Initialize OpenTelemetry TracerProvider with CloudTraceSpanExporter
+    # NOTE: We also initialize ConsoleSpanExporter to display results from this sample directly.
     provider = TracerProvider()
+    cloud_exporter = CloudTraceSpanExporter()
+    provider.add_span_processor(BatchSpanProcessor(cloud_exporter))
     provider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))
+    trace.set_tracer_provider(provider)
 
-    # 2. Pass the TracerProvider directly via ClientOptions
-    # Tracing is activated specifically for this client instance, even without
-    # setting the GOOGLE_SDK_PYTHON_TRACING_ENABLED environment variable.
-    options = ClientOptions(tracer_provider=provider)
-    client = secretmanager.SecretManagerServiceClient(client_options=options)
+    # Enable Google Cloud client library tracing
+    os.environ["GOOGLE_SDK_PYTHON_TRACING_ENABLED"] = "true"
 
-    # 3. Construct resource name and invoke RPC
+    # Instantiate the client (automatically discovers the active TracerProvider)
+    client = secretmanager.SecretManagerServiceClient()
+
+    # Construct resource name and invoke RPC
     name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
 
     try:
@@ -59,18 +75,18 @@ def get_secret_version_with_client_options(
         )
         return response
     finally:
-        # Flush buffered spans before program completion
+        # Flush buffered spans to Cloud Trace before exiting
         provider.shutdown()
 
 
-# [END secretmanager_trace_client_options]
+# [END secretmanager_trace_cloud_trace]
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Get a Secret Manager secret version with ClientOptions-configured tracing."
+        description="Get a Secret Manager secret version and export traces to Google Cloud Trace."
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("secret_id", help="id of the secret")
@@ -79,7 +95,7 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    get_secret_version_with_client_options(
+    get_secret_version_cloud_trace(
         project_id=args.project_id,
         secret_id=args.secret_id,
         version_id=args.version_id,
