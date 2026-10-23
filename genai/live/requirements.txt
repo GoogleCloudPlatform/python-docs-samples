@@ -4,6 +4,6 @@ websockets==15.0.1
 numpy==2.5.3
 soundfile==0.14.0
 openai==1.99.1
-setuptools==84.0.0
+setuptools==84.1.0
 # pyaudio==0.2.14 pyudio cannot be built on python versions >=3.10
 librosa==1.0.0
