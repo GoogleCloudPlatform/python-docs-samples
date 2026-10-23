@@ -13,10 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample demonstrating async OpenTelemetry distributed tracing with SecretManagerServiceAsyncClient."""
+"""Sample demonstrating OpenTelemetry distributed tracing with SecretManagerServiceClient."""
 
-# [START secretmanager_enable_tracing_async]
-import asyncio
+# [START secretmanager_enable_tracing]
 import os
 
 from google.cloud import secretmanager
@@ -25,12 +24,12 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
 
 
-async def get_secret_version_with_tracing_async(
+def get_secret_version_with_tracing(
     project_id: str,
     secret_id: str,
     version_id: str = "latest",
 ) -> secretmanager.SecretVersion:
-    """Get a secret version using SecretManagerServiceAsyncClient with OpenTelemetry tracing.
+    """Get a secret version in Secret Manager with OpenTelemetry tracing enabled.
 
     Args:
         project_id: Google Cloud project ID.
@@ -45,23 +44,23 @@ async def get_secret_version_with_tracing_async(
     # applications (e.g., web servers), configure the TracerProvider once at
     # application startup.
     #
-    # 1. Initialize the OpenTelemetry TracerProvider with a Console exporter
+    # Initialize the OpenTelemetry TracerProvider with a Console exporter
     provider = TracerProvider()
     provider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))
     trace.set_tracer_provider(provider)
 
-    # 2. Enable Google Cloud client library tracing
+    # Enable Google Cloud client library tracing
     os.environ["GOOGLE_SDK_PYTHON_TRACING_ENABLED"] = "true"
 
-    # 3. Instantiate the async client
-    client = secretmanager.SecretManagerServiceAsyncClient()
+    # Instantiate the client (automatically discovers the active TracerProvider)
+    client = secretmanager.SecretManagerServiceClient()
 
-    # 4. Construct resource name and invoke the async RPC
+    # Construct the resource name and invoke the RPC
     name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
 
     try:
         print("--- OpenTelemetry Trace Spans (JSON) ---")
-        response = await client.get_secret_version(request={"name": name})
+        response = client.get_secret_version(request={"name": name})
         state_name = response.state.name
         print(
             f"\nAPI Result: Retrieved secret version {response.name} (state: {state_name})"
@@ -72,14 +71,14 @@ async def get_secret_version_with_tracing_async(
         provider.shutdown()
 
 
-# [END secretmanager_enable_tracing_async]
+# [END secretmanager_enable_tracing]
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Get a Secret Manager secret version asynchronously with OpenTelemetry tracing."
+        description="Get a Secret Manager secret version with OpenTelemetry tracing."
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("secret_id", help="id of the secret")
@@ -88,10 +87,8 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    asyncio.run(
-        get_secret_version_with_tracing_async(
-            project_id=args.project_id,
-            secret_id=args.secret_id,
-            version_id=args.version_id,
-        )
+    get_secret_version_with_tracing(
+        project_id=args.project_id,
+        secret_id=args.secret_id,
+        version_id=args.version_id,
     )

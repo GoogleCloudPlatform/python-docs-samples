@@ -13,11 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for secretmanager_trace snippet."""
+"""Unit tests for get_secret_version_trace snippet."""
 
 import os
 from unittest import mock
 
+from get_secret_version_trace import (
+    get_secret_version_with_tracing,
+)
 from google.api_core.client_options import ClientOptions
 from google.api_core.gapic_v1 import method
 from google.cloud import secretmanager
@@ -25,8 +28,6 @@ from google.cloud.secretmanager_v1.services.secret_manager_service.transports.gr
     SecretManagerServiceGrpcTransport,
 )
 import grpc
-
-from secretmanager_trace import get_secret_version_with_tracing
 
 # Ensure OTel tracing capabilities are enabled in the environment
 os.environ["GOOGLE_SDK_EXPERIMENTAL_PYTHON_TRACING_ENABLED"] = "true"
@@ -51,7 +52,10 @@ def test_get_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
             kind="grpc",
         )
 
-    with mock.patch("secretmanager_trace.TracerProvider", return_value=provider):
+    with mock.patch(
+        "get_secret_version_trace.TracerProvider",
+        return_value=provider,
+    ):
         with mock.patch.object(
             SecretManagerServiceGrpcTransport, "__init__", patched_init
         ):
@@ -61,11 +65,11 @@ def test_get_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
                 version_id="1",
             )
 
-    # 1. Verify returned SecretVersion metadata
+    # Verify returned SecretVersion metadata
     assert version.name == "projects/test-project/secrets/my-secret/versions/1"
     assert version.state == secretmanager.SecretVersion.State.ENABLED
 
-    # 2. Inspect emitted spans
+    # Inspect emitted spans
     spans = exporter.get_finished_spans()
     assert len(spans) == 2, f"Expected 2 spans (T3 + T4), but got {len(spans)}"
 
@@ -78,7 +82,7 @@ def test_get_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
     t3_span = t3_spans[0]
     t4_span = t4_spans[0]
 
-    # 3. Verify T3 logical client span attributes
+    # Verify T3 logical client span attributes
     assert (
         t3_span.name
         == "google.cloud.secretmanager.v1.SecretManagerService/GetSecretVersion"
@@ -86,7 +90,7 @@ def test_get_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
     assert t3_span.attributes.get("rpc.system.name") == "grpc"
     assert t3_span.attributes.get("rpc.response.status_code") == "OK"
 
-    # 4. Verify T4 wire attempt span attributes
+    # Verify T4 wire attempt span attributes
     assert (
         t4_span.name
         == "google.cloud.secretmanager.v1.SecretManagerService/GetSecretVersion"
@@ -98,5 +102,5 @@ def test_get_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
     assert t4_span.attributes.get("rpc.grpc.status_code") == 0
     assert t4_span.attributes.get("rpc.response.status_code") == "OK"
 
-    # 5. Verify span hierarchy / parent-child linkage
+    # Verify span hierarchy / parent-child linkage
     assert t4_span.parent.span_id == t3_span.context.span_id

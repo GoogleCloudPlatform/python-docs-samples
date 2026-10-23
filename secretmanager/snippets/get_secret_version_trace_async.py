@@ -13,28 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample demonstrating exporting OpenTelemetry traces to Google Cloud Trace with SecretManagerServiceClient."""
+"""Sample demonstrating async OpenTelemetry distributed tracing with SecretManagerServiceAsyncClient."""
 
-# [START secretmanager_trace_cloud_trace]
+# [START secretmanager_enable_tracing_async]
+import asyncio
 import os
 
 from google.cloud import secretmanager
 from opentelemetry import trace
-from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import (
-    BatchSpanProcessor,
-    ConsoleSpanExporter,
-    SimpleSpanProcessor,
-)
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
 
 
-def get_secret_version_cloud_trace(
+async def get_secret_version_with_tracing_async(
     project_id: str,
     secret_id: str,
     version_id: str = "latest",
 ) -> secretmanager.SecretVersion:
-    """Get a secret version in Secret Manager exporting traces to Google Cloud Trace.
+    """Get a secret version using SecretManagerServiceAsyncClient with OpenTelemetry tracing.
 
     Args:
         project_id: Google Cloud project ID.
@@ -49,44 +45,41 @@ def get_secret_version_cloud_trace(
     # applications (e.g., web servers), configure the TracerProvider once at
     # application startup.
     #
-    # 1. Initialize OpenTelemetry TracerProvider with CloudTraceSpanExporter
-    # NOTE: We also initialize ConsoleSpanExporter to display results from this sample directly.
+    # Initialize the OpenTelemetry TracerProvider with a Console exporter
     provider = TracerProvider()
-    cloud_exporter = CloudTraceSpanExporter()
-    provider.add_span_processor(BatchSpanProcessor(cloud_exporter))
     provider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))
     trace.set_tracer_provider(provider)
 
-    # 2. Enable Google Cloud client library tracing
+    # Enable Google Cloud client library tracing
     os.environ["GOOGLE_SDK_PYTHON_TRACING_ENABLED"] = "true"
 
-    # 3. Instantiate the client (automatically discovers the active TracerProvider)
-    client = secretmanager.SecretManagerServiceClient()
+    # Instantiate the async client
+    client = secretmanager.SecretManagerServiceAsyncClient()
 
-    # 4. Construct resource name and invoke RPC
+    # Construct resource name and invoke the async RPC
     name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
 
     try:
         print("--- OpenTelemetry Trace Spans (JSON) ---")
-        response = client.get_secret_version(request={"name": name})
+        response = await client.get_secret_version(request={"name": name})
         state_name = response.state.name
         print(
             f"\nAPI Result: Retrieved secret version {response.name} (state: {state_name})"
         )
         return response
     finally:
-        # Flush buffered spans to Cloud Trace before exiting
+        # Flush buffered spans before program completion
         provider.shutdown()
 
 
-# [END secretmanager_trace_cloud_trace]
+# [END secretmanager_enable_tracing_async]
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Get a Secret Manager secret version and export traces to Google Cloud Trace."
+        description="Get a Secret Manager secret version asynchronously with OpenTelemetry tracing."
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("secret_id", help="id of the secret")
@@ -95,8 +88,10 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    get_secret_version_cloud_trace(
-        project_id=args.project_id,
-        secret_id=args.secret_id,
-        version_id=args.version_id,
+    asyncio.run(
+        get_secret_version_with_tracing_async(
+            project_id=args.project_id,
+            secret_id=args.secret_id,
+            version_id=args.version_id,
+        )
     )

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for secretmanager_trace_cloud_trace snippet."""
+"""Unit tests for get_secret_version_trace_cloud_trace snippet."""
 
 import os
 import sys
@@ -45,10 +45,10 @@ if "opentelemetry.exporter.cloud_trace" not in sys.modules:
     mock_module.CloudTraceSpanExporter = MockCloudTraceSpanExporter
     sys.modules["opentelemetry.exporter.cloud_trace"] = mock_module
 
-# flake8: E402 is ignored here because we must patch sys.modules with a mock
-# CloudTraceSpanExporter before importing the snippet module in environments
-# where opentelemetry-exporter-gcp-trace is not installed.
-from secretmanager_trace_cloud_trace import (  # noqa: E402
+# flake8: E402 and I100 are ignored here because we must patch sys.modules with
+# a mock CloudTraceSpanExporter before importing the snippet module in
+# environments where opentelemetry-exporter-gcp-trace is not installed.
+from get_secret_version_trace_cloud_trace import (  # noqa: E402, I100
     get_secret_version_cloud_trace,
 )
 
@@ -69,7 +69,7 @@ def test_get_secret_version_cloud_trace(mock_grpc_server, monkeypatch):
     monkeypatch.setattr(SecretManagerServiceGrpcTransport, "__init__", patched_init)
 
     with mock.patch(
-        "secretmanager_trace_cloud_trace.CloudTraceSpanExporter"
+        "get_secret_version_trace_cloud_trace.CloudTraceSpanExporter"
     ) as mock_cloud_exporter_cls:
         instance = MockCloudTraceSpanExporter()
         mock_cloud_exporter_cls.return_value = instance
