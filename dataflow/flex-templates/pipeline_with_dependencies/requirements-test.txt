@@ -14,8 +14,8 @@
 
 # This is a test configuration file. It is not a part of the example.
 
-google-api-python-client==2.87.0
-google-cloud-storage==2.9.0
-pytest-xdist==3.3.0
-pytest==9.0.3
-pyyaml==6.0
+google-api-python-client==2.201.0
+google-cloud-storage==3.17.1
+pytest-xdist==3.8.0
+pytest==9.1.1
+pyyaml==6.0.3

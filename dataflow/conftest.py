@@ -17,7 +17,6 @@ from dataclasses import dataclass
 from datetime import datetime
 import itertools
 import json
-import logging
 import multiprocessing as mp
 import os
 import platform
@@ -29,6 +28,8 @@ import uuid
 
 from google.api_core import retry
 import pytest
+
+import logging
 
 TIMEOUT_SEC = 30 * 60  # 30 minutes (in seconds)
 
@@ -174,7 +175,7 @@ def pubsub_wait_for_messages(subscription_path: str) -> list[str]:
 
         ack_ids = [m.ack_id for m in response.received_messages]
         subscriber.acknowledge(subscription=subscription_path, ack_ids=ack_ids)
-        print(f"pubsub_receive ack messages")
+        print("pubsub_receive ack messages")
     return messages
 
 
@@ -334,6 +335,8 @@ class Utils:
     @staticmethod
     def storage_bucket(name: str) -> str:
         if bucket_name := os.environ.get("GOOGLE_CLOUD_BUCKET"):
+            if bucket_name.startswith("gs://"):
+                bucket_name = bucket_name.replace("gs://", "", 1)
             logging.warning(f"Using bucket from GOOGLE_CLOUD_BUCKET: {bucket_name}")
             yield bucket_name
             return  # don't delete
