@@ -18,6 +18,9 @@
 import os
 from unittest import mock
 
+from get_secret_version_trace_async import (
+    get_secret_version_with_tracing_async,
+)
 from google.api_core import _observability
 from google.api_core.client_options import ClientOptions
 from google.api_core.gapic_v1 import method_async
@@ -27,10 +30,6 @@ from google.cloud.secretmanager_v1.services.secret_manager_service.transports.gr
 )
 import grpc
 import pytest
-
-from get_secret_version_trace_async import (
-    get_secret_version_with_tracing_async,
-)
 
 # Ensure OTel tracing capabilities are enabled in the environment
 os.environ["GOOGLE_SDK_EXPERIMENTAL_PYTHON_TRACING_ENABLED"] = "true"

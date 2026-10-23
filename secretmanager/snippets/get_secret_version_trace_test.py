@@ -18,7 +18,9 @@
 import os
 from unittest import mock
 
-from google.api_core import _observability
+from get_secret_version_trace import (
+    get_secret_version_with_tracing,
+)
 from google.api_core.client_options import ClientOptions
 from google.api_core.gapic_v1 import method
 from google.cloud import secretmanager
@@ -26,10 +28,6 @@ from google.cloud.secretmanager_v1.services.secret_manager_service.transports.gr
     SecretManagerServiceGrpcTransport,
 )
 import grpc
-
-from get_secret_version_trace import (
-    get_secret_version_with_tracing,
-)
 
 # Ensure OTel tracing capabilities are enabled in the environment
 os.environ["GOOGLE_SDK_EXPERIMENTAL_PYTHON_TRACING_ENABLED"] = "true"
@@ -44,18 +42,13 @@ def test_get_secret_version_with_tracing_spans(mock_grpc_server, otel_setup):
     orig_init = SecretManagerServiceGrpcTransport.__init__
 
     def patched_init(self, *args, **kwargs):
-        opts = ClientOptions(api_endpoint=f"127.0.0.1:{port}", tracer_provider=provider)
-        interceptor = _observability.get_otel_interceptor(opts)
-        channel = grpc.insecure_channel(f"127.0.0.1:{port}")
-        if interceptor:
-            channel = interceptor(channel)
-        kwargs["channel"] = channel
+        kwargs["channel"] = grpc.insecure_channel(f"127.0.0.1:{port}")
         orig_init(self, *args, **kwargs)
         # Ensure modern GAPIC tracing wrapper is attached to the transport callable
         self._wrapped_methods[self.get_secret_version] = method.wrap_method(
             self.get_secret_version,
             method_name="/google.cloud.secretmanager.v1.SecretManagerService/GetSecretVersion",
-            client_options=opts,
+            client_options=ClientOptions(tracer_provider=provider),
             kind="grpc",
         )
 

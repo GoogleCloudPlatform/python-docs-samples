@@ -18,17 +18,15 @@
 import os
 from unittest import mock
 
-from google.api_core.client_options import ClientOptions
+from get_secret_version_trace_client_options import (
+    get_secret_version_with_client_options,
+)
 from google.api_core.gapic_v1 import method
 from google.cloud import secretmanager
 from google.cloud.secretmanager_v1.services.secret_manager_service.transports.grpc import (
     SecretManagerServiceGrpcTransport,
 )
 import grpc
-
-from get_secret_version_trace_client_options import (
-    get_secret_version_with_client_options,
-)
 
 os.environ["GOOGLE_SDK_EXPERIMENTAL_PYTHON_TRACING_ENABLED"] = "true"
 
@@ -44,9 +42,7 @@ def test_get_secret_version_with_client_options(
 
     def patched_init(self, *args, **kwargs):
         kwargs["channel"] = grpc.insecure_channel(f"127.0.0.1:{port}")
-        client_opts = kwargs.get("client_options") or ClientOptions(
-            tracer_provider=provider
-        )
+        client_opts = kwargs.get("client_options")
         orig_init(self, *args, **kwargs)
         if client_opts and client_opts.tracer_provider:
             self._wrapped_methods[self.get_secret_version] = method.wrap_method(

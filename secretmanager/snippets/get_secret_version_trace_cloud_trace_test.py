@@ -45,10 +45,10 @@ if "opentelemetry.exporter.cloud_trace" not in sys.modules:
     mock_module.CloudTraceSpanExporter = MockCloudTraceSpanExporter
     sys.modules["opentelemetry.exporter.cloud_trace"] = mock_module
 
-# flake8: E402 is ignored here because we must patch sys.modules with a mock
-# CloudTraceSpanExporter before importing the snippet module in environments
-# where opentelemetry-exporter-gcp-trace is not installed.
-from get_secret_version_trace_cloud_trace import (  # noqa: E402
+# flake8: E402 and I100 are ignored here because we must patch sys.modules with
+# a mock CloudTraceSpanExporter before importing the snippet module in
+# environments where opentelemetry-exporter-gcp-trace is not installed.
+from get_secret_version_trace_cloud_trace import (  # noqa: E402, I100
     get_secret_version_cloud_trace,
 )
 
