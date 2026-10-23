@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for secretmanager_get_secret_version_trace_client_options snippet."""
+"""Unit tests for get_secret_version_trace_client_options snippet."""
 
 import os
 from unittest import mock
@@ -26,7 +26,7 @@ from google.cloud.secretmanager_v1.services.secret_manager_service.transports.gr
 )
 import grpc
 
-from secretmanager_get_secret_version_trace_client_options import (
+from get_secret_version_trace_client_options import (
     get_secret_version_with_client_options,
 )
 
@@ -60,7 +60,7 @@ def test_get_secret_version_with_client_options(
     monkeypatch.delenv("GOOGLE_SDK_PYTHON_TRACING_ENABLED", raising=False)
 
     with mock.patch(
-        "secretmanager_get_secret_version_trace_client_options.TracerProvider",
+        "get_secret_version_trace_client_options.TracerProvider",
         return_value=provider,
     ):
         version = get_secret_version_with_client_options(
