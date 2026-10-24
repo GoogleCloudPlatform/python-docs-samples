@@ -1,4 +1,4 @@
 google-cloud-aiplatform==2.2.0
-google-cloud-dataflow-client==0.14.0
+google-cloud-dataflow-client==0.14.1
 google-cloud-storage==3.14.1
 pytest==9.1.1
