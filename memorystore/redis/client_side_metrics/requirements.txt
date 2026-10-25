@@ -1,5 +1,5 @@
 redis==7.0.1
-opentelemetry-api==1.39.1
+opentelemetry-api==1.45.1
 opentelemetry-sdk==1.39.1
 opentelemetry-instrumentation-redis==0.60b1
 opentelemetry-exporter-gcp-trace==1.11.0
