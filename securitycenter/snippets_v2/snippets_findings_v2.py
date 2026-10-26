@@ -336,6 +336,70 @@ def update_finding(source_name, location_id) -> Dict:
 # [END securitycenter_update_finding_source_properties_v2]
 
 
+# [START securitycenter_update_finding_state_v2]
+def update_finding_state(
+    organization_id: str,
+    source_id: str,
+    finding_id: str,
+) -> None:
+    """Updates the state of a Security Command Center finding to inactive.
+
+    Updating only the state transitions a finding's lifecycle status without
+    requiring update permissions on the full finding resource.
+
+    Args:
+        organization_id: Numeric identifier for the Google Cloud organization
+            (for example, '123456789012').
+        source_id: Numeric identifier for the Security Command Center source
+            that generated the finding (for example, '111122223333').
+        finding_id: Identifier for the finding to update
+            (for example, 'example-finding-id').
+    """
+    import sys
+
+    from google.api_core import exceptions
+    from google.cloud import securitycenter_v2
+
+    client = securitycenter_v2.SecurityCenterClient()
+
+    # Use the 'global' location when data residency is not enabled.
+    finding_name = (
+        f"organizations/{organization_id}/sources/{source_id}/"
+        f"locations/global/findings/{finding_id}"
+    )
+
+    # Transition the finding to INACTIVE to record that the underlying issue
+    # has been addressed.
+    request = securitycenter_v2.SetFindingStateRequest(
+        name=finding_name,
+        state=securitycenter_v2.Finding.State.INACTIVE,
+    )
+
+    try:
+        response = client.set_finding_state(request=request)
+    except exceptions.NotFound as err:
+        print(
+            f"error: finding '{finding_id}' not found in source '{source_id}' "
+            f"for organization '{organization_id}': {err.message}",
+            file=sys.stderr,
+        )
+    except exceptions.GoogleAPICallError as err:
+        print(
+            f"error: failed to update state for finding '{finding_id}' in "
+            f"source '{source_id}' for organization '{organization_id}': "
+            f"{err.message}",
+            file=sys.stderr,
+        )
+    else:
+        print(f"Resource ID: {response.name}")
+        print(f"Category: {response.category}")
+        print(f"Event Time: {response.event_time}")
+        print(f"State: {response.state.name}")
+
+
+# [END securitycenter_update_finding_state_v2]
+
+
 # [START securitycenter_create_source_v2]
 def create_source(organization_id) -> Dict:
     """
@@ -502,16 +566,17 @@ def set_source_iam_policy(organization_id, source_name, user_email, role_id) -> 
     old_policy = client.get_iam_policy(request={"resource": source_name})
     print(f"Old Policy: {old_policy}")
 
-    # Setup a new IAM binding.
+    # Setup a new IAM binding and append to existing bindings.
     binding = policy_pb2.Binding()
     binding.role = role_id
     binding.members.append(f"user:{user_email}")
+    bindings = list(old_policy.bindings) + [binding]
 
     # Setting the e-tag avoids over-write existing policy
     updated = client.set_iam_policy(
         request={
             "resource": source_name,
-            "policy": {"etag": old_policy.etag, "bindings": [binding]},
+            "policy": {"etag": old_policy.etag, "bindings": bindings},
         }
     )
 
