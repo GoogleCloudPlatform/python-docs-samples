@@ -15,7 +15,11 @@
 from unittest import mock
 
 import main
+
+from opentelemetry.sdk.metrics import MeterProvider
+from opentelemetry.sdk.trace import TracerProvider
 import pytest
+import redis
 from redis.exceptions import ConnectionError
 
 
@@ -87,9 +91,7 @@ def test_smart_redis_call_retry_success():
     # Verify counters captured exactly 2 retry events
     assert mock_metrics["retry_counter"].add.call_count == 2
     assert mock_metrics["conn_error_counter"].add.call_count == 2
-    mock_metrics["retry_counter"].add.assert_called_with(
-        1, {"operation": "get_user"}
-    )
+    mock_metrics["retry_counter"].add.assert_called_with(1, {"operation": "get_user"})
     mock_metrics["conn_error_counter"].add.assert_called_with(
         1, {"operation": "get_user"}
     )
@@ -100,9 +102,7 @@ def test_smart_redis_call_retry_success():
 
 def test_smart_redis_call_permanent_failure():
     """Verifies that permanent connectivity failures bubble up after 3 attempts."""
-    mock_func = mock.MagicMock(
-        side_effect=ConnectionError("permanent DNS error")
-    )
+    mock_func = mock.MagicMock(side_effect=ConnectionError("permanent DNS error"))
     mock_pool = mock.MagicMock()
     mock_metrics = {
         "client_block_hist": mock.MagicMock(),
@@ -135,7 +135,7 @@ def test_smart_redis_call_permanent_failure():
 
 
 def test_init_redis_pool_live(monkeypatch):
-    """Verifies init_redis_pool correctly parses environment variables without network calls."""
+    """Verifies init_redis_pool correctly parses env vars without network calls."""
     monkeypatch.setenv("REDISHOST", "10.0.0.1")
     monkeypatch.setenv("REDISPORT", "7000")
 
@@ -156,20 +156,14 @@ def test_init_redis_pool_live(monkeypatch):
 
 
 def test_smart_redis_call_live_or_skip():
-    """Integration Test: Hits a real Redis endpoint if running locally at localhost:6379."""
-    import main as live_main
-    from opentelemetry.sdk.metrics import MeterProvider
-    from opentelemetry.sdk.trace import TracerProvider
-    import pytest
-    import redis
-
+    """Integration Test: Hits real Redis endpoint if running at localhost:6379."""
     # Initialize REAL No-op OpenTelemetry SDK providers (invoked directly)
     TracerProvider()
     mp = MeterProvider()
 
     try:
         # Exercise actual pool creation and connectivity ping
-        redis_pool, redis_client = live_main.init_redis_pool()
+        redis_pool, redis_client = main.init_redis_pool()
         redis_client.ping()
     except (redis.exceptions.ConnectionError, redis.exceptions.TimeoutError):
         pytest.skip(
@@ -188,7 +182,7 @@ def test_smart_redis_call_live_or_skip():
 
     try:
         # Run a real Redis write hitting the ACTUAL endpoint (invoked directly)
-        live_main.smart_redis_call(
+        main.smart_redis_call(
             "set_test",
             redis_client.set,
             redis_pool,
@@ -197,7 +191,7 @@ def test_smart_redis_call_live_or_skip():
             "live_val",
         )
 
-        result_get = live_main.smart_redis_call(
+        result_get = main.smart_redis_call(
             "get_test",
             redis_client.get,
             redis_pool,
@@ -214,17 +208,24 @@ def test_smart_redis_call_live_or_skip():
         redis_pool.disconnect()
 
 
+@mock.patch(
+    "main.google.auth.default",
+    return_value=(mock.MagicMock(), "test-project"),
+)
+@mock.patch("main.GoogleCloudResourceDetector")
 @mock.patch("main.BatchSpanProcessor")
 @mock.patch("main.PeriodicExportingMetricReader")
-@mock.patch("main.CloudTraceSpanExporter")
-@mock.patch("main.CloudMonitoringMetricsExporter")
+@mock.patch("main.OTLPSpanExporter")
+@mock.patch("main.OTLPMetricExporter")
 @mock.patch("main.RedisInstrumentor")
 def test_init_telemetry_mocks(
     mock_redis_instrumentor,
-    mock_cloud_metrics,
-    mock_cloud_trace,
+    mock_otlp_metrics,
+    mock_otlp_trace,
     mock_metric_reader,
     mock_span_processor,
+    mock_gcp_detector,
+    mock_google_auth,
 ):
     """Verifies the init_telemetry function correctly instruments Redis."""
     tracer, redis_metrics, tp, mp = main.init_telemetry()
@@ -238,6 +239,9 @@ def test_init_telemetry_mocks(
     assert "client_block_hist" in redis_metrics
 
     mock_redis_instrumentor.return_value.instrument.assert_called_once()
-    mock_cloud_trace.assert_called_once()
-    mock_cloud_metrics.assert_called_once()
-    
+    mock_otlp_trace.assert_called_once()
+    mock_otlp_metrics.assert_called_once()
+    _, kwargs_trace = mock_otlp_trace.call_args
+    assert kwargs_trace.get("endpoint") == "telemetry.googleapis.com:443"
+    _, kwargs_metrics = mock_otlp_metrics.call_args
+    assert kwargs_metrics.get("endpoint") == "telemetry.googleapis.com:443"
