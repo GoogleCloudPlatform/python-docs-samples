@@ -16,6 +16,8 @@ import os
 
 import chat_completions_authentication
 import chat_completions_credentials_refresher
+import chat_completions_function_calling_basic
+import chat_completions_function_calling_config
 import chat_completions_non_streaming_image
 import chat_completions_non_streaming_text
 import chat_completions_non_streaming_text_self_deployed
@@ -25,7 +27,8 @@ import chat_completions_streaming_text_self_deployed
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-LOCATION = "us-central1"
+LOCATION = "global"
+SELF_DEPLOYED_LOCATION = "us-central1"
 SELF_HOSTED_MODEL_ID = "google/gemma-2-9b-it"
 ENDPOINT_ID = "6714120476014149632"
 
@@ -62,15 +65,25 @@ def test_credentials_refresher() -> None:
     assert response
 
 
+def test_function_calling_basic() -> None:
+    response = chat_completions_function_calling_basic.generate_text()
+    assert response
+
+
+def test_function_calling_config() -> None:
+    response = chat_completions_function_calling_config.generate_text()
+    assert response
+
+
 def test_streaming_text_self_deployed() -> None:
     response = chat_completions_streaming_text_self_deployed.generate_text(
-        PROJECT_ID, LOCATION, SELF_HOSTED_MODEL_ID, ENDPOINT_ID
+        PROJECT_ID, SELF_DEPLOYED_LOCATION, SELF_HOSTED_MODEL_ID, ENDPOINT_ID
     )
     assert response
 
 
 def test_non_streaming_text_self_deployed() -> None:
     response = chat_completions_non_streaming_text_self_deployed.generate_text(
-        PROJECT_ID, LOCATION, SELF_HOSTED_MODEL_ID, ENDPOINT_ID
+        PROJECT_ID, SELF_DEPLOYED_LOCATION, SELF_HOSTED_MODEL_ID, ENDPOINT_ID
     )
     assert response

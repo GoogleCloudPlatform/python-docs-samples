@@ -14,7 +14,7 @@
 
 import os
 
-from genai import types as genai_types
+from google.genai import types as genai_types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -29,7 +29,7 @@ def generate_content_with_rag(
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-    # corpus_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+    # corpus_name = "projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{rag_corpus_id}"
 
     rag_retrieval_tool = genai_types.Tool(
         retrieval=genai_types.Retrieval(
@@ -50,14 +50,14 @@ def generate_content_with_rag(
     )
 
     # Create a GenAI SDK client to make a generate_content request
-    genai_client = genai.Client(enterprise=True, project=PROJECT_ID, location="us-central1")
+    genai_client = genai.Client(vertexai=True, project=PROJECT_ID, location="global")
 
     response = genai_client.models.generate_content(
-        model="gemini-2.5-pro",
+        model="gemini-3.8-flash",
         contents="Why is the sky blue?",
         config=genai_types.GenerateContentConfig(
             tools=[rag_retrieval_tool]
-        )
+        ),
     )
     print(response.text)
     # Example response:
@@ -73,5 +73,5 @@ def generate_content_with_rag(
 
 if __name__ == "__main__":
     generate_content_with_rag(
-        "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+        f"projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{{rag_corpus_id}}"
     )

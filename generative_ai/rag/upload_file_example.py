@@ -33,12 +33,13 @@ def upload_file(
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-    # corpus_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+    # corpus_name = "projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{rag_corpus_id}"
     # path = "path/to/local/file.txt"
     # display_name = "file_display_name"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-east4")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     rag_file = client.rag.upload_file(
         corpus_name=corpus_name,
@@ -46,7 +47,7 @@ def upload_file(
         display_name=display_name,
     )
     print(rag_file)
-    # RagFile(name='projects/[PROJECT_ID]/locations/us-central1/ragCorpora/1234567890/ragFiles/09876543',
+    # RagFile(name='projects/[PROJECT_ID]/locations/us-east5/ragCorpora/1234567890/ragFiles/09876543',
     #  display_name='file_display_name')
 
     # [END generativeaionvertexai_rag_upload_file]
@@ -55,7 +56,7 @@ def upload_file(
 
 if __name__ == "__main__":
     upload_file(
-        corpus_name="projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}",
+        corpus_name=f"projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{{rag_corpus_id}}",
         path="path/to/file.txt",
         display_name="file_display_name",
         description="file description",

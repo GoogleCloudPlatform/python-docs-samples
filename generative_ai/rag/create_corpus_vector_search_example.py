@@ -19,6 +19,7 @@ from agentplatform import types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
+
 def create_corpus_vector_search(
     vector_search_index_name: str,
     vector_search_index_endpoint_name: str,
@@ -37,8 +38,9 @@ def create_corpus_vector_search(
     # display_name = "test_corpus"
     # description = "Corpus Description"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     # Configure embedding model (Optional)
     embedding_model_config = types.RagEmbeddingModelConfig(

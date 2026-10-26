@@ -26,10 +26,11 @@ def list_files(corpus_name: str) -> types.ListRagFilesResponse:
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-    # corpus_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+    # corpus_name = "projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{rag_corpus_id}"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     files_response = client.rag.list_files(name=corpus_name)
     for file in files_response.rag_files:
@@ -37,13 +38,13 @@ def list_files(corpus_name: str) -> types.ListRagFilesResponse:
         print(file.name)
     # Example response:
     # g-drive_file.txt
-    # projects/1234567890/locations/us-central1/ragCorpora/111111111111/ragFiles/222222222222
+    # projects/1234567890/locations/us-east5/ragCorpora/111111111111/ragFiles/222222222222
     # g_cloud_file.txt
-    # projects/1234567890/locations/us-central1/ragCorpora/111111111111/ragFiles/333333333333
+    # projects/1234567890/locations/us-east5/ragCorpora/111111111111/ragFiles/333333333333
 
     # [END generativeaionvertexai_rag_list_files]
     return files_response
 
 
 if __name__ == "__main__":
-    list_files("projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}")
+    list_files(f"projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{{rag_corpus_id}}")

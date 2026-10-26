@@ -20,7 +20,7 @@ from agentplatform import types
 from google.genai import types as genai_types
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-MODEL_ID = os.getenv("MODEL_ID")
+MODEL_ID = os.getenv("MODEL_ID", "gemini-3.8-flash")
 
 
 def quickstart(
@@ -34,18 +34,17 @@ def quickstart(
     from google import genai
     from google.genai import types as genai_types
 
-
     # Create a RAG Corpus, Import Files, and Generate a response
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-    # MODEL_ID = "gemini-3.5-flash"
+    # MODEL_ID = "gemini-3.8-flash"
     # display_name = "test_corpus"
     # gcs_path = "gs://my_bucket/my_files_dir/*"
-    # google_drive_path ="https://drive.google.com/file/d/123"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-east4")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     # Configure embedding model, for example "text-embedding-005".
     embedding_model_config = types.RagEmbeddingModelConfig(
@@ -74,9 +73,9 @@ def quickstart(
                     chunk_size=512,
                     chunk_overlap=100,
                 )
-            ), # optional
-            max_embedding_requests_per_min=1000, # optional
-        )
+            ),  # optional
+            max_embedding_requests_per_min=1000,  # optional
+        ),
     )
 
     # Direct context retrieval
@@ -96,8 +95,8 @@ def quickstart(
         ),
         query=types.RagQuery(
             text="What is RAG and why it is helpful?",
-            rag_retrieval_config=rag_retrieval_config,   
-        )
+            rag_retrieval_config=rag_retrieval_config,
+        ),
     )
     print(response)
 
@@ -121,8 +120,7 @@ def quickstart(
     # Call generate_content with the tool using the GenAI SDK
 
     # Create a GenAI SDK client
-    genai_client = genai.Client(enterprise=True, project=PROJECT_ID, location="us-east4")
-
+    genai_client = genai.Client(vertexai=True, project=PROJECT_ID, location="global")
 
     response = genai_client.models.generate_content(
         model=MODEL_ID,
@@ -142,9 +140,8 @@ def quickstart(
 
 
 if __name__ == "__main__":
-    gdrive_path = "https://drive.google.com/file/1234567890"
     gcloud_path = "gs://your-bucket-name/file.txt"
     quickstart(
         display_name="test_corpus",
-        paths=[gdrive_path, gcloud_path],
+        gcs_path=gcloud_path,
     )

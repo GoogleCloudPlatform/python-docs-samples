@@ -24,21 +24,22 @@ def delete_corpus(corpus_name: str) -> None:
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-    # corpus_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+    # corpus_name = "projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{rag_corpus_id}"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     client.rag.delete_corpus(name=corpus_name)
     print(f"Corpus {corpus_name} deleted.")
     # Example response:
     # Successfully deleted the RagCorpus.
-    # Corpus projects/[PROJECT_ID]/locations/us-central1/ragCorpora/123456789012345 deleted.
+    # Corpus projects/[PROJECT_ID]/locations/us-east5/ragCorpora/123456789012345 deleted.
 
     # [END generativeaionvertexai_rag_delete_corpus]
 
 
 if __name__ == "__main__":
     delete_corpus(
-        "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+        f"projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{{rag_corpus_id}}"
     )
