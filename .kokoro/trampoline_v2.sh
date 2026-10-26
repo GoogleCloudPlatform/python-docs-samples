@@ -27,7 +27,6 @@
 # (/dev/shm is passed into the container as KOKORO_GFILE_DIR).
 #
 # gsutil cp gs://cloud-devrel-kokoro-resources/python-docs-samples/secrets_viewer_service_account.json /dev/shm
-# gsutil cp gs://cloud-devrel-kokoro-resources/python-docs-samples/automl_secrets.txt /dev/shm
 #
 # Then run the script.
 # .kokoro/trampoline_v2.sh
