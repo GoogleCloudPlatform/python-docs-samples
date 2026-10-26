@@ -26,15 +26,16 @@ def get_corpus(corpus_name: str) -> types.RagCorpus:
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-    # corpus_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+    # corpus_name = "projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{rag_corpus_id}"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     corpus = client.rag.get_corpus(name=corpus_name)
     print(corpus)
     # Example response:
-    # RagCorpus(name='projects/[PROJECT_ID]/locations/us-central1/ragCorpora/1234567890',
+    # RagCorpus(name='projects/[PROJECT_ID]/locations/us-east5/ragCorpora/1234567890',
     # display_name='test_corpus', description='Corpus Description',
     # ...
 
@@ -44,5 +45,5 @@ def get_corpus(corpus_name: str) -> types.RagCorpus:
 
 if __name__ == "__main__":
     get_corpus(
-        corpus_name="projects/your-project-id/locations/us-central1/ragCorpora/[rag_corpus_id]"
+        corpus_name=f"projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{{rag_corpus_id}}"
     )
