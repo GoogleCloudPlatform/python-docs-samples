@@ -30,9 +30,14 @@ def get_object_contexts(bucket_name, blob_name):
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
-    blob = bucket.get_blob(blob_name)
+    blob = bucket.blob(blob_name)
+    # Fetch blob metadata; raises google.api_core.exceptions.NotFound if the
+    # object does not exist.
+    blob.reload()
 
-    custom_contexts = blob.contexts.custom if blob.contexts else {}
+    # blob.contexts always returns an ObjectContexts instance (empty if the
+    # object has no contexts).
+    custom_contexts = blob.contexts.custom
     if not custom_contexts:
         print(f"No contexts found for {blob.name}")
         return
