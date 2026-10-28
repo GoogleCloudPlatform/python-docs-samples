@@ -2,7 +2,7 @@
 
 ## 🦏 [Wildlife Insights -- _image-classification_](image-classification)
 
-> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/image-classification/README.ipynb)
+> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/feat/modernize-ppai-image-classification/people-and-planet-ai/image-classification/README.ipynb)
 >
 > [Watch the video on YouTube ![thumbnail](https://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0)
 
