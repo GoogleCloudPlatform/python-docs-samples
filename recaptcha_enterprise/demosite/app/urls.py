@@ -101,7 +101,7 @@ def on_signup() -> Response:
                 }
             }
         )
-    except ValueError or Exception as e:
+    except Exception as e:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
 
 
@@ -150,7 +150,7 @@ def on_login() -> Response:
                 }
             }
         )
-    except ValueError or Exception as e:
+    except Exception as e:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
 
 
@@ -198,7 +198,7 @@ def on_store_checkout() -> Response:
                 }
             }
         )
-    except ValueError or Exception as e:
+    except Exception as e:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
 
 
@@ -246,7 +246,7 @@ def on_comment_submit() -> Response:
                 }
             }
         )
-    except ValueError or Exception as e:
+    except Exception as e:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
 
 
