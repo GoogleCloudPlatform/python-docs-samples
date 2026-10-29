@@ -135,6 +135,9 @@ def create_images_metadata_table(
 
 if __name__ == "__main__":
     import argparse
+    import logging
+
+    logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
