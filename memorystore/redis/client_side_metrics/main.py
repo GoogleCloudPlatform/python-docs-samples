@@ -16,38 +16,68 @@
 import os
 import time
 
+import google.auth
+from google.auth.transport.grpc import AuthMetadataPlugin
+import google.auth.transport.requests
+import grpc
 from opentelemetry import metrics, trace
-from opentelemetry.exporter.cloud_monitoring import (
-    CloudMonitoringMetricsExporter,
+from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import (
+    OTLPMetricExporter,
 )
-from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
+    OTLPSpanExporter,
+)
 from opentelemetry.instrumentation.redis import RedisInstrumentor
+from opentelemetry.resourcedetector.gcp_resource_detector import (
+    GoogleCloudResourceDetector,
+)
 from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+from opentelemetry.sdk.resources import get_aggregated_resources, Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 import redis
 from redis.exceptions import ConnectionError, TimeoutError
 
 
-
-
 def init_telemetry():
-    """Initializes OpenTelemetry with GCP Exporters and returns the SDK objects."""
+    """Initializes OpenTelemetry with OTLP Exporters and returns the SDK objects."""
+    credentials, project_id = google.auth.default(
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
+    request = google.auth.transport.requests.Request()
+    auth_metadata_plugin = AuthMetadataPlugin(credentials=credentials, request=request)
+    channel_creds = grpc.composite_channel_credentials(
+        grpc.ssl_channel_credentials(),
+        grpc.metadata_call_credentials(auth_metadata_plugin),
+    )
+
+    resource = get_aggregated_resources([GoogleCloudResourceDetector()])
+    if project_id:
+        resource = resource.merge(Resource.create({"gcp.project_id": project_id}))
+
     # 1. Initialize Tracing
-    tracer_provider = TracerProvider()
+    tracer_provider = TracerProvider(resource=resource)
     tracer_provider.add_span_processor(
-        BatchSpanProcessor(CloudTraceSpanExporter())
+        BatchSpanProcessor(
+            OTLPSpanExporter(
+                endpoint="telemetry.googleapis.com:443",
+                credentials=channel_creds,
+            )
+        )
     )
     trace.set_tracer_provider(tracer_provider)
     tracer = trace.get_tracer("redis.client")
 
     # 2. Initialize Metrics
-    metrics_exporter = CloudMonitoringMetricsExporter()
+    metrics_exporter = OTLPMetricExporter(
+        endpoint="telemetry.googleapis.com:443",
+        credentials=channel_creds,
+    )
     metric_reader = PeriodicExportingMetricReader(
         metrics_exporter, export_interval_millis=10000
     )
-    meter_provider = MeterProvider(metric_readers=[metric_reader])
+    meter_provider = MeterProvider(resource=resource, metric_readers=[metric_reader])
     metrics.set_meter_provider(meter_provider)
     meter = metrics.get_meter("redis.metrics")
 
@@ -61,9 +91,7 @@ def init_telemetry():
             "redis_application_blocking_latency", unit="ms"
         ),
         "retry_counter": meter.create_counter("redis_retry_count"),
-        "conn_error_counter": meter.create_counter(
-            "redis_connectivity_error_count"
-        ),
+        "conn_error_counter": meter.create_counter("redis_connectivity_error_count"),
     }
 
     redis_metrics["retry_counter"].add(0, {"operation": "startup"})
@@ -90,9 +118,7 @@ def init_redis_pool():
     return redis_pool, redis_client
 
 
-def smart_redis_call(
-    operation_name, func, redis_pool, metrics, *args, **kwargs
-):
+def smart_redis_call(operation_name, func, redis_pool, metrics, *args, **kwargs):
     """Executes a Redis operation with metrics and retry handling (No Globals!)."""
     max_retries = 3
     attempt = 0
@@ -134,14 +160,13 @@ def smart_redis_call(
         except (ConnectionError, TimeoutError) as e:
             attempt += 1
             if metrics and metrics.get("conn_error_counter"):
-                metrics["conn_error_counter"].add(
-                    1, {"operation": operation_name}
-                )
+                metrics["conn_error_counter"].add(1, {"operation": operation_name})
             if metrics and metrics.get("retry_counter"):
                 metrics["retry_counter"].add(1, {"operation": operation_name})
             if attempt >= max_retries:
                 raise e
             time.sleep((2**attempt) * 0.1)
+
 
 if __name__ == "__main__":
     tracer, redis_metrics, tracer_provider, meter_provider = init_telemetry()
@@ -171,6 +196,6 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f"Error: {e}")
 
-        tracer_provider.force_flush()
-        meter_provider.force_flush()
+        tracer_provider.shutdown()
+        meter_provider.shutdown()
 # [END memorystore_redis_client_side_metrics]
