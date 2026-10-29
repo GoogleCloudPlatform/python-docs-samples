@@ -44,6 +44,7 @@ import storage_create_bucket_object_retention
 import storage_define_bucket_website_configuration
 import storage_delete_file
 import storage_delete_file_archived_generation
+import storage_delete_object_contexts
 import storage_disable_bucket_lifecycle_management
 import storage_disable_soft_delete
 import storage_disable_versioning
@@ -62,6 +63,7 @@ import storage_get_autoclass
 import storage_get_bucket_labels
 import storage_get_bucket_metadata
 import storage_get_metadata
+import storage_get_object_contexts
 import storage_get_service_account
 import storage_get_soft_delete_policy
 import storage_get_soft_deleted_bucket
@@ -69,6 +71,7 @@ import storage_list_buckets
 import storage_list_file_archived_generations
 import storage_list_files
 import storage_list_files_with_prefix
+import storage_list_object_contexts
 import storage_list_soft_deleted_buckets
 import storage_list_soft_deleted_object_versions
 import storage_list_soft_deleted_objects
@@ -85,6 +88,7 @@ import storage_set_autoclass
 import storage_set_bucket_default_kms_key
 import storage_set_client_endpoint
 import storage_set_metadata
+import storage_set_object_contexts
 import storage_set_object_retention_policy
 import storage_set_soft_delete_policy
 import storage_trace_quickstart
@@ -246,6 +250,58 @@ def test_list_blobs(test_blob, capsys):
     storage_list_files.list_blobs(test_blob.bucket.name)
     out, _ = capsys.readouterr()
     assert test_blob.name in out
+
+
+def test_set_object_contexts(test_blob, capsys):
+    storage_set_object_contexts.set_object_contexts(
+        test_blob.bucket.name, test_blob.name
+    )
+    out, _ = capsys.readouterr()
+    assert "key1 = newValue1" in out
+    assert "key3 = value3" in out
+    test_blob.reload()
+    assert "key2" not in test_blob.contexts.custom
+
+
+def test_get_object_contexts(test_blob, capsys):
+    storage_get_object_contexts.get_object_contexts(
+        test_blob.bucket.name, test_blob.name
+    )
+    out, _ = capsys.readouterr()
+    assert f"No contexts found for {test_blob.name}" in out
+
+    storage_set_object_contexts.set_object_contexts(
+        test_blob.bucket.name, test_blob.name
+    )
+    storage_get_object_contexts.get_object_contexts(
+        test_blob.bucket.name, test_blob.name
+    )
+    out, _ = capsys.readouterr()
+    assert "key1 = newValue1" in out
+
+
+def test_list_object_contexts(test_blob, capsys):
+    storage_set_object_contexts.set_object_contexts(
+        test_blob.bucket.name, test_blob.name
+    )
+    storage_list_object_contexts.list_object_contexts(
+        test_blob.bucket.name, 'contexts."key1"="newValue1"'
+    )
+    out, _ = capsys.readouterr()
+    assert test_blob.name in out
+
+
+def test_delete_object_contexts(test_blob, capsys):
+    storage_set_object_contexts.set_object_contexts(
+        test_blob.bucket.name, test_blob.name
+    )
+    storage_delete_object_contexts.delete_object_contexts(
+        test_blob.bucket.name, test_blob.name
+    )
+    out, _ = capsys.readouterr()
+    assert f"Deleted all contexts for {test_blob.name}" in out
+    test_blob.reload()
+    assert not (test_blob.contexts and test_blob.contexts.custom)
 
 
 def test_bucket_metadata(test_bucket, capsys):
