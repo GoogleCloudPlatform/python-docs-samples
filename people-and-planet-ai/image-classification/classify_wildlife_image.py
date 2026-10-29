@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START genai_wildlife_classify_image]
+# [START googlegenaisdk_wildlife_classify_image]
 import sys
 
 from google import genai
@@ -102,7 +102,7 @@ def classify_wildlife_image(
         print(f"Juvenile Present: {observation.juvenile_present}")
         print(f"Species: {observation.species_scientific_name}")
         print(f"Taxon Family: {observation.taxon_family}")
-# [END genai_wildlife_classify_image]
+# [END googlegenaisdk_wildlife_classify_image]
 
 
 if __name__ == "__main__":

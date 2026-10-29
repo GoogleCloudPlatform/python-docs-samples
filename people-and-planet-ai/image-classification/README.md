@@ -16,8 +16,8 @@ pictures in the public [LILA Science](https://lila.science/datasets/wcscameratra
 ## Snippet files
 
 * [`create_images_metadata_table.py`](create_images_metadata_table.py) (`dataflow_wildlife_ingest_metadata`): Ingests and cleans LILA WCS camera trap annotations into BigQuery.
-* [`classify_wildlife_image.py`](classify_wildlife_image.py) (`genai_wildlife_classify_image`): Classifies a camera trap image into structured ecological metadata (`species_scientific_name`, `taxon_family`, `common_name`, `animal_count`, `juvenile_present`, `is_empty_or_misfire`, `confidence`) with optional habitat geo-fencing (`habitat_region`).
-* [`embed_wildlife_image.py`](embed_wildlife_image.py) (`genai_wildlife_embed_image`): Generates a 768-dimensional multimodal vector embedding for a camera trap image using `gemini-embedding-2`.
+* [`classify_wildlife_image.py`](classify_wildlife_image.py) (`googlegenaisdk_wildlife_classify_image`): Classifies a camera trap image into structured ecological metadata (`species_scientific_name`, `taxon_family`, `common_name`, `animal_count`, `juvenile_present`, `is_empty_or_misfire`, `confidence`) with optional habitat geo-fencing (`habitat_region`).
+* [`embed_wildlife_image.py`](embed_wildlife_image.py) (`googlegenaisdk_wildlife_embed_image`): Generates a 768-dimensional multimodal vector embedding for a camera trap image using `gemini-embedding-2`.
 * [`run_wildlife_inference.py`](run_wildlife_inference.py) (`dataflow_wildlife_run_inference`): Runs class-balanced sampling (`Sample.FixedSizePerKey`) and batch Gemini inference (`RunInference`) directly against `gs://public-datasets-lila/wcs-unzipped/` and writes results to BigQuery.
 
 [Apache Beam]: https://beam.apache.org

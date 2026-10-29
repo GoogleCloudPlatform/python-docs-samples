@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START genai_wildlife_embed_image]
+# [START googlegenaisdk_wildlife_embed_image]
 import sys
 
 from google import genai
@@ -63,7 +63,7 @@ def embed_wildlife_image(project_id: str, image_gcs_uri: str) -> None:
         print(f"Embedding Dimensions: {len(values)}")
         print("Model: gemini-embedding-2")
         print(f"Sample Vector Values: {preview}")
-# [END genai_wildlife_embed_image]
+# [END googlegenaisdk_wildlife_embed_image]
 
 
 if __name__ == "__main__":
