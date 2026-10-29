@@ -30,6 +30,7 @@ from google.api_core import exceptions
 from google.genai import errors
 from google.genai import types
 from pydantic import BaseModel
+from pydantic import ValidationError
 
 LILA_WCS_GCS_PREFIX = "gs://public-datasets-lila/wcs-unzipped"
 
@@ -82,12 +83,21 @@ class GeminiWildlifeModelHandler(
                 file_uri=image_gcs_uri,
                 mime_type="image/jpeg",
             )
-            response = model.models.generate_content(
-                model="gemini-3.8-flash",
-                contents=[image_part, prompt],
-                config=config,
-            )
-            obs = WildlifeObservation.model_validate_json(response.text)
+            try:
+                response = model.models.generate_content(
+                    model="gemini-3.8-flash",
+                    contents=[image_part, prompt],
+                    config=config,
+                )
+                obs = WildlifeObservation.model_validate_json(response.text)
+            except (errors.APIError, ValidationError) as err:
+                print(
+                    f"error: failed to classify camera trap image "
+                    f"'{image_gcs_uri}': {err}",
+                    file=sys.stderr,
+                )
+                continue
+
             yield {
                 "image_gcs_uri": image_gcs_uri,
                 "ground_truth_category": item["category"],
@@ -168,10 +178,14 @@ def run_wildlife_inference(
                     create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
                 )
             )
-    except (exceptions.GoogleAPICallError, errors.APIError) as err:
+    except (
+        exceptions.GoogleAPICallError,
+        errors.APIError,
+        RuntimeError,
+    ) as err:
         print(
             f"error: failed to run wildlife inference pipeline writing to "
-            f"'{dest_spec}' for project '{project_id}': {err.message}",
+            f"'{dest_spec}' for project '{project_id}': {err}",
             file=sys.stderr,
         )
     else:

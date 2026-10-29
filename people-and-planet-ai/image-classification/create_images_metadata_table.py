@@ -22,6 +22,7 @@ import io
 import json
 import os
 import sys
+import time
 import zipfile
 
 import apache_beam as beam
@@ -50,7 +51,16 @@ class _ExtractMetadataFn(beam.DoFn):
     """Downloads and parses camera trap image annotations from LILA Science."""
 
     def process(self, metadata_url: str) -> Iterable[dict[str, str]]:
-        content = requests.get(metadata_url, timeout=120).content
+        content = b""
+        for attempt in range(3):
+            try:
+                content = requests.get(metadata_url, timeout=120).content
+                break
+            except requests.RequestException:
+                if attempt == 2:
+                    raise
+                time.sleep(2**attempt)
+
         with zipfile.ZipFile(io.BytesIO(content)) as archive:
             filename = os.path.splitext(os.path.basename(metadata_url))[0]
             with archive.open(filename) as metadata_file:
@@ -119,10 +129,10 @@ def create_images_metadata_table(
                     create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
                 )
             )
-    except exceptions.GoogleAPICallError as err:
+    except (exceptions.GoogleAPICallError, RuntimeError) as err:
         print(
             f"error: failed to populate BigQuery table '{table_spec}' for "
-            f"project '{project_id}': {err.message}",
+            f"project '{project_id}': {err}",
             file=sys.stderr,
         )
     else:
