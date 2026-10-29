@@ -1,3 +1,5 @@
+apache-beam[gcp]==2.77.0
+google-genai==2.29.0
 pillow==12.3.0
-apache-beam[gcp]==2.55.1
-google-cloud-aiplatform==1.157.0
+pydantic==2.14.1
+requests==2.34.2

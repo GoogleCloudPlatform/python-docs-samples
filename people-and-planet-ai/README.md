@@ -2,23 +2,25 @@
 
 ## 🦏 [Wildlife Insights -- _image-classification_](image-classification)
 
-> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/image-classification/README.ipynb)
+> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/feat/modernize-ppai-image-classification/people-and-planet-ai/image-classification/README.ipynb)
 >
-> [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0)
+> [Watch the video on YouTube ![thumbnail](https://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0)
 
-This model is trained to recognize animal species from
+Classify wildlife species and extract ecological recovery metrics from
 [camera trap](https://en.wikipedia.org/wiki/Camera_trap)
-pictures.
+pictures in the public [LILA Science](https://lila.science/datasets/wcscameratraps) Cloud Storage bucket (`gs://public-datasets-lila/`).
 
-* **Model**: [AutoML] Vision
-* **Creating datasets**: [Apache Beam] in [Dataflow]
-* **Training the model**: [AutoML] in [Vertex AI]
-* **Getting predictions**: [Vertex AI]
+* **Multimodal classification and ecological extraction**: [Gemini] (`gemini-3.8-flash`) via the [Google Gen AI SDK]
+* **Rare-species visual similarity and vector search**: [Gemini Embedding 2] (`gemini-embedding-2`)
+* **Class-balanced batch inference pipeline**: [Apache Beam] `RunInference` in [Dataflow]
+* **Metadata and structured observation storage**: [BigQuery]
 
 [Apache Beam]: https://beam.apache.org
+[BigQuery]: https://cloud.google.com/bigquery
 [Dataflow]: https://cloud.google.com/dataflow
-[AutoML]: https://cloud.google.com/vertex-ai/docs/beginner/beginners-guide
-[Vertex AI]: https://cloud.google.com/vertex-ai
+[Gemini]: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-8-flash
+[Gemini Embedding 2]: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/embedding-2
+[Google Gen AI SDK]: https://googleapis.github.io/python-genai/
 
 ---
 
