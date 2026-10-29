@@ -184,7 +184,10 @@ def run_wildlife_inference(
 
 if __name__ == "__main__":
     import argparse
+    import logging
     import os
+
+    logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
