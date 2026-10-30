@@ -1,3 +1,0 @@
-../../serving/weather-data
-../../serving/weather-model
-plotly==5.15.0

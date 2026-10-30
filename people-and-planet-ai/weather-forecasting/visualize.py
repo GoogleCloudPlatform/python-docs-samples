@@ -1,4 +1,6 @@
-# Copyright 2023 Google LLC
+#!/usr/bin/env python
+
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,145 +14,206 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Utility functions to visualize data.
-
-Color names from https://chir.ag/projects/name-that-color
-"""
+"""Visualization utilities for Earth Engine satellite patches and BigQuery forecasts."""
 
 from __future__ import annotations
 
+import io
+from typing import Any
+
+from PIL import Image
+
 import numpy as np
-import plotly.graph_objects as graph_objects
+
+import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-def render_rgb_images(
-    values: np.ndarray, min: float = 0.0, max: float = 1.0
-) -> np.ndarray:
-    """Renders a numeric NumPy array with shape (width, height, rgb) as an image.
-
-    Args:
-        values: A float array with shape (width, height, rgb).
-        min: Minimum value in the values.
-        max: Maximum value in the values.
-
-    Returns: An uint8 array with shape (width, height, rgb).
-    """
-    scaled_values = (values - min) / (max - min)
-    rgb_values = scaled_values.clip(0, 1) * 255
-    return rgb_values.astype(np.uint8)
-
-
 def render_palette(
-    values: np.ndarray, palette: list[str], min: float = 0.0, max: float = 1.0
+    values: np.ndarray,
+    palette: list[str],
+    min_val: float = 0.0,
+    max_val: float = 1.0,
 ) -> np.ndarray:
-    """Renders a NumPy array with shape (width, height, 1) as an image with a palette.
+    """Renders a 2D numeric NumPy array as an RGB uint8 image using a hex palette.
 
     Args:
-        values: An uint8 array with shape (width, height, 1).
-        palette: List of hex encoded colors.
+        values: 2D float array with shape (height, width).
+        palette: List of 6-character hex color strings (without leading '#').
+        min_val: Value mapped to the start of the palette.
+        max_val: Value mapped to the end of the palette.
 
-    Returns: An uint8 array with shape (width, height, rgb) with colors from the palette.
+    Returns:
+        An RGB uint8 array with shape (height, width, 3).
     """
-    # Create a color map from a hex color palette.
-    xs = np.linspace(0, len(palette), 256)
+    xs = np.linspace(0, len(palette) - 1, 256)
     indices = np.arange(len(palette))
 
     red = np.interp(xs, indices, [int(c[0:2], 16) for c in palette])
     green = np.interp(xs, indices, [int(c[2:4], 16) for c in palette])
     blue = np.interp(xs, indices, [int(c[4:6], 16) for c in palette])
-    color_map = np.array([red, green, blue]).astype(np.uint8).transpose()
+    color_map = np.stack([red, green, blue], axis=-1).astype(np.uint8)
 
-    scaled_values = (values - min) / (max - min)
-    color_indices = (scaled_values.clip(0, 1) * 255).astype(np.uint8)
-    return np.take(color_map, color_indices, axis=0)
-
-
-def render_goes16(patch: np.ndarray) -> np.ndarray:
-    red = patch[:, :, 1]  # CMI_C02
-    green = patch[:, :, 2]  # CMI_C03
-    blue = patch[:, :, 0]  # CMI_C01
-    rgb_patch = np.stack([red, green, blue], axis=-1)
-    return render_rgb_images(rgb_patch, max=3000)
+    denom = max(max_val - min_val, 1e-6)
+    scaled = np.clip((values - min_val) / denom, 0.0, 1.0)
+    color_indices = (scaled * 255).astype(np.uint8)
+    return color_map[color_indices]
 
 
-def render_gpm(patch: np.ndarray) -> np.ndarray:
+def render_gpm_precipitation(precipitation_mm_hr: np.ndarray) -> np.ndarray:
+    """Renders GPM IMERG V07 precipitation (mm/hr) using the NASA rainfall palette."""
     palette = [
-        "000096",  # Navy blue
-        "0064ff",  # Blue ribbon blue
-        "00b4ff",  # Dodger blue
-        "33db80",  # Shamrock green
-        "9beb4a",  # Conifer green
-        "ffeb00",  # Turbo yellow
-        "ffb300",  # Selective yellow
-        "ff6400",  # Blaze orange
-        "eb1e00",  # Scarlet red
-        "af0000",  # Bright red
+        "0a1832",  # Very dark navy (0 mm/hr)
+        "0050d5",  # Deep blue
+        "00b4ff",  # Cyan blue
+        "33db80",  # Emerald green
+        "9beb4a",  # Lime green
+        "ffeb00",  # Yellow
+        "ffb300",  # Amber
+        "ff5000",  # Orange red
+        "d60000",  # Crimson
+        "7a0068",  # Extreme magenta (>45 mm/hr)
     ]
-    return render_palette(patch[:, :, 0], palette, max=20)
+    return render_palette(precipitation_mm_hr, palette, min_val=0.0, max_val=45.0)
 
 
-def render_elevation(patch: np.ndarray) -> np.ndarray:
+def render_elevation_dem(elevation_m: np.ndarray) -> np.ndarray:
+    """Renders MERIT DEM surface elevation (meters) using a terrain relief palette."""
     palette = [
-        "000000",  # Black
-        "478fcd",  # Shakespeare blue
-        "86c58e",  # De York green
-        "afc35e",  # Celery green
-        "8f7131",  # Pesto brown
-        "b78d4f",  # Muddy waters brown
-        "e2b8a6",  # Rose fog pink
-        "ffffff",  # White
+        "0b2545",  # Ocean / sea level (0m)
+        "2d6a4f",  # Coastal lowland green
+        "74c69d",  # Foothills green
+        "d9ed92",  # Upland yellow-green
+        "ddb892",  # Highland tan
+        "9c6644",  # Mountain brown
+        "7f4f24",  # High ridge sienna
+        "f8f9fa",  # Alpine peak (>2000m)
     ]
-    return render_palette(patch[:, :, 0], palette, max=3000)
+    return render_palette(elevation_m, palette, min_val=0.0, max_val=2200.0)
 
 
-def show_inputs(patch: np.ndarray) -> None:
-    fig = make_subplots(rows=2, cols=4)
-    fig.add_trace(graph_objects.Image(z=render_gpm(patch[:, :, 0:1])), row=1, col=1)
-    fig.add_trace(graph_objects.Image(z=render_gpm(patch[:, :, 1:2])), row=1, col=2)
-    fig.add_trace(graph_objects.Image(z=render_gpm(patch[:, :, 2:3])), row=1, col=3)
-    fig.add_trace(graph_objects.Image(z=render_goes16(patch[:, :, 3:19])), row=2, col=1)
-    fig.add_trace(
-        graph_objects.Image(z=render_goes16(patch[:, :, 19:35])), row=2, col=2
+def create_storm_overview_figure(patch_data: dict[str, Any]) -> go.Figure:
+    """Creates a 3-panel Plotly figure for GOES, GPM IMERG V07, and MERIT DEM."""
+    goes_rgb = patch_data["goes_rgb"]
+    precip_rgb = render_gpm_precipitation(patch_data["precipitation"])
+    elev_rgb = render_elevation_dem(patch_data["elevation"])
+
+    fig = make_subplots(
+        rows=1,
+        cols=3,
+        subplot_titles=(
+            f"1. {patch_data.get('goes_satellite', 'GOES')} Cloud & Moisture",
+            "2. NASA GPM IMERG V07 Rainfall (mm/hr)",
+            "3. MERIT DEM Terrain Elevation (m)",
+        ),
+        horizontal_spacing=0.04,
     )
-    fig.add_trace(
-        graph_objects.Image(z=render_goes16(patch[:, :, 35:51])), row=2, col=3
+    fig.add_trace(go.Image(z=goes_rgb), row=1, col=1)
+    fig.add_trace(go.Image(z=precip_rgb), row=1, col=2)
+    fig.add_trace(go.Image(z=elev_rgb), row=1, col=3)
+
+    peak_rain = float(np.max(patch_data["precipitation"]))
+    max_elev = float(np.max(patch_data["elevation"]))
+    title_text = (
+        f"<b>{patch_data.get('storm_name', 'Storm Observation')}</b> — "
+        f"{patch_data.get('iso_time', '')} "
+        f"(Peak Rain: {peak_rain:.1f} mm/hr | Max Terrain: {max_elev:.0f} m)"
     )
-    fig.add_trace(
-        graph_objects.Image(z=render_elevation(patch[:, :, 51:52])), row=1, col=4
-    )
-    fig.update_layout(height=500, margin=dict(l=0, r=0, b=0, t=0))
-    fig.show()
-
-
-def show_outputs(patch: np.ndarray) -> None:
-    fig = make_subplots(rows=1, cols=2)
-    fig.add_trace(graph_objects.Image(z=render_gpm(patch[:, :, 0:1])), row=1, col=1)
-    fig.add_trace(graph_objects.Image(z=render_gpm(patch[:, :, 1:2])), row=1, col=2)
-    fig.update_layout(height=300, margin=dict(l=0, r=0, b=0, t=0))
-    fig.show()
-
-
-def show_predictions(results: list[tuple]) -> None:
-    fig = make_subplots(rows=5, cols=len(results), vertical_spacing=0.025)
-    for i, (inputs, predictions, labels) in enumerate(results, start=1):
-        fig.add_trace(
-            graph_objects.Image(z=render_goes16(inputs[:, :, 35:51])), row=1, col=i
-        )
-        fig.add_trace(
-            graph_objects.Image(z=render_gpm(inputs[:, :, 2:3])), row=2, col=i
-        )
-        fig.add_trace(
-            graph_objects.Image(z=render_elevation(inputs[:, :, 51:52])), row=3, col=i
-        )
-        fig.add_trace(
-            graph_objects.Image(z=render_gpm(predictions[:, :, 0:1])), row=4, col=i
-        )
-        fig.add_trace(
-            graph_objects.Image(z=render_gpm(labels[:, :, 0:1])), row=5, col=i
-        )
     fig.update_layout(
-        height=5 * int(1000 / len(results)),
-        margin=dict(l=0, r=0, b=0, t=0),
+        title=dict(text=title_text, x=0.5),
+        height=390,
+        margin=dict(l=15, r=15, t=65, b=15),
     )
-    fig.show()
+    fig.update_xaxes(showticklabels=False)
+    fig.update_yaxes(showticklabels=False)
+    return fig
+
+
+def export_composite_png_bytes(patch_data: dict[str, Any]) -> bytes:
+    """Stitches GOES RGB, GPM IMERG rainfall, and MERIT DEM into a single PNG.
+
+    Used to pass a multi-band visual composite directly to Gemini 3.8 Flash
+    via `types.Part.from_bytes(data=..., mime_type='image/png')`.
+    """
+    goes_rgb = patch_data["goes_rgb"]
+    precip_rgb = render_gpm_precipitation(patch_data["precipitation"])
+    elev_rgb = render_elevation_dem(patch_data["elevation"])
+
+    height = goes_rgb.shape[0]
+    separator = np.full((height, 4, 3), 255, dtype=np.uint8)
+    combined = np.concatenate(
+        [goes_rgb, separator, precip_rgb, separator, elev_rgb], axis=1
+    )
+    pil_image = Image.fromarray(combined, mode="RGB")
+    pil_image = pil_image.resize(
+        (combined.shape[1] * 3, combined.shape[0] * 3),
+        resample=Image.Resampling.NEAREST,
+    )
+    buffer = io.BytesIO()
+    pil_image.save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
+def create_forecast_comparison_figure(
+    historical_rows: list[dict[str, Any]],
+    forecast_rows: list[dict[str, Any]],
+    storm_name: str,
+) -> go.Figure:
+    """Creates a Plotly chart comparing observed GPM rainfall and AI.FORECAST."""
+    hist_times = [r["observation_time"] for r in historical_rows]
+    hist_precip = [float(r["precipitation_mm_hr"]) for r in historical_rows]
+
+    fc_times = [r["forecast_timestamp"] for r in forecast_rows]
+    fc_vals = [float(r["forecasted_precipitation_mm_hr"]) for r in forecast_rows]
+    fc_lower = [
+        max(0.0, float(r["lower_bound_mm_hr"])) for r in forecast_rows
+    ]
+    fc_upper = [float(r["upper_bound_mm_hr"]) for r in forecast_rows]
+
+    fig = go.Figure()
+
+    # 90% confidence interval band
+    fig.add_trace(
+        go.Scatter(
+            x=fc_times + fc_times[::-1],
+            y=fc_upper + fc_lower[::-1],
+            fill="toself",
+            fillcolor="rgba(255, 99, 71, 0.22)",
+            line=dict(color="rgba(255,255,255,0)"),
+            hoverinfo="skip",
+            showlegend=True,
+            name="BigQuery AI.FORECAST 90% Confidence Interval",
+        )
+    )
+    # Observed historical series
+    fig.add_trace(
+        go.Scatter(
+            x=hist_times,
+            y=hist_precip,
+            mode="lines+markers",
+            name="Observed GPM IMERG V07 Rainfall (mm/hr)",
+            line=dict(color="#0064ff", width=2.5),
+        )
+    )
+    # AI.FORECAST TimesFM prediction
+    fig.add_trace(
+        go.Scatter(
+            x=fc_times,
+            y=fc_vals,
+            mode="lines+markers",
+            name="BigQuery AI.FORECAST (TimesFM) Nowcast (mm/hr)",
+            line=dict(color="#eb1e00", width=3, dash="dash"),
+        )
+    )
+    fig.update_layout(
+        title=(
+            f"<b>Precipitation Nowcast ({storm_name})</b> — "
+            "Observed GPM IMERG V07 vs. BigQuery ML AI.FORECAST (TimesFM)"
+        ),
+        xaxis_title="Timestamp (UTC)",
+        yaxis_title="Precipitation Rate (mm/hr)",
+        height=420,
+        template="plotly_white",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    )
+    return fig

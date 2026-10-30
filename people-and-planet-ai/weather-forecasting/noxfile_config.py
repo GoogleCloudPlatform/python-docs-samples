@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.14-slim
-
-WORKDIR /app
-COPY . ./
-
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
-    pip check
-
-CMD exec gunicorn main:app --threads=8 --timeout=0
+TEST_CONFIG_OVERRIDE = {
+    "ignored_versions": ["3.8", "3.9", "3.11", "3.12", "3.13"],
+    "enforce_type_hints": True,
+    "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
+}

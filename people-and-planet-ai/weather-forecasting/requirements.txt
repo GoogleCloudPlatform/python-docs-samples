@@ -1,0 +1,11 @@
+apache-beam[gcp]>=2.60.0
+earthengine-api>=1.0.0
+google-api-core>=2.19.0
+google-auth>=2.29.0
+google-cloud-bigquery>=3.25.0
+google-genai>=1.0.0
+numpy>=1.26.0
+pandas>=2.0.0
+pillow>=10.0.0
+plotly>=5.20.0
+pydantic>=2.7.0
