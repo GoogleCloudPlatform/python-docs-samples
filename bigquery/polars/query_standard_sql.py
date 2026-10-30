@@ -19,7 +19,7 @@ import polars_bigquery
 
 def construct_client(project_id: str = "your-project-id") -> polars_bigquery.Client:
     return polars_bigquery.Client(
-        quota_project_id = project_id,
+        quota_project_id=project_id,
     )
 
 
