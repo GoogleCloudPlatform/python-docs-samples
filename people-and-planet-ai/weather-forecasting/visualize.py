@@ -302,3 +302,62 @@ def create_weathernext_ensemble_figure(
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     )
     return fig
+
+
+def create_bay_area_microclimate_figure(
+    microclimate_rows: list[dict[str, Any]],
+) -> go.Figure:
+    """Creates a Plotly chart comparing 5 Bay Area & Monterey Bay microclimates."""
+    labels = [
+        f"{r['city']}<br><sup>{r['microclimate_zone']}</sup>"
+        for r in microclimate_rows
+    ]
+    current_c = [float(r["current_temp_c"]) for r in microclimate_rows]
+    fc24_c = [float(r["forecast_24h_temp_c"]) for r in microclimate_rows]
+    rh_pct = [float(r["forecast_24h_rh_pct"]) for r in microclimate_rows]
+
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    fig.add_trace(
+        go.Bar(
+            x=labels,
+            y=current_c,
+            name="Current 2.5km RTMA Temp (°C)",
+            marker_color="#1e88e5",
+        ),
+        secondary_y=False,
+    )
+    fig.add_trace(
+        go.Bar(
+            x=labels,
+            y=fc24_c,
+            name="+24h NOAA GFS Forecast Temp (°C)",
+            marker_color="#fb8c00",
+        ),
+        secondary_y=False,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=labels,
+            y=rh_pct,
+            mode="lines+markers",
+            name="+24h Relative Humidity (%)",
+            line=dict(color="#00897b", width=3),
+            marker=dict(size=9),
+        ),
+        secondary_y=True,
+    )
+    fig.update_layout(
+        title=(
+            "<b>San Francisco & Monterey Bay Microclimate Comparison</b> — "
+            "Coastal Marine Gaps vs. Rain-Shadowed Valleys"
+        ),
+        barmode="group",
+        height=420,
+        template="plotly_white",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    )
+    fig.update_yaxes(title_text="Temperature (°C)", secondary_y=False)
+    fig.update_yaxes(
+        title_text="Relative Humidity (%)", range=[0, 100], secondary_y=True
+    )
+    return fig

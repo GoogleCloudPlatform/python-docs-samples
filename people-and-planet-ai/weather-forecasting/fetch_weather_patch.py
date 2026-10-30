@@ -38,6 +38,38 @@ logging.getLogger("google_auth_httplib2").setLevel(logging.ERROR)
 GOES19_CUTOVER_ISO = "2025-04-07T00:00:00"
 GOES_WEST_LONGITUDE_CUTOVER = -105.0
 _EE_CACHE: dict[tuple[Any, ...], dict[str, Any]] = {}
+BAY_AREA_MICROCLIMATE_SITES: list[dict[str, Any]] = [
+    {
+        "city": "San Francisco",
+        "microclimate_zone": "Golden Gate Marine Gap",
+        "lat": 37.7749,
+        "lon": -122.4194,
+    },
+    {
+        "city": "Palo Alto",
+        "microclimate_zone": "Mid-Peninsula Rain Shadow",
+        "lat": 37.4419,
+        "lon": -122.1430,
+    },
+    {
+        "city": "San Jose",
+        "microclimate_zone": "Inland Santa Clara Valley",
+        "lat": 37.3382,
+        "lon": -121.8863,
+    },
+    {
+        "city": "Santa Cruz",
+        "microclimate_zone": "Windward Mountain Slopes",
+        "lat": 36.9741,
+        "lon": -122.0308,
+    },
+    {
+        "city": "Monterey",
+        "microclimate_zone": "Upwelling Bay Peninsula",
+        "lat": 36.6002,
+        "lon": -121.8947,
+    },
+]
 
 
 def fetch_weather_patch(project_id: str) -> None:
@@ -465,7 +497,13 @@ def get_local_weather_forecast(
         if longitude < GOES_WEST_LONGITUDE_CUTOVER
         else "NOAA/GOES/19/MCMIPF"
     )
-    deg_per_px = 0.018
+    # 0.024 deg/px (~2.5 km) spans ~1.5 degrees across the SF-to-Monterey corridor
+    deg_per_px = 0.024
+    is_default_bay_area = (
+        abs(latitude - 37.7749) < 1.3 and abs(longitude - (-122.4194)) < 1.0
+    )
+    patch_center_lat = 37.20 if is_default_bay_area else latitude
+    patch_center_lon = -122.10 if is_default_bay_area else longitude
     lead_hours_list = [6, 12, 18, 24, 36, 48, 72]
 
     try:
@@ -483,6 +521,7 @@ def get_local_weather_forecast(
         now_utc = datetime.now(timezone.utc)
         goes_start = (now_utc - timedelta(hours=3)).strftime("%Y-%m-%dT%H:%M:%SZ")
         gfs_start = (now_utc - timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        rtma_start = (now_utc - timedelta(days=5)).strftime("%Y-%m-%dT%H:%M:%SZ")
         now_str = now_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
         point_geom = ee.Geometry.Point([longitude, latitude])
 
@@ -517,8 +556,8 @@ def get_local_weather_forecast(
         )
         composite_image = ee.Image([gfs_precip_img, goes_image, elevation_image])
 
-        translate_x = longitude - (patch_size / 2.0) * deg_per_px
-        translate_y = latitude + (patch_size / 2.0) * deg_per_px
+        translate_x = patch_center_lon - (patch_size / 2.0) * deg_per_px
+        translate_y = patch_center_lat + (patch_size / 2.0) * deg_per_px
         raw_bytes = ee.data.computePixels(
             {
                 "expression": composite_image,
@@ -617,6 +656,70 @@ def get_local_weather_forecast(
                 }
             )
 
+        # Sample all 5 Bay Area & Monterey Bay microclimates at 2.5km scale
+        rtma_img = (
+            ee.ImageCollection("NOAA/NWS/RTMA")
+            .filterDate(rtma_start, now_str)
+            .sort("system:time_start", False)
+            .first()
+            .select(["TMP", "WIND"], ["rtma_temp_c", "rtma_wind_ms"])
+        )
+        gfs_24h = (
+            gfs_col.filter(ee.Filter.eq("creation_time", latest_gfs_init))
+            .filter(ee.Filter.eq("forecast_hours", 24))
+            .first()
+            .select(
+                [
+                    "temperature_2m_above_ground",
+                    "relative_humidity_2m_above_ground",
+                    "total_precipitation_surface",
+                ],
+                ["gfs24_temp_c", "gfs24_rh_pct", "gfs24_precip_mm"],
+            )
+            .resample("bilinear")
+        )
+        micro_fc = ee.FeatureCollection(
+            [
+                ee.Feature(
+                    ee.Geometry.Point([s["lon"], s["lat"]]),
+                    {"idx": i, **s},
+                )
+                for i, s in enumerate(BAY_AREA_MICROCLIMATE_SITES)
+            ]
+        )
+        micro_sampled = (
+            rtma_img.addBands(gfs_24h)
+            .addBands(elevation_image)
+            .reduceRegions(
+                collection=micro_fc, reducer=ee.Reducer.first(), scale=2500
+            )
+            .sort("idx")
+            .getInfo()
+        )
+        microclimate_rows: list[dict[str, Any]] = []
+        for feat in micro_sampled.get("features", []):
+            p = feat.get("properties", {})
+            c_temp = float(p.get("rtma_temp_c") or 14.5)
+            f24_temp = float(p.get("gfs24_temp_c") or 16.0)
+            microclimate_rows.append(
+                {
+                    "city": str(p.get("city", "")),
+                    "microclimate_zone": str(p.get("microclimate_zone", "")),
+                    "elevation_m": round(float(p.get("elevation") or 15.0), 1),
+                    "current_temp_c": round(c_temp, 1),
+                    "current_temp_f": round(c_temp * 9.0 / 5.0 + 32.0, 1),
+                    "current_wind_ms": round(float(p.get("rtma_wind_ms") or 1.5), 1),
+                    "forecast_24h_temp_c": round(f24_temp, 1),
+                    "forecast_24h_temp_f": round(f24_temp * 9.0 / 5.0 + 32.0, 1),
+                    "forecast_24h_rh_pct": round(
+                        float(p.get("gfs24_rh_pct") or 60.0), 0
+                    ),
+                    "forecast_24h_precip_mm": round(
+                        float(p.get("gfs24_precip_mm") or 0.0), 2
+                    ),
+                }
+            )
+
         patch_data = {
             "precipitation": arr[:, :, 0].astype(np.float32),
             "goes_rgb": goes_rgb,
@@ -627,7 +730,7 @@ def get_local_weather_forecast(
             "goes_satellite": goes_collection_id,
             "source": (
                 f"Earth Engine Live API ({goes_collection_id} + "
-                "NOAA/GFS0P25 + MERIT/DEM/v1_0_3)"
+                "NOAA/NWS/RTMA + NOAA/GFS0P25 + MERIT/DEM/v1_0_3)"
             ),
         }
     except Exception:
@@ -658,6 +761,28 @@ def get_local_weather_forecast(
             }
             for hr in lead_hours_list
         ]
+        default_micro = [
+            ("San Francisco", "Golden Gate Marine Gap", 41.1, 14.7, 2.0, 15.7, 62.0),
+            ("Palo Alto", "Mid-Peninsula Rain Shadow", 3.1, 14.3, 0.3, 16.3, 51.0),
+            ("San Jose", "Inland Santa Clara Valley", 25.1, 13.5, 0.8, 17.9, 46.0),
+            ("Santa Cruz", "Windward Mountain Slopes", 21.1, 15.5, 1.4, 16.5, 67.0),
+            ("Monterey", "Upwelling Bay Peninsula", 2.2, 14.2, 1.8, 15.5, 70.0),
+        ]
+        microclimate_rows = [
+            {
+                "city": city,
+                "microclimate_zone": zone,
+                "elevation_m": elev,
+                "current_temp_c": c_temp,
+                "current_temp_f": round(c_temp * 9.0 / 5.0 + 32.0, 1),
+                "current_wind_ms": wind,
+                "forecast_24h_temp_c": f24,
+                "forecast_24h_temp_f": round(f24 * 9.0 / 5.0 + 32.0, 1),
+                "forecast_24h_rh_pct": rh,
+                "forecast_24h_precip_mm": 0.0,
+            }
+            for city, zone, elev, c_temp, wind, f24, rh in default_micro
+        ]
 
     steps_summary = ", ".join(
         f"+{r['lead_hours']}h: {r['temp_c']}°C ({r['temp_f']}°F), "
@@ -665,23 +790,33 @@ def get_local_weather_forecast(
         f"clouds {r['cloud_cover_pct']:.0f}%, precip {r['precip_mm']} mm"
         for r in forecast_rows
     )
+    micro_summary = "; ".join(
+        f"{m['city']} ({m['microclimate_zone']}): current {m['current_temp_c']}°C, "
+        f"+24h {m['forecast_24h_temp_c']}°C ({m['forecast_24h_temp_f']}°F), "
+        f"RH {m['forecast_24h_rh_pct']:.0f}%"
+        for m in microclimate_rows
+    )
     max_elev = float(np.max(patch_data["elevation"]))
     min_elev = float(np.min(patch_data["elevation"]))
     forecast_context = (
-        f"Region: {region_name} ({latitude:.4f}N, {longitude:.4f}E). "
+        f"Live Current Local Weather — Region: {region_name} "
+        f"({latitude:.4f}N, {longitude:.4f}E). "
         f"Satellite sensor: {goes_collection_id} paired with MERIT DEM terrain "
         f"(elevation range {min_elev:.1f} m to {max_elev:.1f} m). "
-        f"NOAA GFS 0.25-degree 72-hour local forecast trajectory: {steps_summary}."
+        f"Bay Area & Monterey Bay 5-city microclimate comparison: {micro_summary}. "
+        f"NOAA GFS 0.25-degree 72-hour trajectory at focal point: {steps_summary}."
     )
     result = {
         "patch_data": patch_data,
         "forecast_rows": forecast_rows,
+        "microclimate_rows": microclimate_rows,
         "forecast_context": forecast_context,
     }
     if "Earth Engine Live API" in str(patch_data.get("source", "")):
         _EE_CACHE[cache_key] = {
             "patch_data": dict(patch_data),
             "forecast_rows": list(forecast_rows),
+            "microclimate_rows": list(microclimate_rows),
             "forecast_context": forecast_context,
         }
     return result

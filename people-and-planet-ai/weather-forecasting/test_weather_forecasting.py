@@ -148,6 +148,19 @@ def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
         local_fc["patch_data"]["goes_satellite"] == "NOAA/GOES/18/MCMIPF"
     )
     assert len(local_fc["forecast_rows"]) == 7
+    assert len(local_fc["microclimate_rows"]) == 5
+    cities = [m["city"] for m in local_fc["microclimate_rows"]]
+    assert cities == [
+        "San Francisco",
+        "Palo Alto",
+        "San Jose",
+        "Santa Cruz",
+        "Monterey",
+    ]
+    micro_fig = visualize.create_bay_area_microclimate_figure(
+        local_fc["microclimate_rows"]
+    )
+    assert len(micro_fig.data) == 3
     assert "San Francisco Bay Area, CA" in local_fc["forecast_context"]
     assert len(wn_fc["ensemble_rows"]) == 8
     wn_fig = visualize.create_weathernext_ensemble_figure(wn_fc)
