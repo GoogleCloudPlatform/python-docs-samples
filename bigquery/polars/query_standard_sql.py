@@ -41,7 +41,7 @@ def query_standard_sql(plbq: polars_bigquery.Client) -> polars.DataFrame:
         maintain_order=True,
     )
     return df
-# [END bigquery_bigframes_query]
+# [END bigquery_polars_query]
 
 
 if __name__ == "__main__":
