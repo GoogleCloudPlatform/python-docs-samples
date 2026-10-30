@@ -41,7 +41,7 @@ def query_bqstorage(plbq: polars_bigquery.Client) -> polars.DataFrame:
         maintain_order=False,
     )
     return df
-# [END bigquery_bigframes_query_bqstorage]
+# [END bigquery_polars_query_bqstorage]
 
 
 if __name__ == "__main__":
