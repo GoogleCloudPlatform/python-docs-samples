@@ -46,7 +46,7 @@ cryptography==50.0.2
     #   secretstorage
 distro==1.9.0
     # via google-genai
-dnspython==2.8.0
+dnspython==2.9.0
     # via
     #   cloud-sql-python-connector
     #   pymongo
