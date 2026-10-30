@@ -19,6 +19,7 @@ The end-to-end interactive workflow is consolidated in [`README.ipynb`](README.i
 
 * **Hurricane Melissa (`2025-10-28T17:00:00Z`, Jamaica Landfall)**: Category 5 landfall in southwestern Jamaica (`18.1N, 78.0W`), showcasing coastal rainbands interacting with the Blue Mountains (`2,256 m` peak elevation) and highlighted in [`README.ipynb`](README.ipynb) alongside **Google DeepMind [WeatherNext]** (`weathernext_3_0_0_0p1deg` and `weathernext_2_0_0`).
 * **Hurricane Helene (`2024-09-27T06:00:00Z`, Southern Appalachians)**: Historic inland atmospheric moisture plume interacting with Blue Ridge mountain topography (`35.60N, 82.55W`, up to `2,037 m` elevation).
+* **Customizable Local Current Weather Forecasting (`San Francisco Bay Area, CA` or any coordinates)**: Automatically selects **GOES-18 West** (`NOAA/GOES/18/MCMIPF`) for Western longitudes (`longitude < -105.0°`) or **GOES-19 East** (`NOAA/GOES/19/MCMIPF`) for Eastern longitudes, pairs live 10-minute cloud/marine-layer imagery with **MERIT DEM** topography and the latest operational **NOAA GFS (`NOAA/GFS0P25`)** 72-hour forecast trajectory, and synthesizes a localized microclimate report with `gemini-3.8-flash`.
 
 ## Running Locally or in Google Cloud
 

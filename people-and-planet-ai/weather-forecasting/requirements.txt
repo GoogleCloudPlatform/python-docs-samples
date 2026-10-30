@@ -1,4 +1,5 @@
 apache-beam[gcp]>=2.60.0
+bottleneck>=1.5.0
 earthengine-api>=1.0.0
 google-api-core>=2.19.0
 google-auth>=2.29.0

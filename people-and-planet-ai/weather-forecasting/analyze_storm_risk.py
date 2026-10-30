@@ -59,13 +59,14 @@ def analyze_storm_risk(
         data=image_bytes,
         mime_type="image/png",
     )
-    forecast_context = (
+    forecast_context = os.environ.get(
+        "WEATHER_FORECAST_CONTEXT",
         "Storm: Hurricane Melissa (Jamaica Landfall, 18.1N 78.0W). "
         "Observed peak GPM IMERG V07 rainfall: 51.8 mm/hr over coastal and "
         "Blue Mountains terrain (elevation up to 2,256 m). "
         "BigQuery AI.FORECAST (TimesFM 2.5) next 6 hours trajectory: "
         "+1h: 38.4 mm/hr, +2h: 29.1 mm/hr, +3h: 21.7 mm/hr, "
-        "+4h: 16.2 mm/hr, +5h: 12.0 mm/hr, +6h: 9.4 mm/hr."
+        "+4h: 16.2 mm/hr, +5h: 12.0 mm/hr, +6h: 9.4 mm/hr.",
     )
     prompt = (
         f"{forecast_context} "

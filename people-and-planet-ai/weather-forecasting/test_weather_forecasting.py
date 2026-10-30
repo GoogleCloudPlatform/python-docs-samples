@@ -120,11 +120,32 @@ def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
     helene = fetch_weather_patch.build_synthetic_storm_patch(
         "helene_2024", patch_size=32
     )
+    sf_bay = fetch_weather_patch.build_synthetic_storm_patch(
+        "sf_bay_area", patch_size=32
+    )
 
     assert melissa["goes_satellite"] == "NOAA/GOES/19/MCMIPF"
     assert helene["goes_satellite"] == "NOAA/GOES/16/MCMIPF"
+    assert sf_bay["goes_satellite"] == "NOAA/GOES/18/MCMIPF"
     assert melissa["precipitation"].shape == (32, 32)
     assert melissa["goes_rgb"].shape == (32, 32, 3)
+
+    with patch(
+        "fetch_weather_patch.ee.Initialize",
+        side_effect=ee.EEException("Offline test"),
+    ):
+        local_fc = fetch_weather_patch.get_local_weather_forecast(
+            project_id="offline-test-project",
+            region_name="San Francisco Bay Area, CA",
+            latitude=37.7749,
+            longitude=-122.4194,
+            patch_size=16,
+        )
+    assert (
+        local_fc["patch_data"]["goes_satellite"] == "NOAA/GOES/18/MCMIPF"
+    )
+    assert len(local_fc["forecast_rows"]) == 7
+    assert "San Francisco Bay Area, CA" in local_fc["forecast_context"]
 
     overview_fig = visualize.create_storm_overview_figure(melissa)
     assert len(overview_fig.data) == 3
