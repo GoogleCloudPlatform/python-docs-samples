@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Demonstrates how to deduplicate retried Cloud Scheduler HTTP requests."""
+"""Demonstrates how to deduplicate retried Cloud Scheduler HTTP requests.
+See https://docs.cloud.google.com/scheduler/docs/configuring/deduplicate-job-requests
+"""
 
 # [START cloudscheduler_deduplicate_job_requests]
 import datetime
