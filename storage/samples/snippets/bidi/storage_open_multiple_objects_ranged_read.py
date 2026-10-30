@@ -16,7 +16,7 @@
 
 """Downloads a range of bytes from multiple objects concurrently.
 Example usage:
-   ```python samples/snippets/zonal_buckets/storage_open_multiple_objects_ranged_read.py \
+   ```python samples/snippets/bidi/storage_open_multiple_objects_ranged_read.py \
     --bucket_name <BUCKET_NAME> \
     --object_names <OBJECT_1> <OBJECT_2> <OBJECT_3>```
 """
