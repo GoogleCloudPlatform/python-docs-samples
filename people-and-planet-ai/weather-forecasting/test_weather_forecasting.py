@@ -196,10 +196,11 @@ def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
     fetch_weather_patch._EE_CACHE.clear()
 
     overview_fig = visualize.create_storm_overview_figure(melissa)
-    assert len(overview_fig.data) == 3
+    assert len(overview_fig.data) == 4
 
-    png_bytes = visualize.export_composite_png_bytes(melissa)
+    png_bytes = visualize.export_multiband_strip_png_bytes(melissa)
     assert png_bytes.startswith(b"\x89PNG")
+    assert visualize.export_composite_png_bytes(melissa) == png_bytes
 
     hist_rows = [
         {
@@ -213,18 +214,22 @@ def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
     ]
     fc_rows = [
         {
-            "forecast_timestamp": datetime(2025, 10, 28, 17, tzinfo=timezone.utc),
-            "forecasted_precipitation_mm_hr": 38.5,
-            "lower_bound_mm_hr": 30.0,
-            "upper_bound_mm_hr": 47.0,
+            "forecast_timestamp": datetime(2025, 10, 28, 18, tzinfo=timezone.utc),
+            "forecasted_precipitation_mm_hr": 45.5,
+            "lower_bound_mm_hr": -2.5,
+            "upper_bound_mm_hr": 55.0,
         }
     ]
+    eval_metrics = visualize.evaluate_forecast_against_ground_truth(fc_rows)
+    assert eval_metrics["clamped_negative_bounds"] == 1
+    assert eval_metrics["interval_coverage_pct"] == 100.0
     fc_fig = visualize.create_forecast_comparison_figure(
         historical_rows=hist_rows,
         forecast_rows=fc_rows,
         storm_name="Hurricane Melissa",
+        holdout_rows=eval_metrics["holdout_rows"],
     )
-    assert len(fc_fig.data) == 3
+    assert len(fc_fig.data) == 4
 
 
 def test_load_weather_time_series_success(capsys: pytest.CaptureFixture[str]) -> None:
