@@ -21,6 +21,7 @@ import logging
 import math
 import os
 import sys
+import time
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -36,6 +37,7 @@ logging.getLogger("google_auth_httplib2").setLevel(logging.ERROR)
 
 GOES19_CUTOVER_ISO = "2025-04-07T00:00:00"
 GOES_WEST_LONGITUDE_CUTOVER = -105.0
+_EE_CACHE: dict[tuple[Any, ...], dict[str, Any]] = {}
 
 
 def fetch_weather_patch(project_id: str) -> None:
@@ -297,6 +299,18 @@ def get_storm_patch_arrays(
         Dictionary with 'precipitation', 'goes_rgb', 'goes_ir', 'elevation',
         'storm_name', 'iso_time', 'goes_satellite', and 'source'.
     """
+    cache_key = (
+        "storm",
+        project_id,
+        storm_preset,
+        patch_size,
+        scale_meters,
+    )
+    if cache_key in _EE_CACHE:
+        cached = dict(_EE_CACHE[cache_key])
+        cached["source"] = f"{cached['source']} (in-memory cache)"
+        return cached
+
     if storm_preset == "helene_2024":
         iso_time = "2024-09-27T06:00:00"
         longitude, latitude = -82.55, 35.60
@@ -380,7 +394,7 @@ def get_storm_patch_arrays(
             np.uint8
         )
         goes_ir_k = arr[:, :, 4].astype(np.float32) * 0.06145332 + 89.620003
-        return {
+        result = {
             "precipitation": arr[:, :, 0].astype(np.float32),
             "goes_rgb": goes_rgb,
             "goes_ir": goes_ir_k,
@@ -390,6 +404,8 @@ def get_storm_patch_arrays(
             "goes_satellite": goes_collection_id,
             "source": "Earth Engine Live API",
         }
+        _EE_CACHE[cache_key] = dict(result)
+        return result
     except Exception:
         fallback = build_synthetic_storm_patch(
             storm_preset=storm_preset, patch_size=patch_size
@@ -427,6 +443,23 @@ def get_local_weather_forecast(
         multimodal Gemini input), 'forecast_rows' (72-hour GFS forecast list),
         and 'forecast_context' (formatted summary string for analyze_storm_risk).
     """
+    ten_min_bucket = int(time.time() // 600)
+    cache_key = (
+        "local",
+        project_id,
+        region_name,
+        round(latitude, 4),
+        round(longitude, 4),
+        patch_size,
+        ten_min_bucket,
+    )
+    if cache_key in _EE_CACHE:
+        cached = dict(_EE_CACHE[cache_key])
+        cached_patch = dict(cached["patch_data"])
+        cached_patch["source"] = f"{cached_patch['source']} (in-memory cache)"
+        cached["patch_data"] = cached_patch
+        return cached
+
     goes_collection_id = (
         "NOAA/GOES/18/MCMIPF"
         if longitude < GOES_WEST_LONGITUDE_CUTOVER
@@ -640,11 +673,18 @@ def get_local_weather_forecast(
         f"(elevation range {min_elev:.1f} m to {max_elev:.1f} m). "
         f"NOAA GFS 0.25-degree 72-hour local forecast trajectory: {steps_summary}."
     )
-    return {
+    result = {
         "patch_data": patch_data,
         "forecast_rows": forecast_rows,
         "forecast_context": forecast_context,
     }
+    if "Earth Engine Live API" in str(patch_data.get("source", "")):
+        _EE_CACHE[cache_key] = {
+            "patch_data": dict(patch_data),
+            "forecast_rows": list(forecast_rows),
+            "forecast_context": forecast_context,
+        }
+    return result
 
 
 def get_weathernext_ensemble_forecast(
@@ -670,6 +710,20 @@ def get_weathernext_ensemble_forecast(
         Dictionary with 'collection_id', 'latest_asset_id', 'latest_init_utc',
         'total_bands', 'precip_bands', 'ensemble_rows', and 'source'.
     """
+    thirty_min_bucket = int(time.time() // 1800)
+    cache_key = (
+        "weathernext",
+        project_id,
+        region_name,
+        round(latitude, 4),
+        round(longitude, 4),
+        thirty_min_bucket,
+    )
+    if cache_key in _EE_CACHE:
+        cached = dict(_EE_CACHE[cache_key])
+        cached["source"] = f"{cached['source']} (in-memory cache)"
+        return cached
+
     collection_id = (
         "projects/gcp-public-data-weathernext/assets/weathernext_3_0_0_0p1deg"
     )
@@ -748,7 +802,7 @@ def get_weathernext_ensemble_forecast(
             }
         )
 
-    return {
+    result = {
         "region_name": region_name,
         "latitude": latitude,
         "longitude": longitude,
@@ -760,6 +814,9 @@ def get_weathernext_ensemble_forecast(
         "ensemble_rows": ensemble_rows,
         "source": source,
     }
+    if "Live Catalog Metadata" in source:
+        _EE_CACHE[cache_key] = dict(result)
+    return result
 
 
 project_id_arg = os.environ.get("GOOGLE_CLOUD_PROJECT") or (

@@ -153,6 +153,35 @@ def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
     wn_fig = visualize.create_weathernext_ensemble_figure(wn_fc)
     assert len(wn_fig.data) == 5
 
+    # Verify in-memory Earth Engine cache avoids duplicate API calls on repeat runs
+    fetch_weather_patch._EE_CACHE.clear()
+    npy_bytes = _make_structured_npy_bytes(patch_size=16)
+    fake_creds = MagicMock()
+    fake_creds.with_quota_project.return_value = fake_creds
+    with (
+        patch(
+            "fetch_weather_patch.google.auth.default",
+            return_value=(fake_creds, "test-proj"),
+        ),
+        patch("fetch_weather_patch.ee.Initialize"),
+        patch("fetch_weather_patch.ee.ImageCollection"),
+        patch("fetch_weather_patch.ee.Image"),
+        patch("fetch_weather_patch.ee.Geometry.Point"),
+        patch(
+            "fetch_weather_patch.ee.data.computePixels", return_value=npy_bytes
+        ) as mock_compute,
+    ):
+        first = fetch_weather_patch.get_storm_patch_arrays(
+            "cached-proj", "melissa_2025", patch_size=16
+        )
+        second = fetch_weather_patch.get_storm_patch_arrays(
+            "cached-proj", "melissa_2025", patch_size=16
+        )
+    assert mock_compute.call_count == 1
+    assert first["source"] == "Earth Engine Live API"
+    assert second["source"] == "Earth Engine Live API (in-memory cache)"
+    fetch_weather_patch._EE_CACHE.clear()
+
     overview_fig = visualize.create_storm_overview_figure(melissa)
     assert len(overview_fig.data) == 3
 
