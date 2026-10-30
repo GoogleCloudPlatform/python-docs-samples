@@ -25,7 +25,7 @@ def construct_client(project_id: str = "your-project-id") -> polars_bigquery.Cli
 
 def query_bqstorage(plbq: polars_bigquery.Client) -> polars.DataFrame:
     sql = """
-    SELECT year, name, SUM(number),
+    SELECT year, name, SUM(number)
     FROM `bigquery-public-data.usa_names.usa_1910_current`
     GROUP BY year, name
     """
