@@ -17,10 +17,9 @@ from typing import Iterator
 from unittest import mock
 import uuid
 
+import deduplicate_job_requests
 import flask
 import pytest
-
-import deduplicate_job_requests
 
 SCHEDULE_TIME_UTC = "2026-10-16T12:00:00Z"
 SCHEDULE_TIME_OFFSET = "2026-10-16T05:00:00-07:00"
