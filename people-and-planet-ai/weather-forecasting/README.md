@@ -2,6 +2,8 @@
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&cloudshell_git_branch=feat/modernize-ppai-weather-forecasting&cloudshell_open_in_editor=people-and-planet-ai/weather-forecasting/README.ipynb)
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/feat/modernize-ppai-weather-forecasting/people-and-planet-ai/weather-forecasting/README.ipynb)
+[![Open in Colab Enterprise](https://img.shields.io/badge/Open_in-Colab_Enterprise-4285F4?logo=googlecloud&logoColor=white)](https://console.cloud.google.com/agent-platform/colab/import/https:%2F%2Fraw.githubusercontent.com%2FGoogleCloudPlatform%2Fpython-docs-samples%2Ffeat%2Fmodernize-ppai-weather-forecasting%2Fpeople-and-planet-ai%2Fweather-forecasting%2FREADME.ipynb)
+[![Open in Agent Platform Workbench](https://img.shields.io/badge/Open_in-Agent_Platform_Workbench-4285F4?logo=googlecloud&logoColor=white)](https://console.cloud.google.com/agent-platform/workbench/instances?download_url=https://raw.githubusercontent.com/GoogleCloudPlatform/python-docs-samples/feat/modernize-ppai-weather-forecasting/people-and-planet-ai/weather-forecasting/README.ipynb)
 
 This sample demonstrates how to combine satellite observations and terrain elevation from [Google Earth Engine] with zero-shot time-series forecasting in [BigQuery ML] (`AI.FORECAST` powered by **TimesFM 2.5**) and multimodal storm-risk synthesis using **Gemini 3.8 Flash** (`google-genai` SDK).
 
