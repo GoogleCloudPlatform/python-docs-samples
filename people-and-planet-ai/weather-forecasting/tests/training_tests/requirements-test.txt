@@ -1,5 +1,0 @@
-../../serving/weather-data
-ipykernel==6.23.3
-nbclient==0.8.0
-pytest-xdist==3.3.0
-pytest==9.0.3; python_version >= "3.10"

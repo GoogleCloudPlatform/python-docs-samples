@@ -92,20 +92,26 @@ This model uses satellite data to classify what is on Earth. The satellite data 
 
 ---
 
-## 🌦 Weather forecasting -- _timeseries regression_
+## 🌦 [Weather forecasting -- _storm nowcasting_](weather-forecasting)
 
-> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/weather-forecasting/notebooks/1-overview.ipynb)
+> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/weather-forecasting/README.ipynb)
 >
-> [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/6-UJzEXMvGY/0.jpg)](https://youtu.be/6-UJzEXMvGY)
+> [Watch the video on YouTube ![thumbnail](https://img.youtube.com/vi/6-UJzEXMvGY/0.jpg)](https://youtu.be/6-UJzEXMvGY)
 
-This model uses satellite data to forecast precipitation for the next 2 and 6 hours. The satellite data comes from [Google Earth Engine.](https://earthengine.google.com/)
+Forecast hourly precipitation and generate localized flood-risk reports from
+satellite and elevation data in [Earth Engine].
 
-* **Model**: 2D Fully Convolutional Network in [PyTorch]
-* **Creating datasets**: [Sentinel-2] satellite data and [ESA WorldCover] from [Earth Engine] with [Dataflow]
-* **Training the model**: [PyTorch] in [Vertex AI]
-* **Getting predictions**: [PyTorch] locally
+* **Satellite and terrain data**: NASA GPM IMERG, NOAA GOES, and MERIT DEM from [Earth Engine]
+* **Time-series ingestion pipeline**: [Apache Beam] in [Dataflow] writing hourly observations to [BigQuery]
+* **Zero-shot precipitation forecasting**: TimesFM 2.5 via `AI.FORECAST` in [BigQuery ML]
+* **Global ensemble forecasts**: [WeatherNext] 3 from [Earth Engine]
+* **Multimodal flood-risk analysis**: [Gemini] (`gemini-3.8-flash`) via the [Google Gen AI SDK]
 
+[Apache Beam]: https://beam.apache.org
+[BigQuery]: https://cloud.google.com/bigquery
+[BigQuery ML]: https://cloud.google.com/bigquery/docs/timesfm-model
 [Dataflow]: https://cloud.google.com/dataflow
 [Earth Engine]: https://earthengine.google.com/
-[PyTorch]: https://pytorch.org/
-[Vertex AI]: https://cloud.google.com/vertex-ai
+[Gemini]: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-8-flash
+[Google Gen AI SDK]: https://googleapis.github.io/python-genai/
+[WeatherNext]: https://developers.google.com/weathernext/guides/models
