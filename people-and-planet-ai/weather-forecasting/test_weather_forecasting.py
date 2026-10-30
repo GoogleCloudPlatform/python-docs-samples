@@ -141,11 +141,17 @@ def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
             longitude=-122.4194,
             patch_size=16,
         )
+        wn_fc = fetch_weather_patch.get_weathernext_ensemble_forecast(
+            project_id="offline-test-project",
+        )
     assert (
         local_fc["patch_data"]["goes_satellite"] == "NOAA/GOES/18/MCMIPF"
     )
     assert len(local_fc["forecast_rows"]) == 7
     assert "San Francisco Bay Area, CA" in local_fc["forecast_context"]
+    assert len(wn_fc["ensemble_rows"]) == 8
+    wn_fig = visualize.create_weathernext_ensemble_figure(wn_fc)
+    assert len(wn_fig.data) == 5
 
     overview_fig = visualize.create_storm_overview_figure(melissa)
     assert len(overview_fig.data) == 3

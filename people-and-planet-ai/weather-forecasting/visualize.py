@@ -217,3 +217,88 @@ def create_forecast_comparison_figure(
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     )
     return fig
+
+
+def create_weathernext_ensemble_figure(
+    ensemble_data: dict[str, Any],
+) -> go.Figure:
+    """Creates a Plotly ensemble plume chart for WeatherNext 3 percentiles."""
+    rows = ensemble_data["ensemble_rows"]
+    times = [r["valid_time_utc"] for r in rows]
+    p10 = [float(r["p10_mm_hr"]) for r in rows]
+    p25 = [float(r["p25_mm_hr"]) for r in rows]
+    p50 = [float(r["p50_mm_hr"]) for r in rows]
+    p75 = [float(r["p75_mm_hr"]) for r in rows]
+    p90 = [float(r["p90_mm_hr"]) for r in rows]
+    mean_vals = [float(r["mean_mm_hr"]) for r in rows]
+
+    fig = go.Figure()
+
+    # Outer 10th-90th percentile band (80% of 64 ensemble members)
+    fig.add_trace(
+        go.Scatter(
+            x=times + times[::-1],
+            y=p90 + p10[::-1],
+            fill="toself",
+            fillcolor="rgba(30, 136, 229, 0.16)",
+            line=dict(color="rgba(255,255,255,0)"),
+            hoverinfo="skip",
+            showlegend=True,
+            name="p10–p90 Spread (80% of 64 Members)",
+        )
+    )
+    # Inner 25th-75th interquartile band (middle 50% of 64 ensemble members)
+    fig.add_trace(
+        go.Scatter(
+            x=times + times[::-1],
+            y=p75 + p25[::-1],
+            fill="toself",
+            fillcolor="rgba(30, 136, 229, 0.34)",
+            line=dict(color="rgba(255,255,255,0)"),
+            hoverinfo="skip",
+            showlegend=True,
+            name="p25–p75 Interquartile Range (50% of Members)",
+        )
+    )
+    # Ensemble Median (p50)
+    fig.add_trace(
+        go.Scatter(
+            x=times,
+            y=p50,
+            mode="lines+markers",
+            name="Ensemble Median (p50)",
+            line=dict(color="#0d47a1", width=3),
+        )
+    )
+    # Ensemble Mean
+    fig.add_trace(
+        go.Scatter(
+            x=times,
+            y=mean_vals,
+            mode="lines+markers",
+            name="Ensemble Mean (mean)",
+            line=dict(color="#d81b60", width=2.5, dash="dash"),
+        )
+    )
+    # 90th percentile tail-risk line
+    fig.add_trace(
+        go.Scatter(
+            x=times,
+            y=p90,
+            mode="lines",
+            name="p90 Worst-Case Tail Risk (90th Percentile)",
+            line=dict(color="#ff6f00", width=1.8, dash="dot"),
+        )
+    )
+    fig.update_layout(
+        title=(
+            f"<b>WeatherNext 3 (64-Member Ensemble)</b> — "
+            f"{ensemble_data.get('region_name', 'Probabilistic Rainfall Forecast')}"
+        ),
+        xaxis_title="Valid Forecast Time (UTC)",
+        yaxis_title="1-Hour Precipitation Rate (mm/hr)",
+        height=430,
+        template="plotly_white",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    )
+    return fig
