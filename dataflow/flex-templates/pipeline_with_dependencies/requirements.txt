@@ -364,7 +364,7 @@ protobuf==6.33.6
     #   proto-plus
 pyarrow==25.0.1
     # via apache-beam
-pyasn1==0.6.4
+pyasn1==0.6.5
     # via
     #   oauth2client
     #   pyasn1-modules
