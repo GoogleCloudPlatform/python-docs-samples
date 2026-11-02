@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
+import concurrent.futures
+import logging
 
+from google.api_core import exceptions
 from google.cloud import storage
 from google.cloud import storage_control_v2
 import pytest
@@ -24,9 +26,10 @@ import get_rapid_cache
 import list_rapid_caches
 import update_rapid_cache
 
-# Poll for up to 2 minutes for the cache to reach the "disabled" state.
-_DISABLE_POLL_ATTEMPTS = 12
-_DISABLE_POLL_INTERVAL_SECONDS = 10
+# The disable operation only completes once the cache has been fully removed,
+# which can take more than an hour. The cache reaches the "disabled" state
+# within seconds, so the test bounds the wait and then checks the state.
+_DISABLE_TIMEOUT_SECONDS = 600
 
 
 def test_rapid_cache_create_get_list_update_disable(
@@ -35,26 +38,30 @@ def test_rapid_cache_create_get_list_update_disable(
     rapid_cache_zone: str,
 ) -> None:
     bucket_name = regional_hns_enabled_bucket.name
-
-    # Test create Rapid Cache
-    create_rapid_cache.create_rapid_cache(
-        bucket_name=bucket_name, zone=rapid_cache_zone
+    # The Rapid Cache ID is the same as its zone.
+    cache_id = rapid_cache_zone
+    cache_name = storage_control_v2.StorageControlClient.rapid_cache_path(
+        project="_", bucket=bucket_name, rapid_cache=cache_id
     )
-    out, _ = capsys.readouterr()
-    prefix = "Created Rapid Cache: "
-    assert prefix in out
-    cache_name = out.split(prefix, 1)[1].split()[0]
-    cache_id = storage_control_v2.StorageControlClient.parse_rapid_cache_path(
-        cache_name
-    )["rapid_cache"]
-    assert cache_id
+    disable_requested = False
 
     try:
+        # Test create Rapid Cache
+        create_rapid_cache.create_rapid_cache(
+            bucket_name=bucket_name, zone=rapid_cache_zone
+        )
+        out, _ = capsys.readouterr()
+        assert f"Created Rapid Cache: {cache_name}" in out
+        assert "State: running" in out
+        assert "Cache type: rapid-cache-ultra" in out
+
         # Test get Rapid Cache
         get_rapid_cache.get_rapid_cache(bucket_name=bucket_name, cache_id=cache_id)
         out, _ = capsys.readouterr()
-        assert cache_name in out
+        assert f"Got Rapid Cache: {cache_name}" in out
         assert f"Zone: {rapid_cache_zone}" in out
+        assert "State: running" in out
+        assert "Cache type: rapid-cache-ultra" in out
 
         # Test list Rapid Caches
         list_rapid_caches.list_rapid_caches(bucket_name=bucket_name)
@@ -68,22 +75,36 @@ def test_rapid_cache_create_get_list_update_disable(
         out, _ = capsys.readouterr()
         assert f"Updated Rapid Cache: {cache_name}" in out
         assert "TTL: 172800 seconds" in out
+
+        # Test disable Rapid Cache
+        disable_requested = True
+        try:
+            disable_rapid_cache.disable_rapid_cache(
+                bucket_name=bucket_name,
+                cache_id=cache_id,
+                timeout=_DISABLE_TIMEOUT_SECONDS,
+            )
+            out, _ = capsys.readouterr()
+            assert f"Disabled Rapid Cache: {cache_name}" in out
+            assert "State: disabled" in out
+        except concurrent.futures.TimeoutError:
+            logging.warning(
+                "Disable operation for %s did not complete within %s seconds; "
+                "checking the cache state instead.",
+                cache_name,
+                _DISABLE_TIMEOUT_SECONDS,
+            )
+            capsys.readouterr()
+            get_rapid_cache.get_rapid_cache(bucket_name=bucket_name, cache_id=cache_id)
+            out, _ = capsys.readouterr()
+            assert "State: disabled" in out
     finally:
-        # Disable the Rapid Cache. This also cleans up the cache so that the
-        # bucket can be deleted once the cache has been fully removed.
-        disable_rapid_cache.disable_rapid_cache(
-            bucket_name=bucket_name, cache_id=cache_id
-        )
-        disable_out, _ = capsys.readouterr()
-
-    # Test disable Rapid Cache
-    assert f"Disabling Rapid Cache: {cache_name}" in disable_out
-
-    # The cache moves to the "disabled" state shortly after the request.
-    for _ in range(_DISABLE_POLL_ATTEMPTS):
-        get_rapid_cache.get_rapid_cache(bucket_name=bucket_name, cache_id=cache_id)
-        out, _ = capsys.readouterr()
-        if "State: disabled" in out:
-            break
-        time.sleep(_DISABLE_POLL_INTERVAL_SECONDS)
-    assert "State: disabled" in out
+        if not disable_requested:
+            # Disable the Rapid Cache so that the bucket can be deleted once the
+            # cache has been fully removed. Errors are ignored.
+            try:
+                storage_control_v2.StorageControlClient().disable_rapid_cache(
+                    name=cache_name
+                )
+            except exceptions.GoogleAPIError as e:
+                logging.warning("Could not disable %s: %s", cache_name, e)

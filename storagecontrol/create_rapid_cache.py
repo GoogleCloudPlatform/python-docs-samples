@@ -16,6 +16,7 @@ import sys
 
 # [START storage_control_create_rapid_cache]
 from google.cloud import storage_control_v2
+from google.protobuf import duration_pb2
 
 
 def create_rapid_cache(bucket_name: str, zone: str) -> None:
@@ -31,11 +32,18 @@ def create_rapid_cache(bucket_name: str, zone: str) -> None:
     # denotes this bucket exists in the global namespace.
     project_path = storage_control_client.common_project_path("_")
     bucket_path = f"{project_path}/buckets/{bucket_name}"
+    # The Rapid Cache ID must be the same as the zone.
+    rapid_cache_path = storage_control_client.rapid_cache_path(
+        project="_", bucket=bucket_name, rapid_cache=zone
+    )
 
     # Rapid Cache Ultra requires a bucket with hierarchical namespace enabled.
     rapid_cache = storage_control_v2.RapidCache(
+        name=rapid_cache_path,
         zone=zone,
         cache_type="rapid-cache-ultra",
+        # The time to live (TTL) for cache entries: 86400 seconds (24 hours).
+        ttl=duration_pb2.Duration(seconds=86400),
     )
     request = storage_control_v2.CreateRapidCacheRequest(
         parent=bucket_path,
@@ -47,6 +55,8 @@ def create_rapid_cache(bucket_name: str, zone: str) -> None:
     response = operation.result()
 
     print(f"Created Rapid Cache: {response.name}")
+    print(f"State: {response.state}")
+    print(f"Cache type: {response.cache_type}")
 
 
 # [END storage_control_create_rapid_cache]

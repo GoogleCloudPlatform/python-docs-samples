@@ -24,8 +24,8 @@ def update_rapid_cache(bucket_name: str, cache_id: str, ttl_seconds: int) -> Non
     # The ID of your GCS bucket
     # bucket_name = "your-unique-bucket-name"
 
-    # The ID of the Rapid Cache
-    # cache_id = "your-rapid-cache-id"
+    # The ID of the Rapid Cache, which is the same as its zone
+    # cache_id = "us-central1-a"
 
     # The new time to live (TTL) for cache entries, in seconds. The TTL must
     # be between 1 hour and 7 days.

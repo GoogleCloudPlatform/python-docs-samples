@@ -14,6 +14,7 @@
 
 import logging
 import os
+import time
 import uuid
 
 from google.api_core import exceptions
@@ -89,11 +90,14 @@ def regional_hns_enabled_bucket(
     bucket.hierarchical_namespace_enabled = True
     region = rapid_cache_zone.rsplit("-", 1)[0]
     bucket = storage_client.create_bucket(bucket, location=region)
+    # Wait for the new bucket's metadata to propagate before creating a Rapid
+    # Cache on it.
+    time.sleep(20)
 
     yield bucket
 
     # A bucket cannot be deleted until its disabled Rapid Cache has been fully
-    # removed, which can take more than 30 minutes. Cleanup is best-effort: a
+    # removed, which can take more than an hour. Cleanup is best-effort: a
     # short retry, after which the bucket is left behind for later cleanup.
     try:
         retry.Retry(
