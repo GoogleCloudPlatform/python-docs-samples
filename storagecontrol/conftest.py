@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import os
 import uuid
 
+from google.api_core import exceptions
+from google.api_core import retry
 from google.cloud import storage
 
 import pytest
@@ -64,6 +67,43 @@ def hns_enabled_bucket(project_id: str, bucket_name: str) -> storage.Bucket:
     yield bucket
 
     bucket.delete(force=True)
+
+
+@pytest.fixture(scope="module")
+def rapid_cache_zone() -> str:
+    yield os.environ.get("RAPID_CACHE_ZONE", "us-central1-a")
+
+
+@pytest.fixture(scope="function")
+def regional_hns_enabled_bucket(
+    project_id: str, bucket_name: str, rapid_cache_zone: str
+) -> storage.Bucket:
+    """
+    Yields and auto-cleans up a regional HNS enabled bucket located in the
+    region of the Rapid Cache zone.
+    """
+
+    storage_client = storage.Client(project=project_id)
+    bucket = storage_client.bucket(bucket_name)
+    bucket.iam_configuration.uniform_bucket_level_access_enabled = True
+    bucket.hierarchical_namespace_enabled = True
+    region = rapid_cache_zone.rsplit("-", 1)[0]
+    bucket = storage_client.create_bucket(bucket, location=region)
+
+    yield bucket
+
+    # A bucket cannot be deleted until its disabled Rapid Cache has been fully
+    # removed, which can take more than 30 minutes. Cleanup is best-effort: a
+    # short retry, after which the bucket is left behind for later cleanup.
+    try:
+        retry.Retry(
+            predicate=retry.if_exception_type(exceptions.Conflict),
+            initial=10.0,
+            maximum=30.0,
+            timeout=120.0,
+        )(bucket.delete)(force=True)
+    except exceptions.GoogleAPIError as e:
+        logging.warning("Could not delete bucket %s: %s", bucket.name, e)
 
 
 @pytest.fixture(scope="function")
