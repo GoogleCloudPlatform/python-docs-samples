@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import os
 import time
 import uuid
@@ -22,6 +21,8 @@ from google.api_core import retry
 from google.cloud import storage
 
 import pytest
+
+import logging
 
 
 @pytest.fixture(scope="module")

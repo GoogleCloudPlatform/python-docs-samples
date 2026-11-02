@@ -13,18 +13,18 @@
 # limitations under the License.
 
 import concurrent.futures
-import logging
-
-from google.api_core import exceptions
-from google.cloud import storage
-from google.cloud import storage_control_v2
-import pytest
 
 import create_rapid_cache
 import disable_rapid_cache
 import get_rapid_cache
+from google.api_core import exceptions
+from google.cloud import storage
+from google.cloud import storage_control_v2
 import list_rapid_caches
+import pytest
 import update_rapid_cache
+
+import logging
 
 # The disable operation only completes once the cache has been fully removed,
 # which can take more than an hour. The cache reaches the "disabled" state
