@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_check_instance_upgradability]
 import sys
 
-# [START notebooks_v2_check_instance_upgradability]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 
@@ -54,30 +53,3 @@ def check_instance_upgradability(
 
 
 # [END notebooks_v2_check_instance_upgradability]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Check whether a Workbench instance can be upgraded."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-instance",
-        help="The ID of the Workbench instance.",
-    )
-    args = parser.parse_args()
-    check_instance_upgradability(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-    )

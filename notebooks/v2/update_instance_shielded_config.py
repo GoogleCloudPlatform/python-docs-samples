@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_update_instance_shielded_config]
 import sys
 
-# [START notebooks_v2_update_instance_shielded_config]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 from google.protobuf import field_mask_pb2
@@ -58,9 +57,7 @@ def update_instance_shielded_config(
         operation = client.update_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
         response = operation.result()
-        secure_boot = (
-            response.gce_setup.shielded_instance_config.enable_secure_boot
-        )
+        secure_boot = response.gce_setup.shielded_instance_config.enable_secure_boot
         print(f"Resource ID: {response.name}")
         print(f"Secure Boot Enabled: {secure_boot}")
         print(f"State: {response.state.name}")
@@ -73,30 +70,3 @@ def update_instance_shielded_config(
 
 
 # [END notebooks_v2_update_instance_shielded_config]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Update the Shielded VM config of a Workbench instance."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-instance",
-        help="The ID of the Workbench instance.",
-    )
-    args = parser.parse_args()
-    update_instance_shielded_config(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-    )

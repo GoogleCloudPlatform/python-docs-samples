@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_create_instance_private_vpc]
 import sys
 
-# [START notebooks_v2_create_instance_private_vpc]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 
@@ -27,22 +26,25 @@ def create_instance_private_vpc(
     network_id: str = "example-network",
     subnet_id: str = "example-subnet",
 ) -> None:
-    """Creates a private-IP Workbench instance in a custom VPC.
+    """Creates a Workbench instance with private IP in a custom VPC subnet.
+
+    Disabling the external public IP address isolates the Workbench instance
+    from the public internet while allowing private connectivity through a
+    custom VPC network and Cloud NAT or Private Google Access.
 
     Args:
         project_id: The Google Cloud project ID.
         location_id: The Compute Engine zone for the new instance.
         instance_id: The ID to assign to the new Workbench instance.
         network_id: The ID of the VPC network in the project.
-        subnet_id: The ID of the subnetwork in the same region.
+        subnet_id: The ID of the subnetwork in the instance region.
     """
     client = notebooks_v2.NotebookServiceClient()
     parent = f"projects/{project_id}/locations/{location_id}"
-    region_id = "-".join(location_id.split("-")[:-1])
+    parts = location_id.split("-")
+    region_id = "-".join(parts[:-1]) if len(parts) > 2 else location_id
     network = f"projects/{project_id}/global/networks/{network_id}"
-    subnet = (
-        f"projects/{project_id}/regions/{region_id}/subnetworks/{subnet_id}"
-    )
+    subnet = f"projects/{project_id}/regions/{region_id}/subnetworks/{subnet_id}"
     network_interface = notebooks_v2.NetworkInterface(
         network=network,
         subnet=subnet,
@@ -65,7 +67,9 @@ def create_instance_private_vpc(
         print(f"Waiting for operation to complete: {operation.operation.name}")
         response = operation.result()
         print(f"Resource ID: {response.name}")
+        print(f"Creation Date: {response.create_time}")
         print(f"Disable Public IP: {response.gce_setup.disable_public_ip}")
+        print(f"Machine Type: {response.gce_setup.machine_type}")
         print(f"State: {response.state.name}")
     except exceptions.AlreadyExists as err:
         print(
@@ -76,42 +80,3 @@ def create_instance_private_vpc(
 
 
 # [END notebooks_v2_create_instance_private_vpc]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Create a private-IP Workbench instance in a custom VPC."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-private-instance",
-        help="The ID for the new Workbench instance.",
-    )
-    parser.add_argument(
-        "--network-id",
-        default="example-network",
-        help="The VPC network ID.",
-    )
-    parser.add_argument(
-        "--subnet-id",
-        default="example-subnet",
-        help="The subnetwork ID.",
-    )
-    args = parser.parse_args()
-    create_instance_private_vpc(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-        network_id=args.network_id,
-        subnet_id=args.subnet_id,
-    )

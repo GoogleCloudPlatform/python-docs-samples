@@ -2,6 +2,8 @@
 
 This directory contains atomic Python code samples demonstrating how to manage **Workbench instances** using the `google-cloud-notebooks` (`google.cloud.notebooks_v2`) client library.
 
+Workbench instances target enterprises that want to manage a secure JupyterLab environment that keeps their data safe while allowing centralized administration and configuration. Data scientists can experiment, develop, and deploy workloads on Google Cloud while maintaining their organization's desired security posture.
+
 ## Prerequisites
 
 1. Enable the **Notebooks API** (`notebooks.googleapis.com`) in your Google Cloud project:
@@ -29,7 +31,7 @@ This directory contains atomic Python code samples demonstrating how to manage *
 - [`reset_instance.py`](reset_instance.py) — Resets (reboots) a Workbench instance (`notebooks_v2_reset_instance`).
 - [`delete_instance.py`](delete_instance.py) — Deletes a Workbench instance (`notebooks_v2_delete_instance`).
 
-### Instance Configuration, Maintenance & Diagnostics
+### Centralized Administration, Maintenance & Diagnostics
 - [`update_instance_machine_type.py`](update_instance_machine_type.py) — Updates the Compute Engine machine type of a stopped Workbench instance (`notebooks_v2_update_instance_machine_type`).
 - [`update_instance_metadata.py`](update_instance_metadata.py) — Updates custom metadata keys on a Workbench instance (`notebooks_v2_update_instance_metadata`).
 - [`update_instance_shielded_config.py`](update_instance_shielded_config.py) — Updates the Shielded VM configuration on a stopped Workbench instance (`notebooks_v2_update_instance_shielded_config`).
@@ -38,7 +40,7 @@ This directory contains atomic Python code samples demonstrating how to manage *
 - [`rollback_instance.py`](rollback_instance.py) — Rolls back a Workbench instance to a previous snapshot and revision (`notebooks_v2_rollback_instance`).
 - [`diagnose_instance.py`](diagnose_instance.py) — Runs a diagnostic bundle export to Cloud Storage for a Workbench instance (`notebooks_v2_diagnose_instance`).
 
-### Specialized Creation, Security Blueprint Hardening & Access Control
+### Enterprise Security Posture, Specialized Compute & Access Control
 - [`create_instance_gpu.py`](create_instance_gpu.py) — Creates a GPU-accelerated Workbench instance (`notebooks_v2_create_instance_gpu`).
 - [`create_instance_custom_container.py`](create_instance_custom_container.py) — Creates a Workbench instance from a custom container image (`notebooks_v2_create_instance_custom_container`).
 - [`create_instance_cmek.py`](create_instance_cmek.py) — Creates a Workbench instance encrypted with a customer-managed encryption key (`notebooks_v2_create_instance_cmek`).
@@ -47,12 +49,12 @@ This directory contains atomic Python code samples demonstrating how to manage *
 - [`create_instance_single_user.py`](create_instance_single_user.py) — Creates a single-user Workbench instance with a custom least-privilege service account (`notebooks_v2_create_instance_single_user`).
 - [`create_instance_hardened.py`](create_instance_hardened.py) — Creates a security-hardened Workbench instance disabling root, downloads, terminal, and public IP (`notebooks_v2_create_instance_hardened`).
 - [`get_instance_iam_policy.py`](get_instance_iam_policy.py) — Gets the IAM policy for a Workbench instance (`notebooks_v2_get_instance_iam_policy`).
-- [`set_instance_iam_policy.py`](set_instance_iam_policy.py) — Sets an IAM policy binding on a Workbench instance (`notebooks_v2_set_instance_iam_policy`).
-- [`test_instance_iam_permissions.py`](test_instance_iam_permissions.py) — Tests IAM permissions on a Workbench instance (`notebooks_v2_test_instance_iam_permissions`).
+- [`set_instance_iam_policy.py`](set_instance_iam_policy.py) — Sets an IAM policy binding on a Workbench instance using read-modify-write (`notebooks_v2_set_instance_iam_policy`).
+- [`check_instance_iam_permissions.py`](check_instance_iam_permissions.py) — Checks IAM permissions on a Workbench instance (`notebooks_v2_check_instance_iam_permissions`).
 
 ## Running Tests
 
 ```bash
 .venv/bin/pip install -r requirements-test.txt
-.venv/bin/pytest instances_test.py
+.venv/bin/pytest
 ```

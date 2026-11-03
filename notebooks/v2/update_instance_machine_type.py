@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_update_instance_machine_type]
 import sys
 
-# [START notebooks_v2_update_instance_machine_type]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 from google.protobuf import field_mask_pb2
@@ -61,36 +60,3 @@ def update_instance_machine_type(
 
 
 # [END notebooks_v2_update_instance_machine_type]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Update the machine type of a stopped Workbench instance."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-instance",
-        help="The ID of the Workbench instance.",
-    )
-    parser.add_argument(
-        "--machine-type",
-        default="n1-standard-8",
-        help="The Compute Engine machine type.",
-    )
-    args = parser.parse_args()
-    update_instance_machine_type(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-        machine_type=args.machine_type,
-    )

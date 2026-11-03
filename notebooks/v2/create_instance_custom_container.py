@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_create_instance_custom_container]
 import sys
 
-# [START notebooks_v2_create_instance_custom_container]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 
@@ -55,10 +54,9 @@ def create_instance_custom_container(
         operation = client.create_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
         response = operation.result()
+        repo = response.gce_setup.container_image.repository
         print(f"Resource ID: {response.name}")
-        print(
-            f"Container Repository: {response.gce_setup.container_image.repository}"
-        )
+        print(f"Container Repository: {repo}")
         print(f"State: {response.state.name}")
     except exceptions.AlreadyExists as err:
         print(
@@ -69,36 +67,3 @@ def create_instance_custom_container(
 
 
 # [END notebooks_v2_create_instance_custom_container]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Create a Workbench instance using a custom container image."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-container-instance",
-        help="The ID for the new Workbench instance.",
-    )
-    parser.add_argument(
-        "--repository",
-        default="gcr.io/deeplearning-platform-release/base-cpu",
-        help="The container image repository URI.",
-    )
-    args = parser.parse_args()
-    create_instance_custom_container(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-        repository=args.repository,
-    )

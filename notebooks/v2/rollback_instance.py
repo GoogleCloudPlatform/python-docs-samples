@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_rollback_instance]
 import sys
 
-# [START notebooks_v2_rollback_instance]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 
@@ -60,42 +59,3 @@ def rollback_instance(
 
 
 # [END notebooks_v2_rollback_instance]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Roll back a Workbench instance to a snapshot."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-instance",
-        help="The ID of the Workbench instance.",
-    )
-    parser.add_argument(
-        "--snapshot-id",
-        default="example-snapshot",
-        help="The ID of the target Compute Engine snapshot.",
-    )
-    parser.add_argument(
-        "--revision-id",
-        default="1",
-        help="The revision ID for rollback.",
-    )
-    args = parser.parse_args()
-    rollback_instance(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-        snapshot_id=args.snapshot_id,
-        revision_id=args.revision_id,
-    )

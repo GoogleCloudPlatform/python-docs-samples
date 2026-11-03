@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_diagnose_instance]
 import sys
 
-# [START notebooks_v2_diagnose_instance]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 
@@ -62,36 +61,3 @@ def diagnose_instance(
 
 
 # [END notebooks_v2_diagnose_instance]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Run diagnostics on a Workbench instance."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-instance",
-        help="The ID of the Workbench instance.",
-    )
-    parser.add_argument(
-        "--gcs-bucket",
-        default="gs://example-bucket",
-        help="The Cloud Storage bucket URI for diagnostic output.",
-    )
-    args = parser.parse_args()
-    diagnose_instance(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-        gcs_bucket=args.gcs_bucket,
-    )

@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_create_instance_gpu]
 import sys
 
-# [START notebooks_v2_create_instance_gpu]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 
@@ -70,30 +69,3 @@ def create_instance_gpu(
 
 
 # [END notebooks_v2_create_instance_gpu]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Create a GPU-accelerated Workbench instance."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-gpu-instance",
-        help="The ID for the new Workbench instance.",
-    )
-    args = parser.parse_args()
-    create_instance_gpu(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-    )

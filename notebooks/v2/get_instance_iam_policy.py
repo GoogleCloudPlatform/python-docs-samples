@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_get_instance_iam_policy]
 import sys
 
-# [START notebooks_v2_get_instance_iam_policy]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 from google.iam.v1 import iam_policy_pb2
@@ -53,30 +52,3 @@ def get_instance_iam_policy(
 
 
 # [END notebooks_v2_get_instance_iam_policy]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Get the IAM policy for a Workbench instance."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-instance",
-        help="The ID of the Workbench instance.",
-    )
-    args = parser.parse_args()
-    get_instance_iam_policy(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-    )

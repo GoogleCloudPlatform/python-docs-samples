@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_create_instance_single_user]
 import sys
 
-# [START notebooks_v2_create_instance_single_user]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 
@@ -38,9 +37,7 @@ def create_instance_single_user(
     """
     client = notebooks_v2.NotebookServiceClient()
     parent = f"projects/{project_id}/locations/{location_id}"
-    service_account_email = (
-        f"{service_account_id}@{project_id}.iam.gserviceaccount.com"
-    )
+    service_account_email = f"{service_account_id}@{project_id}.iam.gserviceaccount.com"
     service_account = notebooks_v2.ServiceAccount(email=service_account_email)
     gce_setup = notebooks_v2.GceSetup(
         machine_type="e2-standard-4",
@@ -72,42 +69,3 @@ def create_instance_single_user(
 
 
 # [END notebooks_v2_create_instance_single_user]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Create a single-user Workbench instance."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-single-user-instance",
-        help="The ID for the new Workbench instance.",
-    )
-    parser.add_argument(
-        "--instance-owner",
-        default="example-user@example.com",
-        help="The email address of the instance owner.",
-    )
-    parser.add_argument(
-        "--service-account-id",
-        default="example-sa",
-        help="The ID of the custom VM service account.",
-    )
-    args = parser.parse_args()
-    create_instance_single_user(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-        instance_owner=args.instance_owner,
-        service_account_id=args.service_account_id,
-    )

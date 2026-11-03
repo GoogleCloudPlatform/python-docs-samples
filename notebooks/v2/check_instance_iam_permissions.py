@@ -12,21 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
+# [START notebooks_v2_check_instance_iam_permissions]
 import sys
 
-# [START notebooks_v2_test_instance_iam_permissions]
 from google.api_core import exceptions
 from google.cloud import notebooks_v2
 from google.iam.v1 import iam_policy_pb2
 
 
-def test_instance_iam_permissions(
+def check_instance_iam_permissions(
     project_id: str,
     location_id: str = "us-central1-a",
     instance_id: str = "example-instance",
 ) -> None:
-    """Tests IAM permissions on a Workbench instance.
+    """Checks IAM permissions on a Workbench instance.
 
     Args:
         project_id: The Google Cloud project ID.
@@ -52,31 +51,4 @@ def test_instance_iam_permissions(
         )
 
 
-# [END notebooks_v2_test_instance_iam_permissions]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Test IAM permissions on a Workbench instance."
-    )
-    parser.add_argument(
-        "--project-id",
-        required=True,
-        help="The Google Cloud project ID.",
-    )
-    parser.add_argument(
-        "--location-id",
-        default="us-central1-a",
-        help="The Compute Engine zone.",
-    )
-    parser.add_argument(
-        "--instance-id",
-        default="example-instance",
-        help="The ID of the Workbench instance.",
-    )
-    args = parser.parse_args()
-    test_instance_iam_permissions(
-        project_id=args.project_id,
-        location_id=args.location_id,
-        instance_id=args.instance_id,
-    )
+# [END notebooks_v2_check_instance_iam_permissions]
