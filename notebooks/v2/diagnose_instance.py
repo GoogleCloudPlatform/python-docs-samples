@@ -1,0 +1,97 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import argparse
+import sys
+
+# [START notebooks_v2_diagnose_instance]
+from google.api_core import exceptions
+from google.cloud import notebooks_v2
+
+
+def diagnose_instance(
+    project_id: str,
+    location_id: str = "us-central1-a",
+    instance_id: str = "example-instance",
+    gcs_bucket: str = "gs://example-bucket",
+) -> None:
+    """Runs diagnostics on a Workbench instance.
+
+    Args:
+        project_id: The Google Cloud project ID.
+        location_id: The Compute Engine zone where the instance resides.
+        instance_id: The ID of the Workbench instance to diagnose.
+        gcs_bucket: The Cloud Storage bucket URI to store diagnostic logs.
+    """
+    client = notebooks_v2.NotebookServiceClient()
+    name = f"projects/{project_id}/locations/{location_id}/instances/{instance_id}"
+    diagnostic_config = notebooks_v2.DiagnosticConfig(
+        gcs_bucket=gcs_bucket,
+        relative_path="example-diagnostics",
+        enable_repair_flag=False,
+    )
+    request = notebooks_v2.DiagnoseInstanceRequest(
+        name=name,
+        diagnostic_config=diagnostic_config,
+    )
+
+    try:
+        operation = client.diagnose_instance(request=request)
+        print(f"Waiting for operation to complete: {operation.operation.name}")
+        response = operation.result()
+        print(f"Resource ID: {response.name}")
+        print(f"Health State: {response.health_state.name}")
+        print(f"State: {response.state.name}")
+    except exceptions.NotFound as err:
+        print(
+            f"error: Instance '{instance_id}' not found in location "
+            f"'{location_id}' for project '{project_id}': {err.message}",
+            file=sys.stderr,
+        )
+
+
+# [END notebooks_v2_diagnose_instance]
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Run diagnostics on a Workbench instance."
+    )
+    parser.add_argument(
+        "--project-id",
+        required=True,
+        help="The Google Cloud project ID.",
+    )
+    parser.add_argument(
+        "--location-id",
+        default="us-central1-a",
+        help="The Compute Engine zone.",
+    )
+    parser.add_argument(
+        "--instance-id",
+        default="example-instance",
+        help="The ID of the Workbench instance.",
+    )
+    parser.add_argument(
+        "--gcs-bucket",
+        default="gs://example-bucket",
+        help="The Cloud Storage bucket URI for diagnostic output.",
+    )
+    args = parser.parse_args()
+    diagnose_instance(
+        project_id=args.project_id,
+        location_id=args.location_id,
+        instance_id=args.instance_id,
+        gcs_bucket=args.gcs_bucket,
+    )

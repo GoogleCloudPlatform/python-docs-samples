@@ -1,82 +1,70 @@
-# AI Platform Notebooks
+# Workbench Instances and Notebooks
 
-[AI Platform Notebooks](https://cloud.google.com/ai-platform-notebooks)
-is a managed service that offers an integrated and secure JupyterLab
-environment for data scientists and machine learning developers to
-experiment, develop, and deploy models into production.
+**Workbench instances** provide a managed, integrated, and secure JupyterLab environment for data scientists, machine learning developers, and agent builders to experiment, develop, and deploy workloads on Google Cloud.
 
-This directory contains code samples and
-tutorials. The tutorials are divided into 2 sections:
-- [API code samples](samples)
-- [tutorials](tutorials)
+This directory contains Python client library code samples and Jupyter notebook tutorials:
+- [Notebooks API v2 code samples](v2)
+- [Jupyter notebook tutorials](tutorials)
 
-## Notebooks API
+## Notebooks API v2 (`notebooks/v2`)
 
-In [this](samples) folder you will find Python code samples to interact
-with the
-[API](https://cloud.google.com/ai-platform/notebooks/docs/reference/rest)
+In the [v2](v2) folder, you will find atomic Python code samples using the `google-cloud-notebooks` (`google.cloud.notebooks_v2`) client library to create, manage, configure, upgrade, and diagnose Workbench instances.
 
-## Tutorials
+## Tutorials (`notebooks/tutorials`)
 
-**Run in Notebooks**
+### Run in a Workbench Instance
 
-1. Create a Notebook
-   [instance](https://cloud.google.com/ai-platform/notebooks/docs#how-to)
-2. Clone this repository via Jupyter console or using the Git clone
-   button
+1. Create a Workbench instance using the Google Cloud console, the `gcloud workbench instances create` CLI command, or the [create_instance.py](v2/create_instance.py) sample.
+2. Clone this repository via the JupyterLab terminal or using the Git clone button:
 
 ```bash
 git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
 ```
 
-3. Open the tutorials folder and open the Jupyter notebooks
+3. Open the `notebooks/tutorials` folder and launch the Jupyter notebooks.
 
+### Run Locally
 
-**Run locally**
+1. Install JupyterLab or Jupyter Notebook ([installation instructions](https://jupyter.org/install)).
+2. Install the dependencies in the [requirements.txt](./requirements.txt) file ([instructions below](#install-the-dependencies)).
+3. Register the `google-cloud-bigquery` magic commands ([instructions below](#register-magics-and-configure-matplotlib)).
+4. Set `matplotlib` to render inline ([instructions below](#register-magics-and-configure-matplotlib)).
 
-1. Install Jupyter notebooks
-   ([instructions](https://jupyter.org/install))
-1. Install the dependencies in the [requirements.txt](./requirements.txt) file ([instructions below](#install-the-dependencies))
-1. Registered the `google-cloud-bigquery` magic commands ([instructions below](#register-magics-and-configure-matplotlib))
-1. Set `matplotlib` to render inline ([instructions below](#register-magics-and-configure-matplotlib))
-
-### Install the dependencies
+#### Install the dependencies
 
 Install the dependencies with the following command:
 
-        pip install --upgrade -r requirements.txt
+```bash
+pip install --upgrade -r requirements.txt
+```
 
-### Register magics and configure matplotlib
+#### Register magics and configure matplotlib
 
-You can either perform these set up steps in a single notebook, or add the
-steps to your IPython configuration file to apply to all notebooks.
+You can either perform these setup steps in a single notebook, or add the steps to your IPython configuration file to apply to all notebooks.
 
-### Perform set up steps within a notebook
+##### Perform setup steps within a notebook
 
-To perform the set up steps for a single notebook, run the following commands
-in your notebook to register the BigQuery magic commands and set `matplotlib`
-to render inline:
+Run the following commands in your notebook to register the BigQuery magic commands and set `matplotlib` to render inline:
+
 ```python
 %load_ext google.cloud.bigquery
 %matplotlib inline
 ```
 
-### Perform set up steps in your IPython configuration file
+##### Perform setup steps in your IPython configuration file
 
-To perform the set up steps implicitly for all of your notebooks, add the
-following code to your `ipython_config.py` file to register the BigQuery magic
-commands and set `matplotlib` to render inline:
+Add the following code to your `ipython_config.py` file to register the BigQuery magic commands and set `matplotlib` to render inline across all notebooks:
+
 ```python
 c = get_config()
 
 # Register magic commands
 c.InteractiveShellApp.extensions = [
-    'google.cloud.bigquery',
+    "google.cloud.bigquery",
 ]
 
 # Enable matplotlib renderings to render inline in the notebook.
-c.InteractiveShellApp.matplotlib = 'inline'
+c.InteractiveShellApp.matplotlib = "inline"
 ```
-See
-[IPython documentation](https://ipython.readthedocs.io/en/stable/config/intro.html)
-for more information about IPython configuration.
+
+See the [IPython configuration documentation](https://ipython.readthedocs.io/en/stable/config/intro.html) for more information.
