@@ -20,8 +20,8 @@ import pytest
 
 from .. import create_instance_cmek
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-cmek-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -52,6 +52,21 @@ def test_create_instance_cmek_success(
     mock_client.create_instance.return_value = operation
 
     create_instance_cmek.create_instance_cmek(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+
+    request = mock_client.create_instance.call_args.kwargs["request"]
+    assert request.parent == f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
+    assert request.instance_id == INSTANCE_ID
+    gce_setup = request.instance.gce_setup
+    region_id = "-".join(LOCATION_ID.split("-")[:-1])
+    expected_kms_key = (
+        f"projects/{PROJECT_ID}/locations/{region_id}/"
+        "keyRings/example-key-ring/cryptoKeys/example-key"
+    )
+    cmek = notebooks_v2.DiskEncryption.CMEK
+    assert gce_setup.boot_disk.disk_encryption == cmek
+    assert gce_setup.boot_disk.kms_key == expected_kms_key
+    assert gce_setup.data_disks[0].disk_encryption == cmek
+    assert gce_setup.data_disks[0].kms_key == expected_kms_key
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out

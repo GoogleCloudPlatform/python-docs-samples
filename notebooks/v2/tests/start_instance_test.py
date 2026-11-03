@@ -20,8 +20,8 @@ import pytest
 
 from .. import start_instance
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -44,6 +44,9 @@ def test_start_instance_success(
     mock_client.start_instance.return_value = operation
 
     start_instance.start_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+
+    request = mock_client.start_instance.call_args.kwargs["request"]
+    assert request.name == INSTANCE_NAME
 
     captured = capsys.readouterr()
     assert "Waiting for operation to complete:" in captured.out

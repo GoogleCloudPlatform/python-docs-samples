@@ -20,8 +20,8 @@ import pytest
 
 from .. import create_instance_private_vpc
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-private-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -48,6 +48,20 @@ def test_create_instance_private_vpc_success(
 
     create_instance_private_vpc.create_instance_private_vpc(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
+    )
+
+    request = mock_client.create_instance.call_args.kwargs["request"]
+    assert request.parent == f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
+    assert request.instance_id == INSTANCE_ID
+    gce_setup = request.instance.gce_setup
+    region_id = "-".join(LOCATION_ID.split("-")[:-1])
+    network_interface = gce_setup.network_interfaces[0]
+    assert gce_setup.disable_public_ip
+    assert network_interface.network == (
+        f"projects/{PROJECT_ID}/global/networks/example-network"
+    )
+    assert network_interface.subnet == (
+        f"projects/{PROJECT_ID}/regions/{region_id}/subnetworks/example-subnet"
     )
 
     captured = capsys.readouterr()

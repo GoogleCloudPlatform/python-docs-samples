@@ -20,8 +20,8 @@ import pytest
 
 from .. import rollback_instance
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -43,6 +43,13 @@ def test_rollback_instance_success(
     mock_client.rollback_instance.return_value = operation
 
     rollback_instance.rollback_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+
+    request = mock_client.rollback_instance.call_args.kwargs["request"]
+    assert request.name == INSTANCE_NAME
+    assert request.target_snapshot == (
+        f"projects/{PROJECT_ID}/global/snapshots/example-snapshot"
+    )
+    assert request.revision_id == "1"
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out

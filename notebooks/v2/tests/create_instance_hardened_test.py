@@ -20,8 +20,8 @@ import pytest
 
 from .. import create_instance_hardened
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-hardened-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -56,6 +56,43 @@ def test_create_instance_hardened_success(
     create_instance_hardened.create_instance_hardened(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
+
+    request = mock_client.create_instance.call_args.kwargs["request"]
+    assert request.parent == f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
+    assert request.instance_id == INSTANCE_ID
+    gce_setup = request.instance.gce_setup
+    region_id = "-".join(LOCATION_ID.split("-")[:-1])
+    network_interface = gce_setup.network_interfaces[0]
+    shielded = gce_setup.shielded_instance_config
+    metadata = dict(gce_setup.metadata)
+    expected_kms_key = (
+        f"projects/{PROJECT_ID}/locations/{region_id}/"
+        "keyRings/example-key-ring/cryptoKeys/example-key"
+    )
+    assert gce_setup.disable_public_ip
+    assert network_interface.network == (
+        f"projects/{PROJECT_ID}/global/networks/example-network"
+    )
+    assert network_interface.subnet == (
+        f"projects/{PROJECT_ID}/regions/{region_id}/subnetworks/example-subnet"
+    )
+    assert gce_setup.service_accounts[0].email == (
+        f"example-workbench-sa@{PROJECT_ID}.iam.gserviceaccount.com"
+    )
+    assert list(request.instance.instance_owners) == ["example-user@example.com"]
+    assert shielded.enable_secure_boot
+    assert shielded.enable_vtpm
+    assert shielded.enable_integrity_monitoring
+    cmek = notebooks_v2.DiskEncryption.CMEK
+    assert gce_setup.boot_disk.disk_encryption == cmek
+    assert gce_setup.boot_disk.kms_key == expected_kms_key
+    assert gce_setup.data_disks[0].disk_encryption == cmek
+    assert gce_setup.data_disks[0].kms_key == expected_kms_key
+    assert metadata["notebook-disable-root"] == "true"
+    assert metadata["notebook-disable-downloads"] == "true"
+    assert metadata["notebook-disable-terminal"] == "true"
+    assert metadata["serial-port-enable"] == "false"
+    assert metadata["block-project-ssh-keys"] == "true"
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out

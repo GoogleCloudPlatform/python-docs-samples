@@ -20,8 +20,8 @@ import pytest
 
 from .. import check_instance_upgradability
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -44,6 +44,9 @@ def test_check_instance_upgradability_success(
     check_instance_upgradability.check_instance_upgradability(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
+
+    request = mock_client.check_instance_upgradability.call_args.kwargs["request"]
+    assert request.notebook_instance == INSTANCE_NAME
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out

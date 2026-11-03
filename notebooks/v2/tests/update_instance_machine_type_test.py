@@ -20,8 +20,8 @@ import pytest
 
 from .. import update_instance_machine_type
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -46,6 +46,11 @@ def test_update_instance_machine_type_success(
     update_instance_machine_type.update_instance_machine_type(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID, "n1-standard-8"
     )
+
+    request = mock_client.update_instance.call_args.kwargs["request"]
+    assert request.instance.name == INSTANCE_NAME
+    assert request.instance.gce_setup.machine_type == "n1-standard-8"
+    assert list(request.update_mask.paths) == ["gce_setup.machine_type"]
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out

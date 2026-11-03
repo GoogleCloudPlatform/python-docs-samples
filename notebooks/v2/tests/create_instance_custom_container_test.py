@@ -20,8 +20,8 @@ import pytest
 
 from .. import create_instance_custom_container
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-container-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -51,6 +51,15 @@ def test_create_instance_custom_container_success(
     create_instance_custom_container.create_instance_custom_container(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
+
+    request = mock_client.create_instance.call_args.kwargs["request"]
+    assert request.parent == f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
+    assert request.instance_id == INSTANCE_ID
+    gce_setup = request.instance.gce_setup
+    assert gce_setup.container_image.repository == (
+        "gcr.io/deeplearning-platform-release/base-cpu"
+    )
+    assert gce_setup.container_image.tag == "latest"
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out

@@ -20,8 +20,8 @@ import pytest
 
 from .. import update_instance_shielded_config
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -51,6 +51,20 @@ def test_update_instance_shielded_config_success(
 
     update_instance_shielded_config.update_instance_shielded_config(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
+    )
+
+    request = mock_client.update_instance.call_args.kwargs["request"]
+    assert request.instance.name == INSTANCE_NAME
+    shielded = request.instance.gce_setup.shielded_instance_config
+    assert shielded.enable_secure_boot
+    assert shielded.enable_vtpm
+    assert shielded.enable_integrity_monitoring
+    assert sorted(request.update_mask.paths) == sorted(
+        [
+            "gce_setup.shielded_instance_config.enable_secure_boot",
+            "gce_setup.shielded_instance_config.enable_vtpm",
+            "gce_setup.shielded_instance_config.enable_integrity_monitoring",
+        ]
     )
 
     captured = capsys.readouterr()

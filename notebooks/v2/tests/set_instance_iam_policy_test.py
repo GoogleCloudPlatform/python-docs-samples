@@ -20,8 +20,8 @@ import pytest
 
 from .. import set_instance_iam_policy
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -32,33 +32,36 @@ def test_set_instance_iam_policy_success(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    existing_policy = policy_pb2.Policy(
+    existing_binding = policy_pb2.Binding(
+        role="roles/notebooks.admin",
+        members=["user:existing-admin@example.com"],
+    )
+    mock_client.get_iam_policy.return_value = policy_pb2.Policy(
         version=1,
         etag=b"etag-1",
-        bindings=[],
+        bindings=[existing_binding],
     )
-    updated_policy = policy_pb2.Policy(
-        version=1,
-        etag=b"etag-2",
-        bindings=[
-            policy_pb2.Binding(
-                role="roles/notebooks.runner",
-                members=["user:example-user@example.com"],
-            )
-        ],
-    )
-    mock_client.get_iam_policy.return_value = existing_policy
-    mock_client.set_iam_policy.return_value = updated_policy
+    mock_client.set_iam_policy.side_effect = lambda request: request.policy
 
     set_instance_iam_policy.set_instance_iam_policy(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
 
-    mock_client.get_iam_policy.assert_called_once()
-    mock_client.set_iam_policy.assert_called_once()
+    get_request = mock_client.get_iam_policy.call_args.kwargs["request"]
+    assert get_request.resource == INSTANCE_NAME
+    set_request = mock_client.set_iam_policy.call_args.kwargs["request"]
+    assert set_request.resource == INSTANCE_NAME
+    # The etag from the read must be sent back so concurrent edits are rejected.
+    assert set_request.policy.etag == b"etag-1"
+    bindings = {(b.role, tuple(b.members)) for b in set_request.policy.bindings}
+    assert bindings == {
+        ("roles/notebooks.admin", ("user:existing-admin@example.com",)),
+        ("roles/notebooks.runner", ("user:example-user@example.com",)),
+    }
+
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "Bindings Count: 1" in captured.out
+    assert "Bindings Count: 2" in captured.out
     assert captured.err == ""
 
 
@@ -74,6 +77,7 @@ def test_set_instance_iam_policy_not_found(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
 
+    mock_client.set_iam_policy.assert_not_called()
     captured = capsys.readouterr()
     assert "error:" in captured.err
     assert INSTANCE_ID in captured.err

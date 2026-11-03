@@ -20,8 +20,8 @@ import pytest
 
 from .. import create_instance_gpu
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-gpu-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -44,6 +44,17 @@ def test_create_instance_gpu_success(
     mock_client.create_instance.return_value = operation
 
     create_instance_gpu.create_instance_gpu(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+
+    request = mock_client.create_instance.call_args.kwargs["request"]
+    assert request.parent == f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
+    assert request.instance_id == INSTANCE_ID
+    gce_setup = request.instance.gce_setup
+    accelerator = gce_setup.accelerator_configs[0]
+    assert accelerator.type_ == (
+        notebooks_v2.AcceleratorConfig.AcceleratorType.NVIDIA_TESLA_T4
+    )
+    assert accelerator.core_count == 1
+    assert gce_setup.gpu_driver_config.enable_gpu_driver
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out

@@ -20,8 +20,8 @@ import pytest
 
 from .. import get_instance_iam_policy
 
-PROJECT_ID = "example-project"
-LOCATION_ID = "us-central1-a"
+PROJECT_ID = "test-project"
+LOCATION_ID = "us-west1-b"
 INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
@@ -46,6 +46,9 @@ def test_get_instance_iam_policy_success(
     get_instance_iam_policy.get_instance_iam_policy(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
+
+    request = mock_client.get_iam_policy.call_args.kwargs["request"]
+    assert request.resource == INSTANCE_NAME
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
