@@ -18,16 +18,16 @@ from google.api_core import exceptions
 from google.cloud import notebooks_v2
 import pytest
 
-import create_instance_cmek
+from .. import start_instance
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
-INSTANCE_ID = "example-cmek-instance"
+INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_create_instance_cmek_success(
+def test_start_instance_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -38,39 +38,29 @@ def test_create_instance_cmek_success(
     )
     operation.result.return_value = notebooks_v2.Instance(
         name=INSTANCE_NAME,
+        proxy_uri="example-proxy.notebooks.googleusercontent.com",
         state=notebooks_v2.State.ACTIVE,
-        gce_setup=notebooks_v2.GceSetup(
-            boot_disk=notebooks_v2.BootDisk(
-                disk_encryption=notebooks_v2.DiskEncryption.CMEK,
-                kms_key=(
-                    f"projects/{PROJECT_ID}/locations/us-central1/"
-                    "keyRings/example-key-ring/cryptoKeys/example-key"
-                ),
-            )
-        ),
     )
-    mock_client.create_instance.return_value = operation
+    mock_client.start_instance.return_value = operation
 
-    create_instance_cmek.create_instance_cmek(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    start_instance.start_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
+    assert "Waiting for operation to complete:" in captured.out
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "Boot Disk Encryption: CMEK" in captured.out
     assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_create_instance_cmek_already_exists(
+def test_start_instance_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.create_instance.side_effect = exceptions.AlreadyExists(
-        "Instance already exists"
-    )
+    mock_client.start_instance.side_effect = exceptions.NotFound("Instance not found")
 
-    create_instance_cmek.create_instance_cmek(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    start_instance.start_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
     assert "error:" in captured.err

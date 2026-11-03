@@ -18,16 +18,16 @@ from google.api_core import exceptions
 from google.cloud import notebooks_v2
 import pytest
 
-import create_instance_single_user
+from .. import diagnose_instance
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
-INSTANCE_ID = "example-single-user-instance"
+INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_create_instance_single_user_success(
+def test_diagnose_instance_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -38,36 +38,31 @@ def test_create_instance_single_user_success(
     )
     operation.result.return_value = notebooks_v2.Instance(
         name=INSTANCE_NAME,
-        creator="example-user@example.com",
+        health_state=notebooks_v2.HealthState.HEALTHY,
         state=notebooks_v2.State.ACTIVE,
-        gce_setup=notebooks_v2.GceSetup(machine_type="e2-standard-4"),
     )
-    mock_client.create_instance.return_value = operation
+    mock_client.diagnose_instance.return_value = operation
 
-    create_instance_single_user.create_instance_single_user(
-        PROJECT_ID, LOCATION_ID, INSTANCE_ID
-    )
+    diagnose_instance.diagnose_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "Creator: example-user@example.com" in captured.out
+    assert "Health State: HEALTHY" in captured.out
     assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_create_instance_single_user_already_exists(
+def test_diagnose_instance_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.create_instance.side_effect = exceptions.AlreadyExists(
-        "Instance already exists"
+    mock_client.diagnose_instance.side_effect = exceptions.NotFound(
+        "Instance not found"
     )
 
-    create_instance_single_user.create_instance_single_user(
-        PROJECT_ID, LOCATION_ID, INSTANCE_ID
-    )
+    diagnose_instance.diagnose_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
     assert "error:" in captured.err

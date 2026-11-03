@@ -18,16 +18,16 @@ from google.api_core import exceptions
 from google.cloud import notebooks_v2
 import pytest
 
-import diagnose_instance
+from .. import create_instance_confidential
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
-INSTANCE_ID = "example-instance"
+INSTANCE_ID = "example-confidential-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_diagnose_instance_success(
+def test_create_instance_confidential_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -38,31 +38,42 @@ def test_diagnose_instance_success(
     )
     operation.result.return_value = notebooks_v2.Instance(
         name=INSTANCE_NAME,
-        health_state=notebooks_v2.HealthState.HEALTHY,
         state=notebooks_v2.State.ACTIVE,
+        gce_setup=notebooks_v2.GceSetup(
+            machine_type="n2d-standard-4",
+            shielded_instance_config=notebooks_v2.ShieldedInstanceConfig(
+                enable_secure_boot=True,
+                enable_vtpm=True,
+                enable_integrity_monitoring=True,
+            ),
+        ),
     )
-    mock_client.diagnose_instance.return_value = operation
+    mock_client.create_instance.return_value = operation
 
-    diagnose_instance.diagnose_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    create_instance_confidential.create_instance_confidential(
+        PROJECT_ID, LOCATION_ID, INSTANCE_ID
+    )
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "Health State: HEALTHY" in captured.out
+    assert "Secure Boot Enabled: True" in captured.out
     assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_diagnose_instance_not_found(
+def test_create_instance_confidential_already_exists(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.diagnose_instance.side_effect = exceptions.NotFound(
-        "Instance not found"
+    mock_client.create_instance.side_effect = exceptions.AlreadyExists(
+        "Instance already exists"
     )
 
-    diagnose_instance.diagnose_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    create_instance_confidential.create_instance_confidential(
+        PROJECT_ID, LOCATION_ID, INSTANCE_ID
+    )
 
     captured = capsys.readouterr()
     assert "error:" in captured.err

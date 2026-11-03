@@ -18,7 +18,7 @@ from google.api_core import exceptions
 from google.cloud import notebooks_v2
 import pytest
 
-import update_instance_machine_type
+from .. import rollback_instance
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
@@ -27,7 +27,7 @@ INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTA
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_update_instance_machine_type_success(
+def test_rollback_instance_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -38,33 +38,29 @@ def test_update_instance_machine_type_success(
     )
     operation.result.return_value = notebooks_v2.Instance(
         name=INSTANCE_NAME,
-        state=notebooks_v2.State.STOPPED,
-        gce_setup=notebooks_v2.GceSetup(machine_type="n1-standard-8"),
+        state=notebooks_v2.State.ACTIVE,
     )
-    mock_client.update_instance.return_value = operation
+    mock_client.rollback_instance.return_value = operation
 
-    update_instance_machine_type.update_instance_machine_type(
-        PROJECT_ID, LOCATION_ID, INSTANCE_ID, "n1-standard-8"
-    )
+    rollback_instance.rollback_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "Machine Type: n1-standard-8" in captured.out
-    assert "State: STOPPED" in captured.out
+    assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_update_instance_machine_type_not_found(
+def test_rollback_instance_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.update_instance.side_effect = exceptions.NotFound("Instance not found")
-
-    update_instance_machine_type.update_instance_machine_type(
-        PROJECT_ID, LOCATION_ID, INSTANCE_ID, "n1-standard-8"
+    mock_client.rollback_instance.side_effect = exceptions.NotFound(
+        "Instance not found"
     )
+
+    rollback_instance.rollback_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
     assert "error:" in captured.err

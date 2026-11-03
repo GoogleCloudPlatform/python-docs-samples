@@ -15,64 +15,62 @@
 from unittest import mock
 
 from google.api_core import exceptions
-from google.iam.v1 import policy_pb2
+from google.cloud import notebooks_v2
 import pytest
 
-import set_instance_iam_policy
+from .. import create_instance_cmek
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
-INSTANCE_ID = "example-instance"
+INSTANCE_ID = "example-cmek-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_set_instance_iam_policy_success(
+def test_create_instance_cmek_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    existing_policy = policy_pb2.Policy(
-        version=1,
-        etag=b"etag-1",
-        bindings=[],
+    operation = mock.MagicMock()
+    operation.operation.name = (
+        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/operations/op-123"
     )
-    updated_policy = policy_pb2.Policy(
-        version=1,
-        etag=b"etag-2",
-        bindings=[
-            policy_pb2.Binding(
-                role="roles/notebooks.runner",
-                members=["user:example-user@example.com"],
+    operation.result.return_value = notebooks_v2.Instance(
+        name=INSTANCE_NAME,
+        state=notebooks_v2.State.ACTIVE,
+        gce_setup=notebooks_v2.GceSetup(
+            boot_disk=notebooks_v2.BootDisk(
+                disk_encryption=notebooks_v2.DiskEncryption.CMEK,
+                kms_key=(
+                    f"projects/{PROJECT_ID}/locations/us-central1/"
+                    "keyRings/example-key-ring/cryptoKeys/example-key"
+                ),
             )
-        ],
+        ),
     )
-    mock_client.get_iam_policy.return_value = existing_policy
-    mock_client.set_iam_policy.return_value = updated_policy
+    mock_client.create_instance.return_value = operation
 
-    set_instance_iam_policy.set_instance_iam_policy(
-        PROJECT_ID, LOCATION_ID, INSTANCE_ID
-    )
+    create_instance_cmek.create_instance_cmek(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
-    mock_client.get_iam_policy.assert_called_once()
-    mock_client.set_iam_policy.assert_called_once()
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "Bindings Count: 1" in captured.out
+    assert "Boot Disk Encryption: CMEK" in captured.out
+    assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_set_instance_iam_policy_not_found(
+def test_create_instance_cmek_already_exists(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.get_iam_policy.side_effect = exceptions.NotFound("Instance not found")
-
-    set_instance_iam_policy.set_instance_iam_policy(
-        PROJECT_ID, LOCATION_ID, INSTANCE_ID
+    mock_client.create_instance.side_effect = exceptions.AlreadyExists(
+        "Instance already exists"
     )
+
+    create_instance_cmek.create_instance_cmek(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
     assert "error:" in captured.err

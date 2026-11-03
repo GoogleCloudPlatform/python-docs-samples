@@ -15,59 +15,62 @@
 from unittest import mock
 
 from google.api_core import exceptions
-from google.cloud import notebooks_v2
+from google.iam.v1 import policy_pb2
 import pytest
 
-import create_instance_private_vpc
+from .. import set_instance_iam_policy
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
-INSTANCE_ID = "example-private-instance"
+INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_create_instance_private_vpc_success(
+def test_set_instance_iam_policy_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    operation = mock.MagicMock()
-    operation.operation.name = (
-        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/operations/op-123"
+    existing_policy = policy_pb2.Policy(
+        version=1,
+        etag=b"etag-1",
+        bindings=[],
     )
-    operation.result.return_value = notebooks_v2.Instance(
-        name=INSTANCE_NAME,
-        state=notebooks_v2.State.ACTIVE,
-        gce_setup=notebooks_v2.GceSetup(
-            machine_type="e2-standard-4",
-            disable_public_ip=True,
-        ),
+    updated_policy = policy_pb2.Policy(
+        version=1,
+        etag=b"etag-2",
+        bindings=[
+            policy_pb2.Binding(
+                role="roles/notebooks.runner",
+                members=["user:example-user@example.com"],
+            )
+        ],
     )
-    mock_client.create_instance.return_value = operation
+    mock_client.get_iam_policy.return_value = existing_policy
+    mock_client.set_iam_policy.return_value = updated_policy
 
-    create_instance_private_vpc.create_instance_private_vpc(
+    set_instance_iam_policy.set_instance_iam_policy(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
 
+    mock_client.get_iam_policy.assert_called_once()
+    mock_client.set_iam_policy.assert_called_once()
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "Disable Public IP: True" in captured.out
-    assert "State: ACTIVE" in captured.out
+    assert "Bindings Count: 1" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_create_instance_private_vpc_already_exists(
+def test_set_instance_iam_policy_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.create_instance.side_effect = exceptions.AlreadyExists(
-        "Instance already exists"
-    )
+    mock_client.get_iam_policy.side_effect = exceptions.NotFound("Instance not found")
 
-    create_instance_private_vpc.create_instance_private_vpc(
+    set_instance_iam_policy.set_instance_iam_policy(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
 

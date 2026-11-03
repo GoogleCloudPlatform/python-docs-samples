@@ -18,16 +18,16 @@ from google.api_core import exceptions
 from google.cloud import notebooks_v2
 import pytest
 
-import create_instance_custom_container
+from .. import create_instance_single_user
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
-INSTANCE_ID = "example-container-instance"
+INSTANCE_ID = "example-single-user-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_create_instance_custom_container_success(
+def test_create_instance_single_user_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -38,32 +38,25 @@ def test_create_instance_custom_container_success(
     )
     operation.result.return_value = notebooks_v2.Instance(
         name=INSTANCE_NAME,
+        creator="example-user@example.com",
         state=notebooks_v2.State.ACTIVE,
-        gce_setup=notebooks_v2.GceSetup(
-            container_image=notebooks_v2.ContainerImage(
-                repository="gcr.io/deeplearning-platform-release/base-cpu",
-                tag="latest",
-            )
-        ),
+        gce_setup=notebooks_v2.GceSetup(machine_type="e2-standard-4"),
     )
     mock_client.create_instance.return_value = operation
 
-    create_instance_custom_container.create_instance_custom_container(
+    create_instance_single_user.create_instance_single_user(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert (
-        "Container Repository: gcr.io/deeplearning-platform-release/base-cpu"
-        in captured.out
-    )
+    assert "Creator: example-user@example.com" in captured.out
     assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_create_instance_custom_container_already_exists(
+def test_create_instance_single_user_already_exists(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -72,7 +65,7 @@ def test_create_instance_custom_container_already_exists(
         "Instance already exists"
     )
 
-    create_instance_custom_container.create_instance_custom_container(
+    create_instance_single_user.create_instance_single_user(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
 

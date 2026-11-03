@@ -18,52 +18,48 @@ from google.api_core import exceptions
 from google.cloud import notebooks_v2
 import pytest
 
-import create_instance_gpu
+from .. import list_instances
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
-INSTANCE_ID = "example-gpu-instance"
+INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_create_instance_gpu_success(
+def test_list_instances_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    operation = mock.MagicMock()
-    operation.operation.name = (
-        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/operations/op-123"
-    )
-    operation.result.return_value = notebooks_v2.Instance(
-        name=INSTANCE_NAME,
-        state=notebooks_v2.State.ACTIVE,
-        gce_setup=notebooks_v2.GceSetup(machine_type="n1-standard-4"),
-    )
-    mock_client.create_instance.return_value = operation
+    mock_client.list_instances.return_value = [
+        notebooks_v2.Instance(
+            name=INSTANCE_NAME,
+            id="1234567890",
+            creator="example-user@example.com",
+            proxy_uri="example-proxy.notebooks.googleusercontent.com",
+            state=notebooks_v2.State.ACTIVE,
+        )
+    ]
 
-    create_instance_gpu.create_instance_gpu(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    list_instances.list_instances(PROJECT_ID, LOCATION_ID)
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "Machine Type: n1-standard-4" in captured.out
     assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_create_instance_gpu_already_exists(
+def test_list_instances_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.create_instance.side_effect = exceptions.AlreadyExists(
-        "Instance already exists"
-    )
+    mock_client.list_instances.side_effect = exceptions.NotFound("Zone not found")
 
-    create_instance_gpu.create_instance_gpu(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    list_instances.list_instances(PROJECT_ID, LOCATION_ID)
 
     captured = capsys.readouterr()
     assert "error:" in captured.err
-    assert INSTANCE_ID in captured.err
+    assert LOCATION_ID in captured.err

@@ -15,10 +15,10 @@
 from unittest import mock
 
 from google.api_core import exceptions
-from google.iam.v1 import policy_pb2
+from google.cloud import notebooks_v2
 import pytest
 
-import get_instance_iam_policy
+from .. import update_instance_metadata
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
@@ -27,41 +27,42 @@ INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTA
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_get_instance_iam_policy_success(
+def test_update_instance_metadata_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.get_iam_policy.return_value = policy_pb2.Policy(
-        version=1,
-        etag=b"etag-1",
-        bindings=[
-            policy_pb2.Binding(
-                role="roles/notebooks.runner",
-                members=["user:example-user@example.com"],
-            )
-        ],
+    operation = mock.MagicMock()
+    operation.operation.name = (
+        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/operations/op-123"
     )
+    operation.result.return_value = notebooks_v2.Instance(
+        name=INSTANCE_NAME,
+        state=notebooks_v2.State.ACTIVE,
+        gce_setup=notebooks_v2.GceSetup(metadata={"idle-timeout-seconds": "3600"}),
+    )
+    mock_client.update_instance.return_value = operation
 
-    get_instance_iam_policy.get_instance_iam_policy(
+    update_instance_metadata.update_instance_metadata(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "Role: roles/notebooks.runner" in captured.out
+    assert "idle-timeout-seconds" in captured.out
+    assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_get_instance_iam_policy_not_found(
+def test_update_instance_metadata_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.get_iam_policy.side_effect = exceptions.NotFound("Instance not found")
+    mock_client.update_instance.side_effect = exceptions.NotFound("Instance not found")
 
-    get_instance_iam_policy.get_instance_iam_policy(
+    update_instance_metadata.update_instance_metadata(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
 

@@ -18,7 +18,7 @@ from google.api_core import exceptions
 from google.cloud import notebooks_v2
 import pytest
 
-import update_instance_shielded_config
+from .. import update_instance_shielded_config
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"

@@ -18,7 +18,7 @@ from google.api_core import exceptions
 from google.cloud import notebooks_v2
 import pytest
 
-import stop_instance
+from .. import upgrade_instance
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
@@ -27,7 +27,7 @@ INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTA
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_stop_instance_success(
+def test_upgrade_instance_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -38,28 +38,27 @@ def test_stop_instance_success(
     )
     operation.result.return_value = notebooks_v2.Instance(
         name=INSTANCE_NAME,
-        state=notebooks_v2.State.STOPPED,
+        state=notebooks_v2.State.ACTIVE,
     )
-    mock_client.stop_instance.return_value = operation
+    mock_client.upgrade_instance.return_value = operation
 
-    stop_instance.stop_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    upgrade_instance.upgrade_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
-    assert "Waiting for operation to complete:" in captured.out
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "State: STOPPED" in captured.out
+    assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_stop_instance_not_found(
+def test_upgrade_instance_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.stop_instance.side_effect = exceptions.NotFound("Instance not found")
+    mock_client.upgrade_instance.side_effect = exceptions.NotFound("Instance not found")
 
-    stop_instance.stop_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    upgrade_instance.upgrade_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
     assert "error:" in captured.err

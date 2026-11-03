@@ -18,16 +18,16 @@ from google.api_core import exceptions
 from google.cloud import notebooks_v2
 import pytest
 
-import start_instance
+from .. import create_instance_hardened
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
-INSTANCE_ID = "example-instance"
+INSTANCE_ID = "example-hardened-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_start_instance_success(
+def test_create_instance_hardened_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -38,29 +38,46 @@ def test_start_instance_success(
     )
     operation.result.return_value = notebooks_v2.Instance(
         name=INSTANCE_NAME,
-        proxy_uri="example-proxy.notebooks.googleusercontent.com",
         state=notebooks_v2.State.ACTIVE,
+        gce_setup=notebooks_v2.GceSetup(
+            disable_public_ip=True,
+            boot_disk=notebooks_v2.BootDisk(
+                disk_encryption=notebooks_v2.DiskEncryption.CMEK
+            ),
+            shielded_instance_config=notebooks_v2.ShieldedInstanceConfig(
+                enable_secure_boot=True,
+                enable_vtpm=True,
+                enable_integrity_monitoring=True,
+            ),
+        ),
     )
-    mock_client.start_instance.return_value = operation
+    mock_client.create_instance.return_value = operation
 
-    start_instance.start_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    create_instance_hardened.create_instance_hardened(
+        PROJECT_ID, LOCATION_ID, INSTANCE_ID
+    )
 
     captured = capsys.readouterr()
-    assert "Waiting for operation to complete:" in captured.out
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
+    assert "Disable Public IP: True" in captured.out
+    assert "Secure Boot Enabled: True" in captured.out
     assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_start_instance_not_found(
+def test_create_instance_hardened_already_exists(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.start_instance.side_effect = exceptions.NotFound("Instance not found")
+    mock_client.create_instance.side_effect = exceptions.AlreadyExists(
+        "Instance already exists"
+    )
 
-    start_instance.start_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    create_instance_hardened.create_instance_hardened(
+        PROJECT_ID, LOCATION_ID, INSTANCE_ID
+    )
 
     captured = capsys.readouterr()
     assert "error:" in captured.err

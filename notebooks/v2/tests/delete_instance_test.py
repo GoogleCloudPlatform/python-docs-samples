@@ -15,10 +15,9 @@
 from unittest import mock
 
 from google.api_core import exceptions
-from google.cloud import notebooks_v2
 import pytest
 
-import update_instance_metadata
+from .. import delete_instance
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
@@ -27,7 +26,7 @@ INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTA
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_update_instance_metadata_success(
+def test_delete_instance_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -36,35 +35,28 @@ def test_update_instance_metadata_success(
     operation.operation.name = (
         f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/operations/op-123"
     )
-    operation.result.return_value = notebooks_v2.Instance(
-        name=INSTANCE_NAME,
-        state=notebooks_v2.State.ACTIVE,
-        gce_setup=notebooks_v2.GceSetup(metadata={"idle-timeout-seconds": "3600"}),
-    )
-    mock_client.update_instance.return_value = operation
+    operation.result.return_value = None
+    operation.done.return_value = True
+    mock_client.delete_instance.return_value = operation
 
-    update_instance_metadata.update_instance_metadata(
-        PROJECT_ID, LOCATION_ID, INSTANCE_ID
-    )
+    delete_instance.delete_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
+    assert "Waiting for operation to complete:" in captured.out
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "idle-timeout-seconds" in captured.out
-    assert "State: ACTIVE" in captured.out
+    assert "Operation Done: True" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_update_instance_metadata_not_found(
+def test_delete_instance_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.update_instance.side_effect = exceptions.NotFound("Instance not found")
+    mock_client.delete_instance.side_effect = exceptions.NotFound("Instance not found")
 
-    update_instance_metadata.update_instance_metadata(
-        PROJECT_ID, LOCATION_ID, INSTANCE_ID
-    )
+    delete_instance.delete_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     captured = capsys.readouterr()
     assert "error:" in captured.err

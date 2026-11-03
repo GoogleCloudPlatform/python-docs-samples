@@ -15,10 +15,10 @@
 from unittest import mock
 
 from google.api_core import exceptions
-from google.cloud import notebooks_v2
+from google.iam.v1 import policy_pb2
 import pytest
 
-import upgrade_instance
+from .. import get_instance_iam_policy
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
@@ -27,38 +27,43 @@ INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTA
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_upgrade_instance_success(
+def test_get_instance_iam_policy_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    operation = mock.MagicMock()
-    operation.operation.name = (
-        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/operations/op-123"
+    mock_client.get_iam_policy.return_value = policy_pb2.Policy(
+        version=1,
+        etag=b"etag-1",
+        bindings=[
+            policy_pb2.Binding(
+                role="roles/notebooks.runner",
+                members=["user:example-user@example.com"],
+            )
+        ],
     )
-    operation.result.return_value = notebooks_v2.Instance(
-        name=INSTANCE_NAME,
-        state=notebooks_v2.State.ACTIVE,
-    )
-    mock_client.upgrade_instance.return_value = operation
 
-    upgrade_instance.upgrade_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    get_instance_iam_policy.get_instance_iam_policy(
+        PROJECT_ID, LOCATION_ID, INSTANCE_ID
+    )
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "State: ACTIVE" in captured.out
+    assert "Role: roles/notebooks.runner" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_upgrade_instance_not_found(
+def test_get_instance_iam_policy_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.upgrade_instance.side_effect = exceptions.NotFound("Instance not found")
+    mock_client.get_iam_policy.side_effect = exceptions.NotFound("Instance not found")
 
-    upgrade_instance.upgrade_instance(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
+    get_instance_iam_policy.get_instance_iam_policy(
+        PROJECT_ID, LOCATION_ID, INSTANCE_ID
+    )
 
     captured = capsys.readouterr()
     assert "error:" in captured.err

@@ -15,50 +15,59 @@
 from unittest import mock
 
 from google.api_core import exceptions
-from google.iam.v1 import iam_policy_pb2
+from google.cloud import notebooks_v2
 import pytest
 
-import check_instance_iam_permissions
+from .. import create_instance_private_vpc
 
 PROJECT_ID = "example-project"
 LOCATION_ID = "us-central1-a"
-INSTANCE_ID = "example-instance"
+INSTANCE_ID = "example-private-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_check_instance_iam_permissions_success(
+def test_create_instance_private_vpc_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.test_iam_permissions.return_value = (
-        iam_policy_pb2.TestIamPermissionsResponse(
-            permissions=["notebooks.instances.get"]
-        )
+    operation = mock.MagicMock()
+    operation.operation.name = (
+        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/operations/op-123"
     )
+    operation.result.return_value = notebooks_v2.Instance(
+        name=INSTANCE_NAME,
+        state=notebooks_v2.State.ACTIVE,
+        gce_setup=notebooks_v2.GceSetup(
+            machine_type="e2-standard-4",
+            disable_public_ip=True,
+        ),
+    )
+    mock_client.create_instance.return_value = operation
 
-    check_instance_iam_permissions.check_instance_iam_permissions(
+    create_instance_private_vpc.create_instance_private_vpc(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "Allowed Permissions: ['notebooks.instances.get']" in captured.out
+    assert "Disable Public IP: True" in captured.out
+    assert "State: ACTIVE" in captured.out
     assert captured.err == ""
 
 
 @mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
-def test_check_instance_iam_permissions_not_found(
+def test_create_instance_private_vpc_already_exists(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock_client_cls.return_value
-    mock_client.test_iam_permissions.side_effect = exceptions.NotFound(
-        "Instance not found"
+    mock_client.create_instance.side_effect = exceptions.AlreadyExists(
+        "Instance already exists"
     )
 
-    check_instance_iam_permissions.check_instance_iam_permissions(
+    create_instance_private_vpc.create_instance_private_vpc(
         PROJECT_ID, LOCATION_ID, INSTANCE_ID
     )
 
