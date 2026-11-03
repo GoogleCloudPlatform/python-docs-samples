@@ -65,12 +65,18 @@ def create_instance_private_vpc(
     try:
         operation = client.create_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
+        # The operation completes once the instance is accepted, before the
+        # VM finishes provisioning, so the state is usually PROVISIONING here.
         response = operation.result()
         print(f"Resource ID: {response.name}")
         print(f"Creation Date: {response.create_time}")
         print(f"Disable Public IP: {response.gce_setup.disable_public_ip}")
         print(f"Machine Type: {response.gce_setup.machine_type}")
         print(f"State: {response.state.name}")
+        print(
+            "The instance is still starting up; call get_instance until the "
+            "state is ACTIVE before connecting to JupyterLab."
+        )
     except exceptions.AlreadyExists as err:
         print(
             f"error: Instance '{instance_id}' already exists in location "

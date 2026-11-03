@@ -115,6 +115,8 @@ def create_instance_hardened(
     try:
         operation = client.create_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
+        # The operation completes once the instance is accepted, before the
+        # VM finishes provisioning, so the state is usually PROVISIONING here.
         response = operation.result()
         secure_boot = response.gce_setup.shielded_instance_config.enable_secure_boot
         print(f"Resource ID: {response.name}")
@@ -122,6 +124,10 @@ def create_instance_hardened(
         print(f"Disable Public IP: {response.gce_setup.disable_public_ip}")
         print(f"Secure Boot Enabled: {secure_boot}")
         print(f"State: {response.state.name}")
+        print(
+            "The instance is still starting up; call get_instance until the "
+            "state is ACTIVE before connecting to JupyterLab."
+        )
     except exceptions.AlreadyExists as err:
         print(
             f"error: Instance '{instance_id}' already exists in location "

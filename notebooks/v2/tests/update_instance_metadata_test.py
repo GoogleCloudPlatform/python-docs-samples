@@ -39,7 +39,13 @@ def test_update_instance_metadata_success(
     operation.result.return_value = notebooks_v2.Instance(
         name=INSTANCE_NAME,
         state=notebooks_v2.State.ACTIVE,
-        gce_setup=notebooks_v2.GceSetup(metadata={"idle-timeout-seconds": "3600"}),
+        gce_setup=notebooks_v2.GceSetup(
+            metadata={
+                "idle-timeout-seconds": "3600",
+                "version": "20261101-2130",
+                "notebooks-api-version": "v2",
+            }
+        ),
     )
     mock_client.update_instance.return_value = operation
 
@@ -55,8 +61,9 @@ def test_update_instance_metadata_success(
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
-    assert "idle-timeout-seconds" in captured.out
-    assert "State: ACTIVE" in captured.out
+    assert "Idle Timeout Seconds: 3600" in captured.out
+    assert "Image Version: 20261101-2130" in captured.out
+    assert "Metadata Key Count: 3" in captured.out
     assert captured.err == ""
 
 

@@ -38,10 +38,16 @@ def start_instance(
     try:
         operation = client.start_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
+        # The operation completes before the VM finishes booting, so the
+        # state is usually PROVISIONING here.
         response = operation.result()
         print(f"Resource ID: {response.name}")
         print(f"Proxy URI: {response.proxy_uri}")
         print(f"State: {response.state.name}")
+        print(
+            "The instance is still starting up; call get_instance until the "
+            "state is ACTIVE before connecting to JupyterLab."
+        )
     except exceptions.NotFound as err:
         print(
             f"error: Instance '{instance_id}' not found in location "

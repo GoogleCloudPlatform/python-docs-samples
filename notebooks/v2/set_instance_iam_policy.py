@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START notebooks_v2_set_instance_iam_policy]
+import base64
 import sys
 
 from google.api_core import exceptions
@@ -59,7 +60,9 @@ def set_instance_iam_policy(
         response = client.set_iam_policy(request=set_request)
         print(f"Resource ID: {name}")
         print(f"Bindings Count: {len(response.bindings)}")
-        print(f"Policy Etag: {response.etag}")
+        # The etag is an opaque byte string; base64 matches how gcloud and
+        # the REST API display it.
+        print(f"Policy Etag: {base64.b64encode(response.etag).decode()}")
         print(f"Policy Version: {response.version}")
     except exceptions.NotFound as err:
         print(

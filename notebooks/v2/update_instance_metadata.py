@@ -48,9 +48,13 @@ def update_instance_metadata(
         operation = client.update_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
         response = operation.result()
+        # The service merges the update into metadata it manages itself, such
+        # as the image version, so only the updated key changes.
+        metadata = response.gce_setup.metadata
         print(f"Resource ID: {response.name}")
-        print(f"Metadata: {response.gce_setup.metadata}")
-        print(f"State: {response.state.name}")
+        print(f"Idle Timeout Seconds: {metadata.get('idle-timeout-seconds')}")
+        print(f"Image Version: {metadata.get('version')}")
+        print(f"Metadata Key Count: {len(metadata)}")
     except exceptions.NotFound as err:
         print(
             f"error: Instance '{instance_id}' not found in location "

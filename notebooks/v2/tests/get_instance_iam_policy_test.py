@@ -52,6 +52,7 @@ def test_get_instance_iam_policy_success(
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
+    assert "Policy Etag: ZXRhZy0x" in captured.out
     assert "Role: roles/notebooks.runner" in captured.out
     assert captured.err == ""
 

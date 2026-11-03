@@ -61,6 +61,7 @@ def test_set_instance_iam_policy_success(
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
+    assert "Policy Etag: ZXRhZy0x" in captured.out
     assert "Bindings Count: 2" in captured.out
     assert captured.err == ""
 
