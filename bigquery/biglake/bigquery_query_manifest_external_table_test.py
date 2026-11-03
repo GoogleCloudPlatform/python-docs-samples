@@ -26,7 +26,6 @@ def test_query_manifest_external_table_success(
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.job_id = "example-job-123"
-    mock_job.statement_type = "SCRIPT"
     mock_row = mock.MagicMock()
     mock_job.result.return_value = [mock_row]
     mock_client.query.return_value = mock_job
@@ -54,7 +53,9 @@ def test_query_manifest_external_table_error(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
-    mock_client.query.side_effect = exceptions.NotFound("resource error")
+    mock_job = mock.MagicMock()
+    mock_job.result.side_effect = exceptions.NotFound("resource error")
+    mock_client.query.return_value = mock_job
     monkeypatch.setattr(
         bigquery_query_manifest_external_table.bigquery,
         "Client",

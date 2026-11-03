@@ -27,8 +27,7 @@ def test_create_search_index_success(
     mock_job = mock.MagicMock()
     mock_job.job_id = "example-job-123"
     mock_job.statement_type = "SCRIPT"
-    mock_row = mock.MagicMock()
-    mock_job.result.return_value = [mock_row]
+    mock_job.result.return_value = []
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
         bigquery_create_search_index.bigquery,
@@ -53,7 +52,9 @@ def test_create_search_index_error(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
-    mock_client.query.side_effect = exceptions.AlreadyExists("resource error")
+    mock_job = mock.MagicMock()
+    mock_job.result.side_effect = exceptions.NotFound("resource error")
+    mock_client.query.return_value = mock_job
     monkeypatch.setattr(
         bigquery_create_search_index.bigquery,
         "Client",

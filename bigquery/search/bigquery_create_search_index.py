@@ -38,7 +38,7 @@ def create_search_index(
     table_ref = f"{project_id}.{dataset_id}.{table_id}"
     # Indexing ALL COLUMNS enables full-text SEARCH queries across every STRING or JSON field.
     sql = f"""
-        CREATE SEARCH INDEX `{index_name}`
+        CREATE SEARCH INDEX IF NOT EXISTS `{index_name}`
         ON `{table_ref}`(ALL COLUMNS);
     """
 
@@ -46,10 +46,10 @@ def create_search_index(
         print(f"Creating search index {index_name} on table: {table_ref}")
         query_job = client.query(sql)
         query_job.result()
-    except exceptions.AlreadyExists as err:
+    except exceptions.NotFound as err:
         print(
-            f"error: search index '{index_name}' already exists on table "
-            f"'{table_id}' in dataset '{dataset_id}' for project '{project_id}': {err.message}",
+            f"error: table '{table_id}' or dataset '{dataset_id}' not found "
+            f"for project '{project_id}': {err.message}",
             file=sys.stderr,
         )
         return

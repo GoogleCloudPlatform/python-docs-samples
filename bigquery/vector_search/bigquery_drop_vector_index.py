@@ -45,8 +45,8 @@ def drop_vector_index(
         query_job.result()
     except exceptions.NotFound as err:
         print(
-            f"error: table '{table_id}' or vector index '{index_name}' not found in "
-            f"dataset '{dataset_id}' for project '{project_id}': {err.message}",
+            f"error: table '{table_id}' or dataset '{dataset_id}' not found in "
+            f"project '{project_id}': {err.message}",
             file=sys.stderr,
         )
         return
