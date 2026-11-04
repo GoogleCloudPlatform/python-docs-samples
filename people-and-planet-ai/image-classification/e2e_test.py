@@ -25,11 +25,10 @@ import zipfile
 import apache_beam as beam
 from apache_beam.ml.inference.base import RunInference
 from apache_beam.testing.util import assert_that
-import pytest
-
 import classify_wildlife_image
 import create_images_metadata_table
 import embed_wildlife_image
+import pytest
 import run_wildlife_inference
 
 PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
