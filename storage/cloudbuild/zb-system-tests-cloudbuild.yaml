@@ -19,6 +19,10 @@ substitutions:
   _SHORT_BUILD_ID: ${BUILD_ID:0:8}
   _VM_NAME: "py-sdk-sys-test-${_SHORT_BUILD_ID}"
   _ULIMIT: "10000" # 10k, for gRPC bidi streams
+  # Name of the rapid bucket used by the bidi samples tests. Set by the trigger.
+  _ZONAL_BUCKET: ""
+  # Service account attached to the test VM. Set by the trigger.
+  _ZONAL_VM_SERVICE_ACCOUNT: ""
 
 
 
@@ -113,12 +117,12 @@ steps:
           sleep 15
         done
         # copy the script to the VM
-        gcloud compute scp storage/cloudbuild/run_zonal_tests.sh ${_VM_NAME}:~ --zone=${_ZONE} --internal-ip --ssh-key-file=/workspace/.ssh/google_compute_engine
+        gcloud compute scp storage/cloudbuild/run_rapid_tests.sh ${_VM_NAME}:~ --zone=${_ZONE} --internal-ip --ssh-key-file=/workspace/.ssh/google_compute_engine
 
         # Execute the script on the VM via SSH.
         # Capture the exit code to ensure cleanup happens before the build fails.
         set +e
-        gcloud compute ssh ${_VM_NAME} --zone=${_ZONE} --internal-ip --ssh-key-file=/workspace/.ssh/google_compute_engine --command="ulimit -n ${_ULIMIT}; COMMIT_SHA=${COMMIT_SHA} _ZONAL_BUCKET=${_ZONAL_BUCKET} CROSS_REGION_BUCKET=${_CROSS_REGION_BUCKET} _PR_NUMBER=${_PR_NUMBER} bash run_zonal_tests.sh"
+        gcloud compute ssh ${_VM_NAME} --zone=${_ZONE} --internal-ip --ssh-key-file=/workspace/.ssh/google_compute_engine --command="ulimit -n ${_ULIMIT}; COMMIT_SHA=${COMMIT_SHA} _RAPID_BUCKET=${_ZONAL_BUCKET} _ZONAL_BUCKET=${_ZONAL_BUCKET} CROSS_REGION_BUCKET=${_CROSS_REGION_BUCKET} _PR_NUMBER=${_PR_NUMBER} bash run_rapid_tests.sh"
         EXIT_CODE=$?
         set -e
 
