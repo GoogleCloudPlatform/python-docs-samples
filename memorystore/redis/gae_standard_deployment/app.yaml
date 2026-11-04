@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # [START memorystore_app_yaml_standard]
-runtime: python37
+runtime: python313
 entrypoint: gunicorn -b :$PORT main:app
 
 # Update with Redis instance details
