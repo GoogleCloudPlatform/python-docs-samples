@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Sequence
+import mimetypes
 import sys
 from typing import Any
 
@@ -79,9 +80,10 @@ class GeminiWildlifeModelHandler(
         )
         for item in batch:
             image_gcs_uri = f"{LILA_WCS_GCS_PREFIX}/{item['file_name']}"
+            mime_type, _ = mimetypes.guess_type(image_gcs_uri)
             image_part = types.Part.from_uri(
                 file_uri=image_gcs_uri,
-                mime_type="image/jpeg",
+                mime_type=mime_type or "image/jpeg",
             )
             try:
                 response = model.models.generate_content(
@@ -169,6 +171,7 @@ def run_wildlife_inference(
                 )
                 | "FlattenSampledRows"
                 >> beam.FlatMap(lambda sample: sample)
+                | "ReshuffleSampledRows" >> beam.Reshuffle()
                 | "RunGeminiInference" >> RunInference(model_handler)
                 | "WritePredictionsToBigQuery"
                 >> beam.io.WriteToBigQuery(

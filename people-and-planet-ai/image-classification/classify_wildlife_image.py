@@ -15,6 +15,7 @@
 # limitations under the License.
 
 # [START googlegenaisdk_wildlife_classify_image]
+import mimetypes
 import sys
 
 from google import genai
@@ -54,9 +55,10 @@ def classify_wildlife_image(
     location = "global"
     client = genai.Client(vertexai=True, project=project_id, location=location)
 
+    mime_type, _ = mimetypes.guess_type(image_gcs_uri)
     image_part = types.Part.from_uri(
         file_uri=image_gcs_uri,
-        mime_type="image/jpeg",
+        mime_type=mime_type or "image/jpeg",
     )
     habitat_prefix = (
         f"Camera trap habitat region: {habitat_region}. "

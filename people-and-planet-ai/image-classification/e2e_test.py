@@ -32,7 +32,12 @@ import create_images_metadata_table
 import embed_wildlife_image
 import run_wildlife_inference
 
-PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
+if not PROJECT:
+    pytest.skip(
+        "GOOGLE_CLOUD_PROJECT environment variable is required.",
+        allow_module_level=True,
+    )
 
 
 def test_classify_wildlife_image(capsys: pytest.CaptureFixture[str]) -> None:

@@ -15,6 +15,7 @@
 # limitations under the License.
 
 # [START googlegenaisdk_wildlife_embed_image]
+import mimetypes
 import sys
 
 from google import genai
@@ -38,9 +39,10 @@ def embed_wildlife_image(project_id: str, image_gcs_uri: str) -> None:
     location = "global"
     client = genai.Client(vertexai=True, project=project_id, location=location)
 
+    mime_type, _ = mimetypes.guess_type(image_gcs_uri)
     image_part = types.Part.from_uri(
         file_uri=image_gcs_uri,
-        mime_type="image/jpeg",
+        mime_type=mime_type or "image/jpeg",
     )
     config = types.EmbedContentConfig(output_dimensionality=768)
 
@@ -57,7 +59,8 @@ def embed_wildlife_image(project_id: str, image_gcs_uri: str) -> None:
             file=sys.stderr,
         )
     else:
-        values = response.embeddings[0].values
+        embeddings = response.embeddings or [response.embedding]
+        values = embeddings[0].values
         preview = [round(v, 5) for v in values[:3]]
         print(f"Resource ID: {image_gcs_uri}")
         print(f"Embedding Dimensions: {len(values)}")
