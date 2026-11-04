@@ -13,6 +13,6 @@
 # limitations under the License.
 
 # [START cloudscheduler_python_yaml]
-runtime: python37
+runtime: python313
 service: my-service
 # [END cloudscheduler_python_yaml]
