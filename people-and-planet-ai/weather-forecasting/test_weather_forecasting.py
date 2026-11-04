@@ -14,8 +14,8 @@
 
 from __future__ import annotations
 
-import io
 from datetime import datetime, timezone
+import io
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch

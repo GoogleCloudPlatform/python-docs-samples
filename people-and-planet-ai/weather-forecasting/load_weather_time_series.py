@@ -17,10 +17,10 @@
 # [START dataflow_weather_load_time_series]
 from __future__ import annotations
 
+from datetime import datetime, timedelta
 import logging
 import math
 import sys
-from datetime import datetime, timedelta
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions

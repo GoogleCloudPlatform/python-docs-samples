@@ -18,15 +18,13 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta
 import io
 import math
-from datetime import datetime, timedelta
 from typing import Any
 
-from PIL import Image
-
 import numpy as np
-
+from PIL import Image
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
