@@ -25,7 +25,7 @@ def create_instance_hardened(
     instance_id: str = "example-hardened-instance",
     network_id: str = "example-network",
     subnet_id: str = "example-subnet",
-    service_account_id: str = "example-workbench-sa",
+    service_account_email: str = "example-workbench-sa@example-project-id.iam.gserviceaccount.com",
     instance_owner: str = "example-user@example.com",
     key_ring_id: str = "example-key-ring",
     crypto_key_id: str = "example-key",
@@ -44,7 +44,8 @@ def create_instance_hardened(
         instance_id: The ID to assign to the new Workbench instance.
         network_id: The ID of the VPC network in the project.
         subnet_id: The ID of the subnetwork in the instance region.
-        service_account_id: The ID of the custom service account in the project.
+        service_account_email: The email address of the service account to
+            attach to the instance.
         instance_owner: The single user email permitted to access the instance.
         key_ring_id: The Cloud KMS key ring ID in the instance region.
         crypto_key_id: The Cloud KMS crypto key ID used for disk encryption.
@@ -55,7 +56,6 @@ def create_instance_hardened(
     region_id = "-".join(parts[:-1]) if len(parts) > 2 else location_id
     network = f"projects/{project_id}/global/networks/{network_id}"
     subnet = f"projects/{project_id}/regions/{region_id}/subnetworks/{subnet_id}"
-    service_account_email = f"{service_account_id}@{project_id}.iam.gserviceaccount.com"
     kms_key = (
         f"projects/{project_id}/locations/{region_id}/"
         f"keyRings/{key_ring_id}/cryptoKeys/{crypto_key_id}"

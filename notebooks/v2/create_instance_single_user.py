@@ -24,7 +24,7 @@ def create_instance_single_user(
     location_id: str = "us-central1-a",
     instance_id: str = "example-single-user-instance",
     instance_owner: str = "example-user@example.com",
-    service_account_id: str = "example-sa",
+    service_account_email: str = "example-sa@example-project-id.iam.gserviceaccount.com",
 ) -> None:
     """Creates a single-user Workbench instance with a custom service account.
 
@@ -33,11 +33,11 @@ def create_instance_single_user(
         location_id: The Compute Engine zone for the new instance.
         instance_id: The ID to assign to the new Workbench instance.
         instance_owner: The email address of the single permitted user.
-        service_account_id: The ID of the custom service account in the project.
+        service_account_email: The email address of the service account to
+            attach to the instance.
     """
     client = notebooks_v2.NotebookServiceClient()
     parent = f"projects/{project_id}/locations/{location_id}"
-    service_account_email = f"{service_account_id}@{project_id}.iam.gserviceaccount.com"
     service_account = notebooks_v2.ServiceAccount(email=service_account_email)
     gce_setup = notebooks_v2.GceSetup(
         machine_type="e2-standard-4",

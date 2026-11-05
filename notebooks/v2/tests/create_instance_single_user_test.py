@@ -54,7 +54,7 @@ def test_create_instance_single_user_success(
     gce_setup = request.instance.gce_setup
     assert list(request.instance.instance_owners) == ["example-user@example.com"]
     assert gce_setup.service_accounts[0].email == (
-        f"example-sa@{PROJECT_ID}.iam.gserviceaccount.com"
+        "example-sa@example-project-id.iam.gserviceaccount.com"
     )
 
     captured = capsys.readouterr()
