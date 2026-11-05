@@ -15,6 +15,7 @@
 from unittest import mock
 
 from google.api_core import exceptions
+from google.cloud import notebooks_v2
 import pytest
 
 from .. import delete_instance
@@ -25,7 +26,7 @@ INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
-@mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
+@mock.patch.object(notebooks_v2, "NotebookServiceClient", autospec=True)
 def test_delete_instance_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
@@ -51,7 +52,7 @@ def test_delete_instance_success(
     assert captured.err == ""
 
 
-@mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
+@mock.patch.object(notebooks_v2, "NotebookServiceClient", autospec=True)
 def test_delete_instance_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],

@@ -26,7 +26,7 @@ INSTANCE_ID = "example-hardened-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
-@mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
+@mock.patch.object(notebooks_v2, "NotebookServiceClient", autospec=True)
 def test_create_instance_hardened_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
@@ -53,8 +53,12 @@ def test_create_instance_hardened_success(
     )
     mock_client.create_instance.return_value = operation
 
+    custom_sa_email = "custom-workbench-sa@shared-project.iam.gserviceaccount.com"
     create_instance_hardened.create_instance_hardened(
-        PROJECT_ID, LOCATION_ID, INSTANCE_ID
+        PROJECT_ID,
+        LOCATION_ID,
+        INSTANCE_ID,
+        service_account_email=custom_sa_email,
     )
 
     request = mock_client.create_instance.call_args.kwargs["request"]
@@ -76,9 +80,7 @@ def test_create_instance_hardened_success(
     assert network_interface.subnet == (
         f"projects/{PROJECT_ID}/regions/{region_id}/subnetworks/example-subnet"
     )
-    assert gce_setup.service_accounts[0].email == (
-        "example-workbench-sa@example-project-id.iam.gserviceaccount.com"
-    )
+    assert gce_setup.service_accounts[0].email == custom_sa_email
     assert list(request.instance.instance_owners) == ["example-user@example.com"]
     assert shielded.enable_secure_boot
     assert shielded.enable_vtpm
@@ -102,7 +104,7 @@ def test_create_instance_hardened_success(
     assert captured.err == ""
 
 
-@mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
+@mock.patch.object(notebooks_v2, "NotebookServiceClient", autospec=True)
 def test_create_instance_hardened_already_exists(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],

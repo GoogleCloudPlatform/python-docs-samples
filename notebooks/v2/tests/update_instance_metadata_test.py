@@ -26,7 +26,7 @@ INSTANCE_ID = "example-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
-@mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
+@mock.patch.object(notebooks_v2, "NotebookServiceClient", autospec=True)
 def test_update_instance_metadata_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
@@ -67,7 +67,7 @@ def test_update_instance_metadata_success(
     assert captured.err == ""
 
 
-@mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
+@mock.patch.object(notebooks_v2, "NotebookServiceClient", autospec=True)
 def test_update_instance_metadata_not_found(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],

@@ -26,7 +26,7 @@ INSTANCE_ID = "example-single-user-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
-@mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
+@mock.patch.object(notebooks_v2, "NotebookServiceClient", autospec=True)
 def test_create_instance_single_user_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
@@ -44,8 +44,12 @@ def test_create_instance_single_user_success(
     )
     mock_client.create_instance.return_value = operation
 
+    custom_sa_email = "123456789012-compute@developer.gserviceaccount.com"
     create_instance_single_user.create_instance_single_user(
-        PROJECT_ID, LOCATION_ID, INSTANCE_ID
+        PROJECT_ID,
+        LOCATION_ID,
+        INSTANCE_ID,
+        service_account_email=custom_sa_email,
     )
 
     request = mock_client.create_instance.call_args.kwargs["request"]
@@ -53,9 +57,7 @@ def test_create_instance_single_user_success(
     assert request.instance_id == INSTANCE_ID
     gce_setup = request.instance.gce_setup
     assert list(request.instance.instance_owners) == ["example-user@example.com"]
-    assert gce_setup.service_accounts[0].email == (
-        "example-sa@example-project-id.iam.gserviceaccount.com"
-    )
+    assert gce_setup.service_accounts[0].email == custom_sa_email
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out
@@ -64,7 +66,7 @@ def test_create_instance_single_user_success(
     assert captured.err == ""
 
 
-@mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
+@mock.patch.object(notebooks_v2, "NotebookServiceClient", autospec=True)
 def test_create_instance_single_user_already_exists(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],

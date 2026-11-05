@@ -26,7 +26,7 @@ INSTANCE_ID = "example-gpu-instance"
 INSTANCE_NAME = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/instances/{INSTANCE_ID}"
 
 
-@mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
+@mock.patch.object(notebooks_v2, "NotebookServiceClient", autospec=True)
 def test_create_instance_gpu_success(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
@@ -63,7 +63,7 @@ def test_create_instance_gpu_success(
     assert captured.err == ""
 
 
-@mock.patch("google.cloud.notebooks_v2.NotebookServiceClient")
+@mock.patch.object(notebooks_v2, "NotebookServiceClient", autospec=True)
 def test_create_instance_gpu_already_exists(
     mock_client_cls: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
