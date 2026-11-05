@@ -1,0 +1,1 @@
+google-cloud-notebooks==1.18.0
