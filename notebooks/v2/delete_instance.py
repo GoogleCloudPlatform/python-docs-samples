@@ -38,7 +38,7 @@ def delete_instance(
     try:
         operation = client.delete_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
-        operation.result()
+        operation.result(timeout=300)
         print(f"Resource ID: {name}")
         print(f"Location: {location_id}")
         print(f"Operation Done: {operation.done()}")

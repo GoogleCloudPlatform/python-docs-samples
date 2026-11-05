@@ -58,7 +58,7 @@ def create_instance_single_user(
         print(f"Waiting for operation to complete: {operation.operation.name}")
         # The operation completes once the instance is accepted, before the
         # VM finishes provisioning, so the state is usually PROVISIONING here.
-        response = operation.result()
+        response = operation.result(timeout=300)
         print(f"Resource ID: {response.name}")
         print(f"Creator: {response.creator}")
         print(f"State: {response.state.name}")

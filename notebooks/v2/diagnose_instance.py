@@ -48,7 +48,7 @@ def diagnose_instance(
     try:
         operation = client.diagnose_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
-        response = operation.result()
+        response = operation.result(timeout=600)
         print(f"Resource ID: {response.name}")
         print(f"Health State: {response.health_state.name}")
         print(f"State: {response.state.name}")

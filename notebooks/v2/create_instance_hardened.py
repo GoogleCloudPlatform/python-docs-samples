@@ -117,7 +117,7 @@ def create_instance_hardened(
         print(f"Waiting for operation to complete: {operation.operation.name}")
         # The operation completes once the instance is accepted, before the
         # VM finishes provisioning, so the state is usually PROVISIONING here.
-        response = operation.result()
+        response = operation.result(timeout=300)
         secure_boot = response.gce_setup.shielded_instance_config.enable_secure_boot
         print(f"Resource ID: {response.name}")
         print(f"Creation Date: {response.create_time}")

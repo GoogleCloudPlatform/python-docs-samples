@@ -40,7 +40,7 @@ def start_instance(
         print(f"Waiting for operation to complete: {operation.operation.name}")
         # The operation completes before the VM finishes booting, so the
         # state is usually PROVISIONING here.
-        response = operation.result()
+        response = operation.result(timeout=300)
         print(f"Resource ID: {response.name}")
         print(f"Proxy URI: {response.proxy_uri}")
         print(f"State: {response.state.name}")

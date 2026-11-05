@@ -55,7 +55,7 @@ def create_instance_custom_container(
         print(f"Waiting for operation to complete: {operation.operation.name}")
         # The operation completes once the instance is accepted, before the
         # VM finishes provisioning, so the state is usually PROVISIONING here.
-        response = operation.result()
+        response = operation.result(timeout=300)
         repo = response.gce_setup.container_image.repository
         print(f"Resource ID: {response.name}")
         print(f"Container Repository: {repo}")

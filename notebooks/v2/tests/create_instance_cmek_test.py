@@ -54,19 +54,39 @@ def test_create_instance_cmek_success(
     create_instance_cmek.create_instance_cmek(PROJECT_ID, LOCATION_ID, INSTANCE_ID)
 
     request = mock_client.create_instance.call_args.kwargs["request"]
-    assert request.parent == f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
-    assert request.instance_id == INSTANCE_ID
-    gce_setup = request.instance.gce_setup
     region_id = "-".join(LOCATION_ID.split("-")[:-1])
     expected_kms_key = (
         f"projects/{PROJECT_ID}/locations/{region_id}/"
         "keyRings/example-key-ring/cryptoKeys/example-key"
     )
-    cmek = notebooks_v2.DiskEncryption.CMEK
-    assert gce_setup.boot_disk.disk_encryption == cmek
-    assert gce_setup.boot_disk.kms_key == expected_kms_key
-    assert gce_setup.data_disks[0].disk_encryption == cmek
-    assert gce_setup.data_disks[0].kms_key == expected_kms_key
+    actual_request = notebooks_v2.CreateInstanceRequest.to_dict(
+        request,
+        always_print_fields_with_no_presence=False,
+        use_integers_for_enums=False,
+    )
+    assert actual_request == {
+        "parent": f"projects/{PROJECT_ID}/locations/{LOCATION_ID}",
+        "instance_id": INSTANCE_ID,
+        "instance": {
+            "gce_setup": {
+                "machine_type": "e2-standard-4",
+                "boot_disk": {
+                    "disk_size_gb": "150",
+                    "disk_type": "PD_SSD",
+                    "disk_encryption": "CMEK",
+                    "kms_key": expected_kms_key,
+                },
+                "data_disks": [
+                    {
+                        "disk_size_gb": "100",
+                        "disk_type": "PD_SSD",
+                        "disk_encryption": "CMEK",
+                        "kms_key": expected_kms_key,
+                    }
+                ],
+            },
+        },
+    }
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out

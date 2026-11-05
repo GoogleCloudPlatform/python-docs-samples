@@ -47,7 +47,7 @@ def update_instance_machine_type(
     try:
         operation = client.update_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
-        response = operation.result()
+        response = operation.result(timeout=300)
         print(f"Resource ID: {response.name}")
         print(f"Machine Type: {response.gce_setup.machine_type}")
         print(f"State: {response.state.name}")

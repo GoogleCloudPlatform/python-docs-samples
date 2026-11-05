@@ -62,39 +62,66 @@ def test_create_instance_hardened_success(
     )
 
     request = mock_client.create_instance.call_args.kwargs["request"]
-    assert request.parent == f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
-    assert request.instance_id == INSTANCE_ID
-    gce_setup = request.instance.gce_setup
     region_id = "-".join(LOCATION_ID.split("-")[:-1])
-    network_interface = gce_setup.network_interfaces[0]
-    shielded = gce_setup.shielded_instance_config
-    metadata = dict(gce_setup.metadata)
     expected_kms_key = (
         f"projects/{PROJECT_ID}/locations/{region_id}/"
         "keyRings/example-key-ring/cryptoKeys/example-key"
     )
-    assert gce_setup.disable_public_ip
-    assert network_interface.network == (
-        f"projects/{PROJECT_ID}/global/networks/example-network"
+    actual_request = notebooks_v2.CreateInstanceRequest.to_dict(
+        request,
+        always_print_fields_with_no_presence=False,
+        use_integers_for_enums=False,
     )
-    assert network_interface.subnet == (
-        f"projects/{PROJECT_ID}/regions/{region_id}/subnetworks/example-subnet"
-    )
-    assert gce_setup.service_accounts[0].email == custom_sa_email
-    assert list(request.instance.instance_owners) == ["example-user@example.com"]
-    assert shielded.enable_secure_boot
-    assert shielded.enable_vtpm
-    assert shielded.enable_integrity_monitoring
-    cmek = notebooks_v2.DiskEncryption.CMEK
-    assert gce_setup.boot_disk.disk_encryption == cmek
-    assert gce_setup.boot_disk.kms_key == expected_kms_key
-    assert gce_setup.data_disks[0].disk_encryption == cmek
-    assert gce_setup.data_disks[0].kms_key == expected_kms_key
-    assert metadata["notebook-disable-root"] == "true"
-    assert metadata["notebook-disable-downloads"] == "true"
-    assert metadata["notebook-disable-terminal"] == "true"
-    assert metadata["serial-port-enable"] == "false"
-    assert metadata["block-project-ssh-keys"] == "true"
+    assert actual_request == {
+        "parent": f"projects/{PROJECT_ID}/locations/{LOCATION_ID}",
+        "instance_id": INSTANCE_ID,
+        "instance": {
+            "instance_owners": ["example-user@example.com"],
+            "gce_setup": {
+                "machine_type": "e2-standard-4",
+                "disable_public_ip": True,
+                "service_accounts": [{"email": custom_sa_email}],
+                "boot_disk": {
+                    "disk_size_gb": "150",
+                    "disk_type": "PD_SSD",
+                    "disk_encryption": "CMEK",
+                    "kms_key": expected_kms_key,
+                },
+                "data_disks": [
+                    {
+                        "disk_size_gb": "100",
+                        "disk_type": "PD_SSD",
+                        "disk_encryption": "CMEK",
+                        "kms_key": expected_kms_key,
+                    }
+                ],
+                "network_interfaces": [
+                    {
+                        "network": (
+                            f"projects/{PROJECT_ID}/global/networks/example-network"
+                        ),
+                        "subnet": (
+                            f"projects/{PROJECT_ID}/regions/{region_id}/"
+                            "subnetworks/example-subnet"
+                        ),
+                        "nic_type": "GVNIC",
+                    }
+                ],
+                "shielded_instance_config": {
+                    "enable_secure_boot": True,
+                    "enable_vtpm": True,
+                    "enable_integrity_monitoring": True,
+                },
+                "metadata": {
+                    "notebook-disable-root": "true",
+                    "notebook-disable-downloads": "true",
+                    "notebook-disable-terminal": "true",
+                    "serial-port-enable": "false",
+                    "block-project-ssh-keys": "true",
+                },
+            },
+        },
+    }
 
     captured = capsys.readouterr()
     assert f"Resource ID: {INSTANCE_NAME}" in captured.out

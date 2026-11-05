@@ -47,7 +47,7 @@ def update_instance_metadata(
     try:
         operation = client.update_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
-        response = operation.result()
+        response = operation.result(timeout=300)
         # The service merges the update into metadata it manages itself, such
         # as the image version, so only the updated key changes.
         metadata = response.gce_setup.metadata

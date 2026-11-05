@@ -56,7 +56,7 @@ def update_instance_shielded_config(
     try:
         operation = client.update_instance(request=request)
         print(f"Waiting for operation to complete: {operation.operation.name}")
-        response = operation.result()
+        response = operation.result(timeout=300)
         secure_boot = response.gce_setup.shielded_instance_config.enable_secure_boot
         print(f"Resource ID: {response.name}")
         print(f"Secure Boot Enabled: {secure_boot}")
