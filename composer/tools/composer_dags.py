@@ -15,192 +15,92 @@
 # limitations under the License.
 """Standalone script to pause/unpause all the dags in the specific environment."""
 
-from __future__ import annotations
-
 import argparse
-import json
 import logging
-import re
-import subprocess
-import sys
 from typing import Any
+
+import google.auth
+from google.auth.transport.requests import AuthorizedSession
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
-class DAG:
-    """Provides necessary utils for Composer DAGs."""
+class ComposerClient:
+    """Client for interacting with Composer API.
 
-    COMPOSER_AF_VERSION_RE = re.compile(
-        "composer-(\d+)(?:\.(\d+)\.(\d+))?.*?-airflow-(\d+)\.(\d+)\.(\d+)"
-    )
+    The client uses Google Auth and Requests under the hood.
+    """
 
-    @staticmethod
-    def get_list_of_dags(
-        project_name: str,
-        environment: str,
-        location: str,
-        sdk_endpoint: str,
-        airflow_version: tuple[int],
-    ) -> list[str]:
-        """Retrieves the list of dags for particular project."""
-        sub_command = "list_dags" if airflow_version < (2, 0, 0) else "dags list"
-        command = (
-            f"CLOUDSDK_API_ENDPOINT_OVERRIDES_COMPOSER={sdk_endpoint} gcloud composer "
-            f"environments run {environment} --project={project_name}"
-            f" --location={location} {sub_command}"
+    def __init__(self, project: str, location: str, sdk_endpoint: str) -> None:
+        self.project = project
+        self.location = location
+        self.sdk_endpoint = sdk_endpoint.rstrip("/")
+        self.credentials, _ = google.auth.default()
+        self.session = AuthorizedSession(self.credentials)
+        self._airflow_uris = {}
+
+    def _get_airflow_uri(self, environment_name: str) -> str:
+        """Returns the Airflow URI for a given environment, caching the result."""
+        if environment_name not in self._airflow_uris:
+            environment = self.get_environment(environment_name)
+            self._airflow_uris[environment_name] = environment["config"]["airflowUri"]
+        return self._airflow_uris[environment_name]
+
+    def get_environment(self, environment_name: str) -> Any:
+        """Returns an environment json for a given Composer environment."""
+        url = (
+            f"{self.sdk_endpoint}/v1/projects/{self.project}/locations/"
+            f"{self.location}/environments/{environment_name}"
         )
-        command_output = DAG._run_shell_command_locally_once(command=command)[1]
-        if airflow_version < (2, 0, 0):
-            command_output_parsed = command_output.split()
-            return command_output_parsed[
-                command_output_parsed.index("DAGS") + 2 : len(command_output_parsed) - 1
-            ]
-        else:
-            # Collecting names of DAGs for output
-            list_of_dags = []
-            for line in command_output.split("\n"):
-                if re.compile("^[a-zA-Z].*").findall(line):
-                    list_of_dags.append(line.split()[0])
-            return list_of_dags[1:]
-
-    @staticmethod
-    def _run_shell_command_locally_once(
-        command: str,
-        command_input: str = None,
-        log_command: bool = True,
-    ) -> tuple[int, str]:
-        """Executes shell command and returns its output."""
-
-        p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
-        if log_command:
-            logger.info("Executing shell command: %s", command)
-        (res, _) = p.communicate(input=command_input)
-        if p.returncode:
-            logged_command = f' "{command}"' if log_command else ""
-            error_message = (
-                f"Failed to run shell command{logged_command}, " f"details: {res}"
+        response = self.session.get(url)
+        if response.status_code != 200:
+            raise RuntimeError(
+                f"Failed to get environment {environment_name}: {response.text}"
             )
-            logger.error(error_message)
-            sys.exit(1)
-        return (p.returncode, str(res.decode().strip("\n")))
+        return response.json()
 
-    @staticmethod
-    def pause_dag(
-        project_name: str,
-        environment: str,
-        location: str,
-        sdk_endpoint: str,
-        dag_id: str,
-        airflow_version: list[int],
-    ) -> str:
-        """Pause specific DAG in the given environment."""
-        sub_command = "pause" if airflow_version < (2, 0, 0) else "dags pause"
-        command = (
-            f"CLOUDSDK_API_ENDPOINT_OVERRIDES_COMPOSER={sdk_endpoint} gcloud composer environments"
-            f" run {environment} --project={project_name} --location={location}"
-            f" {sub_command} -- {dag_id}"
-        )
-        command_output = DAG._run_shell_command_locally_once(command=command)
-        if command_output[0] == 1:
-            logger.info(command_output[1])
-            logger.info("Error pausing DAG %s, Retrying...", dag_id)
-            command_output = DAG._run_shell_command_locally_once(command=command)
-            if command_output[0] == 1:
-                logger.info("Unable to pause DAG %s", dag_id)
-        logger.info(command_output[1])
+    def pause_all_dags(self, environment_name: str) -> Any:
+        """Pauses all DAGs in a Composer environment."""
+        airflow_uri = self._get_airflow_uri(environment_name)
 
-    @staticmethod
-    def unpause_dag(
-        project_name: str,
-        environment: str,
-        location: str,
-        sdk_endpoint: str,
-        dag_id: str,
-        airflow_version: list[int],
-    ) -> str:
-        """UnPause specific DAG in the given environment."""
-        sub_command = "unpause" if airflow_version < (2, 0, 0) else "dags unpause"
-        command = (
-            f"CLOUDSDK_API_ENDPOINT_OVERRIDES_COMPOSER={sdk_endpoint} gcloud composer environments"
-            f" run {environment} --project={project_name} --location={location}"
-            f" {sub_command} -- {dag_id}"
-        )
-        command_output = DAG._run_shell_command_locally_once(command=command)
-        if command_output[0] == 1:
-            logger.info(command_output[1])
-            logger.info("Error Unpausing DAG %s, Retrying...", dag_id)
-            command_output = DAG._run_shell_command_locally_once(command=command)
-            if command_output[0] == 1:
-                logger.info("Unable to Unpause DAG %s", dag_id)
-        logger.info(command_output[1])
+        url = f"{airflow_uri}/api/v1/dags?dag_id_pattern=%"
+        response = self.session.patch(url, json={"is_paused": True})
+        if response.status_code != 200:
+            raise RuntimeError(f"Failed to pause all DAGs: {response.text}")
 
-    @staticmethod
-    def describe_environment(
-        project_name: str, environment: str, location: str, sdk_endpoint: str
-    ) -> Any:
-        """Returns the given environment json object to parse necessary details."""
-        logger.info("*** Fetching details of the environment: %s...", environment)
-        command = (
-            f"CLOUDSDK_API_ENDPOINT_OVERRIDES_COMPOSER={sdk_endpoint} gcloud composer environments"
-            f" describe {environment} --project={project_name} --location={location}"
-            f" --format json"
-        )
-        environment_json = json.loads(DAG._run_shell_command_locally_once(command)[1])
-        logger.info("Environment Info:\n %s", environment_json["name"])
-        return environment_json
+    def unpause_all_dags(self, environment_name: str) -> Any:
+        """Unpauses all DAGs in a Composer environment."""
+        airflow_uri = self._get_airflow_uri(environment_name)
+
+        url = f"{airflow_uri}/api/v1/dags?dag_id_pattern=%"
+        response = self.session.patch(url, json={"is_paused": False})
+        if response.status_code != 200:
+            raise RuntimeError(f"Failed to unpause all DAGs: {response.text}")
 
 
 def main(
-    project_name: str, environment: str, location: str, operation: str, sdk_endpoint=str
+    project_name: str,
+    environment: str,
+    location: str,
+    operation: str,
+    sdk_endpoint: str,
 ) -> int:
     logger.info("DAG Pause/UnPause Script for Cloud Composer")
-    environment_info = DAG.describe_environment(
-        project_name=project_name,
-        environment=environment,
-        location=location,
-        sdk_endpoint=sdk_endpoint,
+
+    client = ComposerClient(
+        project=project_name, location=location, sdk_endpoint=sdk_endpoint
     )
-    versions = DAG.COMPOSER_AF_VERSION_RE.match(
-        environment_info["config"]["softwareConfig"]["imageVersion"]
-    ).groups()
-    logger.info(
-        "Image version: %s",
-        environment_info["config"]["softwareConfig"]["imageVersion"],
-    )
-    airflow_version = (int(versions[3]), int(versions[4]), int(versions[5]))
-    list_of_dags = DAG.get_list_of_dags(
-        project_name=project_name,
-        environment=environment,
-        location=location,
-        sdk_endpoint=sdk_endpoint,
-        airflow_version=airflow_version,
-    )
-    logger.info("List of dags : %s", list_of_dags)
 
     if operation == "pause":
-        for dag in list_of_dags:
-            if dag == "airflow_monitoring":
-                continue
-            DAG.pause_dag(
-                project_name=project_name,
-                environment=environment,
-                location=location,
-                sdk_endpoint=sdk_endpoint,
-                dag_id=dag,
-                airflow_version=airflow_version,
-            )
+        logger.info("Pausing all DAGs in the environment...")
+        client.pause_all_dags(environment)
+        logger.info("All DAGs paused.")
     else:
-        for dag in list_of_dags:
-            DAG.unpause_dag(
-                project_name=project_name,
-                environment=environment,
-                location=location,
-                sdk_endpoint=sdk_endpoint,
-                dag_id=dag,
-                airflow_version=airflow_version,
-            )
+        # Optimization: use bulk unpause
+        logger.info("Unpausing all DAGs in the environment...")
+        client.unpause_all_dags(environment)
+        logger.info("All DAGs unpaused.")
     return 0
 
 
