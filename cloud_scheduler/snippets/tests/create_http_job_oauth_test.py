@@ -67,7 +67,7 @@ def test_create_http_job_oauth_success(
     out, err = capsys.readouterr()
     assert f"Resource ID: {JOB_NAME}" in out
     assert "State: ENABLED" in out
-    assert "Target URI: https://dataproc.googleapis.com" in out
+    assert "Target URI: https://dataproc.googleapis.com/v1/x\n" in out
     assert err == ""
 
 

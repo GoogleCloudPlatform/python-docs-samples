@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import uuid
+from unittest import mock
 
 import flask
 import pytest
@@ -20,6 +20,17 @@ import pytest
 from .. import main
 
 app = flask.Flask(__name__)
+
+HEADERS = {
+    "X-CloudScheduler-JobName": "test-job",
+    "X-CloudScheduler-ScheduleTime": "2026-11-06T09:00:00Z",
+}
+
+
+@pytest.fixture(autouse=True)
+def reset_claimed_runs() -> None:
+    """Gives each test an empty set of claimed runs."""
+    main.claimed_runs.clear()
 
 
 def call_function(
@@ -29,15 +40,8 @@ def call_function(
         return main.handle_scheduled_run(flask.request)
 
 
-def scheduler_headers() -> dict[str, str]:
-    return {
-        "X-CloudScheduler-JobName": f"test-job-{uuid.uuid4().hex[:8]}",
-        "X-CloudScheduler-ScheduleTime": "2026-11-06T09:00:00Z",
-    }
-
-
 def test_first_delivery_is_processed(capsys: pytest.CaptureFixture[str]) -> None:
-    body, status = call_function(scheduler_headers())
+    body, status = call_function(HEADERS)
 
     assert status == 200
     assert body == "Run processed"
@@ -45,14 +49,24 @@ def test_first_delivery_is_processed(capsys: pytest.CaptureFixture[str]) -> None
 
 
 def test_duplicate_delivery_is_skipped(capsys: pytest.CaptureFixture[str]) -> None:
-    headers = scheduler_headers()
-    call_function(headers)
+    call_function(HEADERS)
 
-    body, status = call_function(headers)
+    body, status = call_function(HEADERS)
 
     assert status == 200
-    assert body == "Run already processed"
+    assert body == "Duplicate run skipped"
     assert "Skipped duplicate run" in capsys.readouterr().out
+
+
+def test_failed_run_releases_claim_for_retry() -> None:
+    with mock.patch.object(main, "process_run", side_effect=RuntimeError("boom")):
+        with pytest.raises(RuntimeError):
+            call_function(HEADERS)
+
+    body, status = call_function(HEADERS)
+
+    assert status == 200
+    assert body == "Run processed"
 
 
 def test_missing_scheduler_headers_are_rejected() -> None:

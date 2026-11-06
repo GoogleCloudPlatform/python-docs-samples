@@ -14,20 +14,33 @@
 
 # [START cloudscheduler_receiver]
 import json
+import threading
 
 import flask
 import functions_framework
 
-# Cloud Scheduler can deliver the same scheduled run more than once, so the
-# function records which runs it has finished. This in-memory set only lasts
-# for the life of one instance; store run keys in a durable database such as
-# Firestore so that every instance sees them.
-processed_runs: set[str] = set()
+# Cloud Scheduler can deliver the same scheduled run more than once, sometimes
+# at nearly the same time, so the function claims each run before doing its
+# work. These in-memory claims last only for the life of one instance. In
+# production, claim each run with a single atomic write, such as creating a
+# Firestore document that fails if the document already exists.
+claimed_runs: set[str] = set()
+claimed_runs_lock = threading.Lock()
 
 
 def log(message: str, **fields: str) -> None:
     """Writes a structured log entry that Cloud Logging parses from stdout."""
     print(json.dumps({"severity": "INFO", "message": message, **fields}))
+
+
+def process_run(job_name: str, schedule_time: str, payload: str) -> None:
+    """Does the scheduled work. Replace the body with your own task."""
+    log(
+        "Processed scheduled run",
+        jobName=job_name,
+        scheduleTime=schedule_time,
+        payload=payload,
+    )
 
 
 @functions_framework.http
@@ -47,23 +60,26 @@ def handle_scheduled_run(request: flask.Request) -> tuple[str, int]:
     # The schedule time stays the same when Cloud Scheduler retries a run,
     # so the job name and schedule time identify a single scheduled run.
     run_key = f"{job_name}/{schedule_time}"
-    if run_key in processed_runs:
-        log("Skipped duplicate run", jobName=job_name, scheduleTime=schedule_time)
-        return "Run already processed", 200
+
+    # Check and claim the run in one step, so that two deliveries of the same
+    # run that arrive together can't both do the work.
+    with claimed_runs_lock:
+        if run_key in claimed_runs:
+            log("Skipped duplicate run", jobName=job_name, scheduleTime=schedule_time)
+            return "Duplicate run skipped", 200
+        claimed_runs.add(run_key)
 
     # Finish the work within the job's attempt deadline. Cloud Scheduler
     # treats a slow response as a failure even if the work later succeeds.
-    # If the work raises an exception, the function returns HTTP 500, which
-    # tells Cloud Scheduler to retry the run according to the job's retry
-    # settings.
-    payload = request.get_data(as_text=True)
-    log(
-        "Processed scheduled run",
-        jobName=job_name,
-        scheduleTime=schedule_time,
-        payload=payload,
-    )
-    processed_runs.add(run_key)
+    try:
+        process_run(job_name, schedule_time, request.get_data(as_text=True))
+    except Exception:
+        # Release the claim so that a retry can process the run. Re-raising
+        # returns HTTP 500, which tells Cloud Scheduler to retry the run
+        # according to the job's retry settings.
+        with claimed_runs_lock:
+            claimed_runs.discard(run_key)
+        raise
     return "Run processed", 200
 
 

@@ -180,9 +180,12 @@ def test_create_http_job_oauth(capsys: pytest.CaptureFixture[str], job_id: str) 
     )
 
     out, err = capsys.readouterr()
+    expected_uri = (
+        f"https://dataproc.googleapis.com/v1/projects/{PROJECT_ID}/regions/"
+        f"{LOCATION_ID}/workflowTemplates/example-workflow-template:instantiate"
+    )
     assert f"Resource ID: {job_name(job_id)}" in out
-    assert "dataproc.googleapis.com" in out
-    assert "example-workflow-template:instantiate" in out
+    assert f"Target URI: {expected_uri}\n" in out
     assert "error:" not in err
 
 
