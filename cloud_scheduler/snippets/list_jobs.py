@@ -54,14 +54,24 @@ def list_jobs(project_id: str, location_id: str) -> None:
 
 
 if __name__ == "__main__":
+    import argparse
     import os
 
-    def arg(index: int, env_var: str, default: str) -> str:
-        """Reads an environment variable, then a CLI argument, then a default."""
-        cli_value = sys.argv[index] if len(sys.argv) > index else None
-        return os.environ.get(env_var) or cli_value or default
+    # Each flag defaults to its environment variable, then to an example value.
+    parser = argparse.ArgumentParser(description=list_jobs.__doc__.splitlines()[0])
+    parser.add_argument(
+        "--project-id",
+        default=os.environ.get("GOOGLE_CLOUD_PROJECT", "example-project-id"),
+        help="Google Cloud project ID (default: $GOOGLE_CLOUD_PROJECT)",
+    )
+    parser.add_argument(
+        "--location-id",
+        default=os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1"),
+        help="Region of the job (default: $GOOGLE_CLOUD_LOCATION)",
+    )
+    args = parser.parse_args()
 
     list_jobs(
-        project_id=arg(1, "GOOGLE_CLOUD_PROJECT", "example-project-id"),
-        location_id=arg(2, "GOOGLE_CLOUD_LOCATION", "us-central1"),
+        project_id=args.project_id,
+        location_id=args.location_id,
     )

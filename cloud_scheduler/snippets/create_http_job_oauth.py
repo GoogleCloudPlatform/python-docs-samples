@@ -96,23 +96,47 @@ def create_http_job_oauth(
 
 
 if __name__ == "__main__":
+    import argparse
     import os
 
-    def arg(index: int, env_var: str, default: str) -> str:
-        """Reads an environment variable, then a CLI argument, then a default."""
-        cli_value = sys.argv[index] if len(sys.argv) > index else None
-        return os.environ.get(env_var) or cli_value or default
-
-    create_http_job_oauth(
-        project_id=arg(1, "GOOGLE_CLOUD_PROJECT", "example-project-id"),
-        location_id=arg(2, "GOOGLE_CLOUD_LOCATION", "us-central1"),
-        job_id=arg(3, "SCHEDULER_JOB_ID", "example-job-id"),
-        workflow_template_id=arg(
-            4, "WORKFLOW_TEMPLATE_ID", "example-workflow-template"
-        ),
-        service_account_email=arg(
-            5,
+    # Each flag defaults to its environment variable, then to an example value.
+    parser = argparse.ArgumentParser(
+        description=create_http_job_oauth.__doc__.splitlines()[0]
+    )
+    parser.add_argument(
+        "--project-id",
+        default=os.environ.get("GOOGLE_CLOUD_PROJECT", "example-project-id"),
+        help="Google Cloud project ID (default: $GOOGLE_CLOUD_PROJECT)",
+    )
+    parser.add_argument(
+        "--location-id",
+        default=os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1"),
+        help="Region of the job (default: $GOOGLE_CLOUD_LOCATION)",
+    )
+    parser.add_argument(
+        "--job-id",
+        default=os.environ.get("SCHEDULER_JOB_ID", "example-job-id"),
+        help="ID of the job (default: $SCHEDULER_JOB_ID)",
+    )
+    parser.add_argument(
+        "--workflow-template-id",
+        default=os.environ.get("WORKFLOW_TEMPLATE_ID", "example-workflow-template"),
+        help="ID of the workflow template to start (default: $WORKFLOW_TEMPLATE_ID)",
+    )
+    parser.add_argument(
+        "--service-account-email",
+        default=os.environ.get(
             "SERVICE_ACCOUNT_EMAIL",
             "example-invoker@example-project-id.iam.gserviceaccount.com",
         ),
+        help="Service account that the job uses to get tokens (default: $SERVICE_ACCOUNT_EMAIL)",
+    )
+    args = parser.parse_args()
+
+    create_http_job_oauth(
+        project_id=args.project_id,
+        location_id=args.location_id,
+        job_id=args.job_id,
+        workflow_template_id=args.workflow_template_id,
+        service_account_email=args.service_account_email,
     )
