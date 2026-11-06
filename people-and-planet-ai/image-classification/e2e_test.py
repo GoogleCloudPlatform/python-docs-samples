@@ -117,7 +117,12 @@ def test_extract_metadata_fn_filters_invalid_categories() -> None:
     mock_response = mock.MagicMock()
     mock_response.content = zip_buffer.getvalue()
 
-    with mock.patch("requests.get", return_value=mock_response):
+    with mock.patch.object(
+        create_images_metadata_table.requests,
+        "get",
+        return_value=mock_response,
+        autospec=True,
+    ):
         fn = create_images_metadata_table._ExtractMetadataFn()
         results = list(fn.process(create_images_metadata_table.METADATA_URL))
 
