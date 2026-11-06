@@ -71,8 +71,8 @@ def forecast_precipitation(
         forecast_rows = list(query_job.result())
     except exceptions.GoogleAPICallError as err:
         print(
-            f"error: failed to run AI.FORECAST on table '{table_ref}' "
-            f"for project '{project_id}': {err.message}",
+            f"error: failed to run AI.FORECAST on table '{table_id}': "
+            f"{err.message}",
             file=sys.stderr,
         )
     else:
@@ -80,7 +80,6 @@ def forecast_precipitation(
             (float(row.forecasted_precipitation_mm_hr) for row in forecast_rows),
             default=0.0,
         )
-        print(f"Resource ID: {table_ref}")
         print(f"Display Name: {table_id}")
         print(f"Confidence Level: {confidence_level:.2f}")
         print(f"Forecast Horizon Hours: {len(forecast_rows)}")
@@ -99,23 +98,14 @@ def forecast_precipitation(
 # [END bigquery_weather_forecast_precipitation]
 
 
-project_id_arg = os.environ.get("GOOGLE_CLOUD_PROJECT") or (
-    sys.argv[1] if len(sys.argv) > 1 else None
-)
-if not project_id_arg:
-    project_id_arg = "example-project-id"
-
-dataset_id_arg = os.environ.get("BIGQUERY_DATASET") or (
-    sys.argv[2] if len(sys.argv) > 2 else None
-)
-if not dataset_id_arg:
-    dataset_id_arg = "weather_forecasting"
-
-table_id_arg = os.environ.get("BIGQUERY_TABLE") or (
-    sys.argv[3] if len(sys.argv) > 3 else None
-)
-if not table_id_arg:
-    table_id_arg = "storm_hourly_observations"
-
 if __name__ == "__main__":
+    project_id_arg = os.environ.get("GOOGLE_CLOUD_PROJECT") or (
+        sys.argv[1] if len(sys.argv) > 1 else "example-project-id"
+    )
+    dataset_id_arg = os.environ.get("BIGQUERY_DATASET") or (
+        sys.argv[2] if len(sys.argv) > 2 else "weather_forecasting"
+    )
+    table_id_arg = os.environ.get("BIGQUERY_TABLE") or (
+        sys.argv[3] if len(sys.argv) > 3 else "storm_hourly_observations"
+    )
     forecast_precipitation(project_id_arg, dataset_id_arg, table_id_arg)

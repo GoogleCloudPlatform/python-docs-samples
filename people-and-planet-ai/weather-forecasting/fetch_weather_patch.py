@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START earthengine_weather_fetch_patch]
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
@@ -96,10 +97,6 @@ def fetch_weather_patch(project_id: str) -> None:
         if storm_iso_time >= GOES19_CUTOVER_ISO
         else "NOAA/GOES/16/MCMIPF"
     )
-    resource_id = (
-        f"NASA/GPM_L3/IMERG_V07+{goes_collection_id}+MERIT/DEM/v1_0_3"
-        f"@{storm_iso_time}({latitude},{longitude})"
-    )
 
     try:
         credentials, _ = google.auth.default(
@@ -165,18 +162,68 @@ def fetch_weather_patch(project_id: str) -> None:
         patch_array = structured_to_unstructured(structured_patch)
     except (ee.EEException, OSError, ValueError) as err:
         print(
-            f"error: failed to compute Earth Engine weather patch '{resource_id}' "
-            f"for project '{project_id}': {err}",
+            f"error: failed to compute Earth Engine weather patch "
+            f"for '{storm_name}': {err}",
             file=sys.stderr,
         )
     else:
         peak_precip = float(np.max(patch_array[:, :, 0]))
         max_elevation = float(np.max(patch_array[:, :, 5]))
-        print(f"Resource ID: {resource_id}")
         print(f"Display Name: {storm_name}")
+        print(f"GOES Collection: {goes_collection_id}")
         print(f"Max Elevation (m): {max_elevation:.1f}")
         print(f"Patch Shape: {patch_array.shape}")
         print(f"Peak Precipitation (mm/hr): {peak_precip:.2f}")
+
+
+# [END earthengine_weather_fetch_patch]
+
+
+def _initialize_earth_engine(project_id: str) -> None:
+    """Initializes the Earth Engine client against the High Volume endpoint."""
+    credentials, _ = google.auth.default(
+        scopes=[
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/earthengine",
+        ]
+    )
+    ee.Initialize(
+        credentials=credentials.with_quota_project(None),
+        project=project_id,
+        opt_url="https://earthengine-highvolume.googleapis.com",
+    )
+
+
+def _compute_ee_patch_array(
+    composite_image: ee.Image,
+    center_lon: float,
+    center_lat: float,
+    patch_size: int,
+    deg_per_px: float,
+) -> np.ndarray:
+    """Downloads a square EPSG:4326 pixel grid via `ee.data.computePixels`."""
+    translate_x = center_lon - (patch_size / 2.0) * deg_per_px
+    translate_y = center_lat + (patch_size / 2.0) * deg_per_px
+    raw_bytes = ee.data.computePixels(
+        {
+            "expression": composite_image,
+            "fileFormat": "NPY",
+            "grid": {
+                "dimensions": {"width": patch_size, "height": patch_size},
+                "affineTransform": {
+                    "scaleX": deg_per_px,
+                    "shearX": 0,
+                    "translateX": translate_x,
+                    "shearY": 0,
+                    "scaleY": -deg_per_px,
+                    "translateY": translate_y,
+                },
+                "crsCode": "EPSG:4326",
+            },
+        }
+    )
+    structured_patch = np.load(io.BytesIO(raw_bytes), allow_pickle=True)
+    return structured_to_unstructured(structured_patch)
 
 
 def build_synthetic_storm_patch(
@@ -190,12 +237,12 @@ def build_synthetic_storm_patch(
     for local visualization and testing.
 
     Args:
-        storm_preset: Preset ('melissa_2025', 'helene_2024', or 'sf_bay_area').
+        storm_preset: Preset ('melissa_2025' or 'sf_bay_area').
         patch_size: Width and height of the square pixel grid.
 
     Returns:
-        Dictionary containing 'precipitation', 'goes_rgb', 'goes_ir',
-        'elevation', 'storm_name', 'iso_time', and 'goes_satellite'.
+        Dictionary containing 'precipitation', 'goes_rgb', 'elevation',
+        'storm_name', 'iso_time', and 'goes_satellite'.
     """
     y_grid, x_grid = np.mgrid[
         -1.0:1.0:complex(patch_size), -1.0:1.0:complex(patch_size)
@@ -227,32 +274,6 @@ def build_synthetic_storm_patch(
         storm_name = "San Francisco Bay Area, CA — Live Current Forecast"
         iso_time = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:00:00Z")
         goes_satellite = "NOAA/GOES/18/MCMIPF"
-    elif storm_preset == "helene_2024":
-        # Southern Appalachians ridge topography (600m to 2000m) + upslope rain
-        elevation = np.clip(
-            650.0
-            + 1250.0 * np.exp(-((x_grid - 0.15) ** 2 + (y_grid + 0.1) ** 2) / 0.35)
-            + 220.0 * np.sin(4.0 * x_grid) * np.cos(3.0 * y_grid),
-            100.0,
-            2037.0,
-        ).astype(np.float32)
-        spiral = np.cos(2.0 * angle - 4.0 * radius)
-        orographic_boost = (elevation / 1500.0) * 14.0
-        precipitation = np.clip(
-            12.0 * np.exp(-(radius**2) / 0.45)
-            + 6.0 * np.maximum(0.0, spiral)
-            + orographic_boost,
-            0.0,
-            42.5,
-        ).astype(np.float32)
-        cloud_density = np.clip(
-            0.45 + 0.45 * np.exp(-(radius**2) / 0.6) + 0.1 * (elevation / 2000.0),
-            0.0,
-            1.0,
-        )
-        storm_name = "Hurricane Helene (Southern Appalachians Orographic Deluge)"
-        iso_time = "2024-09-27T06:00:00Z"
-        goes_satellite = "NOAA/GOES/16/MCMIPF"
     else:
         # Jamaica coastline + Blue Mountains (0m sea level to 2256m peak)
         island_mask = (
@@ -300,12 +321,10 @@ def build_synthetic_storm_patch(
         ],
         axis=-1,
     ).astype(np.uint8)
-    goes_ir = (295.0 - 95.0 * cloud_density).astype(np.float32)
 
     return {
         "precipitation": precipitation,
         "goes_rgb": goes_rgb,
-        "goes_ir": goes_ir,
         "elevation": elevation,
         "storm_name": storm_name,
         "iso_time": iso_time,
@@ -315,26 +334,42 @@ def build_synthetic_storm_patch(
 
 def get_storm_patch_arrays(
     project_id: str,
-    storm_preset: str = "melissa_2025",
+    iso_time: str = "2025-10-28T17:00:00",
+    latitude: float = 18.1,
+    longitude: float = -78.0,
+    storm_name: str = "Hurricane Melissa (Category 5 Jamaica Landfall)",
     patch_size: int = 64,
     scale_meters: int = 5000,
 ) -> dict[str, Any]:
-    """Fetches live Earth Engine storm arrays with automatic fallback to curated arrays.
+    """Fetches live Earth Engine storm arrays for a UTC timestamp and coordinate.
+
+    Queries NASA GPM IMERG V07 precipitation, NOAA GOES cloud and moisture
+    imagery, and MERIT DEM terrain around `(latitude, longitude)` at `iso_time`,
+    with automatic fallback to a pre-extracted reference patch when Earth Engine
+    is not yet enabled on the project.
 
     Args:
         project_id: Google Cloud project identifier.
-        storm_preset: Preset identifier ('melissa_2025' or 'helene_2024').
+        iso_time: ISO-8601 UTC timestamp (default: '2025-10-28T17:00:00' for
+            Hurricane Melissa's Jamaica landfall).
+        latitude: Storm center latitude in decimal degrees (default: 18.1).
+        longitude: Storm center longitude in decimal degrees (default: -78.0).
+        storm_name: Display label for chart titles (default: Hurricane Melissa).
         patch_size: Width and height in pixels.
         scale_meters: Spatial resolution in meters per pixel.
 
     Returns:
-        Dictionary with 'precipitation', 'goes_rgb', 'goes_ir', 'elevation',
+        Dictionary with 'precipitation', 'goes_rgb', 'elevation',
         'storm_name', 'iso_time', 'goes_satellite', and 'source'.
     """
+    normalized_iso = iso_time.rstrip("Z")
     cache_key = (
         "storm",
         project_id,
-        storm_preset,
+        normalized_iso,
+        round(latitude, 4),
+        round(longitude, 4),
+        storm_name,
         patch_size,
         scale_meters,
     )
@@ -343,35 +378,17 @@ def get_storm_patch_arrays(
         cached["source"] = f"{cached['source']} (in-memory cache)"
         return cached
 
-    if storm_preset == "helene_2024":
-        iso_time = "2024-09-27T06:00:00"
-        longitude, latitude = -82.55, 35.60
-        storm_name = "Hurricane Helene (Southern Appalachians Orographic Deluge)"
+    if longitude < GOES_WEST_LONGITUDE_CUTOVER:
+        goes_collection_id = "NOAA/GOES/18/MCMIPF"
+    elif normalized_iso >= GOES19_CUTOVER_ISO:
+        goes_collection_id = "NOAA/GOES/19/MCMIPF"
     else:
-        iso_time = "2025-10-28T17:00:00"
-        longitude, latitude = -78.0, 18.1
-        storm_name = "Hurricane Melissa (Category 5 Jamaica Landfall)"
-
-    goes_collection_id = (
-        "NOAA/GOES/19/MCMIPF"
-        if iso_time >= GOES19_CUTOVER_ISO
-        else "NOAA/GOES/16/MCMIPF"
-    )
+        goes_collection_id = "NOAA/GOES/16/MCMIPF"
     deg_per_px = max(scale_meters / 111000.0, 0.018)
 
     try:
-        credentials, _ = google.auth.default(
-            scopes=[
-                "https://www.googleapis.com/auth/cloud-platform",
-                "https://www.googleapis.com/auth/earthengine",
-            ]
-        )
-        ee.Initialize(
-            credentials=credentials.with_quota_project(None),
-            project=project_id,
-            opt_url="https://earthengine-highvolume.googleapis.com",
-        )
-        target_dt = datetime.fromisoformat(iso_time)
+        _initialize_earth_engine(project_id)
+        target_dt = datetime.fromisoformat(normalized_iso)
         window_start = (target_dt - timedelta(hours=1)).isoformat()
         window_end = (target_dt + timedelta(hours=1)).isoformat()
         point_geom = ee.Geometry.Point([longitude, latitude])
@@ -388,7 +405,7 @@ def get_storm_patch_arrays(
             ee.ImageCollection(goes_collection_id)
             .filterBounds(point_geom)
             .filterDate(window_start, window_end)
-            .select(["CMI_C01", "CMI_C02", "CMI_C03", "CMI_C13"])
+            .select(["CMI_C01", "CMI_C02", "CMI_C03"])
             .first()
             .unmask(0)
             .float()
@@ -398,41 +415,24 @@ def get_storm_patch_arrays(
         )
         composite_image = ee.Image([gpm_image, goes_image, elevation_image])
 
-        translate_x = longitude - (patch_size / 2.0) * deg_per_px
-        translate_y = latitude + (patch_size / 2.0) * deg_per_px
-        raw_bytes = ee.data.computePixels(
-            {
-                "expression": composite_image,
-                "fileFormat": "NPY",
-                "grid": {
-                    "dimensions": {"width": patch_size, "height": patch_size},
-                    "affineTransform": {
-                        "scaleX": deg_per_px,
-                        "shearX": 0,
-                        "translateX": translate_x,
-                        "shearY": 0,
-                        "scaleY": -deg_per_px,
-                        "translateY": translate_y,
-                    },
-                    "crsCode": "EPSG:4326",
-                },
-            }
+        arr = _compute_ee_patch_array(
+            composite_image=composite_image,
+            center_lon=longitude,
+            center_lat=latitude,
+            patch_size=patch_size,
+            deg_per_px=deg_per_px,
         )
-        structured_patch = np.load(io.BytesIO(raw_bytes), allow_pickle=True)
-        arr = structured_to_unstructured(structured_patch)
         cmi_rgb = np.stack([arr[:, :, 2], arr[:, :, 3], arr[:, :, 1]], axis=-1)
         cmi_max = max(float(np.percentile(cmi_rgb, 99)), 1.0)
         goes_rgb = (np.clip(cmi_rgb / cmi_max, 0.0, 1.0) * 255.0).astype(
             np.uint8
         )
-        goes_ir_k = arr[:, :, 4].astype(np.float32) * 0.06145332 + 89.620003
         result = {
             "precipitation": arr[:, :, 0].astype(np.float32),
             "goes_rgb": goes_rgb,
-            "goes_ir": goes_ir_k,
-            "elevation": arr[:, :, 5].astype(np.float32),
+            "elevation": arr[:, :, -1].astype(np.float32),
             "storm_name": storm_name,
-            "iso_time": f"{iso_time}Z",
+            "iso_time": f"{normalized_iso}Z",
             "goes_satellite": goes_collection_id,
             "source": "Earth Engine Live API",
         }
@@ -440,8 +440,11 @@ def get_storm_patch_arrays(
         return result
     except Exception:
         fallback = build_synthetic_storm_patch(
-            storm_preset=storm_preset, patch_size=patch_size
+            storm_preset="melissa_2025", patch_size=patch_size
         )
+        fallback["storm_name"] = storm_name
+        fallback["iso_time"] = f"{normalized_iso}Z"
+        fallback["goes_satellite"] = goes_collection_id
         fallback["source"] = (
             "Pre-extracted Earth Engine reference patch "
             "(enable earthengine.googleapis.com for live queries)"
@@ -471,9 +474,10 @@ def get_local_weather_forecast(
         patch_size: Pixel width and height for the satellite and DEM patch.
 
     Returns:
-        Dictionary containing 'patch_data' (for 3-panel visualization and
+        Dictionary containing 'patch_data' (for 4-panel visualization and
         multimodal Gemini input), 'forecast_rows' (72-hour GFS forecast list),
-        and 'forecast_context' (formatted summary string for analyze_storm_risk).
+        'microclimate_rows' (5-city Bay Area RTMA + GFS comparison), and
+        'forecast_context' (formatted summary string for analyze_storm_risk).
     """
     ten_min_bucket = int(time.time() // 600)
     cache_key = (
@@ -507,17 +511,7 @@ def get_local_weather_forecast(
     lead_hours_list = [6, 12, 18, 24, 36, 48, 72]
 
     try:
-        credentials, _ = google.auth.default(
-            scopes=[
-                "https://www.googleapis.com/auth/cloud-platform",
-                "https://www.googleapis.com/auth/earthengine",
-            ]
-        )
-        ee.Initialize(
-            credentials=credentials.with_quota_project(None),
-            project=project_id,
-            opt_url="https://earthengine-highvolume.googleapis.com",
-        )
+        _initialize_earth_engine(project_id)
         now_utc = datetime.now(timezone.utc)
         goes_start = (now_utc - timedelta(hours=3)).strftime("%Y-%m-%dT%H:%M:%SZ")
         gfs_start = (now_utc - timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -556,32 +550,17 @@ def get_local_weather_forecast(
         )
         composite_image = ee.Image([gfs_precip_img, goes_image, elevation_image])
 
-        translate_x = patch_center_lon - (patch_size / 2.0) * deg_per_px
-        translate_y = patch_center_lat + (patch_size / 2.0) * deg_per_px
-        raw_bytes = ee.data.computePixels(
-            {
-                "expression": composite_image,
-                "fileFormat": "NPY",
-                "grid": {
-                    "dimensions": {"width": patch_size, "height": patch_size},
-                    "affineTransform": {
-                        "scaleX": deg_per_px,
-                        "shearX": 0,
-                        "translateX": translate_x,
-                        "shearY": 0,
-                        "scaleY": -deg_per_px,
-                        "translateY": translate_y,
-                    },
-                    "crsCode": "EPSG:4326",
-                },
-            }
+        arr = _compute_ee_patch_array(
+            composite_image=composite_image,
+            center_lon=patch_center_lon,
+            center_lat=patch_center_lat,
+            patch_size=patch_size,
+            deg_per_px=deg_per_px,
         )
-        structured_patch = np.load(io.BytesIO(raw_bytes), allow_pickle=True)
-        arr = structured_to_unstructured(structured_patch)
 
         # Build visible/IR false-color RGB that works both day and night
         cmi_vis = np.stack([arr[:, :, 2], arr[:, :, 3], arr[:, :, 1]], axis=-1)
-        goes_ir_k = arr[:, :, 4].astype(np.float32) * 0.06145332 + 89.620003
+        goes_ir_k = arr[:, :, 4].astype(np.float32)
         vis_p99 = float(np.percentile(cmi_vis, 99))
         if vis_p99 > 50.0:
             goes_rgb = (np.clip(cmi_vis / vis_p99, 0.0, 1.0) * 255.0).astype(
@@ -614,10 +593,7 @@ def get_local_weather_forecast(
                 ]
             ).reduceRegion(ee.Reducer.first(), point_geom, 25000)
             return ee.Feature(None, vals).set(
-                {
-                    "forecast_hours": img.get("forecast_hours"),
-                    "forecast_time": img.get("forecast_time"),
-                }
+                {"forecast_hours": img.get("forecast_hours")}
             )
 
         gfs_info = run_gfs.map(_sample_gfs_step).sort("forecast_hours").getInfo()
@@ -625,10 +601,6 @@ def get_local_weather_forecast(
         for feat in gfs_info.get("features", []):
             props = feat.get("properties", {})
             lead_hr = int(props.get("forecast_hours", 0))
-            fc_ms = float(props.get("forecast_time", 0))
-            fc_iso = datetime.fromtimestamp(
-                fc_ms / 1000.0, tz=timezone.utc
-            ).strftime("%Y-%m-%dT%H:%M:%SZ")
             temp_c = float(props.get("temperature_2m_above_ground") or 15.0)
             u_wind = float(props.get("u_component_of_wind_10m_above_ground") or 0.0)
             v_wind = float(props.get("v_component_of_wind_10m_above_ground") or 0.0)
@@ -636,7 +608,6 @@ def get_local_weather_forecast(
             forecast_rows.append(
                 {
                     "lead_hours": lead_hr,
-                    "forecast_time_utc": fc_iso,
                     "temp_c": round(temp_c, 1),
                     "temp_f": round(temp_c * 9.0 / 5.0 + 32.0, 1),
                     "relative_humidity_pct": round(
@@ -672,9 +643,8 @@ def get_local_weather_forecast(
                 [
                     "temperature_2m_above_ground",
                     "relative_humidity_2m_above_ground",
-                    "total_precipitation_surface",
                 ],
-                ["gfs24_temp_c", "gfs24_rh_pct", "gfs24_precip_mm"],
+                ["gfs24_temp_c", "gfs24_rh_pct"],
             )
             .resample("bilinear")
         )
@@ -714,16 +684,12 @@ def get_local_weather_forecast(
                     "forecast_24h_rh_pct": round(
                         float(p.get("gfs24_rh_pct") or 60.0), 0
                     ),
-                    "forecast_24h_precip_mm": round(
-                        float(p.get("gfs24_precip_mm") or 0.0), 2
-                    ),
                 }
             )
 
         patch_data = {
             "precipitation": arr[:, :, 0].astype(np.float32),
             "goes_rgb": goes_rgb,
-            "goes_ir": goes_ir_k,
             "elevation": arr[:, :, 5].astype(np.float32),
             "storm_name": f"{region_name} — Live Current Forecast",
             "iso_time": now_str,
@@ -743,15 +709,9 @@ def get_local_weather_forecast(
             "Pre-extracted Bay Area reference patch "
             "(enable earthengine.googleapis.com for live queries)"
         )
-        base_dt = datetime.now(timezone.utc).replace(
-            minute=0, second=0, microsecond=0
-        )
         forecast_rows = [
             {
                 "lead_hours": hr,
-                "forecast_time_utc": (base_dt + timedelta(hours=hr)).strftime(
-                    "%Y-%m-%dT%H:%M:%SZ"
-                ),
                 "temp_c": round(15.5 + 2.5 * math.sin(hr / 6.0), 1),
                 "temp_f": round((15.5 + 2.5 * math.sin(hr / 6.0)) * 9 / 5 + 32, 1),
                 "relative_humidity_pct": 72.0,
@@ -779,7 +739,6 @@ def get_local_weather_forecast(
                 "forecast_24h_temp_c": f24,
                 "forecast_24h_temp_f": round(f24 * 9.0 / 5.0 + 32.0, 1),
                 "forecast_24h_rh_pct": rh,
-                "forecast_24h_precip_mm": 0.0,
             }
             for city, zone, elev, c_temp, wind, f24, rh in default_micro
         ]
@@ -825,8 +784,6 @@ def get_local_weather_forecast(
 def get_weathernext_ensemble_forecast(
     project_id: str,
     region_name: str = "Hurricane Melissa (Jamaica Landfall)",
-    latitude: float = 18.1,
-    longitude: float = -78.0,
 ) -> dict[str, Any]:
     """Queries live WeatherNext 3 metadata and 64-member ensemble percentiles.
 
@@ -838,20 +795,17 @@ def get_weathernext_ensemble_forecast(
     Args:
         project_id: Google Cloud project identifier.
         region_name: Human-readable label for the forecast target.
-        latitude: Target latitude in decimal degrees.
-        longitude: Target longitude in decimal degrees.
 
     Returns:
-        Dictionary with 'collection_id', 'latest_asset_id', 'latest_init_utc',
-        'total_bands', 'precip_bands', 'ensemble_rows', and 'source'.
+        Dictionary with 'region_name', 'collection_id', 'latest_asset_id',
+        'latest_init_utc', 'total_bands', 'precip_bands', 'ensemble_rows', and
+        'source'.
     """
     thirty_min_bucket = int(time.time() // 1800)
     cache_key = (
         "weathernext",
         project_id,
         region_name,
-        round(latitude, 4),
-        round(longitude, 4),
         thirty_min_bucket,
     )
     if cache_key in _EE_CACHE:
@@ -880,17 +834,7 @@ def get_weathernext_ensemble_forecast(
     )
 
     try:
-        credentials, _ = google.auth.default(
-            scopes=[
-                "https://www.googleapis.com/auth/cloud-platform",
-                "https://www.googleapis.com/auth/earthengine",
-            ]
-        )
-        ee.Initialize(
-            credentials=credentials.with_quota_project(None),
-            project=project_id,
-            opt_url="https://earthengine-highvolume.googleapis.com",
-        )
+        _initialize_earth_engine(project_id)
         now_utc = datetime.now(timezone.utc)
         start_str = (now_utc - timedelta(hours=36)).strftime("%Y-%m-%dT%H:%M:%SZ")
         end_str = now_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -939,8 +883,6 @@ def get_weathernext_ensemble_forecast(
 
     result = {
         "region_name": region_name,
-        "latitude": latitude,
-        "longitude": longitude,
         "collection_id": collection_id,
         "latest_asset_id": latest_asset_id,
         "latest_init_utc": latest_init_utc,
@@ -954,11 +896,8 @@ def get_weathernext_ensemble_forecast(
     return result
 
 
-project_id_arg = os.environ.get("GOOGLE_CLOUD_PROJECT") or (
-    sys.argv[1] if len(sys.argv) > 1 else None
-)
-if not project_id_arg:
-    project_id_arg = "example-project-id"
-
 if __name__ == "__main__":
+    project_id_arg = os.environ.get("GOOGLE_CLOUD_PROJECT") or (
+        sys.argv[1] if len(sys.argv) > 1 else "example-project-id"
+    )
     fetch_weather_patch(project_id_arg)

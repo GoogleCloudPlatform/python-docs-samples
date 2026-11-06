@@ -69,26 +69,28 @@ def test_fetch_weather_patch_success(capsys: pytest.CaptureFixture[str]) -> None
     fake_creds.with_quota_project.return_value = fake_creds
 
     with (
-        patch(
-            "fetch_weather_patch.google.auth.default",
+        patch.object(
+            fetch_weather_patch.google.auth,
+            "default",
             return_value=(fake_creds, "test-proj"),
         ),
-        patch("fetch_weather_patch.ee.Initialize"),
-        patch("fetch_weather_patch.ee.ImageCollection"),
-        patch("fetch_weather_patch.ee.Image"),
-        patch("fetch_weather_patch.ee.Geometry.Point"),
-        patch("fetch_weather_patch.ee.data.computePixels", return_value=npy_bytes),
+        patch.object(fetch_weather_patch.ee, "Initialize"),
+        patch.object(fetch_weather_patch.ee, "ImageCollection"),
+        patch.object(fetch_weather_patch.ee, "Image"),
+        patch.object(fetch_weather_patch.ee.Geometry, "Point"),
+        patch.object(
+            fetch_weather_patch.ee.data, "computePixels", return_value=npy_bytes
+        ),
     ):
         fetch_weather_patch.fetch_weather_patch("test-project-id")
 
     captured = capsys.readouterr()
-    expected_prefix = (
-        "Resource ID: NASA/GPM_L3/IMERG_V07+NOAA/GOES/19/MCMIPF+MERIT/DEM/v1_0_3"
-    )
-    assert expected_prefix in captured.out
     assert "Display Name: Hurricane Melissa (Jamaica Landfall)" in captured.out
+    assert "GOES Collection: NOAA/GOES/19/MCMIPF" in captured.out
     assert "Max Elevation (m): 1850.0" in captured.out
     assert "Peak Precipitation (mm/hr): 42.50" in captured.out
+    assert "test-project-id" not in captured.out
+    assert "Resource ID:" not in captured.out
     assert captured.err == ""
 
 
@@ -97,12 +99,14 @@ def test_fetch_weather_patch_error(capsys: pytest.CaptureFixture[str]) -> None:
     fake_creds.with_quota_project.return_value = fake_creds
 
     with (
-        patch(
-            "fetch_weather_patch.google.auth.default",
+        patch.object(
+            fetch_weather_patch.google.auth,
+            "default",
             return_value=(fake_creds, "test-proj"),
         ),
-        patch(
-            "fetch_weather_patch.ee.Initialize",
+        patch.object(
+            fetch_weather_patch.ee,
+            "Initialize",
             side_effect=ee.EEException("Earth Engine API not enabled"),
         ),
     ):
@@ -110,30 +114,44 @@ def test_fetch_weather_patch_error(capsys: pytest.CaptureFixture[str]) -> None:
 
     captured = capsys.readouterr()
     assert "error: failed to compute Earth Engine weather patch" in captured.err
-    assert "test-project-id" in captured.err
+    assert "Hurricane Melissa (Jamaica Landfall)" in captured.err
+    assert "test-project-id" not in captured.err
+    assert "Resource ID:" not in captured.err
 
 
-def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
+def test_build_synthetic_storm_patch_and_visualize() -> None:
     melissa = fetch_weather_patch.build_synthetic_storm_patch(
         "melissa_2025", patch_size=32
-    )
-    helene = fetch_weather_patch.build_synthetic_storm_patch(
-        "helene_2024", patch_size=32
     )
     sf_bay = fetch_weather_patch.build_synthetic_storm_patch(
         "sf_bay_area", patch_size=32
     )
 
     assert melissa["goes_satellite"] == "NOAA/GOES/19/MCMIPF"
-    assert helene["goes_satellite"] == "NOAA/GOES/16/MCMIPF"
     assert sf_bay["goes_satellite"] == "NOAA/GOES/18/MCMIPF"
     assert melissa["precipitation"].shape == (32, 32)
     assert melissa["goes_rgb"].shape == (32, 32, 3)
 
-    with patch(
-        "fetch_weather_patch.ee.Initialize",
-        side_effect=ee.EEException("Offline test"),
+    with (
+        patch.object(
+            fetch_weather_patch.google.auth,
+            "default",
+            return_value=(MagicMock(), "offline-test-project"),
+        ),
+        patch.object(
+            fetch_weather_patch.ee,
+            "Initialize",
+            side_effect=ee.EEException("Offline test"),
+        ),
     ):
+        pre_2025_storm = fetch_weather_patch.get_storm_patch_arrays(
+            project_id="offline-test-project",
+            iso_time="2024-09-27T06:00:00",
+            latitude=35.60,
+            longitude=-82.55,
+            storm_name="Custom Historical Storm",
+            patch_size=16,
+        )
         local_fc = fetch_weather_patch.get_local_weather_forecast(
             project_id="offline-test-project",
             region_name="San Francisco Bay Area, CA",
@@ -144,6 +162,8 @@ def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
         wn_fc = fetch_weather_patch.get_weathernext_ensemble_forecast(
             project_id="offline-test-project",
         )
+    assert pre_2025_storm["goes_satellite"] == "NOAA/GOES/16/MCMIPF"
+    assert pre_2025_storm["storm_name"] == "Custom Historical Storm"
     assert (
         local_fc["patch_data"]["goes_satellite"] == "NOAA/GOES/18/MCMIPF"
     )
@@ -172,23 +192,24 @@ def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
     fake_creds = MagicMock()
     fake_creds.with_quota_project.return_value = fake_creds
     with (
-        patch(
-            "fetch_weather_patch.google.auth.default",
+        patch.object(
+            fetch_weather_patch.google.auth,
+            "default",
             return_value=(fake_creds, "test-proj"),
         ),
-        patch("fetch_weather_patch.ee.Initialize"),
-        patch("fetch_weather_patch.ee.ImageCollection"),
-        patch("fetch_weather_patch.ee.Image"),
-        patch("fetch_weather_patch.ee.Geometry.Point"),
-        patch(
-            "fetch_weather_patch.ee.data.computePixels", return_value=npy_bytes
+        patch.object(fetch_weather_patch.ee, "Initialize"),
+        patch.object(fetch_weather_patch.ee, "ImageCollection"),
+        patch.object(fetch_weather_patch.ee, "Image"),
+        patch.object(fetch_weather_patch.ee.Geometry, "Point"),
+        patch.object(
+            fetch_weather_patch.ee.data, "computePixels", return_value=npy_bytes
         ) as mock_compute,
     ):
         first = fetch_weather_patch.get_storm_patch_arrays(
-            "cached-proj", "melissa_2025", patch_size=16
+            "cached-proj", patch_size=16
         )
         second = fetch_weather_patch.get_storm_patch_arrays(
-            "cached-proj", "melissa_2025", patch_size=16
+            "cached-proj", patch_size=16
         )
     assert mock_compute.call_count == 1
     assert first["source"] == "Earth Engine Live API"
@@ -200,7 +221,6 @@ def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
 
     png_bytes = visualize.export_multiband_strip_png_bytes(melissa)
     assert png_bytes.startswith(b"\x89PNG")
-    assert visualize.export_composite_png_bytes(melissa) == png_bytes
 
     hist_rows = [
         {
@@ -234,9 +254,12 @@ def test_build_synthetic_storm_patch_and_visualize(tmp_path: Path) -> None:
 
 def test_load_weather_time_series_success(capsys: pytest.CaptureFixture[str]) -> None:
     with (
-        patch("load_weather_time_series.bigquery.Client") as mock_bq_cls,
-        patch(
-            "load_weather_time_series.beam.io.WriteToBigQuery",
+        patch.object(
+            load_weather_time_series.bigquery, "Client", autospec=True
+        ) as mock_bq_cls,
+        patch.object(
+            load_weather_time_series.beam.io,
+            "WriteToBigQuery",
             return_value=load_weather_time_series.beam.Map(lambda row: row),
         ),
     ):
@@ -251,13 +274,12 @@ def test_load_weather_time_series_success(capsys: pytest.CaptureFixture[str]) ->
         "test-project-id.weather_forecasting", exists_ok=True
     )
     captured = capsys.readouterr()
-    expected_id = (
-        "Resource ID: projects/test-project-id/datasets/weather_forecasting/"
-        "tables/storm_hourly_observations"
-    )
-    assert expected_id in captured.out
+    assert "Display Name: storm_hourly_observations" in captured.out
+    assert "Dataset ID: weather_forecasting" in captured.out
     assert "Loaded Hours: 36" in captured.out
     assert "Storm Name: Hurricane Melissa" in captured.out
+    assert "test-project-id" not in captured.out
+    assert "Resource ID:" not in captured.out
     assert captured.err == ""
 
 
@@ -280,7 +302,9 @@ def test_forecast_precipitation_success(capsys: pytest.CaptureFixture[str]) -> N
     mock_job.job_id = "test-job-123"
     mock_job.result.return_value = fake_rows
 
-    with patch("forecast_precipitation.bigquery.Client") as mock_bq_cls:
+    with patch.object(
+        forecast_precipitation.bigquery, "Client", autospec=True
+    ) as mock_bq_cls:
         mock_bq_cls.return_value.query.return_value = mock_job
         forecast_precipitation.forecast_precipitation(
             project_id="test-project-id",
@@ -292,17 +316,18 @@ def test_forecast_precipitation_success(capsys: pytest.CaptureFixture[str]) -> N
     assert "AI.FORECAST" in query_str
     assert "TimesFM 2.5" in query_str
     captured = capsys.readouterr()
-    expected_ref = (
-        "Resource ID: test-project-id.weather_forecasting.storm_hourly_observations"
-    )
-    assert expected_ref in captured.out
+    assert "Display Name: storm_hourly_observations" in captured.out
     assert "Forecast Horizon Hours: 2" in captured.out
     assert "Peak Forecasted Precipitation (mm/hr): 36.40" in captured.out
+    assert "test-project-id" not in captured.out
+    assert "Resource ID:" not in captured.out
     assert captured.err == ""
 
 
 def test_forecast_precipitation_error(capsys: pytest.CaptureFixture[str]) -> None:
-    with patch("forecast_precipitation.bigquery.Client") as mock_bq_cls:
+    with patch.object(
+        forecast_precipitation.bigquery, "Client", autospec=True
+    ) as mock_bq_cls:
         mock_bq_cls.return_value.query.side_effect = exceptions.NotFound(
             "Table not found"
         )
@@ -314,17 +339,19 @@ def test_forecast_precipitation_error(capsys: pytest.CaptureFixture[str]) -> Non
 
     captured = capsys.readouterr()
     assert "error: failed to run AI.FORECAST" in captured.err
-    assert "test-project-id.weather_forecasting.missing_table" in captured.err
+    assert "missing_table" in captured.err
+    assert "test-project-id" not in captured.err
+    assert "Resource ID:" not in captured.err
 
 
 def test_analyze_storm_risk_success(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
+ ) -> None:
     patch_data = fetch_weather_patch.build_synthetic_storm_patch(
         "melissa_2025", patch_size=16
     )
     img_path = tmp_path / "composite.png"
-    img_path.write_bytes(visualize.export_composite_png_bytes(patch_data))
+    img_path.write_bytes(visualize.export_multiband_strip_png_bytes(patch_data))
 
     fake_assessment = analyze_storm_risk.StormRiskAssessment(
         storm_summary="Category 5 eyewall rainbands impacting southwestern Jamaica.",
@@ -339,7 +366,9 @@ def test_analyze_storm_risk_success(
     mock_response = MagicMock()
     mock_response.text = fake_assessment.model_dump_json()
 
-    with patch("analyze_storm_risk.genai.Client") as mock_genai_cls:
+    with patch.object(
+        analyze_storm_risk.genai, "Client", autospec=True
+    ) as mock_genai_cls:
         mock_client = mock_genai_cls.return_value
         mock_client.models.generate_content.return_value = mock_response
         analyze_storm_risk.analyze_storm_risk("test-project-id", str(img_path))
@@ -351,9 +380,10 @@ def test_analyze_storm_risk_success(
     assert call_kwargs["model"] == "gemini-3.8-flash"
 
     captured = capsys.readouterr()
-    assert f"Resource ID: {img_path}" in captured.out
     assert "Display Name: EXTREME" in captured.out
     assert "Peak Expected Rainfall (mm/hr): 38.4" in captured.out
+    assert "test-project-id" not in captured.out
+    assert "Resource ID:" not in captured.out
     assert captured.err == ""
 
 
@@ -363,7 +393,9 @@ def test_analyze_storm_risk_api_error(
     img_path = tmp_path / "composite.png"
     img_path.write_bytes(b"\x89PNG\r\n\x1a\n")
 
-    with patch("analyze_storm_risk.genai.Client") as mock_genai_cls:
+    with patch.object(
+        analyze_storm_risk.genai, "Client", autospec=True
+    ) as mock_genai_cls:
         mock_client = mock_genai_cls.return_value
         mock_client.models.generate_content.side_effect = errors.APIError(
             code=429, response_json={"error": {"message": "Quota exceeded"}}
@@ -373,4 +405,5 @@ def test_analyze_storm_risk_api_error(
     captured = capsys.readouterr()
     assert "error: failed to analyze storm composite" in captured.err
     assert "location 'global'" in captured.err
-    assert "test-project-id" in captured.err
+    assert "test-project-id" not in captured.err
+    assert "Resource ID:" not in captured.err

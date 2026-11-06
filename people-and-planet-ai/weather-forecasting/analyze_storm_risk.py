@@ -70,9 +70,10 @@ def analyze_storm_risk(
     )
     prompt = (
         f"{forecast_context} "
-        "Examine the 3-panel satellite composite (left: GOES cloud & moisture, "
-        "center: NASA GPM IMERG V07 precipitation rate in mm/hr, right: MERIT DEM "
-        "terrain elevation in meters) alongside the TimesFM precipitation forecast. "
+        "Examine the 4-panel satellite composite (1: GOES cloud & moisture, "
+        "2: NASA GPM IMERG V07 precipitation rate in mm/hr, 3: MERIT DEM "
+        "terrain elevation in meters, 4: rainbands overlaid on terrain) "
+        "alongside the TimesFM precipitation forecast. "
         "Provide a structured flood risk assessment, evaluate how steep mountain "
         "topography amplifies runoff and flash-flooding, and list concrete "
         "emergency response actions."
@@ -95,12 +96,11 @@ def analyze_storm_risk(
     except errors.APIError as err:
         print(
             f"error: failed to analyze storm composite '{composite_image_path}' "
-            f"in location '{location}' for project '{project_id}': {err.message}",
+            f"in location '{location}': {err.message}",
             file=sys.stderr,
         )
     else:
         assessment = StormRiskAssessment.model_validate_json(response.text)
-        print(f"Resource ID: {composite_image_path}")
         print(f"Display Name: {assessment.flood_risk_level}")
         print(
             "Orographic Amplification Risk: "
@@ -118,17 +118,11 @@ def analyze_storm_risk(
 # [END googlegenaisdk_weather_analyze_storm_risk]
 
 
-project_id_arg = os.environ.get("GOOGLE_CLOUD_PROJECT") or (
-    sys.argv[1] if len(sys.argv) > 1 else None
-)
-if not project_id_arg:
-    project_id_arg = "example-project-id"
-
-image_path_arg = os.environ.get("STORM_COMPOSITE_IMAGE") or (
-    sys.argv[2] if len(sys.argv) > 2 else None
-)
-if not image_path_arg:
-    image_path_arg = "example-storm-composite.png"
-
 if __name__ == "__main__":
+    project_id_arg = os.environ.get("GOOGLE_CLOUD_PROJECT") or (
+        sys.argv[1] if len(sys.argv) > 1 else "example-project-id"
+    )
+    image_path_arg = os.environ.get("STORM_COMPOSITE_IMAGE") or (
+        sys.argv[2] if len(sys.argv) > 2 else "example-storm-composite.png"
+    )
     analyze_storm_risk(project_id_arg, image_path_arg)

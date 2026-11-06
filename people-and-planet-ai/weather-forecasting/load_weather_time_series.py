@@ -17,16 +17,71 @@
 # [START dataflow_weather_load_time_series]
 from __future__ import annotations
 
+from collections.abc import Iterable
 from datetime import datetime, timedelta
 import logging
 import math
 import sys
+from typing import Any
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 
 from google.api_core import exceptions
 from google.cloud import bigquery
+
+
+def compute_melissa_hourly_rainfall(hour_offset: int) -> float:
+    """Computes the Hurricane Melissa rainfall rate (mm/hr) at `hour_offset`.
+
+    Models outer spiral rainbands, the Category 5 eyewall peak at hour `+35`
+    (`2025-10-28 17:00 UTC`), and post-landfall orographic lift over Jamaica's
+    Blue Mountains (`+36..+41`).
+
+    Args:
+        hour_offset: Integer hours elapsed since `2025-10-27 06:00 UTC`.
+
+    Returns:
+        Hourly precipitation rate in mm/hr rounded to 2 decimal places.
+    """
+    eyewall_pulse = 44.5 * math.exp(-(((hour_offset - 35.0) / 4.2) ** 2))
+    outer_bands = 6.5 * math.exp(-(((hour_offset - 22.0) / 10.0) ** 2))
+    orographic_tail = 14.0 * math.exp(-(((hour_offset - 39.0) / 6.5) ** 2))
+    diurnal_ripple = 1.4 * math.sin(hour_offset * 0.65)
+    return max(
+        0.2,
+        round(
+            1.2 + outer_bands + eyewall_pulse + orographic_tail + diurnal_ripple,
+            2,
+        ),
+    )
+
+
+class _BuildHourlyObservationFn(beam.DoFn):
+    """Transforms an hourly storm offset into a BigQuery observation record.
+
+    Models outer rainbands, eyewall landfall peak at hour +35 (17:00 UTC Oct 28),
+    and post-landfall orographic rainfall over Jamaica's Blue Mountains so
+    each hourly window is computed in parallel across Apache Beam workers.
+    """
+
+    def process(self, hour_offset: int) -> Iterable[dict[str, Any]]:
+        base_time = datetime(2025, 10, 27, 6, 0, 0)
+        obs_time = base_time + timedelta(hours=hour_offset)
+        precip_mm_hr = compute_melissa_hourly_rainfall(hour_offset)
+        cloud_moisture_index = round(
+            min(1.0, 0.35 + 0.62 * (precip_mm_hr / 52.0)), 3
+        )
+        yield {
+            "observation_time": obs_time.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "storm_name": "Hurricane Melissa",
+            "location_name": "Jamaica (18.1N, 78.0W)",
+            "latitude": 18.1,
+            "longitude": -78.0,
+            "precipitation_mm_hr": precip_mm_hr,
+            "cloud_moisture_index": cloud_moisture_index,
+            "elevation_m": 1120.0,
+        }
 
 
 def load_weather_time_series(
@@ -50,40 +105,7 @@ def load_weather_time_series(
     bq_client = bigquery.Client(project=project_id)
     dataset_ref = f"{project_id}.{dataset_id}"
     table_spec = f"{project_id}:{dataset_id}.{table_id}"
-    resource_id = f"projects/{project_id}/datasets/{dataset_id}/tables/{table_id}"
-    base_time = datetime(2025, 10, 27, 6, 0, 0)
-
-    # Models outer rainbands, eyewall landfall peak at hour +35 (17:00 UTC Oct 28),
-    # and post-landfall orographic rainfall over Jamaica's Blue Mountains.
-    hourly_records = []
-    for hour_offset in range(36):
-        obs_time = base_time + timedelta(hours=hour_offset)
-        eyewall_pulse = 44.5 * math.exp(-(((hour_offset - 35.0) / 4.2) ** 2))
-        outer_bands = 6.5 * math.exp(-(((hour_offset - 22.0) / 10.0) ** 2))
-        orographic_tail = 14.0 * math.exp(-(((hour_offset - 39.0) / 6.5) ** 2))
-        diurnal_ripple = 1.4 * math.sin(hour_offset * 0.65)
-        precip_mm_hr = max(
-            0.2,
-            round(
-                1.2 + outer_bands + eyewall_pulse + orographic_tail + diurnal_ripple,
-                2,
-            ),
-        )
-        cloud_moisture_index = round(
-            min(1.0, 0.35 + 0.62 * (precip_mm_hr / 52.0)), 3
-        )
-        hourly_records.append(
-            {
-                "observation_time": obs_time.strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "storm_name": "Hurricane Melissa",
-                "location_name": "Jamaica (18.1N, 78.0W)",
-                "latitude": 18.1,
-                "longitude": -78.0,
-                "precipitation_mm_hr": precip_mm_hr,
-                "cloud_moisture_index": cloud_moisture_index,
-                "elevation_m": 1120.0,
-            }
-        )
+    hour_offsets = list(range(36))
 
     table_schema = (
         "observation_time:TIMESTAMP,storm_name:STRING,location_name:STRING,"
@@ -94,11 +116,13 @@ def load_weather_time_series(
 
     try:
         bq_client.create_dataset(dataset_ref, exists_ok=True)
-        print(f"Running Apache Beam pipeline to populate {table_spec}...")
+        print(f"Running Apache Beam pipeline to populate {table_id}...")
         with beam.Pipeline(options=pipeline_options) as pipeline:
             (
                 pipeline
-                | "CreateHourlyRecords" >> beam.Create(hourly_records)
+                | "SeedHourOffsets" >> beam.Create(hour_offsets)
+                | "BuildHourlyRecords"
+                >> beam.ParDo(_BuildHourlyObservationFn())
                 | "WriteToBigQuery"
                 >> beam.io.WriteToBigQuery(
                     table=table_spec,
@@ -110,15 +134,14 @@ def load_weather_time_series(
             )
     except (exceptions.GoogleAPICallError, RuntimeError) as err:
         print(
-            f"error: failed to load weather time series into table '{table_spec}' "
-            f"for project '{project_id}': {err}",
+            f"error: failed to load weather time series into table "
+            f"'{table_id}': {err}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {resource_id}")
         print(f"Display Name: {table_id}")
         print(f"Dataset ID: {dataset_id}")
-        print(f"Loaded Hours: {len(hourly_records)}")
+        print(f"Loaded Hours: {len(hour_offsets)}")
         print("Storm Name: Hurricane Melissa")
 
 

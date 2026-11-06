@@ -23,10 +23,37 @@ import io
 import math
 from typing import Any
 
+import load_weather_time_series
 import numpy as np
 from PIL import Image
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
+# NASA GPM IMERG rainfall radar color scale (0.0 to 45.0+ mm/hr).
+_GPM_PRECIPITATION_PALETTE: list[str] = [
+    "0a1832",  # Very dark navy (0 mm/hr)
+    "0050d5",  # Deep blue
+    "00b4ff",  # Cyan blue
+    "33db80",  # Emerald green
+    "9beb4a",  # Lime green
+    "ffeb00",  # Yellow
+    "ffb300",  # Amber
+    "ff5000",  # Orange red
+    "d60000",  # Crimson
+    "7a0068",  # Extreme magenta (>45 mm/hr)
+]
+
+# Hypsometric terrain relief color scale (0 m sea level to 2,200+ m alpine peaks).
+_MERIT_DEM_PALETTE: list[str] = [
+    "0b2545",  # Ocean / sea level (0m)
+    "2d6a4f",  # Coastal lowland green
+    "74c69d",  # Foothills green
+    "d9ed92",  # Upland yellow-green
+    "ddb892",  # Highland tan
+    "9c6644",  # Mountain brown
+    "7f4f24",  # High ridge sienna
+    "f8f9fa",  # Alpine peak (>2000m)
+]
 
 
 def render_palette(
@@ -37,11 +64,16 @@ def render_palette(
 ) -> np.ndarray:
     """Renders a 2D numeric NumPy array as an RGB uint8 image using a hex palette.
 
+    Normalizes raw physical sensor values (such as rainfall rate in mm/hr or
+    terrain elevation in meters) into a 256-step linearly interpolated RGB
+    lookup table so disparate satellite and terrain bands can be inspected
+    visually or passed as RGB imagery to multimodal models.
+
     Args:
         values: 2D float array with shape (height, width).
         palette: List of 6-character hex color strings (without leading '#').
-        min_val: Value mapped to the start of the palette.
-        max_val: Value mapped to the end of the palette.
+        min_val: Physical value mapped to the first color in the palette.
+        max_val: Physical value mapped to the final color in the palette.
 
     Returns:
         An RGB uint8 array with shape (height, width, 3).
@@ -61,35 +93,43 @@ def render_palette(
 
 
 def render_gpm_precipitation(precipitation_mm_hr: np.ndarray) -> np.ndarray:
-    """Renders GPM IMERG V07 precipitation (mm/hr) using the NASA rainfall palette."""
-    palette = [
-        "0a1832",  # Very dark navy (0 mm/hr)
-        "0050d5",  # Deep blue
-        "00b4ff",  # Cyan blue
-        "33db80",  # Emerald green
-        "9beb4a",  # Lime green
-        "ffeb00",  # Yellow
-        "ffb300",  # Amber
-        "ff5000",  # Orange red
-        "d60000",  # Crimson
-        "7a0068",  # Extreme magenta (>45 mm/hr)
-    ]
-    return render_palette(precipitation_mm_hr, palette, min_val=0.0, max_val=45.0)
+    """Renders GPM IMERG V07 precipitation (mm/hr) using the NASA rainfall palette.
+
+    Maps half-hourly surface rain rates across `0.0` to `45.0 mm/hr` onto a
+    high-contrast meteorological radar color scale (dark navy for dry sky,
+    cyan/green for light-to-moderate rain, yellow/amber for heavy rain, and
+    crimson/magenta for extreme hurricane eyewall convection).
+
+    Args:
+        precipitation_mm_hr: 2D float array of surface rain rates in mm/hr.
+
+    Returns:
+        An RGB uint8 array with shape (height, width, 3) representing rainfall
+        intensity.
+    """
+    return render_palette(
+        precipitation_mm_hr, _GPM_PRECIPITATION_PALETTE, min_val=0.0, max_val=45.0
+    )
 
 
 def render_elevation_dem(elevation_m: np.ndarray) -> np.ndarray:
-    """Renders MERIT DEM surface elevation (meters) using a terrain relief palette."""
-    palette = [
-        "0b2545",  # Ocean / sea level (0m)
-        "2d6a4f",  # Coastal lowland green
-        "74c69d",  # Foothills green
-        "d9ed92",  # Upland yellow-green
-        "ddb892",  # Highland tan
-        "9c6644",  # Mountain brown
-        "7f4f24",  # High ridge sienna
-        "f8f9fa",  # Alpine peak (>2000m)
-    ]
-    return render_palette(elevation_m, palette, min_val=0.0, max_val=2200.0)
+    """Renders MERIT DEM surface elevation (meters) using a terrain relief palette.
+
+    Maps elevation values from `0 m` (sea level) to `2,200 m` (high mountain
+    ridges such as Jamaica's Blue Mountains or the Southern Appalachians) onto
+    a hypsometric tint scale so coastal plains, foothills, and steep windward
+    escarpments are visually distinct.
+
+    Args:
+        elevation_m: 2D float array of terrain elevation in meters above sea level.
+
+    Returns:
+        An RGB uint8 array with shape (height, width, 3) representing terrain
+        topography.
+    """
+    return render_palette(
+        elevation_m, _MERIT_DEM_PALETTE, min_val=0.0, max_val=2200.0
+    )
 
 
 def render_storm_terrain_overlay(
@@ -97,7 +137,25 @@ def render_storm_terrain_overlay(
     precipitation_mm_hr: np.ndarray,
     elevation_m: np.ndarray,
 ) -> np.ndarray:
-    """Alpha-blends GOES clouds and GPM rainbands onto MERIT DEM topography."""
+    """Alpha-blends GOES clouds and GPM rainbands onto MERIT DEM topography.
+
+    Combines all three aligned Earth Engine rasters into a single co-registered
+    composite image to reveal orographic amplification—showing where moist
+    spiraling rainbands (`>= 1.2 mm/hr`) directly collide with steep mountain
+    ridges.
+
+    Args:
+        goes_rgb: 3D uint8 array `(height, width, 3)` of GOES cloud and moisture
+            imagery.
+        precipitation_mm_hr: 2D float array `(height, width)` of GPM IMERG
+            precipitation rates in mm/hr.
+        elevation_m: 2D float array `(height, width)` of MERIT DEM terrain
+            elevation in meters.
+
+    Returns:
+        An RGB uint8 array with shape `(height, width, 3)` blending terrain,
+        translucent cloud cover, and high-opacity radar rainbands.
+    """
     elev_rgb = render_elevation_dem(elevation_m).astype(np.float32)
     precip_rgb = render_gpm_precipitation(precipitation_mm_hr).astype(
         np.float32
@@ -117,13 +175,52 @@ def render_storm_terrain_overlay(
     return np.clip(blended, 0.0, 255.0).astype(np.uint8)
 
 
-def create_storm_overview_figure(patch_data: dict[str, Any]) -> go.Figure:
-    """Creates a 4-panel Plotly figure for GOES, GPM, DEM, and Terrain Overlay."""
+def _render_four_panel_arrays(
+    patch_data: dict[str, Any],
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Renders the 4 aligned RGB panels (GOES, GPM, DEM, and Terrain Overlay).
+
+    Centralizes the conversion of raw physical storm arrays into uint8 RGB
+    images so both the interactive Plotly figure (`create_storm_overview_figure`)
+    and the multimodal PNG strip exporter (`export_multiband_strip_png_bytes`)
+    use identical visual encodings.
+
+    Args:
+        patch_data: Dictionary containing `'goes_rgb'`, `'precipitation'`, and
+            `'elevation'` NumPy arrays.
+
+    Returns:
+        A 4-tuple `(goes_rgb, precip_rgb, elev_rgb, overlay_rgb)` of uint8 RGB
+        arrays.
+    """
     goes_rgb = patch_data["goes_rgb"]
     precip_rgb = render_gpm_precipitation(patch_data["precipitation"])
     elev_rgb = render_elevation_dem(patch_data["elevation"])
     overlay_rgb = render_storm_terrain_overlay(
         goes_rgb, patch_data["precipitation"], patch_data["elevation"]
+    )
+    return goes_rgb, precip_rgb, elev_rgb, overlay_rgb
+
+
+def create_storm_overview_figure(patch_data: dict[str, Any]) -> go.Figure:
+    """Creates a 4-panel Plotly figure for GOES, GPM, DEM, and Terrain Overlay.
+
+    Displays the three individual sensor channels (`GOES` cloud/moisture at
+    2 km native resolution, `GPM IMERG` rainfall at 10 km resolution, and
+    `MERIT DEM` elevation) side-by-side with the 4th alpha-blended spatial
+    overlay so analysts can compare raw sensor values against topographic
+    rainband alignment.
+
+    Args:
+        patch_data: Dictionary returned by `fetch_weather_patch.get_storm_patch_arrays`
+            containing `'goes_rgb'`, `'precipitation'`, `'elevation'`,
+            `'storm_name'`, `'iso_time'`, and `'goes_satellite'`.
+
+    Returns:
+        A 4-column `plotly.graph_objects.Figure` ready for interactive display.
+    """
+    goes_rgb, precip_rgb, elev_rgb, overlay_rgb = _render_four_panel_arrays(
+        patch_data
     )
 
     fig = make_subplots(
@@ -137,10 +234,10 @@ def create_storm_overview_figure(patch_data: dict[str, Any]) -> go.Figure:
         ),
         horizontal_spacing=0.03,
     )
-    fig.add_trace(go.Image(z=goes_rgb), row=1, col=1)
-    fig.add_trace(go.Image(z=precip_rgb), row=1, col=2)
-    fig.add_trace(go.Image(z=elev_rgb), row=1, col=3)
-    fig.add_trace(go.Image(z=overlay_rgb), row=1, col=4)
+    for col_idx, panel_rgb in enumerate(
+        (goes_rgb, precip_rgb, elev_rgb, overlay_rgb), start=1
+    ):
+        fig.add_trace(go.Image(z=panel_rgb), row=1, col=col_idx)
 
     peak_rain = float(np.max(patch_data["precipitation"]))
     max_elev = float(np.max(patch_data["elevation"]))
@@ -162,14 +259,20 @@ def create_storm_overview_figure(patch_data: dict[str, Any]) -> go.Figure:
 def export_multiband_strip_png_bytes(patch_data: dict[str, Any]) -> bytes:
     """Stitches GOES, GPM rainfall, MERIT DEM, and Terrain Overlay into a PNG.
 
-    Passes both the 3 unoccluded sensor bands and the 4th spatial overlay
-    panel to Gemini 3.8 Flash via `types.Part.from_bytes(mime_type='image/png')`.
+    Packages the three unoccluded sensor panels alongside the 4th spatial
+    overlay into a single horizontally concatenated PNG byte stream (upscaled
+    3x with nearest-neighbor resampling to preserve crisp pixel boundaries) for
+    multimodal reasoning with Gemini 3.8 Flash (`types.Part.from_bytes`).
+
+    Args:
+        patch_data: Dictionary containing `'goes_rgb'`, `'precipitation'`, and
+            `'elevation'` NumPy arrays for the region of interest.
+
+    Returns:
+        PNG-encoded image bytes containing the 4-panel horizontal strip.
     """
-    goes_rgb = patch_data["goes_rgb"]
-    precip_rgb = render_gpm_precipitation(patch_data["precipitation"])
-    elev_rgb = render_elevation_dem(patch_data["elevation"])
-    overlay_rgb = render_storm_terrain_overlay(
-        goes_rgb, patch_data["precipitation"], patch_data["elevation"]
+    goes_rgb, precip_rgb, elev_rgb, overlay_rgb = _render_four_panel_arrays(
+        patch_data
     )
 
     height = goes_rgb.shape[0]
@@ -196,52 +299,63 @@ def export_multiband_strip_png_bytes(patch_data: dict[str, Any]) -> bytes:
     return buffer.getvalue()
 
 
-def export_composite_png_bytes(patch_data: dict[str, Any]) -> bytes:
-    """Backward-compatible alias for `export_multiband_strip_png_bytes`."""
-    return export_multiband_strip_png_bytes(patch_data)
-
-
 def build_storm_holdout_labels(horizon: int = 6) -> list[dict[str, Any]]:
     """Returns the 6-hour post-landfall ground-truth GPM IMERG labels.
 
-    Continues the Hurricane Melissa hourly series for hours +36..+41
-    (2025-10-28 18:00 UTC to 23:00 UTC) so learners can evaluate the zero-shot
-    TimesFM 2.5 hindcast against unseen ground-truth labels.
+    Continues the Hurricane Melissa hourly precipitation series for hours
+    `+36..+41` (`2025-10-28 18:00 UTC` to `23:00 UTC`) held out from the
+    36-hour input table so users can score the zero-shot TimesFM 2.5 hindcast
+    against unseen post-landfall observations.
+
+    Args:
+        horizon: Number of future holdout hours to generate (default: 6).
+
+    Returns:
+        List of dictionaries with `'forecast_timestamp'` and
+        `'actual_precipitation_mm_hr'`.
     """
     base_time = datetime(2025, 10, 27, 6, 0, 0)
-    holdout_rows: list[dict[str, Any]] = []
-    for step in range(horizon):
-        hour_offset = 36 + step
-        obs_time = base_time + timedelta(hours=hour_offset)
-        eyewall_pulse = 44.5 * math.exp(-(((hour_offset - 35.0) / 4.2) ** 2))
-        outer_bands = 6.5 * math.exp(-(((hour_offset - 22.0) / 10.0) ** 2))
-        orographic_tail = 14.0 * math.exp(-(((hour_offset - 39.0) / 6.5) ** 2))
-        diurnal_ripple = 1.4 * math.sin(hour_offset * 0.65)
-        actual_mm_hr = max(
-            0.2,
-            round(
-                1.2
-                + outer_bands
-                + eyewall_pulse
-                + orographic_tail
-                + diurnal_ripple,
-                2,
+    return [
+        {
+            "forecast_timestamp": (
+                base_time + timedelta(hours=36 + step)
+            ).strftime("%Y-%m-%d %H:%M:%S+00:00"),
+            "actual_precipitation_mm_hr": (
+                load_weather_time_series.compute_melissa_hourly_rainfall(
+                    36 + step
+                )
             ),
-        )
-        holdout_rows.append(
-            {
-                "forecast_timestamp": obs_time.strftime("%Y-%m-%d %H:%M:%S+00:00"),
-                "actual_precipitation_mm_hr": actual_mm_hr,
-            }
-        )
-    return holdout_rows
+        }
+        for step in range(horizon)
+    ]
 
 
 def evaluate_forecast_against_ground_truth(
     forecast_rows: list[dict[str, Any]],
     holdout_rows: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Evaluates AI.FORECAST predictions against 6-hour holdout ground truth."""
+    """Evaluates AI.FORECAST predictions against 6-hour holdout ground truth.
+
+    Applies physical non-negativity clamping (`max(0.0, x)`, analogous to a
+    neural network ReLU output layer) to the predicted precipitation values and
+    lower confidence bounds, then computes Mean Absolute Error (MAE), Root Mean
+    Squared Error (RMSE), and 90% prediction interval coverage against the
+    held-out GPM IMERG observations.
+
+    Args:
+        forecast_rows: List of dictionaries returned by BigQuery `AI.FORECAST`
+            containing `'forecast_timestamp'`,
+            `'forecasted_precipitation_mm_hr'`, `'lower_bound_mm_hr'`, and
+            `'upper_bound_mm_hr'`.
+        holdout_rows: Optional list of ground-truth dictionaries containing
+            `'actual_precipitation_mm_hr'`. Defaults to
+            `build_storm_holdout_labels`.
+
+    Returns:
+        Dictionary containing `'mae_mm_hr'`, `'rmse_mm_hr'`,
+        `'interval_coverage_pct'`, `'clamped_negative_bounds'`, and
+        `'holdout_rows'`.
+    """
     if holdout_rows is None:
         holdout_rows = build_storm_holdout_labels(horizon=len(forecast_rows))
 
@@ -249,7 +363,6 @@ def evaluate_forecast_against_ground_truth(
     sq_errors: list[float] = []
     inside_interval = 0
     clamped_negative_bounds = 0
-    comparison_rows: list[dict[str, Any]] = []
 
     for fc, gt in zip(forecast_rows, holdout_rows):
         pred = max(0.0, float(fc["forecasted_precipitation_mm_hr"]))
@@ -263,31 +376,85 @@ def evaluate_forecast_against_ground_truth(
         err = abs(pred - actual)
         abs_errors.append(err)
         sq_errors.append(err**2)
-        in_band = lower <= actual <= upper
-        if in_band:
+        if lower <= actual <= upper:
             inside_interval += 1
 
-        comparison_rows.append(
-            {
-                "timestamp": str(fc["forecast_timestamp"]),
-                "actual_mm_hr": round(actual, 2),
-                "predicted_mm_hr": round(pred, 2),
-                "lower_90_mm_hr": round(lower, 2),
-                "upper_90_mm_hr": round(upper, 2),
-                "abs_error_mm_hr": round(err, 2),
-                "within_90_interval": in_band,
-            }
-        )
-
-    n = max(1, len(comparison_rows))
+    n = max(1, len(abs_errors))
     return {
         "mae_mm_hr": round(sum(abs_errors) / n, 2),
         "rmse_mm_hr": round(math.sqrt(sum(sq_errors) / n), 2),
         "interval_coverage_pct": round(100.0 * inside_interval / n, 1),
         "clamped_negative_bounds": clamped_negative_bounds,
         "holdout_rows": holdout_rows,
-        "comparison_rows": comparison_rows,
     }
+
+
+def _add_confidence_band_trace(
+    fig: go.Figure,
+    timestamps: list[Any],
+    lower_bounds: list[float],
+    upper_bounds: list[float],
+    fillcolor: str,
+    name: str,
+) -> None:
+    """Adds a shaded closed-polygon confidence or percentile band to a figure.
+
+    Constructs a forward-and-reverse (`timestamps + timestamps[::-1]`) polygon
+    trace with `fill='toself'` so uncertainty intervals (`90% CI`, `p10–p90`,
+    or `p25–p75`) render as a single legend item without border lines.
+
+    Args:
+        fig: Target `plotly.graph_objects.Figure`.
+        timestamps: Sequence of x-axis timestamps.
+        lower_bounds: Sequence of lower interval values matching `timestamps`.
+        upper_bounds: Sequence of upper interval values matching `timestamps`.
+        fillcolor: RGBA fill color string (for example, `'rgba(255,99,71,0.2)'`).
+        name: Legend label for the uncertainty band.
+    """
+    fig.add_trace(
+        go.Scatter(
+            x=timestamps + timestamps[::-1],
+            y=upper_bounds + lower_bounds[::-1],
+            fill="toself",
+            fillcolor=fillcolor,
+            line=dict(color="rgba(255,255,255,0)"),
+            hoverinfo="skip",
+            showlegend=True,
+            name=name,
+        )
+    )
+
+
+def _apply_standard_chart_layout(
+    fig: go.Figure,
+    title: str,
+    xaxis_title: str | None = None,
+    yaxis_title: str | None = None,
+    height: int = 430,
+) -> go.Figure:
+    """Applies consistent styling, white template, and top legend to a figure.
+
+    Args:
+        fig: Target `plotly.graph_objects.Figure`.
+        title: HTML-formatted chart title.
+        xaxis_title: Optional x-axis label.
+        yaxis_title: Optional y-axis label.
+        height: Figure height in pixels (default: 430).
+
+    Returns:
+        The styled `plotly.graph_objects.Figure`.
+    """
+    fig.update_layout(
+        title=title,
+        xaxis_title=xaxis_title,
+        yaxis_title=yaxis_title,
+        height=height,
+        template="plotly_white",
+        legend=dict(
+            orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
+        ),
+    )
+    return fig
 
 
 def create_forecast_comparison_figure(
@@ -296,7 +463,27 @@ def create_forecast_comparison_figure(
     storm_name: str,
     holdout_rows: list[dict[str, Any]] | None = None,
 ) -> go.Figure:
-    """Creates a Plotly chart comparing inputs, AI.FORECAST, and ground truth."""
+    """Creates a Plotly chart comparing inputs, AI.FORECAST, and ground truth.
+
+    Visualizes the end-to-end hindcast evaluation by plotting the 36-hour
+    historical GPM IMERG input context alongside BigQuery ML's 6-hour
+    `AI.FORECAST` (`TimesFM 2.5`) trajectory, its ReLU-clamped 90% confidence
+    band, and the actual observed 6-hour ground-truth labels.
+
+    Args:
+        historical_rows: List of dictionaries with `'observation_time'` and
+            `'precipitation_mm_hr'` representing the 36-hour input context.
+        forecast_rows: List of dictionaries with `'forecast_timestamp'`,
+            `'forecasted_precipitation_mm_hr'`, `'lower_bound_mm_hr'`, and
+            `'upper_bound_mm_hr'`.
+        storm_name: Display title of the storm event.
+        holdout_rows: Optional list of held-out ground-truth dictionaries with
+            `'actual_precipitation_mm_hr'`.
+
+    Returns:
+        A `plotly.graph_objects.Figure` comparing historical inputs, forecast
+        intervals, and ground-truth observations.
+    """
     if holdout_rows is None:
         holdout_rows = build_storm_holdout_labels(horizon=len(forecast_rows))
 
@@ -315,20 +502,14 @@ def create_forecast_comparison_figure(
 
     fig = go.Figure()
 
-    # 90% confidence interval band (clamped >= 0 mm/hr via ReLU constraint)
-    fig.add_trace(
-        go.Scatter(
-            x=fc_times + fc_times[::-1],
-            y=fc_upper + fc_lower[::-1],
-            fill="toself",
-            fillcolor="rgba(255, 99, 71, 0.20)",
-            line=dict(color="rgba(255,255,255,0)"),
-            hoverinfo="skip",
-            showlegend=True,
-            name="TimesFM 2.5 90% Interval (ReLU Clamped >= 0)",
-        )
+    _add_confidence_band_trace(
+        fig,
+        timestamps=fc_times,
+        lower_bounds=fc_lower,
+        upper_bounds=fc_upper,
+        fillcolor="rgba(255, 99, 71, 0.20)",
+        name="TimesFM 2.5 90% Interval (ReLU Clamped >= 0)",
     )
-    # Observed historical series (Inputs: 36 hours)
     fig.add_trace(
         go.Scatter(
             x=hist_times,
@@ -338,7 +519,6 @@ def create_forecast_comparison_figure(
             line=dict(color="#0064ff", width=2.5),
         )
     )
-    # Actual observed holdout ground-truth labels (Outputs/Labels: 6 hours)
     if holdout_rows:
         gt_vals = [
             float(r["actual_precipitation_mm_hr"]) for r in holdout_rows
@@ -353,7 +533,6 @@ def create_forecast_comparison_figure(
                 marker=dict(symbol="diamond", size=8),
             )
         )
-    # AI.FORECAST TimesFM prediction
     fig.add_trace(
         go.Scatter(
             x=fc_times,
@@ -363,26 +542,38 @@ def create_forecast_comparison_figure(
             line=dict(color="#eb1e00", width=3, dash="dash"),
         )
     )
-    fig.update_layout(
+    return _apply_standard_chart_layout(
+        fig,
         title=(
             f"<b>Storm Hindcast Evaluation ({storm_name})</b> — "
             "36h GPM Inputs vs. 6h TimesFM 2.5 Hindcast & Ground-Truth Labels"
         ),
         xaxis_title="Timestamp (UTC)",
         yaxis_title="Precipitation Rate (mm/hr)",
-        height=430,
-        template="plotly_white",
-        legend=dict(
-            orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
-        ),
     )
-    return fig
 
 
 def create_weathernext_ensemble_figure(
     ensemble_data: dict[str, Any],
 ) -> go.Figure:
-    """Creates a Plotly ensemble plume chart for WeatherNext 3 percentiles."""
+    """Creates a Plotly ensemble plume chart for WeatherNext 3 percentiles.
+
+    Visualizes the probabilistic spread across Google DeepMind's 64-member
+    WeatherNext 3 ensemble (`weathernext_3_0_0_0p1deg`), rendering the outer
+    `p10–p90` band (80% of ensemble members), the inner `p25–p75` interquartile
+    band, the `p50` median, the ensemble `mean`, and the `p90` worst-case
+    tail-risk trajectory used for flood preparedness.
+
+    Args:
+        ensemble_data: Dictionary returned by
+            `fetch_weather_patch.get_weathernext_ensemble_forecast` containing
+            `'region_name'` and `'ensemble_rows'` (`p10_mm_hr`, `p25_mm_hr`,
+            `p50_mm_hr`, `p75_mm_hr`, `p90_mm_hr`, `mean_mm_hr`).
+
+    Returns:
+        A `plotly.graph_objects.Figure` showing the 48-hour probabilistic
+        ensemble plume.
+    """
     rows = ensemble_data["ensemble_rows"]
     times = [r["valid_time_utc"] for r in rows]
     p10 = [float(r["p10_mm_hr"]) for r in rows]
@@ -394,33 +585,22 @@ def create_weathernext_ensemble_figure(
 
     fig = go.Figure()
 
-    # Outer 10th-90th percentile band (80% of 64 ensemble members)
-    fig.add_trace(
-        go.Scatter(
-            x=times + times[::-1],
-            y=p90 + p10[::-1],
-            fill="toself",
-            fillcolor="rgba(30, 136, 229, 0.16)",
-            line=dict(color="rgba(255,255,255,0)"),
-            hoverinfo="skip",
-            showlegend=True,
-            name="p10–p90 Spread (80% of 64 Members)",
-        )
+    _add_confidence_band_trace(
+        fig,
+        timestamps=times,
+        lower_bounds=p10,
+        upper_bounds=p90,
+        fillcolor="rgba(30, 136, 229, 0.16)",
+        name="p10–p90 Spread (80% of 64 Members)",
     )
-    # Inner 25th-75th interquartile band (middle 50% of 64 ensemble members)
-    fig.add_trace(
-        go.Scatter(
-            x=times + times[::-1],
-            y=p75 + p25[::-1],
-            fill="toself",
-            fillcolor="rgba(30, 136, 229, 0.34)",
-            line=dict(color="rgba(255,255,255,0)"),
-            hoverinfo="skip",
-            showlegend=True,
-            name="p25–p75 Interquartile Range (50% of Members)",
-        )
+    _add_confidence_band_trace(
+        fig,
+        timestamps=times,
+        lower_bounds=p25,
+        upper_bounds=p75,
+        fillcolor="rgba(30, 136, 229, 0.34)",
+        name="p25–p75 Interquartile Range (50% of Members)",
     )
-    # Ensemble Median (p50)
     fig.add_trace(
         go.Scatter(
             x=times,
@@ -430,7 +610,6 @@ def create_weathernext_ensemble_figure(
             line=dict(color="#0d47a1", width=3),
         )
     )
-    # Ensemble Mean
     fig.add_trace(
         go.Scatter(
             x=times,
@@ -440,7 +619,6 @@ def create_weathernext_ensemble_figure(
             line=dict(color="#d81b60", width=2.5, dash="dash"),
         )
     )
-    # 90th percentile tail-risk line
     fig.add_trace(
         go.Scatter(
             x=times,
@@ -450,24 +628,38 @@ def create_weathernext_ensemble_figure(
             line=dict(color="#ff6f00", width=1.8, dash="dot"),
         )
     )
-    fig.update_layout(
+    return _apply_standard_chart_layout(
+        fig,
         title=(
             f"<b>WeatherNext 3 (64-Member Ensemble)</b> — "
             f"{ensemble_data.get('region_name', 'Probabilistic Rainfall Forecast')}"
         ),
         xaxis_title="Valid Forecast Time (UTC)",
         yaxis_title="1-Hour Precipitation Rate (mm/hr)",
-        height=430,
-        template="plotly_white",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     )
-    return fig
 
 
 def create_bay_area_microclimate_figure(
     microclimate_rows: list[dict[str, Any]],
 ) -> go.Figure:
-    """Creates a Plotly chart comparing 5 Bay Area & Monterey Bay microclimates."""
+    """Creates a Plotly chart comparing 5 Bay Area & Monterey Bay microclimates.
+
+    Contrasts current 2.5 km NOAA RTMA surface temperatures against +24h NOAA
+    GFS temperature and relative humidity forecasts across five coastal,
+    rain-shadowed, and inland valley microclimate zones (`San Francisco`,
+    `Palo Alto`, `San Jose`, `Santa Cruz`, and `Monterey`).
+
+    Args:
+        microclimate_rows: List of dictionaries returned in the
+            `'microclimate_rows'` key of
+            `fetch_weather_patch.get_local_weather_forecast`, containing
+            `'city'`, `'microclimate_zone'`, `'current_temp_c'`,
+            `'forecast_24h_temp_c'`, and `'forecast_24h_rh_pct'`.
+
+    Returns:
+        A dual-axis `plotly.graph_objects.Figure` comparing temperature bars
+        (left axis) and relative humidity (right axis) across microclimates.
+    """
     labels = [
         f"{r['city']}<br><sup>{r['microclimate_zone']}</sup>"
         for r in microclimate_rows
@@ -506,16 +698,15 @@ def create_bay_area_microclimate_figure(
         ),
         secondary_y=True,
     )
-    fig.update_layout(
+    _apply_standard_chart_layout(
+        fig,
         title=(
             "<b>San Francisco & Monterey Bay Microclimate Comparison</b> — "
             "Coastal Marine Gaps vs. Rain-Shadowed Valleys"
         ),
-        barmode="group",
         height=420,
-        template="plotly_white",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     )
+    fig.update_layout(barmode="group")
     fig.update_yaxes(title_text="Temperature (°C)", secondary_y=False)
     fig.update_yaxes(
         title_text="Relative Humidity (%)", range=[0, 100], secondary_y=True
