@@ -30,7 +30,7 @@ def create_job(
     """Creates a job that calls a Cloud Run service on a schedule.
 
     The job authenticates with an OIDC token for a service account, so the
-    Cloud Run service doesn't need to allow unauthenticated access.
+    Cloud Run service can require authentication.
 
     Args:
         project_id: The Google Cloud project ID (for example, 'example-project-id').

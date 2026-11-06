@@ -34,8 +34,8 @@ def log(message: str, **fields: str) -> None:
 def handle_scheduled_run(request: flask.Request) -> tuple[str, int]:
     """Handles a request that a Cloud Scheduler job sends to this function.
 
-    Deploy the function without unauthenticated access. Cloud Run functions
-    then verifies the job's OIDC token before the request reaches this
+    Deploy the function to require authentication. Cloud Run functions then
+    verifies the job's OIDC token before the request reaches this
     function, and only service accounts with the Cloud Run Invoker role can
     call it.
     """
