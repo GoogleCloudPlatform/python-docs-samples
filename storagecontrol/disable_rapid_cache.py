@@ -40,8 +40,9 @@ def disable_rapid_cache(
 
     request = storage_control_v2.DisableRapidCacheRequest(name=rapid_cache_path)
 
-    # Disabling a Rapid Cache is a long-running operation. This sample waits
-    # for the operation to complete.
+    # Disabling a Rapid Cache is a long-running operation. It completes only
+    # after the cache is fully removed, which can take more than an hour.
+    # This sample waits for the operation to complete, or until the timeout.
     operation = storage_control_client.disable_rapid_cache(request=request)
     response = operation.result(timeout=timeout)
 

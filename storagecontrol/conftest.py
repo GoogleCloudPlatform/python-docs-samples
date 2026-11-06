@@ -19,6 +19,7 @@ import uuid
 from google.api_core import exceptions
 from google.api_core import retry
 from google.cloud import storage
+from google.cloud import storage_control_v2
 
 import pytest
 
@@ -109,6 +110,43 @@ def regional_hns_enabled_bucket(
         )(bucket.delete)(force=True)
     except exceptions.GoogleAPIError as e:
         logging.warning("Could not delete bucket %s: %s", bucket.name, e)
+
+
+@pytest.fixture(scope="function")
+def rapid_cache_id(
+    regional_hns_enabled_bucket: storage.Bucket, rapid_cache_zone: str
+) -> str:
+    """
+    Yields the ID of a Rapid Cache for the regional HNS enabled bucket. If the
+    test created the Rapid Cache and left it active, it is disabled on
+    teardown so that the bucket can be deleted once the cache is removed.
+    """
+
+    # The Rapid Cache ID is the same as its zone.
+    cache_id = rapid_cache_zone
+
+    yield cache_id
+
+    storage_control_client = storage_control_v2.StorageControlClient()
+    bucket_path = (
+        f"{storage_control_client.common_project_path('_')}"
+        f"/buckets/{regional_hns_enabled_bucket.name}"
+    )
+    cache_name = storage_control_client.rapid_cache_path(
+        project="_", bucket=regional_hns_enabled_bucket.name, rapid_cache=cache_id
+    )
+    # Cleanup is best-effort: errors are logged instead of failing the test.
+    try:
+        caches = storage_control_client.list_rapid_caches(parent=bucket_path)
+        cache_active = any(
+            cache.zone == cache_id and cache.state != "disabled" for cache in caches
+        )
+        if cache_active:
+            # Disabling is a long-running operation that completes only once
+            # the cache is fully removed, so teardown does not wait for it.
+            storage_control_client.disable_rapid_cache(name=cache_name)
+    except exceptions.GoogleAPIError as e:
+        logging.warning("Could not disable Rapid Cache %s: %s", cache_name, e)
 
 
 @pytest.fixture(scope="function")
