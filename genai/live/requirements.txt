@@ -1,6 +1,6 @@
 google-genai==2.29.0
 scipy==1.18.1
-websockets==15.0.1
+websockets==17.3
 numpy==2.5.3
 soundfile==0.14.0
 openai==1.99.1
