@@ -27,10 +27,7 @@ def create_job(
     service_url: str,
     service_account_email: str,
 ) -> None:
-    """Creates a job that calls a Cloud Run service on a schedule.
-
-    The job authenticates with an OIDC token for a service account, so the
-    Cloud Run service can require authentication.
+    """Creates a job that calls a Cloud Run service on a schedule with an OIDC token.
 
     Args:
         project_id: The Google Cloud project ID (for example, 'example-project-id').
@@ -43,7 +40,7 @@ def create_job(
     client = scheduler_v1.CloudSchedulerClient()
     parent = f"projects/{project_id}/locations/{location_id}"
 
-    # Cloud Run accepts the token only if its audience matches the service URL.
+    # The audience must match the service URL.
     oidc_token = scheduler_v1.OidcToken(
         service_account_email=service_account_email,
         audience=service_url,
@@ -57,12 +54,10 @@ def create_job(
     job = scheduler_v1.Job(
         name=f"{parent}/jobs/{job_id}",
         http_target=http_target,
-        # Runs every Monday at 09:00. UTC avoids skipped or repeated runs when
-        # daylight saving time starts or ends.
+        # Every Monday at 09:00 UTC, which has no daylight saving shifts.
         schedule="0 9 * * 1",
         time_zone="UTC",
-        # Cloud Scheduler reports a failure if the service doesn't respond
-        # within this deadline, so match it to the service's request timeout.
+        # Match the service's request timeout.
         attempt_deadline=datetime.timedelta(minutes=5),
     )
     request = scheduler_v1.CreateJobRequest(parent=parent, job=job)
