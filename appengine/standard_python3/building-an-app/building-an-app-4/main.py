@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import datetime
+import os
 
 from flask import Flask, render_template, request
 from google.auth.transport import requests
@@ -71,7 +72,9 @@ def root():
             # session store (see for instance
             # http://flask.pocoo.org/docs/1.0/quickstart/#sessions).
             claims = google.oauth2.id_token.verify_firebase_token(
-                id_token, firebase_request_adapter
+                id_token,
+                firebase_request_adapter,
+                audience=os.environ.get("GOOGLE_CLOUD_PROJECT"),
             )
 
             store_time(claims["email"], datetime.datetime.now(tz=datetime.timezone.utc))
