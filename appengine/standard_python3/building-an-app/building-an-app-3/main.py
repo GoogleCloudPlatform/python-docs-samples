@@ -16,6 +16,8 @@ import datetime
 
 # [START gae_python38_auth_verify_token]
 # [START gae_python3_auth_verify_token]
+import os
+
 from flask import Flask, render_template, request
 from google.auth.transport import requests
 from google.cloud import datastore
@@ -64,7 +66,9 @@ def root():
             # session store (see for instance
             # http://flask.pocoo.org/docs/1.0/quickstart/#sessions).
             claims = google.oauth2.id_token.verify_firebase_token(
-                id_token, firebase_request_adapter
+                id_token,
+                firebase_request_adapter,
+                audience=os.environ.get("GOOGLE_CLOUD_PROJECT"),
             )
         except ValueError as exc:
             # This will be raised if the token is expired or any other
