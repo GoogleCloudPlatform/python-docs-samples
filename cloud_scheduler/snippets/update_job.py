@@ -31,16 +31,13 @@ def update_job(project_id: str, location_id: str, job_id: str) -> None:
     client = scheduler_v1.CloudSchedulerClient()
     name = f"projects/{project_id}/locations/{location_id}/jobs/{job_id}"
 
-    # Runs every weekday at 10:00 UTC.
+    # Every weekday at 10:00 UTC.
     job = scheduler_v1.Job(name=name, schedule="0 10 * * 1-5", time_zone="UTC")
-    # Only the fields in the update mask change; the job keeps its other
-    # settings, such as its target.
+    # Only fields in the update mask change.
     update_mask = field_mask_pb2.FieldMask(paths=["schedule", "time_zone"])
     request = scheduler_v1.UpdateJobRequest(job=job, update_mask=update_mask)
 
-    # Cloud Scheduler applies one change to a job at a time. If another change
-    # is still in progress, this call fails with ABORTED; retry after a few
-    # seconds.
+    # Fails with ABORTED while another change to the job is in progress.
     try:
         response = client.update_job(request=request)
     except exceptions.NotFound as err:

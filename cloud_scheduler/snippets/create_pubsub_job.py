@@ -34,8 +34,7 @@ def create_pubsub_job(
     client = scheduler_v1.CloudSchedulerClient()
     parent = f"projects/{project_id}/locations/{location_id}"
 
-    # Cloud Scheduler publishes by using its service agent, which needs the
-    # Cloud Scheduler Service Agent role in the project.
+    # Publishes as the Cloud Scheduler service agent.
     pubsub_target = scheduler_v1.PubsubTarget(
         topic_name=f"projects/{project_id}/topics/{topic_id}",
         data=b"example-payload",
@@ -44,8 +43,7 @@ def create_pubsub_job(
     job = scheduler_v1.Job(
         name=f"{parent}/jobs/{job_id}",
         pubsub_target=pubsub_target,
-        # Runs every Monday at 09:00. UTC avoids skipped or repeated runs when
-        # daylight saving time starts or ends.
+        # Every Monday at 09:00 UTC, which has no daylight saving shifts.
         schedule="0 9 * * 1",
         time_zone="UTC",
     )

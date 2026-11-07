@@ -30,8 +30,7 @@ def create_appengine_job(project_id: str, location_id: str, job_id: str) -> None
         job_id: The ID for the new job (for example, 'example-job-id').
     """
     client = scheduler_v1.CloudSchedulerClient()
-    # App Engine targets must be in the same project and region as the
-    # App Engine app.
+    # Must be the App Engine app's project and region.
     parent = f"projects/{project_id}/locations/{location_id}"
 
     app_engine_routing = scheduler_v1.AppEngineRouting(service="default")
@@ -44,12 +43,9 @@ def create_appengine_job(project_id: str, location_id: str, job_id: str) -> None
     job = scheduler_v1.Job(
         name=f"{parent}/jobs/{job_id}",
         app_engine_http_target=app_engine_target,
-        # Runs every Monday at 09:00. UTC avoids skipped or repeated runs when
-        # daylight saving time starts or ends.
+        # Every Monday at 09:00 UTC, which has no daylight saving shifts.
         schedule="0 9 * * 1",
         time_zone="UTC",
-        # Cloud Scheduler reports a failure if the handler doesn't respond
-        # within this deadline.
         attempt_deadline=datetime.timedelta(minutes=5),
     )
     request = scheduler_v1.CreateJobRequest(parent=parent, job=job)

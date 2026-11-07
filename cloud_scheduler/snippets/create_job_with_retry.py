@@ -50,10 +50,8 @@ def create_job_with_retry(
         body=b"example-payload",
         oidc_token=oidc_token,
     )
-    # Cloud Scheduler stops retrying a run when it reaches either limit:
-    # retry_count retries or max_retry_duration since the first attempt.
-    # The wait between retries starts at min_backoff_duration, doubles
-    # max_doublings times, and then grows linearly up to max_backoff_duration.
+    # Retries stop at retry_count or max_retry_duration, whichever comes first.
+    # Waits start at min_backoff and double up to max_backoff.
     retry_config = scheduler_v1.RetryConfig(
         retry_count=3,
         max_retry_duration=datetime.timedelta(hours=1),
@@ -65,12 +63,10 @@ def create_job_with_retry(
         name=f"{parent}/jobs/{job_id}",
         http_target=http_target,
         retry_config=retry_config,
-        # Runs every Monday at 09:00. UTC avoids skipped or repeated runs when
-        # daylight saving time starts or ends.
+        # Every Monday at 09:00 UTC, which has no daylight saving shifts.
         schedule="0 9 * * 1",
         time_zone="UTC",
-        # A response that misses this deadline counts as a failed attempt and
-        # is retried, so match it to the service's request timeout.
+        # A slow response counts as a failed attempt.
         attempt_deadline=datetime.timedelta(minutes=5),
     )
     request = scheduler_v1.CreateJobRequest(parent=parent, job=job)
