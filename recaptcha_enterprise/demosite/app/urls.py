@@ -102,7 +102,7 @@ def on_signup() -> Response:
             }
         )
     except Exception as e:
-        return jsonify({"data": {"error_msg": str(e.__dict__)}})
+        return jsonify({"data": {"error_msg": str(e)}})
 
 
 # Return login template.
@@ -151,7 +151,7 @@ def on_login() -> Response:
             }
         )
     except Exception as e:
-        return jsonify({"data": {"error_msg": str(e.__dict__)}})
+        return jsonify({"data": {"error_msg": str(e)}})
 
 
 # Return store template.
@@ -199,7 +199,7 @@ def on_store_checkout() -> Response:
             }
         )
     except Exception as e:
-        return jsonify({"data": {"error_msg": str(e.__dict__)}})
+        return jsonify({"data": {"error_msg": str(e)}})
 
 
 # Return comment template.
@@ -247,7 +247,7 @@ def on_comment_submit() -> Response:
             }
         )
     except Exception as e:
-        return jsonify({"data": {"error_msg": str(e.__dict__)}})
+        return jsonify({"data": {"error_msg": str(e)}})
 
 
 # Classify the action as BAD/ NOT_BAD based on conditions specified.
