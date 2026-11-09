@@ -48,8 +48,7 @@ def create_http_job_oauth(
         f"/workflowTemplates/{workflow_template_id}"
     )
 
-    # Use an OAuth token, not an OIDC token, when the target is a Google API
-    # hosted on *.googleapis.com.
+    # Google APIs (*.googleapis.com) need an OAuth token, not OIDC.
     oauth_token = scheduler_v1.OAuthToken(
         service_account_email=service_account_email,
         scope="https://www.googleapis.com/auth/cloud-platform",
@@ -64,8 +63,7 @@ def create_http_job_oauth(
     job = scheduler_v1.Job(
         name=f"{parent}/jobs/{job_id}",
         http_target=http_target,
-        # Runs every Monday at 09:00. UTC avoids skipped or repeated runs when
-        # daylight saving time starts or ends.
+        # Every Monday at 09:00 UTC, which has no daylight saving shifts.
         schedule="0 9 * * 1",
         time_zone="UTC",
     )

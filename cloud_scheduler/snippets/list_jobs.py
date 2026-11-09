@@ -31,7 +31,6 @@ def list_jobs(project_id: str, location_id: str) -> None:
     request = scheduler_v1.ListJobsRequest(parent=parent)
 
     try:
-        # The client fetches more pages as the loop needs them.
         for job in client.list_jobs(request=request):
             print(f"Resource ID: {job.name}")
             print(f"Schedule: {job.schedule}")

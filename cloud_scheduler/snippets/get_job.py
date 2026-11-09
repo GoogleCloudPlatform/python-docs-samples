@@ -47,8 +47,7 @@ def get_job(project_id: str, location_id: str, job_id: str) -> None:
         )
     else:
         print(f"Resource ID: {response.name}")
-        # The last attempt time and status code are empty until the job runs.
-        # A status code of 0 means the last attempt succeeded.
+        # Status code 0 means the last attempt succeeded.
         print(f"Last Attempt Time: {response.last_attempt_time}")
         print(f"State: {response.state.name}")
         print(f"Status Code: {response.status.code}")

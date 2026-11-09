@@ -33,9 +33,7 @@ def pause_job(project_id: str, location_id: str, job_id: str) -> None:
     name = f"projects/{project_id}/locations/{location_id}/jobs/{job_id}"
     request = scheduler_v1.PauseJobRequest(name=name)
 
-    # Cloud Scheduler applies one change to a job at a time. If another change
-    # is still in progress, this call fails with ABORTED; retry after a few
-    # seconds.
+    # Fails with ABORTED while another change to the job is in progress.
     try:
         response = client.pause_job(request=request)
     except exceptions.NotFound as err:
