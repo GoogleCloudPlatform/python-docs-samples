@@ -48,12 +48,6 @@ class FakeDocument:
     def get(self, transaction: object = None) -> FakeSnapshot:
         return FakeSnapshot(self.store.get(self.id))
 
-    def update(self, fields: dict[str, Any]) -> None:
-        self.store[self.id].update(fields)
-
-    def delete(self) -> None:
-        self.store.pop(self.id, None)
-
 
 class FakeDatabase:
     def __init__(self) -> None:
@@ -72,6 +66,10 @@ class FakeDatabase:
         transaction.set.side_effect = lambda ref, data: self.store.__setitem__(
             ref.id, dict(data)
         )
+        transaction.update.side_effect = lambda ref, data: self.store[ref.id].update(
+            data
+        )
+        transaction.delete.side_effect = lambda ref: self.store.pop(ref.id, None)
         return transaction
 
 
@@ -149,6 +147,31 @@ def test_failed_work_releases_the_claim(fake_db: FakeDatabase) -> None:
     assert fake_db.store == {}
     body, status = call_function(HEADERS)
     assert (body, status) == ("Run processed", 200)
+
+
+def test_stale_attempt_does_not_release_newer_claim(fake_db: FakeDatabase) -> None:
+    def slow_failing_work() -> None:
+        # While this attempt runs, its lease expires and a retry claims the run.
+        only_record(fake_db).update(attempt_id="newer-attempt")
+        raise RuntimeError("boom")
+
+    with mock.patch.object(main, "run_job_logic", side_effect=slow_failing_work):
+        with pytest.raises(RuntimeError):
+            call_function(HEADERS)
+
+    record = only_record(fake_db)
+    assert record["attempt_id"] == "newer-attempt"
+    assert record["status"] == "in_progress"
+
+
+def test_stale_attempt_does_not_complete_newer_claim(fake_db: FakeDatabase) -> None:
+    def slow_work() -> None:
+        only_record(fake_db).update(attempt_id="newer-attempt")
+
+    with mock.patch.object(main, "run_job_logic", side_effect=slow_work):
+        call_function(HEADERS)
+
+    assert only_record(fake_db)["status"] == "in_progress"
 
 
 def test_different_schedule_times_are_different_runs(fake_db: FakeDatabase) -> None:

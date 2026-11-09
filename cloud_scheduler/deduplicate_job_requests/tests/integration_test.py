@@ -93,3 +93,18 @@ def test_active_and_expired_leases(headers: dict[str, str]) -> None:
     expired = now - datetime.timedelta(seconds=1)
     run_ref(headers).set({"status": "in_progress", "lease_expires": expired})
     assert call_function(headers) == ("Run processed", 200)
+
+
+def test_stale_attempt_does_not_release_newer_claim(headers: dict[str, str]) -> None:
+    def slow_failing_work() -> None:
+        # While this attempt runs, its lease expires and a retry claims the run.
+        run_ref(headers).update({"attempt_id": "newer-attempt"})
+        raise RuntimeError("boom")
+
+    with mock.patch.object(main, "run_job_logic", side_effect=slow_failing_work):
+        with pytest.raises(RuntimeError):
+            call_function(headers)
+
+    record = run_ref(headers).get().to_dict()
+    assert record["attempt_id"] == "newer-attempt"
+    assert record["status"] == "in_progress"
