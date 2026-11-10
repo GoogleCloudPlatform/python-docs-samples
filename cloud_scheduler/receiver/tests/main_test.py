@@ -70,7 +70,6 @@ def test_failed_run_releases_claim_for_retry() -> None:
 
 
 def test_schedule_time_with_and_without_offset_is_one_run() -> None:
-    # A forced run before the job's first scheduled run omits the offset.
     call_function(
         dict(HEADERS, **{"X-CloudScheduler-ScheduleTime": "2026-11-06T09:00:00.25Z"})
     )

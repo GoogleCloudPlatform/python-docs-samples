@@ -189,7 +189,6 @@ def test_different_schedule_times_are_different_runs(fake_db: FakeDatabase) -> N
 def test_schedule_time_with_and_without_offset_is_one_run(
     fake_db: FakeDatabase,
 ) -> None:
-    # A forced run before the job's first scheduled run omits the offset.
     without_offset = dict(
         HEADERS, **{"X-CloudScheduler-ScheduleTime": "2026-11-06T19:29:00-08:00"}
     )

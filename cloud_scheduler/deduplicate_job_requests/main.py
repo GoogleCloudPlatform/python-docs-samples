@@ -85,9 +85,7 @@ def handle_scheduled_job(request: flask.Request) -> tuple[str, int]:
     if not job_name or not schedule_time:
         return "error: missing Cloud Scheduler headers", 400
 
-    # A forced run sent before the job's first scheduled run omits Cloud
-    # Scheduler's few-second offset, so key on the scheduled minute. A forced
-    # run uses the next scheduled time, so that scheduled run is then skipped.
+    # Key on the minute; some deliveries omit the few-second offset.
     try:
         scheduled = datetime.datetime.fromisoformat(schedule_time)
     except ValueError:
