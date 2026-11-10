@@ -40,5 +40,5 @@ if __name__ == "__main__":
     ip_address = "34.343.343.34"  # put your IP here
 
     assign_static_external_ip_to_new_vm(
-        PROJECT, ZONE, instance_name, external_ipv4=ip_address, external_access=True
+        PROJECT, ZONE, instance_name, ip_address=ip_address
     )
