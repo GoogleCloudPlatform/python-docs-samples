@@ -42,10 +42,11 @@ app = flask.Flask(__name__)
 
 def run_ref(headers: dict[str, str]) -> firestore.DocumentReference:
     """Returns the record that the handler keeps for a run."""
-    key = (
-        f"{headers['X-CloudScheduler-JobName']}/"
-        f"{headers['X-CloudScheduler-ScheduleTime']}"
+    scheduled = datetime.datetime.fromisoformat(
+        headers["X-CloudScheduler-ScheduleTime"]
     )
+    minute = scheduled.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
+    key = f"{headers['X-CloudScheduler-JobName']}/{minute}"
     run_id = hashlib.sha256(key.encode()).hexdigest()
     return main.db.collection("scheduler_runs").document(run_id)
 

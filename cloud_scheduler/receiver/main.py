@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START cloudscheduler_receiver]
+import datetime
 import json
 import threading
 
@@ -51,8 +52,15 @@ def handle_scheduled_run(request: flask.Request) -> tuple[str, int]:
     if not job_name or not schedule_time:
         return "error: missing Cloud Scheduler headers", 400
 
-    # Retries keep the same schedule time, so this identifies one run.
-    run_key = f"{job_name}/{schedule_time}"
+    # A forced run sent before the job's first scheduled run omits Cloud
+    # Scheduler's few-second offset, so key on the scheduled minute. A forced
+    # run uses the next scheduled time, so that scheduled run is then skipped.
+    try:
+        scheduled = datetime.datetime.fromisoformat(schedule_time)
+    except ValueError:
+        return "error: invalid X-CloudScheduler-ScheduleTime header", 400
+    minute = scheduled.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
+    run_key = f"{job_name}/{minute}"
 
     # Check and claim in one step so concurrent duplicates can't both run.
     with claimed_runs_lock:

@@ -69,6 +69,27 @@ def test_failed_run_releases_claim_for_retry() -> None:
     assert body == "Run processed"
 
 
+def test_schedule_time_with_and_without_offset_is_one_run() -> None:
+    # A forced run before the job's first scheduled run omits the offset.
+    call_function(
+        dict(HEADERS, **{"X-CloudScheduler-ScheduleTime": "2026-11-06T09:00:00.25Z"})
+    )
+
+    body, status = call_function(HEADERS)
+
+    assert status == 200
+    assert body == "Duplicate run skipped"
+
+
+def test_invalid_schedule_time_is_rejected() -> None:
+    body, status = call_function(
+        dict(HEADERS, **{"X-CloudScheduler-ScheduleTime": "soon"})
+    )
+
+    assert status == 400
+    assert body.startswith("error:")
+
+
 def test_missing_scheduler_headers_are_rejected() -> None:
     body, status = call_function()
 
