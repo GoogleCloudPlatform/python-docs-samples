@@ -23,7 +23,6 @@ import sys
 
 import nox
 
-
 # WARNING - WARNING - WARNING - WARNING - WARNING
 # WARNING - WARNING - WARNING - WARNING - WARNING
 #       BE CAREFUL WHEN EDITING THIS FILE!
@@ -40,7 +39,12 @@ import nox
 
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7", "3.7", "3.8", "3.10", "3.11", "3.12"],
+    # By default, samples are tested on the minimum (3.12) and the
+    # latest stable (3.14) supported Python versions.
+    "ignored_versions": ["3.13"],
+    # Newly released Python versions are only tested when a sample
+    # explicitly opts in, for example: "opt_in_versions": ["3.15"].
+    "opt_in_versions": [],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
@@ -87,20 +91,33 @@ def get_pytest_env_vars() -> dict[str, str]:
     return ret
 
 
-# All versions used to tested samples.
-ALL_VERSIONS = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+# All Python versions that samples can be tested on. 3.12 is the minimum
+# supported version.
+ALL_VERSIONS = ["3.12", "3.13", "3.14", "3.15"]
 
-# Any default versions that should be ignored.
+# Newly released versions that are only tested when a sample lists them
+# in "opt_in_versions". Existing configs only list the versions they
+# ignore, so without this a new version would be enabled for all of them.
+OPT_IN_VERSIONS = ["3.15"]
+
+# Any default versions that should be ignored. Versions that are no
+# longer in ALL_VERSIONS (for example "3.8") are safely ignored.
 IGNORED_VERSIONS = TEST_CONFIG["ignored_versions"]
 
-TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
+TESTED_VERSIONS = sorted(
+    [
+        v
+        for v in ALL_VERSIONS
+        if v not in IGNORED_VERSIONS
+        and (v not in OPT_IN_VERSIONS or v in TEST_CONFIG.get("opt_in_versions", []))
+    ]
+)
 
 INSTALL_LIBRARY_FROM_SOURCE = bool(os.environ.get("INSTALL_LIBRARY_FROM_SOURCE", False))
 
-# Use the oldest tested Python version for linting (defaults to 3.10)
-LINTING_VERSION = "3.10"
-if len(TESTED_VERSIONS) > 0:
-    LINTING_VERSION = TESTED_VERSIONS[0]
+# Run style checks on the minimum supported Python version, regardless of
+# which versions a sample is tested on, so contributors only need 3.12.
+LINTING_VERSION = "3.12"
 
 # Error if a python version is missing
 nox.options.error_on_missing_interpreters = True
