@@ -307,7 +307,7 @@ packaging==26.3
     #   google-cloud-bigquery
 pg8000==1.31.5
     # via apache-beam
-pillow==12.3.0
+pillow==13.0.0
     # via apache-beam
 pluggy==1.6.0
     # via keyrings-google-artifactregistry-auth
