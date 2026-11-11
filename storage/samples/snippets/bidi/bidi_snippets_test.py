@@ -36,14 +36,21 @@ import storage_pause_and_resume_appendable_upload
 import storage_read_appendable_object_tail
 
 pytestmark = pytest.mark.skipif(
-    os.getenv("RUN_ZONAL_SYSTEM_TESTS") != "True",
-    reason="Zonal system tests need to be explicitly enabled. This helps scheduling tests in Kokoro and Cloud Build.",
+    not any(
+        os.getenv(v) == "True"
+        for v in (
+            "RUN_RAPID_SYSTEM_TESTS",
+            "RUN_BIDI_SYSTEM_TESTS",
+            "RUN_ZONAL_SYSTEM_TESTS",
+        )
+    ),
+    reason="Rapid bucket (bidi) system tests need to be explicitly enabled. This helps scheduling tests in Kokoro and Cloud Build.",
 )
 
 
-# TODO: replace this with a fixture once zonal bucket creation / deletion
+# TODO: replace this with a fixture once rapid bucket creation / deletion
 # is supported in grpc client or json client client.
-_ZONAL_BUCKET = os.getenv("ZONAL_BUCKET")
+_RAPID_BUCKET = os.getenv("RAPID_BUCKET") or os.getenv("ZONAL_BUCKET")
 
 
 async def create_async_grpc_client():
@@ -77,7 +84,7 @@ def json_client():
 async def create_appendable_object(grpc_client, object_name, data):
     writer = AsyncAppendableObjectWriter(
         client=grpc_client,
-        bucket_name=_ZONAL_BUCKET,
+        bucket_name=_RAPID_BUCKET,
         object_name=object_name,
         generation=0,  # throws `FailedPrecondition` if object already exists.
     )
@@ -87,25 +94,20 @@ async def create_appendable_object(grpc_client, object_name, data):
     return writer.generation
 
 
-# TODO: replace this with a fixture once zonal bucket creation / deletion
-# is supported in grpc client or json client client.
-_ZONAL_BUCKET = os.getenv("ZONAL_BUCKET")
-
-
 def test_storage_create_and_write_appendable_object(
     async_grpc_client, json_client, event_loop, capsys
 ):
-    object_name = f"zonal-snippets-test-{uuid.uuid4()}"
+    object_name = f"bidi-snippets-test-{uuid.uuid4()}"
 
     event_loop.run_until_complete(
         storage_create_and_write_appendable_object.storage_create_and_write_appendable_object(
-            _ZONAL_BUCKET, object_name, grpc_client=async_grpc_client
+            _RAPID_BUCKET, object_name, grpc_client=async_grpc_client
         )
     )
     out, _ = capsys.readouterr()
     assert f"Appended object {object_name} created of size" in out
 
-    blob = json_client.bucket(_ZONAL_BUCKET).blob(object_name)
+    blob = json_client.bucket(_RAPID_BUCKET).blob(object_name)
     blob.delete()
 
 
@@ -115,12 +117,12 @@ def test_storage_finalize_appendable_object_upload(
     object_name = f"test-finalize-appendable-{uuid.uuid4()}"
     event_loop.run_until_complete(
         storage_finalize_appendable_object_upload.storage_finalize_appendable_object_upload(
-            _ZONAL_BUCKET, object_name, grpc_client=async_grpc_client
+            _RAPID_BUCKET, object_name, grpc_client=async_grpc_client
         )
     )
     out, _ = capsys.readouterr()
     assert f"Appendable object {object_name} created and finalized." in out
-    blob = json_client.bucket(_ZONAL_BUCKET).get_blob(object_name)
+    blob = json_client.bucket(_RAPID_BUCKET).get_blob(object_name)
     blob.delete()
 
 
@@ -130,14 +132,14 @@ def test_storage_pause_and_resume_appendable_upload(
     object_name = f"test-pause-resume-{uuid.uuid4()}"
     event_loop.run_until_complete(
         storage_pause_and_resume_appendable_upload.storage_pause_and_resume_appendable_upload(
-            _ZONAL_BUCKET, object_name, grpc_client=async_grpc_client
+            _RAPID_BUCKET, object_name, grpc_client=async_grpc_client
         )
     )
     out, _ = capsys.readouterr()
     assert "First writer closed. Upload is 'paused'." in out
     assert "Second writer closed. Full object uploaded." in out
 
-    blob = json_client.bucket(_ZONAL_BUCKET).get_blob(object_name)
+    blob = json_client.bucket(_RAPID_BUCKET).get_blob(object_name)
     blob.delete()
 
 
@@ -147,7 +149,7 @@ def test_storage_read_appendable_object_tail(
     object_name = f"test-read-tail-{uuid.uuid4()}"
     event_loop.run_until_complete(
         storage_read_appendable_object_tail.read_appendable_object_tail(
-            _ZONAL_BUCKET, object_name, duration=3, grpc_client=async_grpc_client
+            _RAPID_BUCKET, object_name, duration=3, grpc_client=async_grpc_client
         )
     )
     out, _ = capsys.readouterr()
@@ -158,7 +160,7 @@ def test_storage_read_appendable_object_tail(
     assert "Tailer finished." in out
     assert "Writer closed." in out
 
-    bucket = json_client.bucket(_ZONAL_BUCKET)
+    bucket = json_client.bucket(_RAPID_BUCKET)
     blob = bucket.blob(object_name)
     blob.delete()
 
@@ -173,15 +175,15 @@ def test_storage_open_object_read_full_object(
     )
     event_loop.run_until_complete(
         storage_open_object_read_full_object.storage_open_object_read_full_object(
-            _ZONAL_BUCKET, object_name, grpc_client=async_grpc_client
+            _RAPID_BUCKET, object_name, grpc_client=async_grpc_client
         )
     )
     out, _ = capsys.readouterr()
     assert (
-        f"Downloaded all {len(data)} bytes from object {object_name} in bucket {_ZONAL_BUCKET}."
+        f"Downloaded all {len(data)} bytes from object {object_name} in bucket {_RAPID_BUCKET}."
         in out
     )
-    blob = json_client.bucket(_ZONAL_BUCKET).blob(object_name)
+    blob = json_client.bucket(_RAPID_BUCKET).blob(object_name)
     blob.delete()
 
 
@@ -197,7 +199,7 @@ def test_storage_open_object_single_ranged_read(
     download_size = 5
     event_loop.run_until_complete(
         storage_open_object_single_ranged_read.storage_open_object_single_ranged_read(
-            _ZONAL_BUCKET,
+            _RAPID_BUCKET,
             object_name,
             start_byte=0,
             size=download_size,
@@ -206,7 +208,7 @@ def test_storage_open_object_single_ranged_read(
     )
     out, _ = capsys.readouterr()
     assert f"Downloaded {download_size} bytes from {object_name}" in out
-    blob = json_client.bucket(_ZONAL_BUCKET).blob(object_name)
+    blob = json_client.bucket(_RAPID_BUCKET).blob(object_name)
     blob.delete()
 
 
@@ -220,7 +222,7 @@ def test_storage_open_object_multiple_ranged_read(
     )
     event_loop.run_until_complete(
         storage_open_object_multiple_ranged_read.storage_open_object_multiple_ranged_read(
-            _ZONAL_BUCKET, object_name, grpc_client=async_grpc_client
+            _RAPID_BUCKET, object_name, grpc_client=async_grpc_client
         )
     )
     out, _ = capsys.readouterr()
@@ -228,7 +230,7 @@ def test_storage_open_object_multiple_ranged_read(
     assert "Downloaded 10 bytes into buffer 2 from start byte 20: b'aaaaaaaaaa'" in out
     assert "Downloaded 10 bytes into buffer 3 from start byte 40: b'aaaaaaaaaa'" in out
     assert "Downloaded 10 bytes into buffer 4 from start byte 60: b'aaaaaaaaaa'" in out
-    blob = json_client.bucket(_ZONAL_BUCKET).blob(object_name)
+    blob = json_client.bucket(_RAPID_BUCKET).blob(object_name)
     blob.delete()
 
 
@@ -248,14 +250,14 @@ def test_storage_open_multiple_objects_ranged_read(
 
     event_loop.run_until_complete(
         storage_open_multiple_objects_ranged_read.storage_open_multiple_objects_ranged_read(
-            _ZONAL_BUCKET, [blob1_name, blob2_name], grpc_client=async_grpc_client
+            _RAPID_BUCKET, [blob1_name, blob2_name], grpc_client=async_grpc_client
         )
     )
     out, _ = capsys.readouterr()
     assert f"Downloaded {len(data1)} bytes from {blob1_name}" in out
     assert f"Downloaded {len(data2)} bytes from {blob2_name}" in out
-    blob1 = json_client.bucket(_ZONAL_BUCKET).blob(blob1_name)
-    blob2 = json_client.bucket(_ZONAL_BUCKET).blob(blob2_name)
+    blob1 = json_client.bucket(_RAPID_BUCKET).blob(blob1_name)
+    blob2 = json_client.bucket(_RAPID_BUCKET).blob(blob2_name)
     blob1.delete()
     blob2.delete()
 
@@ -266,11 +268,11 @@ def test_storage_optimize_write_latency_pool(
     key_prefix = f"test-writer-pool-{uuid.uuid4()}"
     event_loop.run_until_complete(
         storage_optimize_write_latency_pool.storage_optimize_write_latency_pool(
-            _ZONAL_BUCKET, key_prefix, pool_size=3, grpc_client=async_grpc_client
+            _RAPID_BUCKET, key_prefix, pool_size=3, grpc_client=async_grpc_client
         )
     )
     out, _ = capsys.readouterr()
     assert f"Read unfinalized object {key_prefix}_0: 0123456789" in out
-    bucket = json_client.bucket(_ZONAL_BUCKET)
+    bucket = json_client.bucket(_RAPID_BUCKET)
     for i in range(4):
         bucket.blob(f"{key_prefix}_{i}").delete()
