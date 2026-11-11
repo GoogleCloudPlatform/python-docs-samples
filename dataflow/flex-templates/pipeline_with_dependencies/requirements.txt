@@ -383,7 +383,7 @@ pydantic-core==2.46.5
     # via pydantic
 pyfiglet==1.0.4
     # via my_package (setup.py)
-pymongo==4.18.2
+pymongo==4.18.3
     # via apache-beam
 pymysql==1.2.3
     # via apache-beam
