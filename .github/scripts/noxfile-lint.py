@@ -19,7 +19,7 @@ import os
 import nox
 
 # Use a stable Python version for running the style utilities
-LINTING_VERSION = "3.10"
+LINTING_VERSION = "3.12"
 
 # Error out if the runner is missing the target python interpreter
 nox.options.error_on_missing_interpreters = True
@@ -33,10 +33,14 @@ def _determine_local_import_names(start_dir: str) -> list[str]:
             basename
             for basename, extension in file_ext_pairs
             if extension == ".py"
-            or (os.path.isdir(os.path.join(start_dir, basename)) and basename != "__pycache__")
+            or (
+                os.path.isdir(os.path.join(start_dir, basename))
+                and basename != "__pycache__"
+            )
         ]
     except Exception:
         return []
+
 
 # Linting with flake8.
 #
@@ -88,7 +92,7 @@ def lint(session: nox.sessions.Session) -> None:
 def blacken(session: nox.sessions.Session) -> None:
     """Runs black code formatting checks. Honors incremental PR file arguments."""
     session.install("black")
-    
+
     # If explicit target files are passed via posargs, target ONLY those files.
     if session.posargs:
         targets = session.posargs
