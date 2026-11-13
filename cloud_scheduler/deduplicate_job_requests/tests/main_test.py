@@ -186,6 +186,30 @@ def test_different_schedule_times_are_different_runs(fake_db: FakeDatabase) -> N
     assert len(fake_db.store) == 2
 
 
+def test_schedule_time_with_and_without_offset_is_one_run(
+    fake_db: FakeDatabase,
+) -> None:
+    without_offset = dict(
+        HEADERS, **{"X-CloudScheduler-ScheduleTime": "2026-11-06T19:29:00-08:00"}
+    )
+    call_function(without_offset)
+
+    with mock.patch.object(main, "run_job_logic") as run_job_logic:
+        body, status = call_function(HEADERS)
+
+    assert (body, status) == ("Duplicate run skipped", 200)
+    run_job_logic.assert_not_called()
+
+
+def test_invalid_schedule_time_is_rejected() -> None:
+    body, status = call_function(
+        dict(HEADERS, **{"X-CloudScheduler-ScheduleTime": "soon"})
+    )
+
+    assert status == 400
+    assert body.startswith("error:")
+
+
 def test_missing_scheduler_headers_are_rejected() -> None:
     body, status = call_function()
 
