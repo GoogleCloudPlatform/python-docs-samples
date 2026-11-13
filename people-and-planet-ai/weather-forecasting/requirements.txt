@@ -1,0 +1,10 @@
+apache-beam[gcp]==2.77.0
+earthengine-api==1.7.35  # allow-version-pin: 1.7.52 conflicts with apache-beam[gcp] 2.77.0 dependencies
+google-api-core==2.44.0
+google-auth==2.62.2
+google-cloud-bigquery==3.47.0
+google-genai==2.34.0  # allow-version-pin: google-cloud-aiplatform (via apache-beam[gcp]) requires google-genai<3.0.0
+numpy==2.4.6  # allow-version-pin: apache-beam 2.77.0 requires numpy<2.5.0
+pillow==12.3.0  # allow-version-pin: apache-beam 2.77.0 requires pillow<13; upgrade to 13.x (advisory fixes) with apache-beam 2.78.0
+plotly==7.1.0
+pydantic==2.14.3
