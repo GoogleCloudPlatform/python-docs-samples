@@ -12,13 +12,16 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Command line application and sample code for updating the rotation schedule
 of a CLOUD_SQL_DB_CREDENTIALS typed secret.
 """
 
-# [START secretmanager_update_regional_secret_with_managed_rotation_schedule]
 import argparse
+
+# [START secretmanager_update_regional_secret_with_managed_rotation_schedule]
 import time
 
 # Import the Secret Manager client library.
@@ -35,6 +38,15 @@ def update_regional_secret_with_managed_rotation_schedule(
 ) -> secretmanager_v1.Secret:
     """
     Updates the rotation schedule of a CLOUD_SQL_DB_CREDENTIALS typed secret.
+
+    Args:
+        project_id (str): ID of the GCP project.
+        location_id (str): Location of the regional secret, e.g. us-central1.
+        secret_id (str): ID of the secret.
+        rotation_period_seconds (int): Rotation period, in seconds.
+
+    Returns:
+        secretmanager_v1.Secret: The updated secret.
     """
 
     # Endpoint to call the regional Secret Manager API.

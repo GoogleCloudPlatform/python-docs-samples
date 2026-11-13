@@ -12,14 +12,16 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Command line application and sample code for creating a new secret with type
 CLOUD_SQL_DB_CREDENTIALS, eligible for managed rotation.
 """
 
-# [START secretmanager_create_regional_secret_with_cloud_sql_credentials]
 import argparse
 
+# [START secretmanager_create_regional_secret_with_cloud_sql_credentials]
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
@@ -31,6 +33,14 @@ def create_regional_secret_with_cloud_sql_credentials(
 ) -> secretmanager_v1.Secret:
     """
     Creates a new regional secret with type CLOUD_SQL_DB_CREDENTIALS.
+
+    Args:
+        project_id (str): ID of the GCP project.
+        location_id (str): Location of the regional secret, e.g. us-central1.
+        secret_id (str): ID of the secret.
+
+    Returns:
+        secretmanager_v1.Secret: The created secret.
     """
 
     # Endpoint to call the regional Secret Manager API.

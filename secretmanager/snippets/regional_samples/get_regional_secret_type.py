@@ -12,14 +12,16 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 command line application and sample code for getting the secret type of a
 regional secret.
 """
 
-# [START secretmanager_get_regional_secret_type]
 import argparse
 
+# [START secretmanager_get_regional_secret_type]
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
@@ -29,6 +31,14 @@ def get_regional_secret_type(
 ) -> secretmanager_v1.Secret:
     """
     Gets the secret type of the given regional secret.
+
+    Args:
+        project_id (str): ID of the GCP project.
+        location_id (str): Location of the regional secret, e.g. us-central1.
+        secret_id (str): ID of the secret.
+
+    Returns:
+        secretmanager_v1.Secret: The secret, including its secret type.
     """
 
     # Endpoint to call the regional Secret Manager API.

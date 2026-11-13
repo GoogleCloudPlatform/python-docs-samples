@@ -12,14 +12,16 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 command line application and sample code for creating a new secret with a
 secret type restriction.
 """
 
-# [START secretmanager_create_secret_with_type]
 import argparse
 
+# [START secretmanager_create_secret_with_type]
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 
@@ -32,6 +34,14 @@ def create_secret_with_type(
     """
     Creates a new secret with the given secret type.
     Note: CLOUD_SQL_DB_CREDENTIALS is only supported in the regional secret.
+
+    Args:
+        project_id (str): ID of the GCP project.
+        secret_id (str): ID of the secret.
+        secret_type (secretmanager.Secret.SecretType): Secret type restriction to apply.
+
+    Returns:
+        secretmanager.Secret: The created secret.
     """
 
     # Create the Secret Manager client.
@@ -68,7 +78,11 @@ if __name__ == "__main__":
     parser.add_argument("secret_id", help="id of the secret to create")
     parser.add_argument(
         "secret_type",
-        choices=[t.name for t in secretmanager.Secret.SecretType if t.value != 0],
+        choices=[
+            t.name
+            for t in secretmanager.Secret.SecretType
+            if t.name not in ("SECRET_TYPE_UNSPECIFIED", "CLOUD_SQL_DB_CREDENTIALS")
+        ],
         help="secret type restriction to apply",
     )
     args = parser.parse_args()

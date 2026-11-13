@@ -12,14 +12,16 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 command line application and sample code for getting the secret type of a
 secret.
 """
 
-# [START secretmanager_get_secret_type]
 import argparse
 
+# [START secretmanager_get_secret_type]
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 
@@ -27,6 +29,13 @@ from google.cloud import secretmanager
 def get_secret_type(project_id: str, secret_id: str) -> secretmanager.Secret:
     """
     Gets the secret type of the given secret.
+
+    Args:
+        project_id (str): ID of the GCP project.
+        secret_id (str): ID of the secret.
+
+    Returns:
+        secretmanager.Secret: The secret, including its secret type.
     """
 
     # Create the Secret Manager client.

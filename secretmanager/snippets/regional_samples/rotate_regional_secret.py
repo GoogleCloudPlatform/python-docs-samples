@@ -12,14 +12,16 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Command line application and sample code for triggering an adhoc rotation for
 the managed CLOUD_SQL_DB_CREDENTIALS typed secret.
 """
 
-# [START secretmanager_rotate_regional_secret]
 import argparse
 
+# [START secretmanager_rotate_regional_secret]
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
@@ -32,6 +34,14 @@ def rotate_regional_secret(
     """
     Triggers an adhoc rotation for the managed CLOUD_SQL_DB_CREDENTIALS
     typed secret.
+
+    Args:
+        project_id (str): ID of the GCP project.
+        location_id (str): Location of the regional secret, e.g. us-central1.
+        secret_id (str): ID of the secret.
+
+    Returns:
+        secretmanager_v1.SecretVersion: The newly created secret version.
     """
 
     # Endpoint to call the regional Secret Manager API.

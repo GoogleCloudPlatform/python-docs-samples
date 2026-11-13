@@ -12,14 +12,16 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Command line application and sample code to enable managed rotation of a
 CLOUD_SQL_DB_CREDENTIALS typed secret.
 """
 
-# [START secretmanager_enable_regional_secret_managed_rotation]
 import argparse
 
+# [START secretmanager_enable_regional_secret_managed_rotation]
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
@@ -38,6 +40,16 @@ def enable_regional_secret_managed_rotation(
     Note: AddSecretVersion is disabled on the CLOUD_SQL_DB_CREDENTIALS
     currently and for any necessary manual rotations please trigger
     rotate_secret.
+
+    Args:
+        project_id (str): ID of the GCP project.
+        location_id (str): Location of the regional secret, e.g. us-central1.
+        secret_id (str): ID of the secret.
+        instance_id (str): Cloud SQL instance ID (or resource name).
+        username (str): Database user whose password is rotated.
+
+    Returns:
+        secretmanager_v1.SecretVersion: The version created when rotation is enabled.
     """
 
     # Endpoint to call the regional Secret Manager API.
