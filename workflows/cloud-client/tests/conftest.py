@@ -30,6 +30,9 @@ import pytest
 LIVE_PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
 LIVE_LOCATION_ID = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
 LIVE_SERVICE_ACCOUNT_EMAIL = os.environ.get("SERVICE_ACCOUNT_EMAIL", "")
+
+if os.environ.get("RUN_INTEGRATION_TESTS") == "true" and not LIVE_PROJECT_ID:
+    raise RuntimeError("Set GOOGLE_CLOUD_PROJECT when RUN_INTEGRATION_TESTS=true.")
 MY_FIRST_WORKFLOW = (
     pathlib.Path(__file__).resolve().parent.parent / "myFirstWorkflow.workflows.yaml"
 ).read_text()

@@ -28,7 +28,7 @@ PACKAGE = ROOT / "src" / "workflows_samples"
 
 def code_from_first_region(path: pathlib.Path) -> str:
     """Returns the file from its first region tag on, skipping the header."""
-    text = path.read_text()
+    text = path.read_text().replace("\r\n", "\n")
     return text[text.index("# [START") :]
 
 

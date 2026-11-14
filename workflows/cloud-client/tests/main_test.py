@@ -28,7 +28,6 @@ EXECUTION_ID = "test-execution"
 PARENT = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
 WORKFLOW_NAME = f"{PARENT}/workflows/{WORKFLOW_ID}"
 EXECUTION_NAME = f"{WORKFLOW_NAME}/executions/{EXECUTION_ID}"
-WORKFLOWS_CLIENT = "google.cloud.workflows_v1.WorkflowsClient"
 EXECUTIONS_CLIENT = "google.cloud.workflows.executions_v1.ExecutionsClient"
 
 
