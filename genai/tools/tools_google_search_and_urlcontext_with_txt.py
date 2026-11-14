@@ -25,7 +25,7 @@ def generate_content() -> str:
     )
 
     client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
-    model_id = "gemini-3.5-flash"
+    model_id = "gemini-3.8-flash"
 
     tools = [
         Tool(url_context=UrlContext),
@@ -33,7 +33,7 @@ def generate_content() -> str:
     ]
 
     # TODO(developer): Here put your URLs!
-    url = 'https://www.google.com/search?q=events+in+New+York'
+    url = "https://www.google.com/search?q=events+in+New+York"
 
     response = client.models.generate_content(
         model=model_id,
@@ -41,7 +41,7 @@ def generate_content() -> str:
         config=GenerateContentConfig(
             tools=tools,
             response_modalities=["TEXT"],
-        )
+        ),
     )
 
     for each in response.candidates[0].content.parts:

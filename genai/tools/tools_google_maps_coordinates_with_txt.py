@@ -29,7 +29,7 @@ def generate_content() -> str:
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     response = client.models.generate_content(
-        model="gemini-3.5-flash",
+        model="gemini-3.8-flash",
         contents="Where can I get the best espresso near me?",
         config=GenerateContentConfig(
             tools=[
@@ -39,8 +39,7 @@ def generate_content() -> str:
             tool_config=ToolConfig(
                 retrieval_config=RetrievalConfig(
                     lat_lng=LatLng(  # Pass coordinates for location-aware grounding
-                        latitude=40.7128,
-                        longitude=-74.006
+                        latitude=40.7128, longitude=-74.006
                     ),
                     language_code="en_US",  # Optional: localize Maps results
                 ),
