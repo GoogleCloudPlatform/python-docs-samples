@@ -116,7 +116,10 @@ def start_scheduled_run(request: flask.Request) -> tuple[str, int]:
         )
     except Exception:
         # Releases the claim so that a retry can start the run.
-        finish_run(db.transaction(), run_ref, attempt_id, None)
+        try:
+            finish_run(db.transaction(), run_ref, attempt_id, None)
+        except Exception:
+            pass
         raise
     finish_run(db.transaction(), run_ref, attempt_id, execution.name)
     return f"Started execution {execution.name}", 200

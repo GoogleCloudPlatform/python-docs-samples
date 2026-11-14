@@ -217,3 +217,17 @@ def test_function_requires_workflow_name() -> None:
 
     assert result.returncode != 0
     assert "KeyError: 'WORKFLOW_NAME'" in result.stderr
+
+
+def test_rollback_failure_preserves_original_execution_error(
+    db: FakeDatabase, executions: mock.MagicMock, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    executions.create_execution.side_effect = exceptions.ServiceUnavailable(
+        "workflows down"
+    )
+    monkeypatch.setattr(
+        main, "finish_run", mock.MagicMock(side_effect=exceptions.Aborted("db busy"))
+    )
+
+    with pytest.raises(exceptions.ServiceUnavailable, match="workflows down"):
+        call(HEADERS)
