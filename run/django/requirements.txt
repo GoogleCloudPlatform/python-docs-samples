@@ -2,5 +2,5 @@ Django==6.1.1; python_version >= "3.12"
 django-storages[google]==1.14.6
 django-environ==0.13.0
 psycopg2-binary==2.9.10
-gunicorn==23.0.0
+gunicorn==27.0.0
 google-cloud-secret-manager==2.21.1
