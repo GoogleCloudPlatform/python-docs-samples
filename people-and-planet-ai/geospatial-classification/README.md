@@ -1,18 +1,29 @@
-# 🏭 Coal Plant Predictions -- _geospatial-classification_
+# 🏭 Coal Plant Predictions -- _geospatial-classification_ (retired)
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/geospatial-classification/README.ipynb)
+This sample has been retired and is no longer maintained.
 
-> [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/8amFK7T_n30/0.jpg)](https://youtu.be/8amFK7T_n30)
+It trained a TensorFlow model on Vertex AI to predict, from Sentinel-2 satellite
+imagery in Earth Engine, whether a coal plant was operating, and served the
+predictions from Cloud Run. It accompanied the video
+[Mapping carbon pollution globally with satellites](https://youtu.be/8amFK7T_n30).
 
-This model uses satellite data to predict if a coal plant is turned on and producing carbon emissions. The satellite data comes from [Google Earth Engine.](https://earthengine.google.com/)
+## Why it was retired
 
-* **Model**: 1D Fully Convolutional Network in [TensorFlow]
-* **Creating datasets**: [Sentinel-2] satellite data from [Earth Engine]
-* **Training the model**: [TensorFlow] in [Vertex AI]
-* **Getting predictions**: [TensorFlow] in [Cloud Run]
+* The notebook no longer runs: its setup step depends on a file that was removed
+  in 2023, and its training and serving code don't work with Keras 3.
+* It used the deprecated `COPERNICUS/S2` Earth Engine dataset.
+* Its labels end in 2021, and many of the labeled plants have since closed or
+  switched to natural gas.
 
-[Cloud Run]: https://cloud.google.com/run
-[Sentinel-2]: https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
-[Earth Engine]: https://earthengine.google.com/
-[TensorFlow]: https://www.tensorflow.org/
-[Vertex AI]: https://cloud.google.com/vertex-ai
+## Last version
+
+You can still read the code as it was before retirement at commit
+[`636f2f5`](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/636f2f5fc1b4dc34855b3115b0deba21b524cc51/people-and-planet-ai/geospatial-classification).
+It isn't maintained and doesn't run as is.
+
+## Related samples
+
+* [Weather forecasting](../weather-forecasting): forecasting with Earth Engine
+  satellite data.
+* [Wildlife Insights](../image-classification): classifying camera trap images
+  with Gemini.
