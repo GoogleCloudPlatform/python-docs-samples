@@ -21,7 +21,7 @@ def generate_content() -> str:
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-3.5-flash",
+        model="gemini-3.8-flash",
         contents="solve x^2 + 4x + 4 = 0",
         config=GenerateContentConfig(
             thinking_config=ThinkingConfig(

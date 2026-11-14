@@ -54,7 +54,7 @@ def generate_content() -> GenerateContentResponse:
     ]
 
     response = client.models.generate_content(
-        model="gemini-3.5-flash",
+        model="gemini-3.8-flash",
         contents=prompt,
         config=GenerateContentConfig(
             system_instruction=system_instruction,
@@ -74,12 +74,12 @@ def generate_content() -> GenerateContentResponse:
 
     # For details on all the fields in the response
     for each in response.candidates[0].safety_ratings:
-        print('\nCategory: ', str(each.category))
-        print('Is Blocked:', True if each.blocked else False)
-        print('Probability: ', each.probability)
-        print('Probability Score: ', each.probability_score)
-        print('Severity:', each.severity)
-        print('Severity Score:', each.severity_score)
+        print("\nCategory: ", str(each.category))
+        print("Is Blocked:", True if each.blocked else False)
+        print("Probability: ", each.probability)
+        print("Probability Score: ", each.probability_score)
+        print("Severity:", each.severity)
+        print("Severity Score:", each.severity_score)
     # Example response:
     #
     #     Category:  HarmCategory.HARM_CATEGORY_HATE_SPEECH
