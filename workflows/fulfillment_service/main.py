@@ -30,9 +30,10 @@ db = firestore.Client(database=os.environ.get("FIRESTORE_DATABASE", "(default)")
 @functions_framework.http
 def fulfill(request: flask.Request) -> tuple[dict, int]:
     """Fulfills the order, or fails permanently if it's out of stock."""
-    order_id = str((request.get_json(silent=True) or {}).get("order_id", ""))
-    if not order_id:
+    raw_order_id = (request.get_json(silent=True) or {}).get("order_id")
+    if not raw_order_id:
         return {"error": "missing order_id"}, 400
+    order_id = str(raw_order_id)
     if db.collection("fulfillment_service_faults").document(order_id).get().exists:
         # 422 is permanent, so the workflow doesn't retry it and runs the refund.
         return {"error": "out of stock"}, 422

@@ -56,9 +56,12 @@ def test_simulated_fault_fails_permanently(monkeypatch: pytest.MonkeyPatch) -> N
     assert status == 422
 
 
-def test_missing_order_id_is_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("body", [{}, {"order_id": None}, {"order_id": ""}])
+def test_missing_order_id_is_rejected(
+    monkeypatch: pytest.MonkeyPatch, body: dict[str, Any]
+) -> None:
     monkeypatch.setattr(main, "db", make_db(set()))
 
-    _, status = call({})
+    _, status = call(body)
 
     assert status == 400
