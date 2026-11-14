@@ -18,14 +18,19 @@ def create_tuning_job() -> str:
     import time
 
     from google import genai
-    from google.genai.types import CreateTuningJobConfig, HttpOptions, TuningDataset
+    from google.genai.types import (
+        CreateTuningJobConfig,
+        HttpOptions,
+        TuningDataset,
+        TuningValidationDataset,
+    )
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     training_dataset = TuningDataset(
         gcs_uri="gs://mybucket/preference_tuning/data/train_data.jsonl",
     )
-    validation_dataset = TuningDataset(
+    validation_dataset = TuningValidationDataset(
         gcs_uri="gs://mybucket/preference_tuning/data/validation_data.jsonl",
     )
 
@@ -41,10 +46,12 @@ def create_tuning_job() -> str:
         ),
     )
 
-    running_states = set([
-        "JOB_STATE_PENDING",
-        "JOB_STATE_RUNNING",
-    ])
+    running_states = set(
+        [
+            "JOB_STATE_PENDING",
+            "JOB_STATE_RUNNING",
+        ]
+    )
 
     while tuning_job.state in running_states:
         print(tuning_job.state)
