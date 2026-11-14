@@ -1,0 +1,80 @@
+<!--  Copyright 2026 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License. -->
+
+<!-- [START alm_ui_sample] -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Region Selector</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #1a73e8; text-decoration: none;}
+    </style>
+</head>
+<body>
+
+    <div class="gcp-header">
+        <h1>Market Place Integration</h1>
+    </div>
+
+    <div class="card">
+        <a href="{{ url_for('generate_api') }}" class="back-btn">&larr; Back to Step 1</a>
+        <h2>Apigee to ALM</h2>
+        
+        <form method="POST" action="/deploy">
+            <div class="form-group">
+                <label for="region">Location</label>
+                <select name="region" id="region" required>
+                    <option value="" disabled selected>Select a region...</option>
+                    {% for region in regions %}
+                        <option value="{{ region }}" {% if selected_region == region %}selected{% endif %}>
+                            {{ region }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" name="action" value="deploy">Deploy to Region</button>
+                <button type="submit" name="action" value="status">Get Status</button>
+            </div>
+        </form>
+
+        {% if api_response and not api_response.error %}
+            <div class="result-alert">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
+                <span>Successfully configured for <strong>{{ selected_region }}</strong></span>
+            </div>
+        {% endif %}
+
+        {% if operation_state %}
+            <div class="result-alert" style="margin-top: 15px; background-color: #f0f4f8;">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/></svg>
+                <span>State: <strong>{{ operation_state }}</strong></span>
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
+<!-- [END alm_ui_sample] -->
