@@ -1,5 +1,5 @@
 apache-beam[gcp]==2.77.0
-google-genai==2.29.0
+google-genai==3.0.0
 pillow==12.3.0
 pydantic==2.14.1
 requests==2.34.2
