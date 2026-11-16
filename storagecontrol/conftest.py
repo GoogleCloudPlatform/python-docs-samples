@@ -13,11 +13,9 @@
 # limitations under the License.
 
 import os
-import time
 import uuid
 
 from google.api_core import exceptions
-from google.api_core import retry
 from google.cloud import storage
 from google.cloud import storage_control_v2
 
@@ -74,7 +72,14 @@ def hns_enabled_bucket(project_id: str, bucket_name: str) -> storage.Bucket:
 
 @pytest.fixture(scope="module")
 def rapid_cache_zone() -> str:
-    yield os.environ.get("RAPID_CACHE_ZONE", "us-central1-a")
+    zone = os.environ.get("RAPID_CACHE_ZONE", "").strip() or "us-central1-a"
+    parts = zone.split("-")
+    if len(parts) < 3 or not all(parts):
+        raise ValueError(
+            f"Invalid RAPID_CACHE_ZONE {zone!r}; expected a zone like "
+            "'us-central1-a'."
+        )
+    yield zone
 
 
 @pytest.fixture(scope="function")
@@ -92,22 +97,14 @@ def regional_hns_enabled_bucket(
     bucket.hierarchical_namespace_enabled = True
     region = rapid_cache_zone.rsplit("-", 1)[0]
     bucket = storage_client.create_bucket(bucket, location=region)
-    # Wait for the new bucket's metadata to propagate before creating a Rapid
-    # Cache on it.
-    time.sleep(20)
 
     yield bucket
 
     # A bucket cannot be deleted until its disabled Rapid Cache has been fully
-    # removed, which can take more than an hour. Cleanup is best-effort: a
-    # short retry, after which the bucket is left behind for later cleanup.
+    # removed, which can take more than an hour. Cleanup is best-effort; if
+    # deletion fails with Conflict, leave the bucket for later cleanup.
     try:
-        retry.Retry(
-            predicate=retry.if_exception_type(exceptions.Conflict),
-            initial=10.0,
-            maximum=30.0,
-            timeout=120.0,
-        )(bucket.delete)(force=True)
+        bucket.delete(force=True)
     except exceptions.GoogleAPIError as e:
         logging.warning("Could not delete bucket %s: %s", bucket.name, e)
 
@@ -122,7 +119,7 @@ def rapid_cache_id(
     teardown so that the bucket can be deleted once the cache is removed.
     """
 
-    # The Rapid Cache ID is the same as its zone.
+    # The ID of the Rapid Cache. This test uses the zone as the cache ID.
     cache_id = rapid_cache_zone
 
     yield cache_id
@@ -132,21 +129,19 @@ def rapid_cache_id(
         f"{storage_control_client.common_project_path('_')}"
         f"/buckets/{regional_hns_enabled_bucket.name}"
     )
-    cache_name = storage_control_client.rapid_cache_path(
-        project="_", bucket=regional_hns_enabled_bucket.name, rapid_cache=cache_id
-    )
     # Cleanup is best-effort: errors are logged instead of failing the test.
     try:
-        caches = storage_control_client.list_rapid_caches(parent=bucket_path)
-        cache_active = any(
-            cache.zone == cache_id and cache.state != "disabled" for cache in caches
-        )
-        if cache_active:
-            # Disabling is a long-running operation that completes only once
-            # the cache is fully removed, so teardown does not wait for it.
-            storage_control_client.disable_rapid_cache(name=cache_name)
+        for cache in storage_control_client.list_rapid_caches(parent=bucket_path):
+            if cache.state != "disabled":
+                # Disabling is a long-running operation that completes only once
+                # the cache is fully removed, so teardown does not wait for it.
+                storage_control_client.disable_rapid_cache(name=cache.name)
     except exceptions.GoogleAPIError as e:
-        logging.warning("Could not disable Rapid Cache %s: %s", cache_name, e)
+        logging.warning(
+            "Could not disable Rapid Cache in bucket %s: %s",
+            regional_hns_enabled_bucket.name,
+            e,
+        )
 
 
 @pytest.fixture(scope="function")

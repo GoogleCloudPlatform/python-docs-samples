@@ -31,18 +31,13 @@ def create_rapid_cache(bucket_name: str, zone: str) -> None:
     # denotes this bucket exists in the global namespace.
     project_path = storage_control_client.common_project_path("_")
     bucket_path = f"{project_path}/buckets/{bucket_name}"
-    # The ID of the Rapid Cache must be the same as its zone.
-    cache_id = zone
-    rapid_cache_path = storage_control_client.rapid_cache_path(
-        project="_", bucket=bucket_name, rapid_cache=cache_id
-    )
 
     # Only the required fields are set. Optional fields, such as the time to
     # live (TTL) for cache entries, use server defaults and can be changed
     # later by updating the Rapid Cache.
-    # Rapid Cache Ultra requires a bucket with hierarchical namespace enabled.
+    # Rapid Cache Ultra requires a regional bucket with hierarchical namespace
+    # enabled.
     rapid_cache = storage_control_v2.RapidCache(
-        name=rapid_cache_path,
         zone=zone,
         cache_type="rapid-cache-ultra",
     )

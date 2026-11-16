@@ -18,18 +18,12 @@ import sys
 from google.cloud import storage_control_v2
 
 
-def disable_rapid_cache(
-    bucket_name: str, cache_id: str, timeout: float | None = None
-) -> None:
+def disable_rapid_cache(bucket_name: str, cache_id: str) -> None:
     # The ID of your GCS bucket
     # bucket_name = "your-unique-bucket-name"
 
-    # The ID of the Rapid Cache, which is the same as its zone
+    # The ID of the Rapid Cache
     # cache_id = "us-central1-a"
-
-    # (Optional) The maximum time to wait for the operation, in seconds.
-    # None waits until the operation completes.
-    # timeout = None
 
     storage_control_client = storage_control_v2.StorageControlClient()
     # The storage bucket path uses the global access pattern, in which the "_"
@@ -40,14 +34,15 @@ def disable_rapid_cache(
 
     request = storage_control_v2.DisableRapidCacheRequest(name=rapid_cache_path)
 
-    # Disabling a Rapid Cache is a long-running operation. It completes only
-    # after the cache is fully removed, which can take more than an hour.
-    # This sample waits for the operation to complete, or until the timeout.
+    # Disabling a Rapid Cache is a long-running operation. The cache moves to
+    # the "disabled" state quickly, but the operation only completes once the
+    # cache is fully removed (which can take more than an hour; bucket deletion
+    # is blocked until removal completes). Start the operation without waiting
+    # and use get_rapid_cache to check the cache state.
     operation = storage_control_client.disable_rapid_cache(request=request)
-    response = operation.result(timeout=timeout)
 
-    print(f"Disabled Rapid Cache: {response.name}")
-    print(f"State: {response.state}")
+    print(f"Disabling Rapid Cache: {rapid_cache_path}")
+    print(f"Operation: {operation.operation.name}")
 
 
 # [END storage_control_disable_rapid_cache]

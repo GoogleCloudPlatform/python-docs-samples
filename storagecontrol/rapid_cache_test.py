@@ -12,23 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import concurrent.futures
-import contextlib
+import os
 
 import create_rapid_cache
 import disable_rapid_cache
 import get_rapid_cache
+from google.api_core import exceptions
 from google.cloud import storage
 from google.cloud import storage_control_v2
 import list_rapid_caches
 import pytest
 import update_rapid_cache
 
-# The disable operation only completes once the cache has been fully removed,
-# which can take more than an hour. The cache reaches the "disabled" state
-# within seconds, so the test bounds the wait on the operation and then
-# checks the cache state.
-_DISABLE_TIMEOUT_SECONDS = 600
+pytestmark = pytest.mark.skipif(
+    os.getenv("RUN_RAPID_CACHE_TESTS") != "True",
+    reason=(
+        "Rapid Cache tests require an allowlisted project and leave buckets "
+        "until async cache removal completes. Set RUN_RAPID_CACHE_TESTS=True "
+        "to run."
+    ),
+)
 
 
 def test_rapid_cache_create_get_list_update_disable(
@@ -59,6 +62,7 @@ def test_rapid_cache_create_get_list_update_disable(
     assert f"Zone: {rapid_cache_zone}" in out
     assert "State: running" in out
     assert "Cache type: rapid-cache-ultra" in out
+    assert "TTL:" in out
 
     # Test list Rapid Caches
     list_rapid_caches.list_rapid_caches(bucket_name=bucket_name)
@@ -73,15 +77,16 @@ def test_rapid_cache_create_get_list_update_disable(
     assert f"Updated Rapid Cache: {cache_name}" in out
     assert "TTL: 172800 seconds" in out
 
-    # Test disable Rapid Cache. The wait on the operation is bounded by the
-    # native operation timeout; if it expires, the cache state is checked.
-    with contextlib.suppress(concurrent.futures.TimeoutError):
-        disable_rapid_cache.disable_rapid_cache(
-            bucket_name=bucket_name,
-            cache_id=cache_id,
-            timeout=_DISABLE_TIMEOUT_SECONDS,
-        )
-    capsys.readouterr()
-    get_rapid_cache.get_rapid_cache(bucket_name=bucket_name, cache_id=cache_id)
+    # Test disable Rapid Cache
+    disable_rapid_cache.disable_rapid_cache(bucket_name=bucket_name, cache_id=cache_id)
     out, _ = capsys.readouterr()
-    assert "State: disabled" in out
+    assert f"Disabling Rapid Cache: {cache_name}" in out
+    assert "Operation:" in out
+
+    try:
+        get_rapid_cache.get_rapid_cache(bucket_name=bucket_name, cache_id=cache_id)
+        out, _ = capsys.readouterr()
+        assert "State: disabled" in out
+    except exceptions.NotFound:
+        # On an empty bucket, full cache removal can finish before get runs.
+        pass

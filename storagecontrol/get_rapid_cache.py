@@ -22,7 +22,7 @@ def get_rapid_cache(bucket_name: str, cache_id: str) -> None:
     # The ID of your GCS bucket
     # bucket_name = "your-unique-bucket-name"
 
-    # The ID of the Rapid Cache, which is the same as its zone
+    # The ID of the Rapid Cache
     # cache_id = "us-central1-a"
 
     storage_control_client = storage_control_v2.StorageControlClient()
@@ -39,6 +39,8 @@ def get_rapid_cache(bucket_name: str, cache_id: str) -> None:
     print(f"Zone: {response.zone}")
     print(f"State: {response.state}")
     print(f"Cache type: {response.cache_type}")
+    if response.ttl:
+        print(f"TTL: {response.ttl.total_seconds():.0f} seconds")
 
 
 # [END storage_control_get_rapid_cache]
