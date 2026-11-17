@@ -16,19 +16,16 @@
 def generate_content() -> int:
     # [START googlegenaisdk_imggen_mmflash_txt_and_img_with_txt]
     from google import genai
-    from google.genai.types import GenerateContentConfig, Modality
+    from google.genai.types import GenerateContentConfig
     from PIL import Image
     from io import BytesIO
 
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-3.1-flash-image",
-        contents=(
-            "Generate an illustrated recipe for a paella."
-            "Create images to go alongside the text as you generate the recipe"
-        ),
-        config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
+        model="gemini-nano-banana-2.1",
+        contents="Generate an illustrated recipe for paella. Create images to go alongside the text as you generate the recipe.",
+        config=GenerateContentConfig(response_modalities=["TEXT", "IMAGE"]),
     )
     with open("output_folder/paella-recipe.md", "w") as fp:
         for i, part in enumerate(response.candidates[0].content.parts):

@@ -19,27 +19,29 @@ def generate_content() -> str:
     from io import BytesIO
 
     from google import genai
-    from google.genai.types import GenerateContentConfig, Modality
+    from google.genai.types import GenerateContentConfig, ImageConfig
     from PIL import Image
 
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-3.1-flash-image",
-        contents=("Generate an image of the Eiffel tower with fireworks in the background."),
+        model="gemini-nano-banana-2.1",
+        contents="Generate a high-contrast, grainy black and white street photography shot.",
         config=GenerateContentConfig(
-            response_modalities=[Modality.TEXT, Modality.IMAGE],
+            response_modalities=["IMAGE"],
+            image_config=ImageConfig(
+                aspect_ratio="3:2",
+                image_size="1K",
+            ),
         ),
     )
     for part in response.candidates[0].content.parts:
-        if part.text:
-            print(part.text)
-        elif part.inline_data:
+        if part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
             # Ensure the output directory exists
             output_dir = "output_folder"
             os.makedirs(output_dir, exist_ok=True)
-            image.save(os.path.join(output_dir, "example-image-eiffel-tower.png"))
+            image.save(os.path.join(output_dir, "example-image.png"))
 
     # [END googlegenaisdk_imggen_mmflash_with_txt]
     return True
