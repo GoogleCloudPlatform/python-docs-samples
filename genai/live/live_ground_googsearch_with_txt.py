@@ -20,6 +20,7 @@ async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_ground_googsearch_with_txt]
     from google import genai
     from google.genai.types import (
+        AudioTranscriptionConfig,
         Content,
         GoogleSearch,
         LiveConnectConfig,
@@ -29,13 +30,15 @@ async def generate_content() -> list[str]:
     )
 
     client = genai.Client()
-    model_id = "gemini-live-2.5-flash-native-audio"
+    model_id = "gemini-3.8-live"
     config = LiveConnectConfig(
-        response_modalities=[Modality.TEXT],
+        response_modalities=[Modality.AUDIO],
+        output_audio_transcription=AudioTranscriptionConfig(),
         tools=[Tool(google_search=GoogleSearch())],
     )
     async with client.aio.live.connect(model=model_id, config=config) as session:
         text_input = "When did the last Brazil vs. Argentina soccer match happen?"
+        print("> ", text_input, "\n")
         await session.send_client_content(
             turns=Content(role="user", parts=[Part(text=text_input)])
         )
@@ -43,19 +46,10 @@ async def generate_content() -> list[str]:
         response = []
 
         async for chunk in session.receive():
-            if chunk.server_content:
-                if chunk.text is not None:
-                    response.append(chunk.text)
-
-                # The model might generate and execute Python code to use Search
-                model_turn = chunk.server_content.model_turn
-                if model_turn:
-                    for part in model_turn.parts:
-                        if part.executable_code is not None:
-                            print(part.executable_code.code)
-
-                        if part.code_execution_result is not None:
-                            print(part.code_execution_result.output)
+            server_content = chunk.server_content
+            if server_content and server_content.output_transcription:
+                if server_content.output_transcription.text:
+                    response.append(server_content.output_transcription.text)
 
     print("".join(response))
     # Example output:
