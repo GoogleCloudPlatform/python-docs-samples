@@ -48,13 +48,14 @@ def test_generate_product_recommendations_success(
     )
 
     ddl_args = database.update_ddl.call_args.args[0]
+    assert "CREATE MODEL IF NOT EXISTS GeminiRecommendationModel" in ddl_args[0]
     assert "locations/global/publishers/google/models/gemini-3.8-flash" in ddl_args[0]
     database.update_ddl.return_value.result.assert_called_once_with(timeout=300)
 
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_NAME}" in out
     assert "Product Name: Cordless Drill" in out
-    assert "Recommendation: YES" in out
+    assert "RECOMMENDATION: YES" in out.upper()
     assert err == ""
 
 
@@ -136,4 +137,4 @@ def test_generate_product_recommendations_live(
     out, err = capsys.readouterr()
     assert err == ""
     assert "Product Name: Cordless Drill" in out
-    assert "Recommendation: YES" in out
+    assert "RECOMMENDATION: YES" in out.upper()

@@ -42,7 +42,7 @@ def generate_product_recommendations(
         f"/locations/{location}/publishers/google/models/gemini-3.8-flash"
     )
     ddl_statement = f"""
-        CREATE OR REPLACE MODEL {model_name}
+        CREATE MODEL IF NOT EXISTS {model_name}
         INPUT (prompt STRING(MAX))
         OUTPUT (content STRING(MAX))
         REMOTE OPTIONS (
