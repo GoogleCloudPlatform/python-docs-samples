@@ -18,6 +18,7 @@ async def generate_content(memory_corpus: str) -> list[str]:
     # [START googlegenaisdk_live_ground_ragengine_with_txt]
     from google import genai
     from google.genai.types import (
+        AudioTranscriptionConfig,
         Content,
         LiveConnectConfig,
         Modality,
@@ -29,7 +30,7 @@ async def generate_content(memory_corpus: str) -> list[str]:
     )
 
     client = genai.Client()
-    model_id = "gemini-live-2.5-flash-native-audio"
+    model_id = "gemini-3.8-live"
     rag_store = VertexRagStore(
         rag_resources=[
             VertexRagStoreRagResource(
@@ -40,7 +41,8 @@ async def generate_content(memory_corpus: str) -> list[str]:
         store_context=True,
     )
     config = LiveConnectConfig(
-        response_modalities=[Modality.TEXT],
+        response_modalities=[Modality.AUDIO],
+        output_audio_transcription=AudioTranscriptionConfig(),
         tools=[Tool(retrieval=Retrieval(vertex_rag_store=rag_store))],
     )
 
@@ -55,8 +57,10 @@ async def generate_content(memory_corpus: str) -> list[str]:
         response = []
 
         async for message in session.receive():
-            if message.text:
-                response.append(message.text)
+            server_content = message.server_content
+            if server_content and server_content.output_transcription:
+                if server_content.output_transcription.text:
+                    response.append(server_content.output_transcription.text)
 
     print("".join(response))
     # Example output:
