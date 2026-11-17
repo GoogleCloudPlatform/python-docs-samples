@@ -29,7 +29,7 @@ def count_tokens() -> int:
     ]
 
     response = client.models.count_tokens(
-        model="gemini-3.5-flash",
+        model="gemini-3.8-flash",
         contents=contents,
     )
     print(response)

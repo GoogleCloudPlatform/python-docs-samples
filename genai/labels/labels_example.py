@@ -20,7 +20,7 @@ from google import genai
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = os.getenv("LOCATION_ID")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL_ID", "gemini-2.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL_ID", "gemini-3.8-flash")
 
 
 def generate_content() -> genai.types.GenerateContentResponse:

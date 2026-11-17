@@ -23,9 +23,7 @@ def count_tokens_example() -> int:
     prompt = "Why is the sky blue?"
 
     # Send text to Gemini
-    response = client.models.generate_content(
-        model="gemini-3.5-flash", contents=prompt
-    )
+    response = client.models.generate_content(model="gemini-3.8-flash", contents=prompt)
 
     # Prompt and response tokens count
     print(response.usage_metadata)
