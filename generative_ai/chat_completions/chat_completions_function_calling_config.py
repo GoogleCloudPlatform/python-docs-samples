@@ -19,22 +19,21 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 def generate_text() -> object:
     # [START generativeaionvertexai_gemini_chat_completions_function_calling_config]
+    from google.auth import default
+    import google.auth.transport.requests
     import openai
-
-    from google.auth import default, transport
 
     # TODO(developer): Update & uncomment below line
     # PROJECT_ID = "your-project-id"
-    location = "us-central1"
+    location = "global"
 
     # Programmatically get an access token
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
-    auth_request = transport.requests.Request()
-    credentials.refresh(auth_request)
+    credentials.refresh(google.auth.transport.requests.Request())
 
     # OpenAI Client
     client = openai.OpenAI(
-        base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{PROJECT_ID}/locations/{location}/endpoints/openapi",
+        base_url=f"https://aiplatform.googleapis.com/v1beta1/projects/{PROJECT_ID}/locations/{location}/endpoints/openapi",
         api_key=credentials.token,
     )
 
@@ -68,7 +67,7 @@ def generate_text() -> object:
     messages.append({"role": "user", "content": "What is the weather in Boston, MA?"})
 
     response = client.chat.completions.create(
-        model="google/gemini-2.0-flash-001",
+        model="google/gemini-3.8-flash",
         messages=messages,
         tools=tools,
         tool_choice="auto",

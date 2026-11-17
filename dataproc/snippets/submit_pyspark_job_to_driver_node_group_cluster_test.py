@@ -62,27 +62,28 @@ def teardown():
     max_tries=5,
 )
 def test_workflows(capsys):
-    # Setup driver node group cluster. TODO: cleanup b/424371877
-    command = f"""gcloud dataproc clusters create {CLUSTER_NAME} \
-            --region {REGION} \
-            --project {PROJECT_ID} \
-            --driver-pool-size=1 \
-            --driver-pool-id=pytest"""
+    try:
+        # Setup driver node group cluster. TODO: cleanup b/424371877
+        command = f"""gcloud dataproc clusters create {CLUSTER_NAME} \
+                --region {REGION} \
+                --project {PROJECT_ID} \
+                --driver-pool-size=1 \
+                --driver-pool-id=pytest"""
 
-    output = subprocess.run(
-        command,
-        capture_output=True,
-        shell=True,
-        check=True,
-    )
-    print(output)
+        output = subprocess.run(
+            command,
+            capture_output=True,
+            shell=True,
+            check=True,
+        )
+        print(output)
 
-    # Wrapper function for client library function
-    submit_pyspark_job_to_driver_node_group_cluster.submit_job(
-        PROJECT_ID, REGION, CLUSTER_NAME
-    )
+        # Wrapper function for client library function
+        submit_pyspark_job_to_driver_node_group_cluster.submit_job(
+            PROJECT_ID, REGION, CLUSTER_NAME
+        )
 
-    out, _ = capsys.readouterr()
-    assert "Job finished successfully" in out
-
-    # cluster deleted in teardown()
+        out, _ = capsys.readouterr()
+        assert "Job finished successfully" in out
+    finally:
+        teardown()

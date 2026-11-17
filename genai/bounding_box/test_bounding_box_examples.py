@@ -18,6 +18,7 @@
 
 import os
 
+import boundingbox_interactions_with_txt_img
 import boundingbox_with_txt_img
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
@@ -29,3 +30,9 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
 def test_boundingbox_with_txt_img() -> None:
     response = boundingbox_with_txt_img.generate_content()
     assert response
+
+
+def test_boundingbox_interactions_with_txt_img() -> None:
+    response = boundingbox_interactions_with_txt_img.create_interaction()
+    assert response
+

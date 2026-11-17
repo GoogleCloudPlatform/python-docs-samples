@@ -36,7 +36,10 @@ import requests
 
 ATTESTATION_SIGNATURE_LEN = 256
 
-MANUFACTURER_CERT_URL = "https://www.marvell.com/content/dam/marvell/en/public-collateral/security-solutions/liquid_security_certificate.zip"
+MANUFACTURER_CERT_URL = (
+    "https://www.marvell.com/content/dam/marvell/en/public-collateral/"
+    "security-solutions/liquidsecurity-certificate-cnxxxxx-nfbe-x.0-g-v3.zip"
+)
 
 # <Name(C=US,ST=California,L=San Jose,O=Cavium\, Inc.,OU=LiquidSecurity,CN=localca.liquidsecurity.cavium.com)>
 MANUFACTURER_CERT_SUBJECT_BYTES = (
@@ -134,7 +137,7 @@ def get_manufacturer_root_certificate():
     resp = requests.get(MANUFACTURER_CERT_URL)
     tmp_file = io.BytesIO(resp.content)
     zip_file = zipfile.ZipFile(tmp_file)
-    with zip_file.open("liquid_security_certificate.crt") as f:
+    with zip_file.open("cavium_cert.crt") as f:
         return x509.load_pem_x509_certificate(f.read(), backends.default_backend())
 
 

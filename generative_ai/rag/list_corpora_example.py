@@ -27,8 +27,9 @@ def list_corpora() -> types.ListRagCorporaResponse:
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     corpora = client.rag.list_corpora()
     print(corpora)

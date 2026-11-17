@@ -26,15 +26,16 @@ def get_file(file_name: str) -> types.RagFile:
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-    # file_name = "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}/ragFiles/{rag_file_id}"
+    # file_name = "projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{rag_corpus_id}/ragFiles/{rag_file_id}"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     rag_file = client.rag.get_file(name=file_name)
     print(rag_file)
     # Example response:
-    # RagFile(name='projects/1234567890/locations/us-central1/ragCorpora/11111111111/ragFiles/22222222222',
+    # RagFile(name='projects/1234567890/locations/us-east5/ragCorpora/11111111111/ragFiles/22222222222',
     # display_name='file_display_name', description='file description')
 
     # [END generativeaionvertexai_rag_get_file]
@@ -44,5 +45,5 @@ def get_file(file_name: str) -> types.RagFile:
 
 if __name__ == "__main__":
     get_file(
-        "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}/ragFiles/{rag_file_id}"
+        f"projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{{rag_corpus_id}}/ragFiles/{{rag_file_id}}"
     )

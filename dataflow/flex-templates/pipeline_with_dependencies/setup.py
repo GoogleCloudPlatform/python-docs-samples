@@ -20,4 +20,5 @@ pipeline option or the FLEX_TEMPLATE_PYTHON_SETUP_FILE configuration option.
 """
 
 import setuptools
+
 setuptools.setup()

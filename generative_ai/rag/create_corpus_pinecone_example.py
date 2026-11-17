@@ -20,7 +20,6 @@ from agentplatform import types
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-
 def create_corpus_pinecone(
     pinecone_index_name: str,
     pinecone_api_key_secret_manager_version: str,
@@ -38,8 +37,9 @@ def create_corpus_pinecone(
     # display_name = "test_corpus"
     # description = "Corpus Description"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     # Configure embedding model (Optional)
     embedding_model_config = types.RagEmbeddingModelConfig(
@@ -51,7 +51,12 @@ def create_corpus_pinecone(
     # Configure Vector DB
     vector_db = types.RagVectorDbConfig(
         pinecone=types.RagVectorDbConfigPinecone(
-         index_name=pinecone_index_name,
+            index_name=pinecone_index_name,
+        ),
+        api_auth=types.ApiAuth(
+            api_key_config=types.ApiAuthApiKeyConfig(
+                api_key_secret_version=pinecone_api_key_secret_manager_version
+            )
         ),
         rag_embedding_model_config=embedding_model_config,
     )

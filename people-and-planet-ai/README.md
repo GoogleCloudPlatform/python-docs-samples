@@ -4,21 +4,23 @@
 
 > [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/image-classification/README.ipynb)
 >
-> [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0)
+> [Watch the video on YouTube ![thumbnail](https://img.youtube.com/vi/hUzODH3uGg0/0.jpg)](https://youtu.be/hUzODH3uGg0)
 
-This model is trained to recognize animal species from
+Classify wildlife species and extract ecological recovery metrics from
 [camera trap](https://en.wikipedia.org/wiki/Camera_trap)
-pictures.
+pictures in the public [LILA Science](https://lila.science/datasets/wcscameratraps) Cloud Storage bucket (`gs://public-datasets-lila/`).
 
-* **Model**: [AutoML] Vision
-* **Creating datasets**: [Apache Beam] in [Dataflow]
-* **Training the model**: [AutoML] in [Vertex AI]
-* **Getting predictions**: [Vertex AI]
+* **Multimodal classification and ecological extraction**: [Gemini] (`gemini-3.8-flash`) via the [Google Gen AI SDK]
+* **Rare-species visual similarity and vector search**: [Gemini Embedding 2] (`gemini-embedding-2`)
+* **Class-balanced batch inference pipeline**: [Apache Beam] `RunInference` in [Dataflow]
+* **Metadata and structured observation storage**: [BigQuery]
 
 [Apache Beam]: https://beam.apache.org
+[BigQuery]: https://cloud.google.com/bigquery
 [Dataflow]: https://cloud.google.com/dataflow
-[AutoML]: https://cloud.google.com/vertex-ai/docs/beginner/beginners-guide
-[Vertex AI]: https://cloud.google.com/vertex-ai
+[Gemini]: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-8-flash
+[Gemini Embedding 2]: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/embedding-2
+[Google Gen AI SDK]: https://googleapis.github.io/python-genai/
 
 ---
 
@@ -45,24 +47,14 @@ location data.
 
 ---
 
-## 🏭 [Coal Plant Predictions -- _geospatial-classification_](geospatial-classification)
+## 🏭 Coal Plant Predictions -- _geospatial-classification_ (retired)
 
-> [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/GoogleCloudPlatform/python-docs-samples/blob/main/people-and-planet-ai/geospatial-classification/README.ipynb)
->
-> [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/8amFK7T_n30/0.jpg)](https://youtu.be/8amFK7T_n30)
+> [Watch the video on YouTube ![thumbnail](https://img.youtube.com/vi/8amFK7T_n30/0.jpg)](https://youtu.be/8amFK7T_n30)
 
-This model uses satellite data to predict if a coal plant is turned on and producing carbon emissions. The satellite data comes from [Google Earth Engine.](https://earthengine.google.com/)
-
-* **Model**: 1D Fully Convolutional Network in [TensorFlow]
-* **Creating datasets**: [Sentinel-2] satellite data from [Earth Engine]
-* **Training the model**: [TensorFlow] in [Vertex AI]
-* **Getting predictions**: [TensorFlow] in [Cloud Run]
-
-[Cloud Run]: https://cloud.google.com/run
-[Sentinel-2]: https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
-[Earth Engine]: https://earthengine.google.com/
-[TensorFlow]: https://www.tensorflow.org/
-[Vertex AI]: https://cloud.google.com/vertex-ai
+This sample used Sentinel-2 satellite data from Earth Engine to predict whether a
+coal plant was operating. It has been retired; see
+[geospatial-classification](geospatial-classification) for why, and for a link to
+the last version of the code.
 
 ---
 

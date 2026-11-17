@@ -41,7 +41,7 @@ import upload_file_example
 pytest.skip(allow_module_level=True)
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-LOCATION = "us-central1"
+LOCATION = "us-east5"
 GCS_FILE = "gs://cloud-samples-data/generative-ai/pdf/earnings_statement.pdf"
 
 

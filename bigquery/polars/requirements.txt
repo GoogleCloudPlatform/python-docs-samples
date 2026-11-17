@@ -1,0 +1,2 @@
+polars-bigquery==0.3.0
+polars==2.1.0

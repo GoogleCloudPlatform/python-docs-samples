@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_text(project_id: str, location: str = "us-central1") -> object:
+def generate_text(project_id: str, location: str = "global") -> object:
     # [START generativeaionvertexai_gemini_chat_completions_non_streaming_image]
 
     from google.auth import default
@@ -23,7 +23,7 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    # location = "us-central1"
+    # location = "global"
 
     # Programmatically get an access token
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
@@ -31,12 +31,12 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
 
     # OpenAI Client
     client = openai.OpenAI(
-        base_url=f"https://{location}-aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}/endpoints/openapi",
+        base_url=f"https://aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}/endpoints/openapi",
         api_key=credentials.token,
     )
 
     response = client.chat.completions.create(
-        model="google/gemini-2.0-flash-001",
+        model="google/gemini-3.8-flash",
         messages=[
             {
                 "role": "user",

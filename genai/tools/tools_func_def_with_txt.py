@@ -34,14 +34,13 @@ def generate_content() -> str:
         return weather_map.get(location, "unknown")
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-3.5-flash"
+    model_id = "gemini-3.8-flash"
 
     response = client.models.generate_content(
         model=model_id,
         contents="What is the weather like in Boston?",
         config=GenerateContentConfig(
             tools=[get_current_weather],
-            temperature=0,
         ),
     )
 

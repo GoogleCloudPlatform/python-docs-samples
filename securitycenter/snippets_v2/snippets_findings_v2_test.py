@@ -140,6 +140,25 @@ def test_update_finding(source_name):
     assert "s_value" in keys
 
 
+def test_update_finding_state(capsys, organization_id, source_name):
+    snippets_findings_v2.create_finding(
+        organization_id,
+        "global",
+        "samplefindingid",
+        source_name,
+        "MEDIUM_RISK_ONE",
+    )
+    snippets_findings_v2.update_finding_state(
+        organization_id,
+        source_name.split("/")[-1],
+        "samplefindingid",
+    )
+    captured = capsys.readouterr()
+    assert "Resource ID:" in captured.out
+    assert "samplefindingid" in captured.out
+    assert "State: INACTIVE" in captured.out
+
+
 def test_create_source(organization_id):
     source = snippets_findings_v2.create_source(organization_id)
     assert source.display_name == "Customized Display Name"

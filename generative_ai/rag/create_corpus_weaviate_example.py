@@ -40,13 +40,14 @@ def create_corpus_weaviate(
     # display_name = "test_corpus"
     # description = "Corpus Description"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-central1")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     # Configure embedding model (Optional)
     embedding_model_config = types.RagEmbeddingModelConfig(
         vertex_prediction_endpoint=types.RagEmbeddingModelConfigVertexPredictionEndpoint(
-            endpoint="publishers/google/models/text-embedding-004"
+            endpoint="publishers/google/models/text-embedding-005"
         )
     )
 
@@ -60,9 +61,14 @@ def create_corpus_weaviate(
         rag_corpus=types.RagCorpus(
             display_name=display_name,
             description=description,
-            rag_embedding_model_config=embedding_model_config,
             rag_vector_db_config=types.RagVectorDbConfig(
-                weaviate=vector_db
+                weaviate=vector_db,
+                api_auth=types.ApiAuth(
+                    api_key_config=types.ApiAuthApiKeyConfig(
+                        api_key_secret_version=weaviate_api_key_secret_manager_version
+                    )
+                ),
+                rag_embedding_model_config=embedding_model_config,
             ),
         )
     )

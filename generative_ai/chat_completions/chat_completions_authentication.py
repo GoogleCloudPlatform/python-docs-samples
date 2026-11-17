@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_text(project_id: str, location: str = "us-central1") -> object:
+def generate_text(project_id: str, location: str = "global") -> object:
     # [START generativeaionvertexai_gemini_chat_completions_authentication]
     import openai
 
@@ -22,7 +22,7 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    # location = "us-central1"
+    # location = "global"
 
     # Programmatically get an access token
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
@@ -42,7 +42,7 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
 
     # OpenAI Client
     client = openai.OpenAI(
-        base_url=f"https://{location}-aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}/endpoints/{ENDPOINT_ID}",
+        base_url=f"https://aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}/endpoints/{ENDPOINT_ID}",
         api_key=credentials.token,
     )
     # [END generativeaionvertexai_gemini_chat_completions_authentication]

@@ -1,0 +1,54 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+def create_interaction() -> str:
+    # [START googlegenaisdk_interactions_textgen_code_with_pdf]
+    from google import genai
+    from google.genai.interactions import DocumentContent, TextContent
+
+    client = genai.Client()
+    model_id = "gemini-3.8-flash"
+    prompt = "Convert this python code to use Google Python Style Guide."
+    print("> ", prompt, "\n")
+    pdf_uri = "https://storage.googleapis.com/cloud-samples-data/generative-ai/text/inefficient_fibonacci_series_python_code.pdf"
+
+    interaction = client.interactions.create(
+        model=model_id,
+        input=[
+            DocumentContent(
+                uri=pdf_uri,
+                mime_type="application/pdf",
+            ),
+            TextContent(text=prompt),
+        ],
+    )
+
+    print(interaction.output_text)
+    # Example response:
+    # >  Convert this python code to use Google Python Style Guide.
+    #
+    # def generate_fibonacci_sequence(num_terms: int) -> list[int]:
+    #     """Generates the Fibonacci sequence up to a specified number of terms.
+    #
+    #     This function calculates the Fibonacci sequence starting with 0 and 1.
+    #     It handles base cases for 0, 1, and 2 terms efficiently.
+    #
+    # # ...
+    # [END googlegenaisdk_interactions_textgen_code_with_pdf]
+    return interaction.output_text
+
+
+if __name__ == "__main__":
+    create_interaction()

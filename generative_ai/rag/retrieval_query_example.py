@@ -31,10 +31,11 @@ def retrieval_query(
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-    # corpus_name = "projects/[PROJECT_ID]/locations/us-central1/ragCorpora/[rag_corpus_id]"
+    # corpus_name = "projects/[PROJECT_ID]/locations/us-east5/ragCorpora/[rag_corpus_id]"
 
-    # Initialize Agent Platform client once per session
-    client = agentplatform.Client(project=PROJECT_ID, location="us-east4")
+    # Initialize Agent Platform client once per session.
+    # See https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview#supported-regions
+    client = agentplatform.Client(project=PROJECT_ID, location="us-east5")
 
     response = client.rag.retrieve_contexts(
         vertex_rag_store=genai_types.VertexRagStore(
@@ -71,5 +72,5 @@ def retrieval_query(
 
 if __name__ == "__main__":
     retrieval_query(
-        "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+        f"projects/{PROJECT_ID}/locations/us-east5/ragCorpora/{{rag_corpus_id}}"
     )

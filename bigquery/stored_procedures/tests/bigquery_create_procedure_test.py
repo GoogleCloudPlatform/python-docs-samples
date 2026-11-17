@@ -1,0 +1,62 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from unittest import mock
+
+from google.api_core import exceptions
+import pytest
+
+from .. import bigquery_create_procedure
+
+
+def test_create_procedure_success(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    mock_client = mock.MagicMock()
+    mock_job = mock.MagicMock()
+    mock_job.job_id = "example-job-123"
+    mock_job.statement_type = "SCRIPT"
+    mock_job.result.return_value = []
+    mock_client.query.return_value = mock_job
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
+    monkeypatch.setattr(bigquery_create_procedure.bigquery, "Client", mock_client_cls)
+
+    bigquery_create_procedure.create_procedure(
+        project_id="example-project",
+        dataset_id="example_dataset",
+    )
+
+    captured = capsys.readouterr()
+    assert "Resource ID:" in captured.out
+    assert "example-project" in captured.out
+    assert mock_client.query.called
+    mock_client_cls.assert_called_once_with(project="example-project")
+
+
+def test_create_procedure_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    mock_client = mock.MagicMock()
+    mock_job = mock.MagicMock()
+    mock_job.result.side_effect = exceptions.NotFound("resource error")
+    mock_client.query.return_value = mock_job
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
+    monkeypatch.setattr(bigquery_create_procedure.bigquery, "Client", mock_client_cls)
+
+    with pytest.raises(exceptions.GoogleAPICallError):
+        bigquery_create_procedure.create_procedure(
+            project_id="example-project",
+            dataset_id="example_dataset",
+        )

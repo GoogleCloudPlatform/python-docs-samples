@@ -9,7 +9,8 @@ dependencies = [
     "opentelemetry-api==1.40.0",
     "opentelemetry-sdk==1.40.0",
     "opentelemetry-exporter-otlp-proto-grpc==1.40.0",
-    "google-auth==2.49.1",
+    "google-auth==2.62.0",
     "grpcio==1.80.0",
+    "requests==2.34.2",
 ]
 

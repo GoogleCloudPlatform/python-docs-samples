@@ -22,7 +22,13 @@
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["3.8", "3.9", "3.11", "3.12", "3.13"],
+    # By default, samples are tested on the minimum (3.12) and the
+    # latest stable (3.14) supported Python versions. Remove "3.13"
+    # from this list to also test on 3.13.
+    "ignored_versions": ["3.13"],
+    # Newly released Python versions are only tested when listed here,
+    # for example: "opt_in_versions": ["3.15"].
+    "opt_in_versions": [],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": True,
