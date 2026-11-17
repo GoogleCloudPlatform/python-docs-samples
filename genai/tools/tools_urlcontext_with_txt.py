@@ -19,11 +19,9 @@ def generate_content() -> str:
     from google.genai.types import GenerateContentConfig, HttpOptions, Tool, UrlContext
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-3.5-flash"
+    model_id = "gemini-3.8-flash"
 
-    url_context_tool = Tool(
-        url_context=UrlContext
-    )
+    url_context_tool = Tool(url_context=UrlContext)
 
     # TODO(developer): Here put your URLs
     url1 = "https://cloud.google.com/vertex-ai/docs/generative-ai/start"
@@ -35,7 +33,7 @@ def generate_content() -> str:
         config=GenerateContentConfig(
             tools=[url_context_tool],
             response_modalities=["TEXT"],
-        )
+        ),
     )
 
     for each in response.candidates[0].content.parts:
