@@ -36,6 +36,7 @@ def create_vector_index(project_id: str, instance_id: str, database_id: str) -> 
         f"CREATE VECTOR INDEX {index_name} "
         "ON Documents(DocEmbedding) "
         "STORING (WordCount) "
+        "WHERE DocEmbedding IS NOT NULL "
         "OPTIONS (distance_type = 'COSINE')"
     )
     request = spanner_admin_database_v1.UpdateDatabaseDdlRequest(

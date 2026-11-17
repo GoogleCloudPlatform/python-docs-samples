@@ -41,6 +41,7 @@ def test_create_vector_index_success(
     request = client.update_database_ddl.call_args.kwargs["request"]
     assert request.database == DATABASE_PATH
     assert "CREATE VECTOR INDEX DocEmbeddingIndex" in request.statements[0]
+    assert "WHERE DocEmbedding IS NOT NULL" in request.statements[0]
     client.update_database_ddl.return_value.result.assert_called_once_with(timeout=300)
 
     out, err = capsys.readouterr()
