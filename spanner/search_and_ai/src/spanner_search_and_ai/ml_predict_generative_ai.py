@@ -72,7 +72,7 @@ def generate_product_recommendations(
                 JOIN Users AS customer
                     ON customer.UserId = @user_id
             ),
-            STRUCT(1024 AS maxOutputTokens, 0.0 AS temperature)
+            STRUCT(1024 AS maxOutputTokens)
         )
         ORDER BY ProductId
     """

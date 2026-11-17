@@ -52,6 +52,10 @@ def test_generate_product_recommendations_success(
     assert "locations/global/publishers/google/models/gemini-3.8-flash" in ddl_args[0]
     database.update_ddl.return_value.result.assert_called_once_with(timeout=300)
 
+    sql_arg = snapshot.execute_sql.call_args.args[0]
+    assert "STRUCT(1024 AS maxOutputTokens)" in sql_arg
+    assert "temperature" not in sql_arg
+
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_NAME}" in out
     assert "Product Name: Cordless Drill" in out
