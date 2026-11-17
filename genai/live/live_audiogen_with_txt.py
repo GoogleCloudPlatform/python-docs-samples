@@ -24,12 +24,18 @@ async def generate_content() -> None:
     import numpy as np
     import scipy.io.wavfile as wavfile
     from google import genai
-    from google.genai.types import (Content, LiveConnectConfig, Modality, Part,
-                                    PrebuiltVoiceConfig, SpeechConfig,
-                                    VoiceConfig)
+    from google.genai.types import (
+        Content,
+        LiveConnectConfig,
+        Modality,
+        Part,
+        PrebuiltVoiceConfig,
+        SpeechConfig,
+        VoiceConfig,
+    )
 
     client = genai.Client()
-    model = "gemini-live-2.5-flash-native-audio"
+    model = "gemini-3.8-live"
     # For more Voice options, check https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash#live-api-native-audio
     voice_name = "Aoede"
 

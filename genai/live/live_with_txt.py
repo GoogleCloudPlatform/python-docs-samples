@@ -19,6 +19,7 @@ async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_with_txt]
     from google import genai
     from google.genai.types import (
+        AudioTranscriptionConfig,
         Content,
         HttpOptions,
         LiveConnectConfig,
@@ -27,11 +28,15 @@ async def generate_content() -> list[str]:
     )
 
     client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
-    model_id = "gemini-live-2.5-flash-native-audio"
+    model_id = "gemini-3.8-live"
 
     async with client.aio.live.connect(
         model=model_id,
-        config=LiveConnectConfig(response_modalities=[Modality.TEXT]),
+        # The model responds with audio. Request a transcript of it to get text.
+        config=LiveConnectConfig(
+            response_modalities=[Modality.AUDIO],
+            output_audio_transcription=AudioTranscriptionConfig(),
+        ),
     ) as session:
         text_input = "Hello? Gemini, are you there?"
         print("> ", text_input, "\n")
@@ -42,8 +47,10 @@ async def generate_content() -> list[str]:
         response = []
 
         async for message in session.receive():
-            if message.text:
-                response.append(message.text)
+            server_content = message.server_content
+            if server_content and server_content.output_transcription:
+                if server_content.output_transcription.text:
+                    response.append(server_content.output_transcription.text)
 
         print("".join(response))
     # Example output:

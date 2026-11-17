@@ -22,8 +22,13 @@ async def generate_content() -> list:
     # [START googlegenaisdk_live_audio_with_txt]
     from google import genai
     from google.genai.types import (
-        Content, LiveConnectConfig, Modality, Part,
-        PrebuiltVoiceConfig, SpeechConfig, VoiceConfig
+        Content,
+        LiveConnectConfig,
+        Modality,
+        Part,
+        PrebuiltVoiceConfig,
+        SpeechConfig,
+        VoiceConfig,
     )
     import numpy as np
     import soundfile as sf
@@ -37,7 +42,7 @@ async def generate_content() -> list:
 
     client = genai.Client()
     voice_name = "Aoede"
-    model = "gemini-live-2.5-flash-native-audio"
+    model = "gemini-3.8-live"
 
     config = LiveConnectConfig(
         response_modalities=[Modality.AUDIO],
