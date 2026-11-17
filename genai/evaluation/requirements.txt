@@ -1,4 +1,5 @@
 pandas==2.3.3
-google-auth==2.55.2
+google-auth==2.62.2
 google-cloud-aiplatform[evaluation]==1.161.0
-google-genai==2.12.1
+# google-genai stays on 2.x: google-cloud-aiplatform (Gen AI evaluation service) requires google-genai<3.0.0.
+google-genai==2.34.0
