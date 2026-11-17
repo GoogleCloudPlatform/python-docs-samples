@@ -31,10 +31,9 @@ def test_query_external_bigtable_success(
     mock_row.rowkey = "row-001"
     mock_job.result.return_value = [mock_row]
     mock_client.query.return_value = mock_job
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
     monkeypatch.setattr(
-        bigquery_query_external_bigtable.bigquery,
-        "Client",
-        lambda project=None: mock_client,
+        bigquery_query_external_bigtable.bigquery, "Client", mock_client_cls
     )
 
     bigquery_query_external_bigtable.query_external_bigtable(
@@ -51,6 +50,7 @@ def test_query_external_bigtable_success(
     assert "Rows Returned: 1" in captured.out
     assert "Temporary Table: example_bigtable_temp" in captured.out
     assert mock_client.query.called
+    mock_client_cls.assert_called_once_with(project="example-project")
 
 
 def test_query_external_bigtable_error(
@@ -60,10 +60,9 @@ def test_query_external_bigtable_error(
     mock_job = mock.MagicMock()
     mock_job.result.side_effect = exceptions.NotFound("resource error")
     mock_client.query.return_value = mock_job
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
     monkeypatch.setattr(
-        bigquery_query_external_bigtable.bigquery,
-        "Client",
-        lambda project=None: mock_client,
+        bigquery_query_external_bigtable.bigquery, "Client", mock_client_cls
     )
 
     with pytest.raises(exceptions.GoogleAPICallError):
