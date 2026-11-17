@@ -1,6 +1,6 @@
 # Cloud Spanner Transaction Samples
 
-Python samples demonstrating transaction isolation levels and pessimistic row locking (`SELECT ... FOR UPDATE` with `IsolationLevel.REPEATABLE_READ`) in [Cloud Spanner](https://cloud.google.com/spanner/docs/isolation-levels).
+Python samples demonstrating transaction isolation levels and commit-time read validation (`SELECT ... FOR UPDATE` with `IsolationLevel.REPEATABLE_READ`) in [Cloud Spanner](https://cloud.google.com/spanner/docs/isolation-levels).
 
 ## Setup
 

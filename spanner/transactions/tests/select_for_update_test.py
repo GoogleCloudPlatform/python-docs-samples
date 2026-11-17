@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from collections.abc import Callable
 import runpy
 from unittest import mock
 
@@ -40,19 +41,18 @@ def test_transfer_budget_with_select_for_update_success(
     transaction = mock.MagicMock()
     transaction.execute_sql.side_effect = [
         [(500000,)],
-        [(300000,)],
+        [(None,)],
     ]
 
     def run_txn(
-        fn: object,
+        fn: Callable[[mock.MagicMock], None],
         isolation_level: spanner_v1.TransactionOptions.IsolationLevel,
     ) -> None:
         assert (
             isolation_level
             == spanner_v1.TransactionOptions.IsolationLevel.REPEATABLE_READ
         )
-        callable_fn = fn  # type: ignore[assignment]
-        callable_fn(transaction)
+        fn(transaction)
 
     database.run_in_transaction.side_effect = run_txn
 
@@ -68,8 +68,28 @@ def test_transfer_budget_with_select_for_update_success(
     assert f"Resource ID: {DATABASE_NAME}" in out
     assert "Isolation Level: REPEATABLE_READ" in out
     assert "Source Budget: 490000" in out
-    assert "Target Budget: 310000" in out
+    assert "Target Budget: 10000" in out
     assert err == ""
+
+
+@mock.patch(SPANNER_CLIENT)
+def test_transfer_budget_with_select_for_update_missing_album(
+    mock_client_class: mock.MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    database = (
+        mock_client_class.return_value.instance.return_value.database.return_value
+    )
+    transaction = mock.MagicMock()
+    transaction.execute_sql.side_effect = [[], [(300000,)]]
+    database.run_in_transaction.side_effect = lambda fn, **_kw: fn(transaction)
+
+    select_for_update.transfer_budget_with_select_for_update(
+        PROJECT_ID, INSTANCE_ID, DATABASE_ID
+    )
+
+    out, err = capsys.readouterr()
+    assert out == ""
+    assert "Source or target album row was not found." in err
 
 
 @pytest.mark.parametrize(

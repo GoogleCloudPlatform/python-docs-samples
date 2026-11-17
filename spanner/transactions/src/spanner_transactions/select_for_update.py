@@ -65,8 +65,10 @@ def transfer_budget_with_select_for_update(
                 },
             )
         )
-        source_budget = int(source_rows[0][0]) - transfer_amount
-        target_budget = int(target_rows[0][0]) + transfer_amount
+        if not source_rows or not target_rows:
+            raise ValueError("Source or target album row was not found.")
+        source_budget = int(source_rows[0][0] or 0) - transfer_amount
+        target_budget = int(target_rows[0][0] or 0) + transfer_amount
 
         update_sql = """
             UPDATE Albums
@@ -95,6 +97,12 @@ def transfer_budget_with_select_for_update(
         database.run_in_transaction(
             update_albums,
             isolation_level=spanner_v1.TransactionOptions.IsolationLevel.REPEATABLE_READ,
+        )
+    except ValueError as err:
+        print(
+            f"error: cannot transfer budget on database '{database_id}' "
+            f"in instance '{instance_id}' for project '{project_id}': {err}",
+            file=sys.stderr,
         )
     except exceptions.NotFound as err:
         print(
