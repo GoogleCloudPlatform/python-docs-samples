@@ -37,6 +37,13 @@ def test_upgrade_manifest_biglake_table_success(
             mock.MagicMock(),
         ]
         mock_client.query.side_effect = [mock_ddl_job, mock_select_job]
+        mock_table = mock.MagicMock()
+        mock_table.external_data_configuration.to_api_repr.return_value = {
+            "sourceFormat": "PARQUET",
+            "metadataCacheMode": "AUTOMATIC",
+        }
+        mock_table.max_staleness = "0-0 0 1:0:0"
+        mock_client.get_table.return_value = mock_table
 
         bigquery_upgrade_manifest_biglake_table.upgrade_manifest_biglake_table(
             project_id="example-project",
@@ -47,12 +54,16 @@ def test_upgrade_manifest_biglake_table_success(
         )
 
         assert mock_client.query.call_count == 2
+        mock_client.get_table.assert_called_once_with(
+            "example-project.example_dataset.example_manifest_table"
+        )
         captured = capsys.readouterr()
         assert (
             "Resource ID: example-project.example_dataset.example_manifest_table"
             in captured.out
         )
         assert "Metadata Cache Mode: AUTOMATIC" in captured.out
+        assert "Max Staleness: 0-0 0 1:0:0" in captured.out
         assert "Rows Returned: 3" in captured.out
 
 

@@ -52,12 +52,8 @@ def upgrade_manifest_biglake_table(
         );
     """
     select_sql = f"""
-        SELECT
-          id,
-          label,
-          score
+        SELECT *
         FROM `{table_ref}`
-        ORDER BY id ASC
         LIMIT 10;
     """
 
@@ -66,6 +62,11 @@ def upgrade_manifest_biglake_table(
     )
     client.query(ddl_sql).result()
 
+    # Read the table back to confirm the metadata caching settings BigQuery applied.
+    table = client.get_table(table_ref)
+    external_config = table.external_data_configuration.to_api_repr()
+    metadata_cache_mode = external_config.get("metadataCacheMode")
+
     query_job = client.query(select_sql)
     rows = list(query_job.result())
 
@@ -73,7 +74,8 @@ def upgrade_manifest_biglake_table(
     print(f"Connection ID: {connection_id}")
     print(f"Job ID: {query_job.job_id}")
     print(f"Manifest URI: {manifest_uri}")
-    print("Metadata Cache Mode: AUTOMATIC")
+    print(f"Metadata Cache Mode: {metadata_cache_mode}")
+    print(f"Max Staleness: {table.max_staleness}")
     print(f"Rows Returned: {len(rows)}")
 
 
