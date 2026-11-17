@@ -27,11 +27,28 @@ async def generate_content() -> list[str]:
     import requests
     import soundfile as sf
     from google import genai
-    from google.genai.types import Blob, LiveConnectConfig, Modality
+    from google.genai.types import (
+        ActivityEnd,
+        ActivityStart,
+        AudioTranscriptionConfig,
+        AutomaticActivityDetection,
+        Blob,
+        LiveConnectConfig,
+        Modality,
+        RealtimeInputConfig,
+    )
 
     client = genai.Client()
-    model = "gemini-live-2.5-flash-native-audio"
-    config = LiveConnectConfig(response_modalities=[Modality.TEXT])
+    model = "gemini-3.8-live"
+    config = LiveConnectConfig(
+        response_modalities=[Modality.AUDIO],
+        output_audio_transcription=AudioTranscriptionConfig(),
+        # Mark the start and end of the audio yourself, because the audio file
+        # doesn't end with the silence that automatic activity detection needs.
+        realtime_input_config=RealtimeInputConfig(
+            automatic_activity_detection=AutomaticActivityDetection(disabled=True)
+        ),
+    )
 
     async with client.aio.live.connect(model=model, config=config) as session:
         audio_url = (
@@ -50,15 +67,19 @@ async def generate_content() -> list[str]:
 
         print("> Answer to this audio url", audio_url, "\n")
 
+        await session.send_realtime_input(activity_start=ActivityStart())
         await session.send_realtime_input(
-            media=Blob(data=audio_bytes, mime_type="audio/pcm;rate=16000")
+            audio=Blob(data=audio_bytes, mime_type="audio/pcm;rate=16000")
         )
+        await session.send_realtime_input(activity_end=ActivityEnd())
 
         response = []
 
         async for message in session.receive():
-            if message.text is not None:
-                response.append(message.text)
+            server_content = message.server_content
+            if server_content and server_content.output_transcription:
+                if server_content.output_transcription.text:
+                    response.append(server_content.output_transcription.text)
 
         print("".join(response))
     # Example output:
