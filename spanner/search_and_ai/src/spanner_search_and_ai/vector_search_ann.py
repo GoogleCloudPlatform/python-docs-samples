@@ -43,7 +43,7 @@ def find_approximate_nearest_neighbors(
                    options => JSON '{"num_leaves_to_search": 10}'
                ) AS approx_distance
         FROM CatalogItems@{FORCE_INDEX=CatalogEmbeddingIndex}
-        WHERE WordCount > @min_words
+        WHERE WordCount > @min_words AND Embedding IS NOT NULL
         ORDER BY approx_distance
         LIMIT @top_k
     """

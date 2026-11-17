@@ -49,6 +49,7 @@ def test_find_approximate_nearest_neighbors_success(
     sql = snapshot.execute_sql.call_args.args[0]
     assert "APPROX_COSINE_DISTANCE" in sql
     assert "FORCE_INDEX=CatalogEmbeddingIndex" in sql
+    assert "Embedding IS NOT NULL" in sql
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_NAME}" in out
     assert "Item ID: 1" in out
