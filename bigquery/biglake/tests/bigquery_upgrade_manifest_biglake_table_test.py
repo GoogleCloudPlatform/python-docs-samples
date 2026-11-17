@@ -15,6 +15,7 @@
 from unittest import mock
 
 from google.api_core import exceptions
+from google.cloud import bigquery
 import pytest
 
 from .. import bigquery_upgrade_manifest_biglake_table
