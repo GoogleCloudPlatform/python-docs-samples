@@ -22,9 +22,9 @@ import os
 
 from google.cloud import storage
 
-import pytest
-
 import imggen_virtual_try_on_with_txt_img
+
+import pytest
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
