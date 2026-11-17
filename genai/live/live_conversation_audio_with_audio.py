@@ -32,7 +32,7 @@ from scipy.io import wavfile
 # The number of audio frames to send in each chunk.
 CHUNK = 4200
 CHANNELS = 1
-MODEL = "gemini-live-2.5-flash-native-audio"
+MODEL = "gemini-3.8-live"
 
 # The audio sample rate expected by the model.
 INPUT_RATE = 16000
@@ -42,7 +42,9 @@ OUTPUT_RATE = 24000
 # The sample width for 16-bit audio, which is standard for this type of audio data.
 SAMPLE_WIDTH = 2
 
-client = genai.Client(http_options=HttpOptions(api_version="v1beta1"), location="us-central1")
+client = genai.Client(
+    http_options=HttpOptions(api_version="v1beta1"), location="us-central1"
+)
 
 
 def read_wavefile(filepath: str) -> tuple[str, str]:
@@ -91,16 +93,26 @@ async def main() -> bool:
             wav_file_path = "hello_gemini_are_you_there.wav"
             base64_data, mime_type = read_wavefile(wav_file_path)
             audio_bytes = base64.b64decode(base64_data)
-            await session.send_realtime_input(media=Blob(data=audio_bytes, mime_type=mime_type))
+            await session.send_realtime_input(
+                media=Blob(data=audio_bytes, mime_type=mime_type)
+            )
 
         async def receive() -> None:
             audio_frames = []
 
             async for message in session.receive():
                 if message.server_content.input_transcription:
-                    print(message.server_content.model_dump(mode="json", exclude_none=True))
+                    print(
+                        message.server_content.model_dump(
+                            mode="json", exclude_none=True
+                        )
+                    )
                 if message.server_content.output_transcription:
-                    print(message.server_content.model_dump(mode="json", exclude_none=True))
+                    print(
+                        message.server_content.model_dump(
+                            mode="json", exclude_none=True
+                        )
+                    )
                 if message.server_content.model_turn:
                     for part in message.server_content.model_turn.parts:
                         if part.inline_data.data:
@@ -126,8 +138,9 @@ async def main() -> bool:
         #     {'output_transcription': {'finished': True}}
         #     Model response saved to example_model_response.wav
 
-# [END googlegenaisdk_live_conversation_audio_with_audio]
+    # [END googlegenaisdk_live_conversation_audio_with_audio]
     return True
+
 
 if __name__ == "__main__":
     asyncio.run(main())

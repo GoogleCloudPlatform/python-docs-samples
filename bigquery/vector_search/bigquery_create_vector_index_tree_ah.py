@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_create_vector_index_tree_ah]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -47,24 +44,9 @@ def create_vector_index_tree_ah(
         );
     """
 
-    try:
-        print(f"Creating TreeAH vector index {index_name} on table: {table_ref}")
-        query_job = client.query(sql)
-        query_job.result()
-    except exceptions.NotFound as err:
-        print(
-            f"error: table '{table_id}' or dataset '{dataset_id}' not found in "
-            f"project '{project_id}' when creating index '{index_name}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to create TreeAH vector index '{index_name}' on table "
-            f"'{table_id}' in dataset '{dataset_id}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Creating TreeAH vector index {index_name} on table: {table_ref}")
+    query_job = client.query(sql)
+    query_job.result()
 
     print(f"Resource ID: {table_ref}")
     print(f"Index Name: {index_name}")

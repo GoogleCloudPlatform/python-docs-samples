@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_call_procedure]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -48,24 +45,9 @@ def call_procedure(
         SELECT out_total AS total_words;
     """
 
-    try:
-        print(f"Calling stored procedure: {routine_ref}")
-        query_job = client.query(sql, job_config=job_config)
-        rows = list(query_job.result())
-    except exceptions.NotFound as err:
-        print(
-            f"error: stored procedure '{procedure_id}' not found in dataset "
-            f"'{dataset_id}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to call stored procedure '{procedure_id}' in dataset "
-            f"'{dataset_id}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Calling stored procedure: {routine_ref}")
+    query_job = client.query(sql, job_config=job_config)
+    rows = list(query_job.result())
 
     total_words = rows[0].total_words if rows else 0
     print(f"Resource ID: {routine_ref}")
