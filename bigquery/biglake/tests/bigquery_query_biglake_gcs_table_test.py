@@ -30,10 +30,9 @@ def test_query_biglake_gcs_table_success(
     mock_row = mock.MagicMock()
     mock_job.result.return_value = [mock_row]
     mock_client.query.return_value = mock_job
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
     monkeypatch.setattr(
-        bigquery_query_biglake_gcs_table.bigquery,
-        "Client",
-        lambda project=None: mock_client,
+        bigquery_query_biglake_gcs_table.bigquery, "Client", mock_client_cls
     )
 
     bigquery_query_biglake_gcs_table.query_biglake_gcs_table(
@@ -46,6 +45,7 @@ def test_query_biglake_gcs_table_success(
     assert "Resource ID:" in captured.out
     assert "example-project" in captured.out
     assert mock_client.query.called
+    mock_client_cls.assert_called_once_with(project="example-project")
 
 
 def test_query_biglake_gcs_table_error(
@@ -55,10 +55,9 @@ def test_query_biglake_gcs_table_error(
     mock_job = mock.MagicMock()
     mock_job.result.side_effect = exceptions.NotFound("resource error")
     mock_client.query.return_value = mock_job
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
     monkeypatch.setattr(
-        bigquery_query_biglake_gcs_table.bigquery,
-        "Client",
-        lambda project=None: mock_client,
+        bigquery_query_biglake_gcs_table.bigquery, "Client", mock_client_cls
     )
 
     with pytest.raises(exceptions.GoogleAPICallError):
