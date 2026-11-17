@@ -36,10 +36,11 @@ def test_read_biglake_gcs_storage_api_success(
     mock_response.row_count = 3
     mock_client.read_rows.return_value = [mock_response]
 
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
     monkeypatch.setattr(
         bigquery_read_biglake_gcs_storage_api.bigquery_storage_v1,
         "BigQueryReadClient",
-        lambda: mock_client,
+        mock_client_cls,
     )
 
     bigquery_read_biglake_gcs_storage_api.read_biglake_gcs_storage_api(
@@ -55,6 +56,7 @@ def test_read_biglake_gcs_storage_api_success(
     )
     assert "Rows Read: 3" in captured.out
     assert "Stream Count: 1" in captured.out
+    mock_client_cls.assert_called_once_with()
 
 
 def test_read_biglake_gcs_storage_api_error(
@@ -62,10 +64,11 @@ def test_read_biglake_gcs_storage_api_error(
 ) -> None:
     mock_client = mock.MagicMock()
     mock_client.create_read_session.side_effect = exceptions.NotFound("table not found")
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
     monkeypatch.setattr(
         bigquery_read_biglake_gcs_storage_api.bigquery_storage_v1,
         "BigQueryReadClient",
-        lambda: mock_client,
+        mock_client_cls,
     )
 
     with pytest.raises(exceptions.GoogleAPICallError):
