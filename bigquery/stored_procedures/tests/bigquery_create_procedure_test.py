@@ -30,11 +30,8 @@ def test_create_procedure_success(
     mock_job.statement_type = "SCRIPT"
     mock_job.result.return_value = []
     mock_client.query.return_value = mock_job
-    monkeypatch.setattr(
-        bigquery_create_procedure.bigquery,
-        "Client",
-        lambda project=None: mock_client,
-    )
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
+    monkeypatch.setattr(bigquery_create_procedure.bigquery, "Client", mock_client_cls)
 
     bigquery_create_procedure.create_procedure(
         project_id="example-project",
@@ -45,6 +42,7 @@ def test_create_procedure_success(
     assert "Resource ID:" in captured.out
     assert "example-project" in captured.out
     assert mock_client.query.called
+    mock_client_cls.assert_called_once_with(project="example-project")
 
 
 def test_create_procedure_error(
@@ -54,11 +52,8 @@ def test_create_procedure_error(
     mock_job = mock.MagicMock()
     mock_job.result.side_effect = exceptions.NotFound("resource error")
     mock_client.query.return_value = mock_job
-    monkeypatch.setattr(
-        bigquery_create_procedure.bigquery,
-        "Client",
-        lambda project=None: mock_client,
-    )
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
+    monkeypatch.setattr(bigquery_create_procedure.bigquery, "Client", mock_client_cls)
 
     with pytest.raises(exceptions.GoogleAPICallError):
         bigquery_create_procedure.create_procedure(
