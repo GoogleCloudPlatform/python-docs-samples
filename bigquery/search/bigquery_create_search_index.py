@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_create_search_index]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -38,28 +35,13 @@ def create_search_index(
     table_ref = f"{project_id}.{dataset_id}.{table_id}"
     # Indexing ALL COLUMNS enables full-text SEARCH queries across every STRING or JSON field.
     sql = f"""
-        CREATE SEARCH INDEX `{index_name}`
+        CREATE SEARCH INDEX IF NOT EXISTS `{index_name}`
         ON `{table_ref}`(ALL COLUMNS);
     """
 
-    try:
-        print(f"Creating search index {index_name} on table: {table_ref}")
-        query_job = client.query(sql)
-        query_job.result()
-    except exceptions.AlreadyExists as err:
-        print(
-            f"error: search index '{index_name}' already exists on table "
-            f"'{table_id}' in dataset '{dataset_id}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to create search index '{index_name}' on table "
-            f"'{table_id}' in dataset '{dataset_id}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Creating search index {index_name} on table: {table_ref}")
+    query_job = client.query(sql)
+    query_job.result()
 
     print(f"Resource ID: {table_ref}")
     print(f"Index Name: {index_name}")

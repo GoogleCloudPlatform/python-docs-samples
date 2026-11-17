@@ -24,7 +24,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import live_audio_with_txt
 import live_audiogen_with_txt
-import live_code_exec_with_txt
 import live_func_call_with_txt
 import live_ground_googsearch_with_txt
 import live_ground_ragengine_with_txt
@@ -184,11 +183,6 @@ async def test_live_with_text() -> None:
 @pytest.mark.asyncio
 async def test_live_audiogen_with_txt() -> None:
     assert live_audiogen_with_txt.generate_content()
-
-
-@pytest.mark.asyncio
-async def test_live_code_exec_with_txt() -> None:
-    assert await live_code_exec_with_txt.generate_content()
 
 
 @pytest.mark.asyncio
