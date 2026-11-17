@@ -1,6 +1,6 @@
 # Cloud Spanner Graph Samples
 
-Python samples demonstrating [Spanner Graph](https://cloud.google.com/spanner/docs/graph/overview) (`GRAPH_TABLE`) queries combined with vector similarity (`COSINE_DISTANCE`) and full-text search (`SEARCH` and `SCORE`).
+Python samples demonstrating [Spanner Graph](https://cloud.google.com/spanner/docs/graph/overview) (`GRAPH_TABLE`) queries combined with vector similarity (`EUCLIDEAN_DISTANCE`) and full-text search (`SEARCH` and `SCORE`).
 
 ## Setup
 
