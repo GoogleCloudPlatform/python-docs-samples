@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_search_with_text_analyzer]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -52,26 +49,9 @@ def search_with_text_analyzer(
         LIMIT 10;
     """
 
-    try:
-        print(
-            f"Searching {table_ref} with analyzer {analyzer_name} for: {search_query}"
-        )
-        query_job = client.query(sql, job_config=job_config)
-        rows = list(query_job.result())
-    except exceptions.NotFound as err:
-        print(
-            f"error: table '{table_ref}' not found when querying from project "
-            f"'{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to search '{table_ref}' with analyzer '{analyzer_name}' "
-            f"in project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Searching {table_ref} with analyzer {analyzer_name} for: {search_query}")
+    query_job = client.query(sql, job_config=job_config)
+    rows = list(query_job.result())
 
     print(f"Resource ID: {table_ref}")
     print(f"Analyzer: {analyzer_name}")

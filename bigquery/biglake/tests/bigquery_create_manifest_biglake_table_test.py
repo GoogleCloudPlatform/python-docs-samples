@@ -14,15 +14,18 @@
 
 from unittest import mock
 
-import bigquery_create_manifest_biglake_table
 from google.api_core import exceptions
 import pytest
+
+from .. import bigquery_create_manifest_biglake_table
 
 
 def test_create_manifest_biglake_table_success(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    with mock.patch("google.cloud.bigquery.Client") as mock_client_cls:
+    with mock.patch.object(
+        bigquery_create_manifest_biglake_table.bigquery, "Client"
+    ) as mock_client_cls:
         mock_client = mock_client_cls.return_value
         mock_job = mock.MagicMock()
         mock_job.job_id = "example-job-123"
@@ -47,20 +50,19 @@ def test_create_manifest_biglake_table_success(
         assert "Statement Type: CREATE_EXTERNAL_TABLE" in captured.out
 
 
-def test_create_manifest_biglake_table_not_found(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    with mock.patch("google.cloud.bigquery.Client") as mock_client_cls:
+def test_create_manifest_biglake_table_not_found() -> None:
+    with mock.patch.object(
+        bigquery_create_manifest_biglake_table.bigquery, "Client"
+    ) as mock_client_cls:
         mock_client = mock_client_cls.return_value
-        mock_client.query.side_effect = exceptions.NotFound("Dataset not found")
+        mock_job = mock.MagicMock()
+        mock_job.result.side_effect = exceptions.NotFound("Dataset not found")
+        mock_client.query.return_value = mock_job
 
-        bigquery_create_manifest_biglake_table.create_manifest_biglake_table(
-            project_id="example-project",
-            dataset_id="example_dataset",
-            connection_id="example-project.us.example_biglake_conn",
-            manifest_uri="gs://example-bucket/manifests/symlink.manifest",
-        )
-
-        captured = capsys.readouterr()
-        assert "error:" in captured.err
-        assert "example_dataset" in captured.err
+        with pytest.raises(exceptions.GoogleAPICallError):
+            bigquery_create_manifest_biglake_table.create_manifest_biglake_table(
+                project_id="example-project",
+                dataset_id="example_dataset",
+                connection_id="example-project.us.example_biglake_conn",
+                manifest_uri="gs://example-bucket/manifests/symlink.manifest",
+            )

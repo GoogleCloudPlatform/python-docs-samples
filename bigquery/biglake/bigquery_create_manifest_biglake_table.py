@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_create_manifest_biglake_table]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -52,25 +49,9 @@ def create_manifest_biglake_table(
         );
     """
 
-    try:
-        print(f"Creating manifest-backed BigLake table: {table_ref}")
-        query_job = client.query(sql)
-        query_job.result()
-    except exceptions.NotFound as err:
-        print(
-            f"error: dataset '{dataset_id}' or connection '{connection_id}' not found "
-            f"for project '{project_id}' (manifest '{manifest_uri}'): {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to create BigLake table '{table_id}' in dataset '{dataset_id}' "
-            f"for project '{project_id}' (connection '{connection_id}', "
-            f"manifest '{manifest_uri}'): {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Creating manifest-backed BigLake table: {table_ref}")
+    query_job = client.query(sql)
+    query_job.result()
 
     print(f"Resource ID: {table_ref}")
     print(f"Connection ID: {connection_id}")

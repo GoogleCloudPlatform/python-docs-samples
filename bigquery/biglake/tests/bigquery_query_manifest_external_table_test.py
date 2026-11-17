@@ -14,54 +14,58 @@
 
 from unittest import mock
 
-import bigquery_search_with_text_analyzer
 from google.api_core import exceptions
 import pytest
 
+from .. import bigquery_query_manifest_external_table
 
-def test_search_with_text_analyzer_success(
+
+def test_query_manifest_external_table_success(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.job_id = "example-job-123"
-    mock_job.result.return_value = []
+    mock_row = mock.MagicMock()
+    mock_job.result.return_value = [mock_row]
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_search_with_text_analyzer.bigquery,
+        bigquery_query_manifest_external_table.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_search_with_text_analyzer.search_with_text_analyzer(
+    bigquery_query_manifest_external_table.query_manifest_external_table(
         project_id="example-project",
+        dataset_id="example_dataset",
+        table_id="example_manifest_table",
+        manifest_uri="gs://example-bucket/manifests/symlink.manifest",
     )
 
     captured = capsys.readouterr()
-    assert "Resource ID: bigquery-public-data.thelook_ecommerce.users" in captured.out
-    assert "Analyzer: NO_OP_ANALYZER" in captured.out
+    assert "Resource ID:" in captured.out
+    assert "example-project" in captured.out
     assert mock_client.query.called
 
 
-def test_search_with_text_analyzer_error(
+def test_query_manifest_external_table_error(
     monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.result.side_effect = exceptions.NotFound("resource error")
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_search_with_text_analyzer.bigquery,
+        bigquery_query_manifest_external_table.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_search_with_text_analyzer.search_with_text_analyzer(
-        project_id="example-project",
-    )
-
-    captured = capsys.readouterr()
-    assert "error:" in captured.err
-    assert "example-project" in captured.err
+    with pytest.raises(exceptions.GoogleAPICallError):
+        bigquery_query_manifest_external_table.query_manifest_external_table(
+            project_id="example-project",
+            dataset_id="example_dataset",
+            table_id="example_manifest_table",
+            manifest_uri="gs://example-bucket/manifests/symlink.manifest",
+        )

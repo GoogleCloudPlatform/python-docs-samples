@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_drop_procedure]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -38,23 +35,9 @@ def drop_procedure(
     # Use IF EXISTS so dropping an already-removed routine succeeds idempotently.
     sql = f"DROP PROCEDURE IF EXISTS `{routine_ref}`;"
 
-    try:
-        print(f"Dropping stored procedure: {routine_ref}")
-        query_job = client.query(sql)
-        query_job.result()
-    except exceptions.NotFound as err:
-        print(
-            f"error: dataset '{dataset_id}' or project '{project_id}' not found: {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to drop stored procedure '{procedure_id}' in dataset "
-            f"'{dataset_id}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Dropping stored procedure: {routine_ref}")
+    query_job = client.query(sql)
+    query_job.result()
 
     print(f"Resource ID: {routine_ref}")
     print(f"Job ID: {query_job.job_id}")

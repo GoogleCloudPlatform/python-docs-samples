@@ -14,53 +14,56 @@
 
 from unittest import mock
 
-import bigquery_search_with_analyzer_options
 from google.api_core import exceptions
 import pytest
 
+from .. import bigquery_create_search_index
 
-def test_search_with_analyzer_options_success(
+
+def test_create_search_index_success(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.job_id = "example-job-123"
-    mock_job.result.return_value = [mock.MagicMock()]
+    mock_job.statement_type = "SCRIPT"
+    mock_job.result.return_value = []
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_search_with_analyzer_options.bigquery,
+        bigquery_create_search_index.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_search_with_analyzer_options.search_with_analyzer_options(
+    bigquery_create_search_index.create_search_index(
         project_id="example-project",
+        dataset_id="example_dataset",
+        table_id="example_table",
     )
 
     captured = capsys.readouterr()
-    assert "Resource ID: bigquery-public-data.thelook_ecommerce.users" in captured.out
-    assert "Analyzer: LOG_ANALYZER" in captured.out
-    assert "Matching Rows: 1" in captured.out
+    assert "Resource ID:" in captured.out
+    assert "example-project" in captured.out
     assert mock_client.query.called
 
 
-def test_search_with_analyzer_options_error(
+def test_create_search_index_error(
     monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
-    mock_client.query.side_effect = exceptions.NotFound("resource error")
+    mock_job = mock.MagicMock()
+    mock_job.result.side_effect = exceptions.NotFound("resource error")
+    mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_search_with_analyzer_options.bigquery,
+        bigquery_create_search_index.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_search_with_analyzer_options.search_with_analyzer_options(
-        project_id="example-project",
-    )
-
-    captured = capsys.readouterr()
-    assert "error:" in captured.err
-    assert "example-project" in captured.err
+    with pytest.raises(exceptions.GoogleAPICallError):
+        bigquery_create_search_index.create_search_index(
+            project_id="example-project",
+            dataset_id="example_dataset",
+            table_id="example_table",
+        )

@@ -14,58 +14,51 @@
 
 from unittest import mock
 
-import bigquery_call_procedure
 from google.api_core import exceptions
 import pytest
 
+from .. import bigquery_search_with_text_analyzer
 
-def test_call_procedure_success(
+
+def test_search_with_text_analyzer_success(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.job_id = "example-job-123"
-    mock_row = mock.MagicMock()
-    mock_row.total_words = 42
-    mock_job.result.return_value = [mock_row]
+    mock_job.result.return_value = []
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_call_procedure.bigquery,
+        bigquery_search_with_text_analyzer.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_call_procedure.call_procedure(
+    bigquery_search_with_text_analyzer.search_with_text_analyzer(
         project_id="example-project",
-        dataset_id="example_dataset",
-        procedure_id="example_procedure",
     )
 
     captured = capsys.readouterr()
-    assert "Resource ID:" in captured.out
-    assert "example-project" in captured.out
+    assert "Resource ID: bigquery-public-data.thelook_ecommerce.users" in captured.out
+    assert "Analyzer: NO_OP_ANALYZER" in captured.out
     assert mock_client.query.called
 
 
-def test_call_procedure_error(
+def test_search_with_text_analyzer_error(
     monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
-    mock_client.query.side_effect = exceptions.NotFound("resource error")
+    mock_job = mock.MagicMock()
+    mock_job.result.side_effect = exceptions.NotFound("resource error")
+    mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_call_procedure.bigquery,
+        bigquery_search_with_text_analyzer.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_call_procedure.call_procedure(
-        project_id="example-project",
-        dataset_id="example_dataset",
-        procedure_id="example_procedure",
-    )
-
-    captured = capsys.readouterr()
-    assert "error:" in captured.err
-    assert "example-project" in captured.err
+    with pytest.raises(exceptions.GoogleAPICallError):
+        bigquery_search_with_text_analyzer.search_with_text_analyzer(
+            project_id="example-project",
+        )

@@ -14,57 +14,53 @@
 
 from unittest import mock
 
-import bigquery_drop_search_index
 from google.api_core import exceptions
 import pytest
 
+from .. import bigquery_federated_view_schema_cloud_sql
 
-def test_drop_search_index_success(
+
+def test_federated_view_schema_cloud_sql_success(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.job_id = "example-job-123"
-    mock_job.statement_type = "SCRIPT"
-    mock_job.result.return_value = []
+    mock_job.result.return_value = [mock.MagicMock(), mock.MagicMock()]
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_drop_search_index.bigquery,
+        bigquery_federated_view_schema_cloud_sql.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_drop_search_index.drop_search_index(
+    bigquery_federated_view_schema_cloud_sql.federated_view_schema_cloud_sql(
         project_id="example-project",
-        dataset_id="example_dataset",
-        table_id="example_table",
+        connection_id="example-project.us.example-cloudsql-conn",
     )
 
     captured = capsys.readouterr()
-    assert "Resource ID:" in captured.out
-    assert "example-project" in captured.out
+    assert "Resource ID: example-project.us.example-cloudsql-conn" in captured.out
+    assert "Columns Returned: 2" in captured.out
     assert mock_client.query.called
 
 
-def test_drop_search_index_error(
+def test_federated_view_schema_cloud_sql_error(
     monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
-    mock_client.query.side_effect = exceptions.NotFound("resource error")
+    mock_job = mock.MagicMock()
+    mock_job.result.side_effect = exceptions.NotFound("connection not found")
+    mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_drop_search_index.bigquery,
+        bigquery_federated_view_schema_cloud_sql.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_drop_search_index.drop_search_index(
-        project_id="example-project",
-        dataset_id="example_dataset",
-        table_id="example_table",
-    )
-
-    captured = capsys.readouterr()
-    assert "error:" in captured.err
-    assert "example-project" in captured.err
+    with pytest.raises(exceptions.GoogleAPICallError):
+        bigquery_federated_view_schema_cloud_sql.federated_view_schema_cloud_sql(
+            project_id="example-project",
+            connection_id="example-project.us.example-cloudsql-conn",
+        )

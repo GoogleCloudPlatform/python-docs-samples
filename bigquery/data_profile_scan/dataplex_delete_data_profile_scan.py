@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START dataplex_delete_data_profile_scan]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import dataplex_v1
 
 
@@ -38,24 +35,9 @@ def delete_data_profile_scan(
     # Deleting a DataScan is a long-running operation that removes the scan configuration.
     request = dataplex_v1.DeleteDataScanRequest(name=scan_name)
 
-    try:
-        print(f"Deleting Dataplex data profile scan: {scan_name}")
-        operation = client.delete_data_scan(request=request)
-        operation.result()
-    except exceptions.NotFound as err:
-        print(
-            f"error: data profile scan '{data_scan_id}' not found in location "
-            f"'{location}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to delete data profile scan '{data_scan_id}' in location "
-            f"'{location}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Deleting Dataplex data profile scan: {scan_name}")
+    operation = client.delete_data_scan(request=request)
+    operation.result()
 
     print(f"Resource ID: {scan_name}")
     print("Deleted: True")

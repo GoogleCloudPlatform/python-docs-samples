@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_call_system_procedure]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -43,24 +40,9 @@ def call_system_procedure(
     )
     sql = "CALL BQ.REFRESH_MATERIALIZED_VIEW(@view_name);"
 
-    try:
-        print(f"Refreshing materialized view via system procedure: {mv_ref}")
-        query_job = client.query(sql, job_config=job_config)
-        query_job.result()
-    except exceptions.NotFound as err:
-        print(
-            f"error: materialized view '{materialized_view_id}' not found in dataset "
-            f"'{dataset_id}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to refresh materialized view '{materialized_view_id}' in dataset "
-            f"'{dataset_id}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Refreshing materialized view via system procedure: {mv_ref}")
+    query_job = client.query(sql, job_config=job_config)
+    query_job.result()
 
     print(f"Resource ID: {mv_ref}")
     print(f"Job ID: {query_job.job_id}")

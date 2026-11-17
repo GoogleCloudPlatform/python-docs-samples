@@ -14,23 +14,30 @@
 
 from unittest import mock
 
-import bigquery_multi_statement_transaction
 from google.api_core import exceptions
 import pytest
+
+from .. import bigquery_multi_statement_transaction
 
 
 def test_run_multi_statement_transaction_success(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    with mock.patch("google.cloud.bigquery.Client") as mock_client_cls:
+    with mock.patch.object(
+        bigquery_multi_statement_transaction.bigquery, "Client"
+    ) as mock_client_cls:
         mock_client = mock_client_cls.return_value
-        mock_job = mock.MagicMock()
-        mock_job.job_id = "example-job-123"
-        mock_job.num_child_jobs = 3
+        mock_tx_job = mock.MagicMock()
+        mock_tx_job.job_id = "example-job-123"
+        mock_tx_job.num_child_jobs = 3
+        mock_tx_job.result.return_value = []
+
+        mock_count_job = mock.MagicMock()
         mock_row = mock.MagicMock()
         mock_row.inventory_rows = 3
-        mock_job.result.return_value = [mock_row]
-        mock_client.query.return_value = mock_job
+        mock_count_job.result.return_value = [mock_row]
+
+        mock_client.query.side_effect = [mock_tx_job, mock_count_job]
 
         bigquery_multi_statement_transaction.run_multi_statement_transaction(
             project_id="example-project",
@@ -39,7 +46,7 @@ def test_run_multi_statement_transaction_success(
             target_table_id="example_inventory",
         )
 
-        mock_client.query.assert_called_once()
+        assert mock_client.query.call_count == 2
         captured = capsys.readouterr()
         assert (
             "Resource ID: example-project.example_dataset.example_inventory"
@@ -50,20 +57,19 @@ def test_run_multi_statement_transaction_success(
         assert "Transaction State: COMMITTED" in captured.out
 
 
-def test_run_multi_statement_transaction_not_found(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    with mock.patch("google.cloud.bigquery.Client") as mock_client_cls:
+def test_run_multi_statement_transaction_not_found() -> None:
+    with mock.patch.object(
+        bigquery_multi_statement_transaction.bigquery, "Client"
+    ) as mock_client_cls:
         mock_client = mock_client_cls.return_value
-        mock_client.query.side_effect = exceptions.NotFound("Table not found")
+        mock_job = mock.MagicMock()
+        mock_job.result.side_effect = exceptions.NotFound("Table not found")
+        mock_client.query.return_value = mock_job
 
-        bigquery_multi_statement_transaction.run_multi_statement_transaction(
-            project_id="example-project",
-            dataset_id="example_dataset",
-            source_table_id="example_new_arrivals",
-            target_table_id="example_inventory",
-        )
-
-        captured = capsys.readouterr()
-        assert "error:" in captured.err
-        assert "example_inventory" in captured.err
+        with pytest.raises(exceptions.GoogleAPICallError):
+            bigquery_multi_statement_transaction.run_multi_statement_transaction(
+                project_id="example-project",
+                dataset_id="example_dataset",
+                source_table_id="example_new_arrivals",
+                target_table_id="example_inventory",
+            )

@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_federated_view_schema_cloud_sql]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -47,24 +44,9 @@ def federated_view_schema_cloud_sql(
         ORDER BY column_name ASC;
     """
 
-    try:
-        print(f"Inspecting Cloud SQL table schema via connection: {connection_id}")
-        query_job = client.query(query)
-        rows = list(query_job.result())
-    except exceptions.NotFound as err:
-        print(
-            f"error: Cloud SQL connection '{connection_id}' not found in project "
-            f"'{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: could not inspect Cloud SQL table schema on connection "
-            f"'{connection_id}' in project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Inspecting Cloud SQL table schema via connection: {connection_id}")
+    query_job = client.query(query)
+    rows = list(query_job.result())
 
     print(f"Resource ID: {connection_id}")
     print(f"Columns Returned: {len(rows)}")

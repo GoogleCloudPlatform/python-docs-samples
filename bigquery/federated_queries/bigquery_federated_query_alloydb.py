@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_federated_query_alloydb]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -52,24 +49,9 @@ def federated_query_alloydb(
         LIMIT 10;
     """
 
-    try:
-        print(f"Running AlloyDB federated query via connection: {connection_id}")
-        query_job = client.query(query)
-        rows = list(query_job.result())
-    except exceptions.NotFound as err:
-        print(
-            f"error: AlloyDB connection '{connection_id}' not found in project "
-            f"'{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: could not run AlloyDB federated query on connection "
-            f"'{connection_id}' in project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Running AlloyDB federated query via connection: {connection_id}")
+    query_job = client.query(query)
+    rows = list(query_job.result())
 
     print(f"Resource ID: {connection_id}")
     print(f"Job ID: {query_job.job_id}")

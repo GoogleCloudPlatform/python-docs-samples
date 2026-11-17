@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_search_table]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -51,24 +48,9 @@ def search_table(
         LIMIT 10;
     """
 
-    try:
-        print(f"Searching table {table_ref} for term: {search_query}")
-        query_job = client.query(sql, job_config=job_config)
-        rows = list(query_job.result())
-    except exceptions.NotFound as err:
-        print(
-            f"error: table '{table_ref}' not found when querying from project "
-            f"'{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to search table '{table_ref}' in project "
-            f"'{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Searching table {table_ref} for term: {search_query}")
+    query_job = client.query(sql, job_config=job_config)
+    rows = list(query_job.result())
 
     print(f"Resource ID: {table_ref}")
     print(f"Job ID: {query_job.job_id}")

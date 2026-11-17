@@ -14,12 +14,13 @@
 
 from unittest import mock
 
-import bigquery_query_iceberg_table
 from google.api_core import exceptions
 import pytest
 
+from .. import bigquery_federated_query_cloud_sql
 
-def test_query_iceberg_table_success(
+
+def test_federated_query_cloud_sql_success(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -30,17 +31,14 @@ def test_query_iceberg_table_success(
     mock_job.result.return_value = [mock_row]
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_query_iceberg_table.bigquery,
+        bigquery_federated_query_cloud_sql.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_query_iceberg_table.query_iceberg_table(
+    bigquery_federated_query_cloud_sql.federated_query_cloud_sql(
         project_id="example-project",
-        dataset_id="example_dataset",
-        table_id="example_iceberg_table",
-        connection_id="example-project.us.example_iceberg_conn",
-        metadata_uri="gs://example-bucket/warehouse/orders_ns/customer_orders/metadata/v2.metadata.json",
+        connection_id="example-project.us.example-cloudsql-conn",
     )
 
     captured = capsys.readouterr()
@@ -49,26 +47,21 @@ def test_query_iceberg_table_success(
     assert mock_client.query.called
 
 
-def test_query_iceberg_table_error(
+def test_federated_query_cloud_sql_error(
     monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
-    mock_client.query.side_effect = exceptions.NotFound("resource error")
+    mock_job = mock.MagicMock()
+    mock_job.result.side_effect = exceptions.NotFound("resource error")
+    mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_query_iceberg_table.bigquery,
+        bigquery_federated_query_cloud_sql.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_query_iceberg_table.query_iceberg_table(
-        project_id="example-project",
-        dataset_id="example_dataset",
-        table_id="example_iceberg_table",
-        connection_id="example-project.us.example_iceberg_conn",
-        metadata_uri="gs://example-bucket/warehouse/orders_ns/customer_orders/metadata/v2.metadata.json",
-    )
-
-    captured = capsys.readouterr()
-    assert "error:" in captured.err
-    assert "example-project" in captured.err
+    with pytest.raises(exceptions.GoogleAPICallError):
+        bigquery_federated_query_cloud_sql.federated_query_cloud_sql(
+            project_id="example-project",
+            connection_id="example-project.us.example-cloudsql-conn",
+        )
