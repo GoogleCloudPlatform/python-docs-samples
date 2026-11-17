@@ -33,10 +33,9 @@ def test_federated_view_schema_spanner_success(
         mock.MagicMock(),
     ]
     mock_client.query.return_value = mock_job
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
     monkeypatch.setattr(
-        bigquery_federated_view_schema_spanner.bigquery,
-        "Client",
-        lambda project=None: mock_client,
+        bigquery_federated_view_schema_spanner.bigquery, "Client", mock_client_cls
     )
 
     bigquery_federated_view_schema_spanner.federated_view_schema_spanner(
@@ -48,6 +47,7 @@ def test_federated_view_schema_spanner_success(
     assert "Resource ID: example-project.us.example-spanner-conn" in captured.out
     assert "Columns Returned: 3" in captured.out
     assert mock_client.query.called
+    mock_client_cls.assert_called_once_with(project="example-project")
 
 
 def test_federated_view_schema_spanner_error(
@@ -57,10 +57,9 @@ def test_federated_view_schema_spanner_error(
     mock_job = mock.MagicMock()
     mock_job.result.side_effect = exceptions.NotFound("connection not found")
     mock_client.query.return_value = mock_job
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
     monkeypatch.setattr(
-        bigquery_federated_view_schema_spanner.bigquery,
-        "Client",
-        lambda project=None: mock_client,
+        bigquery_federated_view_schema_spanner.bigquery, "Client", mock_client_cls
     )
 
     with pytest.raises(exceptions.GoogleAPICallError):
