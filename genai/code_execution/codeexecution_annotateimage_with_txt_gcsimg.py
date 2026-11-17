@@ -23,7 +23,7 @@ def generate_content() -> bool:
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-3-flash-preview",
+        model="gemini-3.8-flash",
         contents=[
             types.Part.from_uri(
                 file_uri="https://storage.googleapis.com/cloud-samples-data/generative-ai/image/robotic.jpeg",
@@ -31,7 +31,9 @@ def generate_content() -> bool:
             ),
             "Annotate on the image with arrows of different colors, which object should go into which bin.",
         ],
-        config=types.GenerateContentConfig(tools=[types.Tool(code_execution=types.ToolCodeExecution)]),
+        config=types.GenerateContentConfig(
+            tools=[types.Tool(code_execution=types.ToolCodeExecution)]
+        ),
     )
 
     img_count = 0
@@ -39,10 +41,14 @@ def generate_content() -> bool:
         if part.text is not None:
             print(part.text)
         if part.executable_code is not None:
-            print("####################### 1. Generate Python Code #######################")
+            print(
+                "####################### 1. Generate Python Code #######################"
+            )
             print(part.executable_code.code)
         if part.code_execution_result is not None:
-            print("####################### 2. Executing Python Code #######################")
+            print(
+                "####################### 2. Executing Python Code #######################"
+            )
             print(part.code_execution_result.output)
         # For local executions, save the output to a local filename
         if part.as_image() is not None:

@@ -40,11 +40,21 @@ def create_interaction() -> bool:
 
     for step in interaction.steps:
         if step.type == "code_execution_call":
-            print("####################### 1. Generate Python Code #######################")
+            print(
+                "####################### 1. Generate Python Code #######################"
+            )
             print(step.arguments.code)
         elif step.type == "code_execution_result":
-            print("####################### 2. Executing Python Code #######################")
-            print(step.result)
+            print(
+                "####################### 2. Executing Python Code #######################"
+            )
+            if isinstance(step.result, str):
+                print(step.result)
+            else:
+                # The result can also be a list of content items.
+                for item in step.result:
+                    if item.type == "text":
+                        print(item.text)
 
     if interaction.output_image:
         print("####################### 3. Save Output #######################")
