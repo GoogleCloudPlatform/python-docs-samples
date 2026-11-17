@@ -32,6 +32,14 @@ def connect_with_emulator(project_id: str, instance_id: str, database_id: str) -
         database_id: The emulator Spanner database ID to create or reuse.
     """
     emulator_host = os.environ.get("SPANNER_EMULATOR_HOST", "")
+    if not emulator_host:
+        print(
+            "error: set SPANNER_EMULATOR_HOST (for example, 'localhost:9010') "
+            "before connecting to the Spanner Emulator.",
+            file=sys.stderr,
+        )
+        return
+
     client = spanner.Client(project=project_id)
     config_name = f"{client.project_name}/instanceConfigs/emulator-config"
     instance = client.instance(

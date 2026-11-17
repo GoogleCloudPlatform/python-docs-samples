@@ -57,6 +57,22 @@ def test_connect_with_emulator_creates_missing_resources(
     assert err == ""
 
 
+@mock.patch(SPANNER_CLIENT)
+def test_connect_with_emulator_missing_host_env(
+    mock_client_class: mock.MagicMock,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.delenv("SPANNER_EMULATOR_HOST", raising=False)
+
+    connect_emulator.connect_with_emulator(PROJECT_ID, INSTANCE_ID, DATABASE_ID)
+
+    mock_client_class.assert_not_called()
+    out, err = capsys.readouterr()
+    assert out == ""
+    assert err.startswith("error: set SPANNER_EMULATOR_HOST")
+
+
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
