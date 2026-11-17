@@ -14,15 +14,18 @@
 
 from unittest import mock
 
-import bigquery_call_system_procedure
 from google.api_core import exceptions
 import pytest
+
+from .. import bigquery_call_system_procedure
 
 
 def test_call_system_procedure_success(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    with mock.patch("google.cloud.bigquery.Client") as mock_client_cls:
+    with mock.patch.object(
+        bigquery_call_system_procedure.bigquery, "Client"
+    ) as mock_client_cls:
         mock_client = mock_client_cls.return_value
         mock_job = mock.MagicMock()
         mock_job.job_id = "example-job-123"
@@ -43,21 +46,18 @@ def test_call_system_procedure_success(
         assert "System Procedure: BQ.REFRESH_MATERIALIZED_VIEW" in captured.out
 
 
-def test_call_system_procedure_not_found(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    with mock.patch("google.cloud.bigquery.Client") as mock_client_cls:
+def test_call_system_procedure_not_found() -> None:
+    with mock.patch.object(
+        bigquery_call_system_procedure.bigquery, "Client"
+    ) as mock_client_cls:
         mock_client = mock_client_cls.return_value
         mock_job = mock.MagicMock()
         mock_job.result.side_effect = exceptions.NotFound("View not found")
         mock_client.query.return_value = mock_job
 
-        bigquery_call_system_procedure.call_system_procedure(
-            project_id="example-project",
-            dataset_id="example_dataset",
-            materialized_view_id="example_mv",
-        )
-
-        captured = capsys.readouterr()
-        assert "error:" in captured.err
-        assert "example_mv" in captured.err
+        with pytest.raises(exceptions.GoogleAPICallError):
+            bigquery_call_system_procedure.call_system_procedure(
+                project_id="example-project",
+                dataset_id="example_dataset",
+                materialized_view_id="example_mv",
+            )

@@ -14,12 +14,13 @@
 
 from unittest import mock
 
-import bigquery_query_manifest_external_table
 from google.api_core import exceptions
 import pytest
 
+from .. import bigquery_federated_query_alloydb
 
-def test_query_manifest_external_table_success(
+
+def test_federated_query_alloydb_success(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -30,16 +31,14 @@ def test_query_manifest_external_table_success(
     mock_job.result.return_value = [mock_row]
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_query_manifest_external_table.bigquery,
+        bigquery_federated_query_alloydb.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_query_manifest_external_table.query_manifest_external_table(
+    bigquery_federated_query_alloydb.federated_query_alloydb(
         project_id="example-project",
-        dataset_id="example_dataset",
-        table_id="example_manifest_table",
-        manifest_uri="gs://example-bucket/manifests/symlink.manifest",
+        connection_id="example-project.us-central1.example-alloydb-conn",
     )
 
     captured = capsys.readouterr()
@@ -48,27 +47,21 @@ def test_query_manifest_external_table_success(
     assert mock_client.query.called
 
 
-def test_query_manifest_external_table_error(
+def test_federated_query_alloydb_error(
     monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.result.side_effect = exceptions.NotFound("resource error")
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_query_manifest_external_table.bigquery,
+        bigquery_federated_query_alloydb.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_query_manifest_external_table.query_manifest_external_table(
-        project_id="example-project",
-        dataset_id="example_dataset",
-        table_id="example_manifest_table",
-        manifest_uri="gs://example-bucket/manifests/symlink.manifest",
-    )
-
-    captured = capsys.readouterr()
-    assert "error:" in captured.err
-    assert "example-project" in captured.err
+    with pytest.raises(exceptions.GoogleAPICallError):
+        bigquery_federated_query_alloydb.federated_query_alloydb(
+            project_id="example-project",
+            connection_id="example-project.us-central1.example-alloydb-conn",
+        )

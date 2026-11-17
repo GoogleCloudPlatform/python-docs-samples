@@ -14,31 +14,33 @@
 
 from unittest import mock
 
-import bigquery_create_search_index
 from google.api_core import exceptions
 import pytest
 
+from .. import bigquery_call_procedure
 
-def test_create_search_index_success(
+
+def test_call_procedure_success(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.job_id = "example-job-123"
-    mock_job.statement_type = "SCRIPT"
-    mock_job.result.return_value = []
+    mock_row = mock.MagicMock()
+    mock_row.total_words = 42
+    mock_job.result.return_value = [mock_row]
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_create_search_index.bigquery,
+        bigquery_call_procedure.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_create_search_index.create_search_index(
+    bigquery_call_procedure.call_procedure(
         project_id="example-project",
         dataset_id="example_dataset",
-        table_id="example_table",
+        procedure_id="example_procedure",
     )
 
     captured = capsys.readouterr()
@@ -47,26 +49,22 @@ def test_create_search_index_success(
     assert mock_client.query.called
 
 
-def test_create_search_index_error(
+def test_call_procedure_error(
     monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.result.side_effect = exceptions.NotFound("resource error")
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_create_search_index.bigquery,
+        bigquery_call_procedure.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_create_search_index.create_search_index(
-        project_id="example-project",
-        dataset_id="example_dataset",
-        table_id="example_table",
-    )
-
-    captured = capsys.readouterr()
-    assert "error:" in captured.err
-    assert "example-project" in captured.err
+    with pytest.raises(exceptions.GoogleAPICallError):
+        bigquery_call_procedure.call_procedure(
+            project_id="example-project",
+            dataset_id="example_dataset",
+            procedure_id="example_procedure",
+        )

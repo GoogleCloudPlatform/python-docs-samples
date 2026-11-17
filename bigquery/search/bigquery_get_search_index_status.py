@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_get_search_index_status]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -50,24 +47,9 @@ def get_search_index_status(
         WHERE table_name = @table_id;
     """
 
-    try:
-        print(f"Checking search index status for table: {table_ref}")
-        query_job = client.query(sql, job_config=job_config)
-        rows = list(query_job.result())
-    except exceptions.NotFound as err:
-        print(
-            f"error: dataset '{dataset_id}' or table '{table_id}' not found in "
-            f"project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to get search index status for table '{table_id}' in "
-            f"dataset '{dataset_id}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Checking search index status for table: {table_ref}")
+    query_job = client.query(sql, job_config=job_config)
+    rows = list(query_job.result())
 
     index_name = rows[0].index_name if rows else "NONE"
     index_status = rows[0].index_status if rows else "NONE"

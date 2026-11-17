@@ -14,59 +14,62 @@
 
 from unittest import mock
 
-import bigquery_drop_procedure
 from google.api_core import exceptions
 import pytest
 
+from .. import bigquery_query_iceberg_table
 
-def test_drop_procedure_success(
+
+def test_query_iceberg_table_success(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
-    mock_job = mock.MagicMock()
-    mock_job.job_id = "example-job-123"
-    mock_job.statement_type = "SCRIPT"
-    mock_job.result.return_value = []
-    mock_client.query.return_value = mock_job
+    mock_ddl_job = mock.MagicMock()
+    mock_ddl_job.result.return_value = []
+    mock_select_job = mock.MagicMock()
+    mock_select_job.job_id = "example-job-123"
+    mock_row = mock.MagicMock()
+    mock_select_job.result.return_value = [mock_row]
+    mock_client.query.side_effect = [mock_ddl_job, mock_select_job]
     monkeypatch.setattr(
-        bigquery_drop_procedure.bigquery,
+        bigquery_query_iceberg_table.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_drop_procedure.drop_procedure(
+    bigquery_query_iceberg_table.query_iceberg_table(
         project_id="example-project",
         dataset_id="example_dataset",
-        procedure_id="example_procedure",
+        table_id="example_iceberg_table",
+        connection_id="example-project.us.example_iceberg_conn",
+        metadata_uri="gs://example-bucket/warehouse/orders_ns/customer_orders/metadata/v2.metadata.json",
     )
 
     captured = capsys.readouterr()
     assert "Resource ID:" in captured.out
     assert "example-project" in captured.out
-    assert mock_client.query.called
+    assert mock_client.query.call_count == 2
 
 
-def test_drop_procedure_error(
+def test_query_iceberg_table_error(
     monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.result.side_effect = exceptions.NotFound("resource error")
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_drop_procedure.bigquery,
+        bigquery_query_iceberg_table.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_drop_procedure.drop_procedure(
-        project_id="example-project",
-        dataset_id="example_dataset",
-        procedure_id="example_procedure",
-    )
-
-    captured = capsys.readouterr()
-    assert "error:" in captured.err
-    assert "example-project" in captured.err
+    with pytest.raises(exceptions.GoogleAPICallError):
+        bigquery_query_iceberg_table.query_iceberg_table(
+            project_id="example-project",
+            dataset_id="example_dataset",
+            table_id="example_iceberg_table",
+            connection_id="example-project.us.example_iceberg_conn",
+            metadata_uri="gs://example-bucket/warehouse/orders_ns/customer_orders/metadata/v2.metadata.json",
+        )

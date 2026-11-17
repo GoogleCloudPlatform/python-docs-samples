@@ -14,15 +14,18 @@
 
 from unittest import mock
 
-import bigquery_get_search_index_status
 from google.api_core import exceptions
 import pytest
+
+from .. import bigquery_get_search_index_status
 
 
 def test_get_search_index_status_success(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    with mock.patch("google.cloud.bigquery.Client") as mock_client_cls:
+    with mock.patch.object(
+        bigquery_get_search_index_status.bigquery, "Client"
+    ) as mock_client_cls:
         mock_client = mock_client_cls.return_value
         mock_job = mock.MagicMock()
         mock_job.job_id = "example-job-123"
@@ -50,19 +53,18 @@ def test_get_search_index_status_success(
         assert "Coverage Percentage: 100%" in captured.out
 
 
-def test_get_search_index_status_not_found(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    with mock.patch("google.cloud.bigquery.Client") as mock_client_cls:
+def test_get_search_index_status_not_found() -> None:
+    with mock.patch.object(
+        bigquery_get_search_index_status.bigquery, "Client"
+    ) as mock_client_cls:
         mock_client = mock_client_cls.return_value
-        mock_client.query.side_effect = exceptions.NotFound("Dataset not found")
+        mock_job = mock.MagicMock()
+        mock_job.result.side_effect = exceptions.NotFound("Dataset not found")
+        mock_client.query.return_value = mock_job
 
-        bigquery_get_search_index_status.get_search_index_status(
-            project_id="example-project",
-            dataset_id="example_dataset",
-            table_id="example_table",
-        )
-
-        captured = capsys.readouterr()
-        assert "error:" in captured.err
-        assert "example_table" in captured.err
+        with pytest.raises(exceptions.GoogleAPICallError):
+            bigquery_get_search_index_status.get_search_index_status(
+                project_id="example-project",
+                dataset_id="example_dataset",
+                table_id="example_table",
+            )

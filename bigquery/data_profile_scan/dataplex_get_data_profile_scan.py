@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START dataplex_get_data_profile_scan]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import dataplex_v1
 
 
@@ -41,22 +38,7 @@ def get_data_profile_scan(
         view=dataplex_v1.GetDataScanRequest.DataScanView.FULL,
     )
 
-    try:
-        scan = client.get_data_scan(request=request)
-    except exceptions.NotFound as err:
-        print(
-            f"error: data profile scan '{data_scan_id}' not found in location "
-            f"'{location}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: failed to retrieve data profile scan '{data_scan_id}' in location "
-            f"'{location}' for project '{project_id}': {err.message}",
-            file=sys.stderr,
-        )
-        return
+    scan = client.get_data_scan(request=request)
 
     row_count = (
         scan.data_profile_result.row_count if scan.data_profile_result else "N/A"

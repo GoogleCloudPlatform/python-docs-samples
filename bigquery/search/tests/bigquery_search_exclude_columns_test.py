@@ -14,12 +14,13 @@
 
 from unittest import mock
 
-import bigquery_search_with_text_analyzer
 from google.api_core import exceptions
 import pytest
 
+from .. import bigquery_search_exclude_columns
 
-def test_search_with_text_analyzer_success(
+
+def test_search_exclude_columns_success(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -29,39 +30,35 @@ def test_search_with_text_analyzer_success(
     mock_job.result.return_value = []
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_search_with_text_analyzer.bigquery,
+        bigquery_search_exclude_columns.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_search_with_text_analyzer.search_with_text_analyzer(
+    bigquery_search_exclude_columns.search_exclude_columns(
         project_id="example-project",
     )
 
     captured = capsys.readouterr()
     assert "Resource ID: bigquery-public-data.thelook_ecommerce.users" in captured.out
-    assert "Analyzer: NO_OP_ANALYZER" in captured.out
+    assert "Matching Rows: 0" in captured.out
     assert mock_client.query.called
 
 
-def test_search_with_text_analyzer_error(
+def test_search_exclude_columns_error(
     monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
 ) -> None:
     mock_client = mock.MagicMock()
     mock_job = mock.MagicMock()
     mock_job.result.side_effect = exceptions.NotFound("resource error")
     mock_client.query.return_value = mock_job
     monkeypatch.setattr(
-        bigquery_search_with_text_analyzer.bigquery,
+        bigquery_search_exclude_columns.bigquery,
         "Client",
         lambda project=None: mock_client,
     )
 
-    bigquery_search_with_text_analyzer.search_with_text_analyzer(
-        project_id="example-project",
-    )
-
-    captured = capsys.readouterr()
-    assert "error:" in captured.err
-    assert "example-project" in captured.err
+    with pytest.raises(exceptions.GoogleAPICallError):
+        bigquery_search_exclude_columns.search_exclude_columns(
+            project_id="example-project",
+        )

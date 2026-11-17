@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START bigquery_query_manifest_external_table]
-import sys
-
-from google.api_core import exceptions
 from google.cloud import bigquery
 
 
@@ -54,25 +51,10 @@ def query_manifest_external_table(
         "SELECT id, label, score " f"FROM `{table_ref}` " "ORDER BY id ASC " "LIMIT 10"
     )
 
-    try:
-        print(f"Configuring manifest URI and querying external table: {table_ref}")
-        client.update_table(table, ["external_data_configuration"])
-        query_job = client.query(query)
-        rows = list(query_job.result())
-    except exceptions.NotFound as err:
-        print(
-            f"error: manifest external table '{table_id}' in dataset '{dataset_id}' "
-            f"for project '{project_id}' (manifest '{manifest_uri}') was not found: {err.message}",
-            file=sys.stderr,
-        )
-        return
-    except exceptions.GoogleAPICallError as err:
-        print(
-            f"error: could not query manifest external table '{table_id}' in dataset "
-            f"'{dataset_id}' for project '{project_id}' (manifest '{manifest_uri}'): {err.message}",
-            file=sys.stderr,
-        )
-        return
+    print(f"Configuring manifest URI and querying external table: {table_ref}")
+    client.update_table(table, ["external_data_configuration"])
+    query_job = client.query(query)
+    rows = list(query_job.result())
 
     print(f"Resource ID: {table_ref}")
     print(f"Job ID: {query_job.job_id}")
