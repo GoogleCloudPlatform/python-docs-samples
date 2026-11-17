@@ -74,7 +74,9 @@ def mock_rag_components(mocker: pytest_mock.MockerFixture) -> None:
             if not self.used:
                 self.used = True
                 return mocker.MagicMock(
-                    text="""In December 2023, Google launched Gemini, their "most capable and general model". It's multimodal, meaning it understands and combines different types of information like text, code, audio, images, and video."""
+                    **{
+                        "server_content.output_transcription.text": """In December 2023, Google launched Gemini, their "most capable and general model". It's multimodal, meaning it understands and combines different types of information like text, code, audio, images, and video."""
+                    }
                 )
             raise StopAsyncIteration
 
