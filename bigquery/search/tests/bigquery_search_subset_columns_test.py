@@ -29,10 +29,9 @@ def test_search_subset_columns_success(
     mock_job.job_id = "example-job-123"
     mock_job.result.return_value = [mock.MagicMock()]
     mock_client.query.return_value = mock_job
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
     monkeypatch.setattr(
-        bigquery_search_subset_columns.bigquery,
-        "Client",
-        lambda project=None: mock_client,
+        bigquery_search_subset_columns.bigquery, "Client", mock_client_cls
     )
 
     bigquery_search_subset_columns.search_subset_columns(
@@ -43,6 +42,7 @@ def test_search_subset_columns_success(
     assert "Resource ID: bigquery-public-data.thelook_ecommerce.users" in captured.out
     assert "Matching Rows: 1" in captured.out
     assert mock_client.query.called
+    mock_client_cls.assert_called_once_with(project="example-project")
 
 
 def test_search_subset_columns_error(
@@ -52,10 +52,9 @@ def test_search_subset_columns_error(
     mock_job = mock.MagicMock()
     mock_job.result.side_effect = exceptions.NotFound("resource error")
     mock_client.query.return_value = mock_job
+    mock_client_cls = mock.MagicMock(return_value=mock_client)
     monkeypatch.setattr(
-        bigquery_search_subset_columns.bigquery,
-        "Client",
-        lambda project=None: mock_client,
+        bigquery_search_subset_columns.bigquery, "Client", mock_client_cls
     )
 
     with pytest.raises(exceptions.GoogleAPICallError):
