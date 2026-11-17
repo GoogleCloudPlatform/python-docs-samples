@@ -21,6 +21,7 @@ async def generate_content() -> list[FunctionResponse]:
     # [START googlegenaisdk_live_func_call_with_txt]
     from google import genai
     from google.genai.types import (
+        AudioTranscriptionConfig,
         Content,
         FunctionDeclaration,
         FunctionResponse,
@@ -31,14 +32,15 @@ async def generate_content() -> list[FunctionResponse]:
     )
 
     client = genai.Client()
-    model_id = "gemini-live-2.5-flash-native-audio"
+    model_id = "gemini-3.8-live"
 
     # Simple function definitions
     turn_on_the_lights = FunctionDeclaration(name="turn_on_the_lights")
     turn_off_the_lights = FunctionDeclaration(name="turn_off_the_lights")
 
     config = LiveConnectConfig(
-        response_modalities=[Modality.TEXT],
+        response_modalities=[Modality.AUDIO],
+        output_audio_transcription=AudioTranscriptionConfig(),
         tools=[Tool(function_declarations=[turn_on_the_lights, turn_off_the_lights])],
     )
     async with client.aio.live.connect(model=model_id, config=config) as session:
@@ -50,28 +52,35 @@ async def generate_content() -> list[FunctionResponse]:
 
         function_responses = []
 
+        # The first turn ends after the model requests the function calls.
         async for chunk in session.receive():
-            if chunk.server_content:
-                if chunk.text is not None:
-                    print(chunk.text)
-
-            elif chunk.tool_call:
-
+            if chunk.tool_call:
                 for fc in chunk.tool_call.function_calls:
                     function_response = FunctionResponse(
+                        id=fc.id,
                         name=fc.name,
                         response={
                             "result": "ok"
                         },  # simple, hard-coded function response
                     )
                     function_responses.append(function_response)
-                    print(function_response.response["result"])
+                    print(f"{fc.name}: {function_response.response['result']}")
 
                 await session.send_tool_response(function_responses=function_responses)
 
+        # The next turn contains the model's answer, which uses the function results.
+        response = []
+        async for chunk in session.receive():
+            server_content = chunk.server_content
+            if server_content and server_content.output_transcription:
+                if server_content.output_transcription.text:
+                    response.append(server_content.output_transcription.text)
+        print("".join(response))
+
     # Example output:
     # >  Turn on the lights please
-    # ok
+    # turn_on_the_lights: ok
+    # I've turned on the lights for you.
     # [END googlegenaisdk_live_func_call_with_txt]
     return True
 
