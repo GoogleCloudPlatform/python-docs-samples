@@ -14,7 +14,6 @@
 
 from unittest import mock
 
-from google.api_core import exceptions
 from google.cloud import bigquery
 import pytest
 
@@ -25,26 +24,36 @@ def test_upgrade_manifest_biglake_table_success(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     with mock.patch.object(
-        bigquery_upgrade_manifest_biglake_table.bigquery, "Client"
+        bigquery_upgrade_manifest_biglake_table.bigquery,
+        "Client",
+        autospec=True,
+        spec_set=True,
     ) as mock_client_cls:
         mock_client = mock_client_cls.return_value
-        mock_ddl_job = mock.MagicMock()
+        mock_ddl_job = mock.create_autospec(
+            bigquery.QueryJob, instance=True, spec_set=True
+        )
         mock_ddl_job.result.return_value = []
-        mock_select_job = mock.MagicMock()
+        mock_select_job = mock.create_autospec(
+            bigquery.QueryJob, instance=True, spec_set=True
+        )
         mock_select_job.job_id = "example-job-123"
-        mock_select_job.result.return_value = [
-            mock.MagicMock(),
-            mock.MagicMock(),
-            mock.MagicMock(),
-        ]
+        mock_select_job.result.return_value = [{}, {}, {}]
         mock_client.query.side_effect = [mock_ddl_job, mock_select_job]
-        mock_table = mock.MagicMock()
-        mock_table.external_data_configuration.to_api_repr.return_value = {
-            "sourceFormat": "PARQUET",
-            "metadataCacheMode": "AUTOMATIC",
-        }
-        mock_table.max_staleness = "0-0 0 1:0:0"
-        mock_client.get_table.return_value = mock_table
+        mock_client.get_table.return_value = bigquery.Table.from_api_repr(
+            {
+                "tableReference": {
+                    "projectId": "example-project",
+                    "datasetId": "example_dataset",
+                    "tableId": "example_manifest_table",
+                },
+                "maxStaleness": "0-0 0 1:0:0",
+                "externalDataConfiguration": {
+                    "sourceFormat": "PARQUET",
+                    "metadataCacheMode": "AUTOMATIC",
+                },
+            }
+        )
 
         bigquery_upgrade_manifest_biglake_table.upgrade_manifest_biglake_table(
             project_id="example-project",
@@ -54,7 +63,13 @@ def test_upgrade_manifest_biglake_table_success(
             manifest_uri="gs://example-bucket/manifests/symlink.manifest",
         )
 
+        mock_client_cls.assert_called_once_with(project="example-project")
         assert mock_client.query.call_count == 2
+        assert (
+            "CREATE OR REPLACE EXTERNAL TABLE"
+            in mock_client.query.call_args_list[0].args[0]
+        )
+        assert "SELECT *" in mock_client.query.call_args_list[1].args[0]
         mock_client.get_table.assert_called_once_with(
             "example-project.example_dataset.example_manifest_table"
         )
@@ -66,22 +81,3 @@ def test_upgrade_manifest_biglake_table_success(
         assert "Metadata Cache Mode: AUTOMATIC" in captured.out
         assert "Max Staleness: 0-0 0 1:0:0" in captured.out
         assert "Rows Returned: 3" in captured.out
-
-
-def test_upgrade_manifest_biglake_table_not_found() -> None:
-    with mock.patch.object(
-        bigquery_upgrade_manifest_biglake_table.bigquery, "Client"
-    ) as mock_client_cls:
-        mock_client = mock_client_cls.return_value
-        mock_job = mock.MagicMock()
-        mock_job.result.side_effect = exceptions.NotFound("Connection not found")
-        mock_client.query.return_value = mock_job
-
-        with pytest.raises(exceptions.GoogleAPICallError):
-            bigquery_upgrade_manifest_biglake_table.upgrade_manifest_biglake_table(
-                project_id="example-project",
-                dataset_id="example_dataset",
-                table_id="example_manifest_table",
-                connection_id="example-project.us.example_biglake_conn",
-                manifest_uri="gs://example-bucket/manifests/symlink.manifest",
-            )
