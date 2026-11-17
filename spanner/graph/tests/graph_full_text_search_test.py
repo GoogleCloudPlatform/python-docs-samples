@@ -39,7 +39,7 @@ def test_run_graph_full_text_search_success(
     snapshot = database.snapshot.return_value.__enter__.return_value
     snapshot.execute_sql.return_value = [
         ("Rainy day emergency fund", 200.0, 1.500000),
-        ("Fund for a refreshing tropical vacation", 500.0, 1.100000),
+        ("Fund for a refreshing tropical vacation", None, 1.100000),
     ]
 
     graph_full_text_search.run_graph_full_text_search(
@@ -53,6 +53,7 @@ def test_run_graph_full_text_search_success(
     assert f"Resource ID: {DATABASE_NAME}" in out
     assert "Account Nickname: Rainy day emergency fund" in out
     assert "Amount Added: 200.00" in out
+    assert "Amount Added: 0.00" in out
     assert err == ""
 
 

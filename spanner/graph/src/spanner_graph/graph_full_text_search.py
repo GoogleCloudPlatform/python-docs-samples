@@ -71,7 +71,7 @@ def run_graph_full_text_search(
         print(f"Resource ID: {database.name}")
         for nick_name, amount_added, relevance_score in rows:
             print(f"Account Nickname: {nick_name}")
-            print(f"Amount Added: {amount_added:.2f}")
+            print(f"Amount Added: {float(amount_added or 0.0):.2f}")
             print(f"Relevance Score: {relevance_score:.6f}")
 
 
