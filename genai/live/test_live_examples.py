@@ -22,9 +22,6 @@ import types
 
 from unittest.mock import AsyncMock, MagicMock, patch
 
-import pytest
-import pytest_mock
-
 import live_audio_with_txt
 import live_audiogen_with_txt
 import live_code_exec_with_txt
@@ -35,12 +32,9 @@ import live_structured_output_with_txt
 import live_transcribe_with_audio
 import live_txt_with_audio
 import live_txtgen_with_audio
-import live_websocket_audiogen_with_txt
-import live_websocket_audiotranscript_with_txt
-# import live_websocket_textgen_with_audio
-import live_websocket_textgen_with_txt
 import live_with_txt
-
+import pytest
+import pytest_mock
 
 os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -187,26 +181,6 @@ async def test_live_with_text() -> None:
     assert await live_with_txt.generate_content()
 
 
-# @pytest.mark.asyncio
-# async def test_live_websocket_textgen_with_audio() -> None:
-#     assert await live_websocket_textgen_with_audio.generate_content()
-
-
-@pytest.mark.asyncio
-async def test_live_websocket_textgen_with_txt() -> None:
-    assert await live_websocket_textgen_with_txt.generate_content()
-
-
-@pytest.mark.asyncio
-async def test_live_websocket_audiogen_with_txt() -> None:
-    assert await live_websocket_audiogen_with_txt.generate_content()
-
-
-@pytest.mark.asyncio
-async def test_live_websocket_audiotranscript_with_txt() -> None:
-    assert await live_websocket_audiotranscript_with_txt.generate_content()
-
-
 @pytest.mark.asyncio
 async def test_live_audiogen_with_txt() -> None:
     assert live_audiogen_with_txt.generate_content()
@@ -267,6 +241,8 @@ async def test_live_audio_with_txt(mock_live_session: None) -> None:
 
 
 @pytest.mark.asyncio
-async def test_live_conversation_audio_with_audio(live_conversation: types.ModuleType) -> None:
+async def test_live_conversation_audio_with_audio(
+    live_conversation: types.ModuleType,
+) -> None:
     result = await live_conversation.main()
     assert result is True or result is None
