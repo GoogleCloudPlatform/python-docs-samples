@@ -52,6 +52,7 @@ def test_add_numeric_column_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (
             exceptions.FailedPrecondition("Duplicate column"),
             "error: column 'Revenue' already exists",

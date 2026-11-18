@@ -47,6 +47,12 @@ def add_numeric_column(project_id: str, instance_id: str, database_id: str) -> N
             f"on instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
+    except TimeoutError as err:
+        print(
+            f"error: timed out waiting for the operation on database '{database_id}' "
+            f"to complete; the operation may still be running: {err}",
+            file=sys.stderr,
+        )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to add column '{column_name}' on database "
