@@ -71,8 +71,6 @@ def configure_cloud_trace_tracing(
     else:
         print(f"Resource ID: {database_id}")
         print(f"Check Result: {row[0]}")
-        print("End-to-End Tracing: True")
-        print("Trace Exporter: Cloud Trace")
     finally:
         tracer_provider.shutdown()
 

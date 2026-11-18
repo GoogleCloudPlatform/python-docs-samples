@@ -16,6 +16,7 @@ import runpy
 from unittest import mock
 
 from google.api_core import exceptions
+from google.cloud import spanner
 from opentelemetry.sdk.trace.export import SpanExportResult
 import pytest
 from spanner_observability import opentelemetry_traces_cloudtrace
@@ -57,8 +58,6 @@ def test_configure_cloud_trace_tracing_success(
     assert f"Resource ID: {DATABASE_ID}" in out
     assert PROJECT_ID not in out
     assert "Check Result: 1" in out
-    assert "End-to-End Tracing: True" in out
-    assert "Trace Exporter: Cloud Trace" in out
     assert err == ""
 
 
@@ -99,8 +98,6 @@ def test_configure_cloud_trace_tracing_errors(
     assert out == ""
     assert err.startswith(expected_prefix)
     assert PROJECT_ID not in err
-    assert PROJECT_ID not in err
-    assert PROJECT_ID not in err
 
 
 @mock.patch(CT_EXPORTER_SRC)
@@ -135,20 +132,24 @@ def test_configure_cloud_trace_tracing_cli_entrypoint(
         "spanner_observability.opentelemetry_traces_cloudtrace", run_name="__main__"
     )
 
-    assert "Trace Exporter: Cloud Trace" in capsys.readouterr().out
+    assert "Check Result: 1" in capsys.readouterr().out
 
 
 @conftest.live_only
 def test_configure_cloud_trace_tracing_live(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    opentelemetry_traces_cloudtrace.configure_cloud_trace_tracing(
-        conftest.LIVE_PROJECT_ID,
-        conftest.LIVE_INSTANCE_ID,
-        conftest.LIVE_DATABASE_ID,
-    )
+    with mock.patch.object(spanner, "Client", wraps=spanner.Client) as spy_client:
+        opentelemetry_traces_cloudtrace.configure_cloud_trace_tracing(
+            conftest.LIVE_PROJECT_ID,
+            conftest.LIVE_INSTANCE_ID,
+            conftest.LIVE_DATABASE_ID,
+        )
 
+    obs = spy_client.call_args.kwargs["observability_options"]
+    assert obs["enable_end_to_end_tracing"] is True
+    assert obs["enable_extended_tracing"] is True
     out, err = capsys.readouterr()
     assert err == ""
+    assert conftest.LIVE_PROJECT_ID not in out
     assert "Check Result: 1" in out
-    assert "Trace Exporter: Cloud Trace" in out
