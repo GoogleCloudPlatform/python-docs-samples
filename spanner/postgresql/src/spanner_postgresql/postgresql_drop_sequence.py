@@ -53,6 +53,13 @@ def drop_postgresql_sequence(
             f"on database '{database_id}' in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
+    except TimeoutError as err:
+        print(
+            f"error: timed out waiting to drop PostgreSQL sequence "
+            f"'{sequence_name}' on database '{database_id}' in instance "
+            f"'{instance_id}'; the operation may still be running: {err}",
+            file=sys.stderr,
+        )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to drop PostgreSQL sequence '{sequence_name}' on "

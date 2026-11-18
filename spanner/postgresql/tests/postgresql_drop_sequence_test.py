@@ -60,6 +60,10 @@ def test_drop_postgresql_sequence_success(
             "error: sequence 'Seq' is still referenced or missing",
         ),
         (
+            TimeoutError("deadline"),
+            "error: timed out waiting to drop PostgreSQL sequence 'Seq'",
+        ),
+        (
             exceptions.PermissionDenied("denied"),
             "error: failed to drop PostgreSQL sequence 'Seq'",
         ),
