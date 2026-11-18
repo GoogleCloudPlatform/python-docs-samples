@@ -54,6 +54,12 @@ def create_change_stream(project_id: str, instance_id: str, database_id: str) ->
             f"'{instance_id}': {err.message}",
             file=sys.stderr,
         )
+    except TimeoutError as err:
+        print(
+            f"error: timed out waiting for the operation on database '{database_id}' "
+            f"to complete; the operation may still be running: {err}",
+            file=sys.stderr,
+        )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to create change stream '{stream_name}' on "

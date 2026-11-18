@@ -51,6 +51,7 @@ def test_create_change_stream_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (
             exceptions.FailedPrecondition("duplicate"),
             "error: change stream 'NamesAndAlbumsStream' already exists",
