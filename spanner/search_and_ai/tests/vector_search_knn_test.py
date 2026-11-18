@@ -50,7 +50,8 @@ def test_find_k_nearest_neighbors_success(
     assert "COSINE_DISTANCE" in snapshot.execute_sql.call_args.args[0]
 
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Document ID: 101" in out
     assert "Title: Amateur Sandlot Baseball" in out
     assert err == ""
@@ -87,6 +88,8 @@ def test_find_k_nearest_neighbors_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)

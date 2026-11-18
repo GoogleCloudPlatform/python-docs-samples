@@ -66,17 +66,17 @@ def find_k_nearest_neighbors(
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
-            f"in project '{project_id}' was not found: {err.message}",
+            f"was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: KNN vector search failed on database '{database_id}' "
-            f"in instance '{instance_id}' for project '{project_id}': {err.message}",
+            f"in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         for doc_id, title, distance in rows:
             print(f"Distance: {distance:.6f}")
             print(f"Document ID: {doc_id}")
