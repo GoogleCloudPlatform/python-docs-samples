@@ -51,18 +51,18 @@ def create_change_stream(project_id: str, instance_id: str, database_id: str) ->
         print(
             f"error: change stream '{stream_name}' already exists or failed "
             f"preconditions on database '{database_id}' in instance "
-            f"'{instance_id}' for project '{project_id}': {err.message}",
+            f"'{instance_id}': {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to create change stream '{stream_name}' on "
-            f"database '{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"database '{database_id}' in instance '{instance_id}'"
+            f": {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database_path}")
+        print(f"Resource ID: {database_id}")
         print(f"Change Stream: {stream_name}")
         print("Retention Period: 36h")
         print("Transaction Exclusion Allowed: True")

@@ -42,7 +42,8 @@ def test_create_change_stream_success(
     assert "CREATE CHANGE STREAM NamesAndAlbumsStream" in req.statements[0]
     assert "allow_txn_exclusion = true" in req.statements[0]
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_PATH}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Change Stream: NamesAndAlbumsStream" in out
     assert "Retention Period: 36h" in out
     assert "Transaction Exclusion Allowed: True" in out
@@ -77,6 +78,8 @@ def test_create_change_stream_errors(
 
     _out, err = capsys.readouterr()
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(ADMIN_CLIENT)

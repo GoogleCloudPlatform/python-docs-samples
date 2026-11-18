@@ -20,9 +20,7 @@ import pytest
 
 LIVE_PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
 LIVE_INSTANCE_ID = os.environ.get("SPANNER_INSTANCE_ID", "")
-LIVE_DATABASE_ID = os.environ.get(
-    "SPANNER_DATABASE_ID", os.environ.get("SPANNER_DATABASE_ID", "")
-)
+LIVE_DATABASE_ID = os.environ.get("SPANNER_DATABASE_ID", "")
 
 if os.environ.get("RUN_INTEGRATION_TESTS") == "true" and (
     not LIVE_PROJECT_ID or not LIVE_INSTANCE_ID or not LIVE_DATABASE_ID
