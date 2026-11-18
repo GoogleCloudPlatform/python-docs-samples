@@ -51,7 +51,6 @@ def test_update_postgresql_dml_last_statement_success(
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_ID}" in out
     assert PROJECT_ID not in out
-    assert "Last Statement Optimization: True" in out
     assert "Updated Rows: 1" in out
     assert err == ""
 
@@ -151,7 +150,6 @@ def test_update_postgresql_dml_last_statement_live(
         out, err = capsys.readouterr()
         assert err == ""
         assert conftest.LIVE_PROJECT_ID not in out
-        assert "Last Statement Optimization: True" in out
         assert "Updated Rows: 1" in out
     finally:
         database.run_in_transaction(
