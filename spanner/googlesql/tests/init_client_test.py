@@ -43,9 +43,10 @@ def test_init_client_success(
 
     mock_client_class.assert_called_once_with(project=PROJECT_ID)
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Check Result: 1" in out
-    assert f"Project ID: {PROJECT_ID}" in out
+    assert f"Instance ID: {INSTANCE_ID}" in out
     assert err == ""
 
 
@@ -80,6 +81,9 @@ def test_init_client_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
@@ -89,7 +93,6 @@ def test_init_client_cli_entrypoint(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     client = mock_client_class.return_value
-    client.project = PROJECT_ID
     database = client.instance.return_value.database.return_value
     database.name = DATABASE_NAME
     snapshot = database.snapshot.return_value.__enter__.return_value
@@ -122,5 +125,6 @@ def test_init_client_live(capsys: pytest.CaptureFixture[str]) -> None:
 
     out, err = capsys.readouterr()
     assert err == ""
+    assert conftest.LIVE_PROJECT_ID not in out
     assert "Check Result: 1" in out
-    assert f"Project ID: {conftest.LIVE_PROJECT_ID}" in out
+    assert f"Instance ID: {conftest.LIVE_INSTANCE_ID}" in out

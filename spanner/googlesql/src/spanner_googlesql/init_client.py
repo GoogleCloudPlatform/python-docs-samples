@@ -33,23 +33,23 @@ def init_client(project_id: str, instance_id: str, database_id: str) -> None:
 
     try:
         with database.snapshot() as snapshot:
-            row = list(snapshot.execute_sql("SELECT 1"))[0]
+            row = next(iter(snapshot.execute_sql("SELECT 1")))
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
-            f"in project '{project_id}' was not found: {err.message}",
+            f"was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to query database '{database_id}' on instance "
-            f"'{instance_id}' in project '{project_id}': {err.message}",
+            f"'{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print(f"Check Result: {row[0]}")
-        print(f"Project ID: {client.project}")
+        print(f"Instance ID: {instance_id}")
 
 
 # [END spanner_init_client]
