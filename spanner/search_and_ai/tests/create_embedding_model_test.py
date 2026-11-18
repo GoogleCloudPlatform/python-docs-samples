@@ -47,7 +47,8 @@ def test_create_embedding_model_success(
 
     out, err = capsys.readouterr()
     assert "Waiting for remote model 'TextEmbeddingModel'" in out
-    assert f"Resource ID: {DATABASE_PATH}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Model Name: TextEmbeddingModel" in out
     assert err == ""
 
@@ -82,6 +83,8 @@ def test_create_embedding_model_errors(
 
     _out, err = capsys.readouterr()
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(ADMIN_CLIENT)

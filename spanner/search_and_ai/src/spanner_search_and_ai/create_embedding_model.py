@@ -69,19 +69,19 @@ def create_embedding_model(
         print(
             f"error: model '{model_name}' already exists on database "
             f"'{database_id}' in instance '{instance_id}' and location "
-            f"'{location_id}' for project '{project_id}': {err.message}",
+            f"'{location_id}': {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to register model '{model_name}' on database "
             f"'{database_id}' in instance '{instance_id}' and location "
-            f"'{location_id}' for project '{project_id}': {err.message}",
+            f"'{location_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database_path}")
-        print(f"Endpoint: {endpoint}")
+        print(f"Resource ID: {database_id}")
+        print(f"Endpoint Location: {location_id}")
         print(f"Model Name: {model_name}")
 
 
