@@ -47,7 +47,8 @@ def test_disable_leader_aware_routing_success(
         project=PROJECT_ID, route_to_leader_enabled=False
     )
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Check Result: 1" in out
     assert "Leader-Aware Routing Enabled: False" in out
     assert err == ""
@@ -86,6 +87,8 @@ def test_disable_leader_aware_routing_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)

@@ -44,18 +44,18 @@ def disable_leader_aware_routing(
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
-            f"in project '{project_id}' was not found: {err.message}",
+            f"was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: query failed with leader-aware routing disabled on "
-            f"database '{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"database '{database_id}' in instance '{instance_id}'"
+            f": {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print(f"Check Result: {row[0]}")
         print(f"Leader-Aware Routing Enabled: {client.route_to_leader_enabled}")
 
