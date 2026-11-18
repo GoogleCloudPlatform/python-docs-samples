@@ -60,6 +60,7 @@ def test_create_postgresql_database_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (
             exceptions.AlreadyExists("dup"),
             "error: database 'example-pg-db' already exists",
