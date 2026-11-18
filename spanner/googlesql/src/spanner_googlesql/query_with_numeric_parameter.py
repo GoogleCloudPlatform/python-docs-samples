@@ -18,7 +18,6 @@ import sys
 
 from google.api_core import exceptions
 from google.cloud import spanner
-from google.cloud.spanner_v1 import param_types
 
 
 def query_with_numeric_parameter(
@@ -41,7 +40,7 @@ def query_with_numeric_parameter(
                 snapshot.execute_sql(
                     "SELECT VenueId, Revenue FROM Venues WHERE Revenue < @revenue",
                     params={"revenue": max_revenue},
-                    param_types={"revenue": param_types.NUMERIC},
+                    param_types={"revenue": spanner.param_types.NUMERIC},
                 )
             )
     except exceptions.NotFound as err:
