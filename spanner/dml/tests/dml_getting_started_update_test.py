@@ -67,6 +67,10 @@ def test_transfer_budget_with_dml_success(
             exceptions.PermissionDenied("denied"),
             "error: DML budget transfer failed",
         ),
+        (
+            ValueError("Second album not found."),
+            "error: DML budget transfer aborted",
+        ),
     ],
 )
 @mock.patch(SPANNER_CLIENT)
@@ -88,6 +92,23 @@ def test_transfer_budget_with_dml_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+
+
+@mock.patch(SPANNER_CLIENT)
+def test_transfer_budget_with_dml_missing_row(
+    mock_client_class: mock.MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    txn = _setup_txn(mock_client_class)
+    txn.execute_sql.side_effect = [[]]
+
+    dml_getting_started_update.transfer_budget_with_dml(
+        PROJECT_ID, INSTANCE_ID, DATABASE_ID
+    )
+
+    out, err = capsys.readouterr()
+    assert out == ""
+    assert err.startswith("error: DML budget transfer aborted")
     assert PROJECT_ID not in err
 
 
@@ -123,7 +144,7 @@ def test_transfer_budget_with_dml_live(capsys: pytest.CaptureFixture[str]) -> No
     client = spanner.Client(project=conftest.LIVE_PROJECT_ID)
     db = client.instance(conftest.LIVE_INSTANCE_ID).database(conftest.LIVE_DATABASE_ID)
     with db.batch() as batch:
-        batch.update(
+        batch.insert_or_update(
             table="Albums",
             columns=("SingerId", "AlbumId", "MarketingBudget"),
             values=[(1, 1, 300000), (2, 2, 500000)],
@@ -142,7 +163,7 @@ def test_transfer_budget_with_dml_live(capsys: pytest.CaptureFixture[str]) -> No
         assert "Updated Rows: 2" in out
     finally:
         with db.batch() as batch:
-            batch.update(
+            batch.insert_or_update(
                 table="Albums",
                 columns=("SingerId", "AlbumId", "MarketingBudget"),
                 values=[(1, 1, 300000), (2, 2, 500000)],

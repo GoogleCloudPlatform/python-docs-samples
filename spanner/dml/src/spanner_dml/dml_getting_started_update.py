@@ -47,11 +47,14 @@ def transfer_budget_with_dml(
                     "SELECT MarketingBudget FROM Albums "
                     "WHERE SingerId = 2 AND AlbumId = 2"
                 )
-            )
+            ),
+            None,
         )
+        if second_row is None:
+            raise ValueError("Second album not found.")
         second_budget = int(second_row[0] or 0)
         if second_budget < transfer_amount:
-            return
+            raise ValueError("Second album does not have sufficient funds.")
 
         first_row = next(
             iter(
@@ -59,8 +62,11 @@ def transfer_budget_with_dml(
                     "SELECT MarketingBudget FROM Albums "
                     "WHERE SingerId = 1 AND AlbumId = 1"
                 )
-            )
+            ),
+            None,
         )
+        if first_row is None:
+            raise ValueError("First album not found.")
         updated_first_budget = int(first_row[0] or 0) + transfer_amount
         updated_second_budget = second_budget - transfer_amount
 
@@ -82,6 +88,12 @@ def transfer_budget_with_dml(
 
     try:
         database.run_in_transaction(transfer_budget)
+    except ValueError as err:
+        print(
+            f"error: DML budget transfer aborted on database '{database_id}' "
+            f"in instance '{instance_id}': {err}",
+            file=sys.stderr,
+        )
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
