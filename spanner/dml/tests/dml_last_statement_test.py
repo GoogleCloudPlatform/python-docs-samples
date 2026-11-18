@@ -16,6 +16,7 @@ import runpy
 from unittest import mock
 
 from google.api_core import exceptions
+from google.cloud import spanner
 import pytest
 from spanner_dml import dml_last_statement
 
@@ -44,7 +45,8 @@ def test_update_dml_last_statement_success(
 
     assert transaction.execute_update.call_args.kwargs["last_statement"] is True
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Last Statement Optimization: True" in out
     assert "Updated Rows: 1" in out
     assert err == ""
@@ -80,6 +82,9 @@ def test_update_dml_last_statement_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
@@ -115,13 +120,28 @@ def test_update_dml_last_statement_cli_entrypoint(
 
 @conftest.live_only
 def test_update_dml_last_statement_live(capsys: pytest.CaptureFixture[str]) -> None:
-    dml_last_statement.update_dml_last_statement(
-        conftest.LIVE_PROJECT_ID,
-        conftest.LIVE_INSTANCE_ID,
-        conftest.LIVE_DATABASE_ID,
+    client = spanner.Client(project=conftest.LIVE_PROJECT_ID)
+    database = client.instance(conftest.LIVE_INSTANCE_ID).database(
+        conftest.LIVE_DATABASE_ID
     )
+    with database.batch() as batch:
+        batch.insert_or_update(
+            table="Singers",
+            columns=("SingerId", "FirstName", "LastName"),
+            values=[(54213, "Jane", "Smith")],
+        )
+    try:
+        dml_last_statement.update_dml_last_statement(
+            conftest.LIVE_PROJECT_ID,
+            conftest.LIVE_INSTANCE_ID,
+            conftest.LIVE_DATABASE_ID,
+        )
 
-    out, err = capsys.readouterr()
-    assert err == ""
-    assert "Last Statement Optimization: True" in out
-    assert "Updated Rows: 1" in out
+        out, err = capsys.readouterr()
+        assert err == ""
+        assert conftest.LIVE_PROJECT_ID not in out
+        assert "Last Statement Optimization: True" in out
+        assert "Updated Rows: 1" in out
+    finally:
+        with database.batch() as batch:
+            batch.delete(table="Singers", keyset=spanner.KeySet(keys=[[54213]]))
