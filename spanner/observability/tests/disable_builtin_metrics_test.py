@@ -88,6 +88,8 @@ def test_disable_builtin_metrics_errors(
     assert out == ""
     assert err.startswith(expected_prefix)
     assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
