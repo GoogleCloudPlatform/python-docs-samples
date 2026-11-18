@@ -46,7 +46,8 @@ def test_create_vector_index_success(
 
     out, err = capsys.readouterr()
     assert "Waiting for vector index 'DocEmbeddingIndex'" in out
-    assert f"Resource ID: {DATABASE_PATH}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Distance Type: COSINE" in out
     assert "Index Name: DocEmbeddingIndex" in out
     assert err == ""
@@ -80,6 +81,8 @@ def test_create_vector_index_errors(
 
     _out, err = capsys.readouterr()
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(ADMIN_CLIENT)
