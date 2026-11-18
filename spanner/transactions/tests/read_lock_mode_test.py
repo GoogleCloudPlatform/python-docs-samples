@@ -73,6 +73,10 @@ def test_run_transaction_with_read_lock_mode_success(
             exceptions.PermissionDenied("denied"),
             "error: read_lock_mode transaction failed",
         ),
+        (
+            ValueError("Album row not found."),
+            "error: read_lock_mode transaction failed",
+        ),
     ],
 )
 @mock.patch(SPANNER_CLIENT)
@@ -130,6 +134,12 @@ def test_run_transaction_with_read_lock_mode_live(
 ) -> None:
     client = spanner.Client(project=conftest.LIVE_PROJECT_ID)
     db = client.instance(conftest.LIVE_INSTANCE_ID).database(conftest.LIVE_DATABASE_ID)
+    with db.batch() as batch:
+        batch.insert_or_update(
+            table="Albums",
+            columns=("SingerId", "AlbumId", "AlbumTitle"),
+            values=[(2, 1, "Green")],
+        )
     try:
         read_lock_mode.run_transaction_with_read_lock_mode(
             conftest.LIVE_PROJECT_ID,
@@ -142,7 +152,7 @@ def test_run_transaction_with_read_lock_mode_live(
         assert "Updated Rows: 1" in out
     finally:
         with db.batch() as batch:
-            batch.update(
+            batch.insert_or_update(
                 table="Albums",
                 columns=("SingerId", "AlbumId", "AlbumTitle"),
                 values=[(2, 1, "Green")],
