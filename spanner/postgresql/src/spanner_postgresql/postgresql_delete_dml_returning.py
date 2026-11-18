@@ -33,38 +33,36 @@ def postgresql_delete_dml_returning(
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
     deleted_singers: list[tuple[int, str]] = []
-    row_counts: list[int] = []
+    row_count = 0
 
     def delete_singers(transaction: spanner_v1.Transaction) -> None:
+        nonlocal row_count
         deleted_singers.clear()
-        row_counts.clear()
         results = transaction.execute_sql(
             "DELETE FROM Singers WHERE FirstName = 'David' "
             "RETURNING SingerId, FullName"
         )
         for singer_id, full_name in results:
             deleted_singers.append((int(singer_id), str(full_name)))
-        row_counts.append(int(results.stats.row_count_exact))
+        row_count = int(results.stats.row_count_exact) if results.stats else 0
 
     try:
         database.run_in_transaction(delete_singers)
     except exceptions.NotFound as err:
         print(
             f"error: PostgreSQL database '{database_id}' on instance "
-            f"'{instance_id}' in project '{project_id}' was not found: "
-            f"{err.message}",
+            f"'{instance_id}' was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: PostgreSQL DELETE RETURNING failed on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
-        print(f"Deleted Rows: {row_counts[-1]}")
+        print(f"Resource ID: {database_id}")
+        print(f"Deleted Rows: {row_count}")
         for singer_id, full_name in deleted_singers:
             print(f"Full Name: {full_name}")
             print(f"Singer ID: {singer_id}")
