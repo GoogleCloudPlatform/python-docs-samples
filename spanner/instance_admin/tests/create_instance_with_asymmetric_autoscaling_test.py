@@ -64,7 +64,8 @@ def test_create_instance_with_asymmetric_autoscaling_success(
     assert opts[0].replica_selection.location == "us-west1"
 
     out, err = capsys.readouterr()
-    assert f"Resource ID: {INSTANCE_NAME}" in out
+    assert f"Resource ID: {INSTANCE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Asymmetric Overrides: 1" in out
     assert "Instance State: READY" in out
     assert err == ""
@@ -98,6 +99,8 @@ def test_create_instance_with_asymmetric_autoscaling_errors(
 
     _out, err = capsys.readouterr()
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(ADMIN_CLIENT)
@@ -144,7 +147,8 @@ def test_create_instance_with_asymmetric_autoscaling_live(
         )
         out, err = capsys.readouterr()
         assert err == ""
-        assert f"Resource ID: {temp_instance_name}" in out
+        assert conftest.LIVE_PROJECT_ID not in out
+        assert f"Resource ID: {temp_instance_id}" in out
         assert "Asymmetric Overrides: 1" in out
     finally:
         try:

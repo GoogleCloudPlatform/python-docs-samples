@@ -84,23 +84,25 @@ def create_instance_with_asymmetric_autoscaling(
         created = operation.result(timeout=600)
     except exceptions.AlreadyExists as err:
         print(
-            f"error: Spanner instance '{instance_id}' already exists in "
-            f"project '{project_id}': {err.message}",
+            f"error: Spanner instance '{instance_id}' already exists: "
+            f"{err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to create asymmetric-autoscaling instance "
-            f"'{instance_id}' in project '{project_id}': {err.message}",
+            f"'{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {created.name}")
-        print(f"Display Name: {created.display_name}")
-        print(
-            "Asymmetric Overrides: "
-            f"{len(created.autoscaling_config.asymmetric_autoscaling_options)}"
+        asymmetric_options = (
+            created.autoscaling_config.asymmetric_autoscaling_options
+            if created.autoscaling_config
+            else []
         )
+        print(f"Resource ID: {instance_id}")
+        print(f"Display Name: {created.display_name}")
+        print(f"Asymmetric Overrides: {len(asymmetric_options)}")
         print(f"Instance State: {created.state.name}")
 
 
