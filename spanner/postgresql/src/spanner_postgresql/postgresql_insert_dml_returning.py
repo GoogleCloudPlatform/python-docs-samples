@@ -33,11 +33,11 @@ def postgresql_insert_dml_returning(
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
     inserted_names: list[str] = []
-    row_counts: list[int] = []
+    row_count = 0
 
     def insert_singers(transaction: spanner_v1.Transaction) -> None:
+        nonlocal row_count
         inserted_names.clear()
-        row_counts.clear()
         results = transaction.execute_sql(
             "INSERT INTO Singers (SingerId, FirstName, LastName) VALUES "
             "(21, 'Luann', 'Chizoba'), "
@@ -48,29 +48,27 @@ def postgresql_insert_dml_returning(
         )
         for row in results:
             inserted_names.append(str(row[0]))
-        row_counts.append(int(results.stats.row_count_exact))
+        row_count = int(results.stats.row_count_exact) if results.stats else 0
 
     try:
         database.run_in_transaction(insert_singers)
     except exceptions.AlreadyExists as err:
         print(
             f"error: one or more SingerId rows already exist in PostgreSQL "
-            f"database '{database_id}' on instance '{instance_id}' in project "
-            f"'{project_id}': {err.message}",
+            f"database '{database_id}' on instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: PostgreSQL INSERT RETURNING failed on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         for full_name in inserted_names:
             print(f"Full Name: {full_name}")
-        print(f"Inserted Rows: {row_counts[-1]}")
+        print(f"Inserted Rows: {row_count}")
 
 
 # [END spanner_postgresql_insert_dml_returning]
