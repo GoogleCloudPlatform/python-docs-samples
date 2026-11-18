@@ -50,19 +50,19 @@ def send_queue_message(project_id: str, instance_id: str, database_id: str) -> N
     except exceptions.NotFound as err:
         print(
             f"error: queue '{queue_name}' or parent row on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}' was not found: {err.message}",
+            f"'{database_id}' in instance '{instance_id}'"
+            f" was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to send message to queue '{queue_name}' on "
-            f"database '{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"database '{database_id}' in instance '{instance_id}'"
+            f": {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print(f"Message ID: {message_id}")
         print(f"Queue Name: {queue_name}")
         print(f"User ID: {user_id}")

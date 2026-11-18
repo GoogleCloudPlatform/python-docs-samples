@@ -43,7 +43,8 @@ def test_send_queue_message_success(
     batch.send.assert_called_once()
     assert batch.send.call_args.kwargs["queue"] == "UserTasks"
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Queue Name: UserTasks" in out
     assert "User ID: 1" in out
     assert err == ""
@@ -79,6 +80,8 @@ def test_send_queue_message_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
