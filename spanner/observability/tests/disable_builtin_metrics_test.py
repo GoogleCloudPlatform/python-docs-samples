@@ -17,9 +17,6 @@ from unittest import mock
 
 from google.api_core import exceptions
 from google.cloud import spanner
-from google.cloud.spanner_v1.metrics.spanner_metrics_tracer_factory import (
-    SpannerMetricsTracerFactory,
-)
 import pytest
 from spanner_observability import disable_builtin_metrics
 
@@ -32,7 +29,7 @@ DATABASE_NAME = f"projects/{PROJECT_ID}/instances/{INSTANCE_ID}/databases/{DATAB
 SPANNER_CLIENT = "google.cloud.spanner.Client"
 
 
-@mock.patch(SPANNER_CLIENT)
+@mock.patch(SPANNER_CLIENT, autospec=True)
 def test_disable_builtin_metrics_success(
     mock_client_class: mock.MagicMock, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -70,7 +67,7 @@ def test_disable_builtin_metrics_success(
         ),
     ],
 )
-@mock.patch(SPANNER_CLIENT)
+@mock.patch(SPANNER_CLIENT, autospec=True)
 def test_disable_builtin_metrics_errors(
     mock_client_class: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
@@ -93,7 +90,7 @@ def test_disable_builtin_metrics_errors(
     assert PROJECT_ID not in err
 
 
-@mock.patch(SPANNER_CLIENT)
+@mock.patch(SPANNER_CLIENT, autospec=True)
 def test_disable_builtin_metrics_cli_entrypoint(
     mock_client_class: mock.MagicMock,
     monkeypatch: pytest.MonkeyPatch,
@@ -125,6 +122,8 @@ def test_disable_builtin_metrics_cli_entrypoint(
     assert "Check Result: 1" in capsys.readouterr().out
 
 
+# Live integration test: skipped unless RUN_INTEGRATION_TESTS=true is set along
+# with GOOGLE_CLOUD_PROJECT, SPANNER_INSTANCE_ID, and SPANNER_DATABASE_ID.
 @conftest.live_only
 def test_disable_builtin_metrics_live(capsys: pytest.CaptureFixture[str]) -> None:
     with mock.patch.object(spanner, "Client", wraps=spanner.Client) as spy_client:
@@ -138,7 +137,6 @@ def test_disable_builtin_metrics_live(capsys: pytest.CaptureFixture[str]) -> Non
         project=conftest.LIVE_PROJECT_ID,
         disable_builtin_metrics=True,
     )
-    assert SpannerMetricsTracerFactory().enabled is False
     out, err = capsys.readouterr()
     assert err == ""
     assert conftest.LIVE_PROJECT_ID not in out

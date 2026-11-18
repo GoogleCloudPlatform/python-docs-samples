@@ -25,3 +25,14 @@ Run unit tests offline:
 pip install -r requirements-test.txt
 pytest tests
 ```
+
+Live integration tests are skipped by default. To run them against a real
+Spanner database, export the following environment variables first:
+
+```sh
+export RUN_INTEGRATION_TESTS=true
+export GOOGLE_CLOUD_PROJECT=your-project-id
+export SPANNER_INSTANCE_ID=your-instance-id
+export SPANNER_DATABASE_ID=your-database-id
+pytest tests
+```
