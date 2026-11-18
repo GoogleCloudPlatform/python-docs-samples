@@ -65,7 +65,8 @@ def test_transfer_budget_with_select_for_update_success(
     assert transaction.execute_update.call_count == 2
 
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Isolation Level: REPEATABLE_READ" in out
     assert "Source Budget: 490000" in out
     assert "Target Budget: 10000" in out
@@ -124,6 +125,8 @@ def test_transfer_budget_with_select_for_update_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)

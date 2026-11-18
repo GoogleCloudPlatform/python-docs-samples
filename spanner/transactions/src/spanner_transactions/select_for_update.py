@@ -101,24 +101,24 @@ def transfer_budget_with_select_for_update(
     except ValueError as err:
         print(
             f"error: cannot transfer budget on database '{database_id}' "
-            f"in instance '{instance_id}' for project '{project_id}': {err}",
+            f"in instance '{instance_id}': {err}",
             file=sys.stderr,
         )
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
-            f"in project '{project_id}' was not found: {err.message}",
+            f"was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: SELECT FOR UPDATE transaction failed on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}'"
+            f": {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print("Isolation Level: REPEATABLE_READ")
         print(f"Source Budget: {updated_budgets['source']}")
         print(f"Target Budget: {updated_budgets['target']}")
