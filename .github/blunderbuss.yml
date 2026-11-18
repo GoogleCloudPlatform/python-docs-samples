@@ -28,10 +28,6 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/cloud-native-db-dpes
   - labels:
-      - "api: spanner"
-    to:
-      - GoogleCloudPlatform/api-spanner-python
-  - labels:
       - "api: storage"
       - "api: storagecontrol"
       - "api: storagetransfer"
@@ -114,10 +110,6 @@ assign_prs_by:
       - "api: firestore"
     to:
       - GoogleCloudPlatform/cloud-native-db-dpes
-  - labels:
-      - "api: spanner"
-    to:
-      - GoogleCloudPlatform/api-spanner-python
   - labels:
       - "api: storage"
     to:
