@@ -89,19 +89,19 @@ def generate_and_query_embeddings(
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' or model on instance "
-            f"'{instance_id}' in project '{project_id}' was not found: "
+            f"'{instance_id}' was not found: "
             f"{err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: ML.PREDICT embedding query failed on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}'"
+            f": {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         for product_id, name, distance in rows:
             print(f"Cosine Distance: {distance:.6f}")
             print(f"Product ID: {product_id}")

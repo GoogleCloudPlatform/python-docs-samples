@@ -51,7 +51,8 @@ def test_generate_and_query_embeddings_success(
     assert "ML.PREDICT" in sql
     assert "MODEL TextEmbeddingModel" in sql
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Product ID: 3" in out
     assert "Product Name: Cordless Drill" in out
     assert err == ""
@@ -90,6 +91,8 @@ def test_generate_and_query_embeddings_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
