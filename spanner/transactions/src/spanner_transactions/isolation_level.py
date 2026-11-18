@@ -50,8 +50,11 @@ def run_transaction_with_isolation_level(
                 transaction.execute_sql(
                     "SELECT AlbumTitle FROM Albums WHERE SingerId = 1 AND AlbumId = 1"
                 )
-            )
+            ),
+            None,
         )
+        if row is None:
+            raise ValueError("Album row not found.")
         previous_title = str(row[0])
         updated_rows = transaction.execute_update(
             "UPDATE Albums SET AlbumTitle = 'A New Title' "
@@ -68,10 +71,11 @@ def run_transaction_with_isolation_level(
             f"was not found: {err.message}",
             file=sys.stderr,
         )
-    except exceptions.GoogleAPICallError as err:
+    except (exceptions.GoogleAPICallError, ValueError) as err:
+        message = getattr(err, "message", str(err))
         print(
             f"error: isolation-level transaction failed on database "
-            f"'{database_id}' in instance '{instance_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}': {message}",
             file=sys.stderr,
         )
     else:

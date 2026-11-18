@@ -73,6 +73,10 @@ def test_run_transaction_with_isolation_level_success(
             exceptions.PermissionDenied("denied"),
             "error: isolation-level transaction failed",
         ),
+        (
+            ValueError("Album row not found."),
+            "error: isolation-level transaction failed",
+        ),
     ],
 )
 @mock.patch(SPANNER_CLIENT)
@@ -130,6 +134,12 @@ def test_run_transaction_with_isolation_level_live(
 ) -> None:
     client = spanner.Client(project=conftest.LIVE_PROJECT_ID)
     db = client.instance(conftest.LIVE_INSTANCE_ID).database(conftest.LIVE_DATABASE_ID)
+    with db.batch() as batch:
+        batch.insert_or_update(
+            table="Albums",
+            columns=("SingerId", "AlbumId", "AlbumTitle"),
+            values=[(1, 1, "Total Junk")],
+        )
     try:
         isolation_level.run_transaction_with_isolation_level(
             conftest.LIVE_PROJECT_ID,
@@ -142,7 +152,7 @@ def test_run_transaction_with_isolation_level_live(
         assert "Updated Rows: 1" in out
     finally:
         with db.batch() as batch:
-            batch.update(
+            batch.insert_or_update(
                 table="Albums",
                 columns=("SingerId", "AlbumId", "AlbumTitle"),
                 values=[(1, 1, "Total Junk")],
