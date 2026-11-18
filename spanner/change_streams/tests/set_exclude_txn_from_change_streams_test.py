@@ -58,7 +58,6 @@ def test_set_exclude_txn_from_change_streams_success(
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_ID}" in out
     assert PROJECT_ID not in out
-    assert "Excluded From Change Streams: True" in out
     assert "Modified Statements: 2" in out
     assert err == ""
 
@@ -130,7 +129,7 @@ def test_set_exclude_txn_from_change_streams_cli_entrypoint(
         run_name="__main__",
     )
 
-    assert "Excluded From Change Streams: True" in capsys.readouterr().out
+    assert "Modified Statements: 2" in capsys.readouterr().out
 
 
 @conftest.live_only
@@ -149,7 +148,8 @@ def test_set_exclude_txn_from_change_streams_live(
         )
         out, err = capsys.readouterr()
         assert err == ""
-        assert "Excluded From Change Streams: True" in out
+        assert conftest.LIVE_PROJECT_ID not in out
+        assert "Modified Statements: 2" in out
     finally:
         with database.batch() as batch:
             batch.delete(table="Singers", keyset=KeySet(keys=[[101]]))

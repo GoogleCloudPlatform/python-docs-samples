@@ -68,7 +68,6 @@ def set_exclude_txn_from_change_streams(
         )
     else:
         print(f"Resource ID: {database_id}")
-        print("Excluded From Change Streams: True")
         print(f"Modified Statements: {modified_statements}")
 
 
