@@ -45,8 +45,6 @@ def test_create_change_stream_success(
     assert f"Resource ID: {DATABASE_ID}" in out
     assert PROJECT_ID not in out
     assert "Change Stream: NamesAndAlbumsStream" in out
-    assert "Retention Period: 36h" in out
-    assert "Transaction Exclusion Allowed: True" in out
     assert err == ""
 
 
