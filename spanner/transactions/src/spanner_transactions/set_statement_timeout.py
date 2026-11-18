@@ -47,13 +47,13 @@ def execute_statement_with_timeout(
     except exceptions.DeadlineExceeded as err:
         print(
             f"error: DML statement exceeded 60s timeout on database "
-            f"'{database_id}' in instance '{instance_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}': {err}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: statement-timeout transaction failed on database "
-            f"'{database_id}' in instance '{instance_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}': {err}",
             file=sys.stderr,
         )
     else:
