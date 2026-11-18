@@ -69,8 +69,6 @@ def configure_otlp_tracing(project_id: str, instance_id: str, database_id: str) 
     else:
         print(f"Resource ID: {database_id}")
         print(f"Check Result: {row[0]}")
-        print("End-to-End Tracing: True")
-        print("Trace Exporter: OTLP")
     finally:
         tracer_provider.shutdown()
 
