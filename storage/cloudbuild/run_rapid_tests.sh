@@ -40,9 +40,11 @@ pip install google-cloud-testutils google-cloud-kms
 pip install google-cloud-storage[grpc,testing]
 
 echo '--- Setting up environment variables on VM ---'
-export ZONAL_BUCKET=${_ZONAL_BUCKET}
-export RUN_ZONAL_SYSTEM_TESTS=True
+export RAPID_BUCKET="${_RAPID_BUCKET:-${_ZONAL_BUCKET:-}}"
+export ZONAL_BUCKET="${RAPID_BUCKET}"
+export RUN_RAPID_SYSTEM_TESTS=True
+export RUN_BIDI_SYSTEM_TESTS=True
 export GCE_METADATA_MTLS_MODE=None
 CURRENT_ULIMIT=$(ulimit -n)
-echo '--- Running Zonal tests on VM with ulimit set to ---' $CURRENT_ULIMIT
-pytest -vv -s --log-format='%(asctime)s %(levelname)s %(message)s' --log-date-format='%H:%M:%S' samples/snippets/zonal_buckets/zonal_snippets_test.py
+echo '--- Running Rapid bucket (bidi) tests on VM with ulimit set to ---' $CURRENT_ULIMIT
+pytest -vv -s --log-format='%(asctime)s %(levelname)s %(message)s' --log-date-format='%H:%M:%S' samples/snippets/bidi/bidi_snippets_test.py
