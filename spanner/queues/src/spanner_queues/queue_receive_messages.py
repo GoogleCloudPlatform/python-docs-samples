@@ -45,36 +45,39 @@ def receive_and_ack_queue_messages(
     """
     acked_count = 0
 
+    def ack_valid_messages(keys: list[list[int | str]]) -> None:
+        with database.batch() as batch:
+            for key in keys:
+                batch.ack(queue=queue_name, key=key, ignore_not_found=True)
+
     try:
         with database.snapshot() as snapshot:
             rows = list(snapshot.execute_sql(sql))
 
         now = datetime.now(timezone.utc)
-        valid_keys = [
+        valid_keys: list[list[int | str]] = [
             [int(user_id), str(msg_id)]
             for user_id, msg_id, _payload, lease_exp in rows
             if lease_exp is not None and lease_exp > now
         ]
-        for key in valid_keys:
-            with database.batch() as batch:
-                batch.ack(queue=queue_name, key=key, ignore_not_found=True)
-            acked_count += 1
+        if valid_keys:
+            ack_valid_messages(valid_keys)
+            acked_count = len(valid_keys)
     except exceptions.NotFound as err:
         print(
             f"error: queue '{queue_name}' on database '{database_id}' "
-            f"in instance '{instance_id}' for project '{project_id}' was not "
-            f"found: {err.message}",
+            f"in instance '{instance_id}' was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to receive or ack messages from queue "
             f"'{queue_name}' on database '{database_id}' in instance "
-            f"'{instance_id}' for project '{project_id}': {err.message}",
+            f"'{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print(f"Acknowledged Messages: {acked_count}")
         print(f"Queue Name: {queue_name}")
         print(f"Received Messages: {len(rows)}")

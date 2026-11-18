@@ -51,11 +51,13 @@ def test_receive_and_ack_queue_messages_success(
         PROJECT_ID, INSTANCE_ID, DATABASE_ID
     )
 
+    database.batch.assert_called_once_with()
     batch.ack.assert_called_once_with(
         queue="UserTasks", key=[1, "msg-valid"], ignore_not_found=True
     )
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Acknowledged Messages: 1" in out
     assert "Queue Name: UserTasks" in out
     assert "Received Messages: 2" in out
@@ -95,6 +97,8 @@ def test_receive_and_ack_queue_messages_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
