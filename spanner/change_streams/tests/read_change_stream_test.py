@@ -48,7 +48,6 @@ def test_read_change_stream_success(
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_ID}" in out
     assert PROJECT_ID not in out
-    assert "Change Stream: SingersAndAlbumsStream" in out
     assert "Stream Chunks Received: 1" in out
     assert err == ""
 
@@ -111,7 +110,7 @@ def test_read_change_stream_cli_entrypoint(
 
     runpy.run_module("spanner_change_streams.read_change_stream", run_name="__main__")
 
-    assert "Change Stream: SingersAndAlbumsStream" in capsys.readouterr().out
+    assert "Stream Chunks Received: 1" in capsys.readouterr().out
 
 
 @conftest.live_only
@@ -124,5 +123,5 @@ def test_read_change_stream_live(capsys: pytest.CaptureFixture[str]) -> None:
 
     out, err = capsys.readouterr()
     assert err == ""
-    assert "Change Stream: SingersAndAlbumsStream" in out
+    assert conftest.LIVE_PROJECT_ID not in out
     assert "Stream Chunks Received:" in out

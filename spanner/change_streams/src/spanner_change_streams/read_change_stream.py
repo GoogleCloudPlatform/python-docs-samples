@@ -86,7 +86,6 @@ def read_change_stream(project_id: str, instance_id: str, database_id: str) -> N
         )
     else:
         print(f"Resource ID: {database_id}")
-        print("Change Stream: SingersAndAlbumsStream")
         print(f"Stream Chunks Received: {len(chunks)}")
 
 
