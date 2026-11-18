@@ -67,7 +67,6 @@ def test_transfer_budget_with_select_for_update_success(
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_ID}" in out
     assert PROJECT_ID not in out
-    assert "Isolation Level: REPEATABLE_READ" in out
     assert "Source Budget: 490000" in out
     assert "Target Budget: 10000" in out
     assert err == ""
@@ -172,6 +171,6 @@ def test_transfer_budget_with_select_for_update_live(
 
     out, err = capsys.readouterr()
     assert err == ""
-    assert "Isolation Level: REPEATABLE_READ" in out
+    assert conftest.LIVE_PROJECT_ID not in out
     assert "Source Budget:" in out
     assert "Target Budget:" in out

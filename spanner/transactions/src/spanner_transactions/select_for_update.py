@@ -119,7 +119,6 @@ def transfer_budget_with_select_for_update(
         )
     else:
         print(f"Resource ID: {database_id}")
-        print("Isolation Level: REPEATABLE_READ")
         print(f"Source Budget: {updated_budgets['source']}")
         print(f"Target Budget: {updated_budgets['target']}")
 
