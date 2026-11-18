@@ -50,7 +50,8 @@ def test_run_graph_full_text_search_success(
     assert "GRAPH FinGraph" in sql
     assert "SEARCH(n.nick_name_token, @search_query)" in sql
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Account Nickname: Rainy day emergency fund" in out
     assert "Amount Added: 200.00" in out
     assert "Amount Added: 0.00" in out
@@ -90,6 +91,8 @@ def test_run_graph_full_text_search_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
