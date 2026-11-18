@@ -72,6 +72,7 @@ def test_alter_postgresql_sequence_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (exceptions.NotFound("missing"), "error: database 'example-pg-db'"),
         (
             exceptions.FailedPrecondition("missing seq"),
