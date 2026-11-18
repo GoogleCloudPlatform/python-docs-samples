@@ -72,7 +72,7 @@ def test_insert_data_with_timestamp_errors(
     database = (
         mock_client_class.return_value.instance.return_value.database.return_value
     )
-    database.batch.return_value.__enter__.side_effect = error
+    database.batch.return_value.__exit__.side_effect = error
 
     insert_data_with_timestamp_column.insert_data_with_timestamp(
         PROJECT_ID, INSTANCE_ID, DATABASE_ID
