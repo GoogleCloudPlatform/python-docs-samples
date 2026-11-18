@@ -93,19 +93,19 @@ def generate_product_recommendations(
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' or Vertex AI model on instance "
-            f"'{instance_id}' for project '{project_id}' was not found: "
+            f"'{instance_id}' was not found: "
             f"{err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: Gemini ML.PREDICT recommendation query failed on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}'"
+            f": {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         for product_id, name, recommendation in rows:
             print(f"Product ID: {product_id}")
             print(f"Product Name: {name}")

@@ -57,7 +57,8 @@ def test_generate_product_recommendations_success(
     assert "temperature" not in sql_arg
 
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Product Name: Cordless Drill" in out
     assert "RECOMMENDATION: YES" in out.upper()
     assert err == ""
@@ -94,6 +95,8 @@ def test_generate_product_recommendations_errors(
 
     _out, err = capsys.readouterr()
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
