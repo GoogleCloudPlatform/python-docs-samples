@@ -71,19 +71,18 @@ def connect_with_emulator(project_id: str, instance_id: str, database_id: str) -
     except exceptions.AlreadyExists as err:
         print(
             f"error: emulator resource already exists for database "
-            f"'{database_id}' in instance '{instance_id}' and project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to connect to Spanner Emulator at '{emulator_host}' "
-            f"for database '{database_id}' in instance '{instance_id}' and "
-            f"project '{project_id}': {err.message}",
+            f"for database '{database_id}' in instance '{instance_id}': "
+            f"{err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print(f"Emulator Host: {emulator_host}")
         print(f"Query Check: {row[0]}")
 

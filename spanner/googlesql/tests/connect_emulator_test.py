@@ -51,7 +51,8 @@ def test_connect_with_emulator_creates_missing_resources(
     instance.create.return_value.result.assert_called_once_with(timeout=60)
     database.create.return_value.result.assert_called_once_with(timeout=60)
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Emulator Host: localhost:9010" in out
     assert "Query Check: 1" in out
     assert err == ""
@@ -103,6 +104,8 @@ def test_connect_with_emulator_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
