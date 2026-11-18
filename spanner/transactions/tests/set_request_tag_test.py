@@ -112,4 +112,5 @@ def test_set_request_tag_live(capsys: pytest.CaptureFixture[str]) -> None:
     out, err = capsys.readouterr()
     assert err == ""
     assert conftest.LIVE_PROJECT_ID not in out
-    assert "Total Junk" in out
+    assert "Row Count:" in out
+    assert "Title:" in out
