@@ -56,6 +56,7 @@ def test_create_embedding_model_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (
             exceptions.AlreadyExists("model exists"),
             "error: model 'TextEmbeddingModel' already exists",
