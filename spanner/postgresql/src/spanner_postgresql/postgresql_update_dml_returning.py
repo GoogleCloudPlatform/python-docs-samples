@@ -33,11 +33,11 @@ def postgresql_update_dml_returning(
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
     budgets: list[int] = []
-    row_counts: list[int] = []
+    row_count = 0
 
     def update_albums(transaction: spanner_v1.Transaction) -> None:
+        nonlocal row_count
         budgets.clear()
-        row_counts.clear()
         results = transaction.execute_sql(
             "UPDATE Albums "
             "SET MarketingBudget = MarketingBudget * 2 "
@@ -46,29 +46,27 @@ def postgresql_update_dml_returning(
         )
         for row in results:
             budgets.append(int(row[0] or 0))
-        row_counts.append(int(results.stats.row_count_exact))
+        row_count = int(results.stats.row_count_exact) if results.stats else 0
 
     try:
         database.run_in_transaction(update_albums)
     except exceptions.NotFound as err:
         print(
             f"error: PostgreSQL database '{database_id}' on instance "
-            f"'{instance_id}' in project '{project_id}' was not found: "
-            f"{err.message}",
+            f"'{instance_id}' was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: PostgreSQL UPDATE RETURNING failed on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         for budget in budgets:
             print(f"Marketing Budget: {budget}")
-        print(f"Updated Rows: {row_counts[-1]}")
+        print(f"Updated Rows: {row_count}")
 
 
 # [END spanner_postgresql_update_dml_returning]
