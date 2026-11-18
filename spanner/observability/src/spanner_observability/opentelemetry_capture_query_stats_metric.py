@@ -54,23 +54,24 @@ def capture_query_stats_metric(
                 query_mode=spanner_v1.ExecuteSqlRequest.QueryMode.PROFILE,
             )
             rows = list(results)
-            raw_elapsed = str(results.stats.query_stats.get("elapsed_time", "0 msecs"))
+            query_stats = results.stats.query_stats if results.stats else {}
+            raw_elapsed = str(query_stats.get("elapsed_time", "0 msecs"))
             elapsed_ms = float(raw_elapsed.split()[0])
             query_latency.record(elapsed_ms, {"database": database_id})
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
-            f"in project '{project_id}' was not found: {err.message}",
+            f"was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: profiled query failed on database '{database_id}' "
-            f"in instance '{instance_id}' for project '{project_id}': {err.message}",
+            f"in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print(f"Elapsed Milliseconds: {elapsed_ms:.2f}")
         print("Metric Name: spanner/query_stats_elapsed")
         print(f"Row Count: {len(rows)}")

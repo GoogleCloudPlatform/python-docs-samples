@@ -73,7 +73,8 @@ def test_capture_query_stats_metric_success(
     )
 
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Elapsed Milliseconds: 2.50" in out
     assert "Metric Name: spanner/query_stats_elapsed" in out
     assert "Row Count: 1" in out
@@ -116,6 +117,7 @@ def test_capture_query_stats_metric_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
 
 
 @mock.patch(OTLP_METRIC_EXPORTER_SRC)
