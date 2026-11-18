@@ -55,6 +55,12 @@ def create_vector_index(project_id: str, instance_id: str, database_id: str) -> 
             f"{err.message}",
             file=sys.stderr,
         )
+    except TimeoutError as err:
+        print(
+            f"error: timed out waiting for the operation on database '{database_id}' "
+            f"to complete; the operation may still be running: {err}",
+            file=sys.stderr,
+        )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to create vector index '{index_name}' on database "

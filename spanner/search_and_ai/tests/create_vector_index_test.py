@@ -55,6 +55,7 @@ def test_create_vector_index_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (
             exceptions.FailedPrecondition("Duplicate name"),
             "error: vector index 'DocEmbeddingIndex' already exists",
