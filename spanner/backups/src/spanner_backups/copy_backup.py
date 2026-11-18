@@ -39,6 +39,7 @@ def copy_backup(
     parent = client.instance_path(project_id, instance_id)
     expire_time = datetime.now(timezone.utc) + timedelta(days=14)
 
+    source_backup_id = source_backup_path.split("/")[-1]
     request = spanner_admin_database_v1.CopyBackupRequest(
         parent=parent,
         backup_id=backup_id,
@@ -53,25 +54,23 @@ def copy_backup(
     except exceptions.AlreadyExists as err:
         print(
             f"error: backup '{backup_id}' already exists on instance "
-            f"'{instance_id}' in project '{project_id}': {err.message}",
+            f"'{instance_id}': {err.message}",
             file=sys.stderr,
         )
     except exceptions.NotFound as err:
         print(
-            f"error: source backup '{source_backup_path}' or destination "
-            f"instance '{instance_id}' in project '{project_id}' was not found: "
-            f"{err.message}",
+            f"error: source backup '{source_backup_id}' or destination "
+            f"instance '{instance_id}' was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
-            f"error: failed to copy backup '{source_backup_path}' to "
-            f"'{backup_id}' on instance '{instance_id}' in project "
-            f"'{project_id}': {err.message}",
+            f"error: failed to copy backup '{source_backup_id}' to "
+            f"'{backup_id}' on instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {copied.name}")
+        print(f"Resource ID: {backup_id}")
         print(f"Backup State: {copied.state.name}")
         print(f"Size Bytes: {copied.size_bytes}")
 

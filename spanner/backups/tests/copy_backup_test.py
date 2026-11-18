@@ -54,7 +54,8 @@ def test_copy_backup_success(
     assert req.backup_id == BACKUP_ID
     assert req.source_backup == SOURCE_BACKUP
     out, err = capsys.readouterr()
-    assert f"Resource ID: {COPIED_NAME}" in out
+    assert f"Resource ID: {BACKUP_ID}" in out
+    assert PROJECT_ID not in out
     assert "Backup State: READY" in out
     assert "Size Bytes: 4096" in out
     assert err == ""
@@ -92,6 +93,8 @@ def test_copy_backup_errors(
 
     _out, err = capsys.readouterr()
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(ADMIN_CLIENT)
@@ -166,7 +169,8 @@ def test_copy_backup_live(capsys: pytest.CaptureFixture[str]) -> None:
         )
         out, err = capsys.readouterr()
         assert err == ""
-        assert f"Resource ID: {dst_name}" in out
+        assert conftest.LIVE_PROJECT_ID not in out
+        assert f"Resource ID: {dst_id}" in out
         assert "Backup State: READY" in out
     finally:
         for bkp in (dst_name, src_name):
