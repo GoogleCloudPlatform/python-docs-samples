@@ -62,7 +62,6 @@ def create_search_index(project_id: str, instance_id: str, database_id: str) -> 
     else:
         print(f"Resource ID: {database_id}")
         print(f"Index Name: {index_name}")
-        print("Token Column: AlbumTitle_Tokens")
 
 
 # [END spanner_create_search_index]

@@ -47,7 +47,6 @@ def test_create_search_index_success(
     assert f"Resource ID: {DATABASE_ID}" in out
     assert PROJECT_ID not in out
     assert "Index Name: AlbumsIndex" in out
-    assert "Token Column: AlbumTitle_Tokens" in out
     assert err == ""
 
 
