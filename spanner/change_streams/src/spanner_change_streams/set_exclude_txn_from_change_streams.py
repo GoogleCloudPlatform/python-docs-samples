@@ -36,10 +36,10 @@ def set_exclude_txn_from_change_streams(
     """
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
-    row_counts: list[int] = []
+    modified_statements = 0
 
     def insert_and_update_singer(transaction: spanner_v1.Transaction) -> None:
-        row_counts.clear()
+        nonlocal modified_statements
         inserted = transaction.execute_update(
             "INSERT OR UPDATE Singers (SingerId, FirstName, LastName) "
             "VALUES (101, ' Virginia', 'Watson')"
@@ -47,7 +47,7 @@ def set_exclude_txn_from_change_streams(
         updated = transaction.execute_update(
             "UPDATE Singers SET FirstName = 'Virginia' WHERE SingerId = 101"
         )
-        row_counts.append(int(inserted) + int(updated))
+        modified_statements = int(inserted) + int(updated)
 
     try:
         database.run_in_transaction(
@@ -57,20 +57,19 @@ def set_exclude_txn_from_change_streams(
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
-            f"in project '{project_id}' was not found: {err.message}",
+            f"was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: change-stream excluded transaction failed on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print("Excluded From Change Streams: True")
-        print(f"Modified Statements: {row_counts[-1]}")
+        print(f"Modified Statements: {modified_statements}")
 
 
 # [END spanner_set_exclude_txn_from_change_streams]
