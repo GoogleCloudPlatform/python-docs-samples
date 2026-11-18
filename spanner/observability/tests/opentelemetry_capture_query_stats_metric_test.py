@@ -118,6 +118,8 @@ def test_capture_query_stats_metric_errors(
     assert out == ""
     assert err.startswith(expected_prefix)
     assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(OTLP_METRIC_EXPORTER_SRC)
