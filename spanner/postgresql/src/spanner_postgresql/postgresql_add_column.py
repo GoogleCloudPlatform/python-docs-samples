@@ -46,6 +46,12 @@ def add_postgresql_column(project_id: str, instance_id: str, database_id: str) -
             f"{err.message}",
             file=sys.stderr,
         )
+    except TimeoutError as err:
+        print(
+            f"error: timed out waiting to add column '{column_name}' on "
+            f"database '{database_id}'; the operation may still be running: {err}",
+            file=sys.stderr,
+        )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to add column '{column_name}' on database "

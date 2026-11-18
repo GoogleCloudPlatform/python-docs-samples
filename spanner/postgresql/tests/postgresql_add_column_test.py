@@ -59,6 +59,10 @@ def test_add_postgresql_column_success(
             "error: column 'MarketingBudget' already exists",
         ),
         (
+            TimeoutError("deadline"),
+            "error: timed out waiting to add column 'MarketingBudget'",
+        ),
+        (
             exceptions.PermissionDenied("denied"),
             "error: failed to add column 'MarketingBudget'",
         ),
