@@ -67,7 +67,6 @@ def update_dml_last_statement(
         )
     else:
         print(f"Resource ID: {database_id}")
-        print("Last Statement Optimization: True")
         print(f"Updated Rows: {updated_count}")
 
 
