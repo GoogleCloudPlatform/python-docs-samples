@@ -17,7 +17,7 @@ import flask
 import functions_framework
 
 # Spanner encodes INT64 values outside +/- 2^53 as JSON strings to preserve precision.
-_MAX_LOSSLESS_JSON_INT = 9007199254740992
+_MAX_LOSSLESS_JSON_INT = 2**53
 
 
 @functions_framework.http
@@ -39,12 +39,16 @@ def batch_add(request: flask.Request) -> tuple[dict[str, object], int]:
     if not isinstance(payload, dict) or not isinstance(payload.get("calls"), list):
         return {"errorMessage": "Request JSON must include a 'calls' list."}, 400
 
-    replies: list[int | str] = []
+    replies: list[int | str | None] = []
     try:
         for call in payload["calls"]:
             if not isinstance(call, list):
                 return {"errorMessage": "Each entry in 'calls' must be a list."}, 400
-            total = sum(int(item) for item in call if item is not None)
+            values = [int(item) for item in call if item is not None]
+            if not values:
+                replies.append(None)
+                continue
+            total = sum(values)
             if total > _MAX_LOSSLESS_JSON_INT or total < -_MAX_LOSSLESS_JSON_INT:
                 replies.append(str(total))
             else:

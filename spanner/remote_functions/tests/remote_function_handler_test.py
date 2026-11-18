@@ -31,12 +31,13 @@ def test_batch_add_sums_numbers_and_large_int64_strings() -> None:
                 [1, 2],
                 [3, None, 4],
                 [large, 2],
+                [None, None],
             ],
         },
     )
 
     assert response.status_code == 200
-    assert response.get_json() == {"replies": [3, 7, "9007199254740995"]}
+    assert response.get_json() == {"replies": [3, 7, "9007199254740995", None]}
 
 
 @pytest.mark.parametrize(
