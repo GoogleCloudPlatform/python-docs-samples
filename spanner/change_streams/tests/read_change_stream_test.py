@@ -46,7 +46,8 @@ def test_read_change_stream_success(
     assert "READ_SingersAndAlbumsStream" in req.sql
     assert req.transaction.single_use.read_only.strong is True
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Change Stream: SingersAndAlbumsStream" in out
     assert "Stream Chunks Received: 1" in out
     assert err == ""
@@ -80,6 +81,8 @@ def test_read_change_stream_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(GAPIC_CLIENT)

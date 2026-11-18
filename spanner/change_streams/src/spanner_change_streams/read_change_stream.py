@@ -58,6 +58,7 @@ def read_change_stream(project_id: str, instance_id: str, database_id: str) -> N
     """
 
     try:
+        # Multiplexed sessions are managed by Spanner and do not support DeleteSession.
         session_req = spanner_v1.CreateSessionRequest(
             database=database_name,
             session=spanner_v1.Session(multiplexed=True),
@@ -74,17 +75,17 @@ def read_change_stream(project_id: str, instance_id: str, database_id: str) -> N
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
-            f"in project '{project_id}' was not found: {err.message}",
+            f"was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: change stream read failed on database '{database_id}' "
-            f"in instance '{instance_id}' for project '{project_id}': {err.message}",
+            f"in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database_name}")
+        print(f"Resource ID: {database_id}")
         print("Change Stream: SingersAndAlbumsStream")
         print(f"Stream Chunks Received: {len(chunks)}")
 
