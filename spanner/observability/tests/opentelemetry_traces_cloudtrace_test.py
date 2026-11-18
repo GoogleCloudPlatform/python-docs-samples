@@ -54,7 +54,8 @@ def test_configure_cloud_trace_tracing_success(
 
     mock_exporter_class.assert_called_once_with(project_id=PROJECT_ID)
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Check Result: 1" in out
     assert "End-to-End Tracing: True" in out
     assert "Trace Exporter: Cloud Trace" in out
@@ -97,6 +98,7 @@ def test_configure_cloud_trace_tracing_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
 
 
 @mock.patch(CT_EXPORTER_SRC)
