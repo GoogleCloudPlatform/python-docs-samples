@@ -57,11 +57,12 @@ def test_list_copy_backup_operations_success(
     req = client.list_backup_operations.call_args.kwargs["request"]
     assert "CopyBackupMetadata" in req.filter
     out, err = capsys.readouterr()
-    assert f"Resource ID: {PARENT}" in out
+    assert f"Resource ID: {INSTANCE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Copy Backup Operation Count: 1" in out
-    assert f"Destination Backup: {PARENT}/backups/example-copied" in out
+    assert "Destination Backup: example-copied" in out
     assert "Operation Done: True" in out
-    assert f"Source Backup: {PARENT}/backups/example-source" in out
+    assert "Source Backup: example-source" in out
     assert err == ""
 
 
@@ -93,6 +94,8 @@ def test_list_copy_backup_operations_errors(
 
     _out, err = capsys.readouterr()
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(ADMIN_CLIENT)

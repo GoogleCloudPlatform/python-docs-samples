@@ -37,26 +37,25 @@ def list_copy_backup_operations(project_id: str, instance_id: str) -> None:
         operations = list(client.list_backup_operations(request=request))
     except exceptions.NotFound as err:
         print(
-            f"error: Spanner instance '{instance_id}' in project "
-            f"'{project_id}' was not found: {err.message}",
+            f"error: Spanner instance '{instance_id}' was not found: " f"{err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to list copy-backup operations on instance "
-            f"'{instance_id}' in project '{project_id}': {err.message}",
+            f"'{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {parent}")
+        print(f"Resource ID: {instance_id}")
         print(f"Copy Backup Operation Count: {len(operations)}")
         for op in operations:
-            meta = spanner_admin_database_v1.CopyBackupMetadata.pb().FromString(
+            meta = spanner_admin_database_v1.CopyBackupMetadata.deserialize(
                 op.metadata.value
             )
-            print(f"Destination Backup: {meta.name}")
+            print(f"Destination Backup: {meta.name.split('/')[-1]}")
             print(f"Operation Done: {op.done}")
-            print(f"Source Backup: {meta.source_backup}")
+            print(f"Source Backup: {meta.source_backup.split('/')[-1]}")
 
 
 # [END spanner_list_copy_backup_operations]
