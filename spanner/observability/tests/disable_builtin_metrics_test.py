@@ -16,6 +16,10 @@ import runpy
 from unittest import mock
 
 from google.api_core import exceptions
+from google.cloud import spanner
+from google.cloud.spanner_v1.metrics.spanner_metrics_tracer_factory import (
+    SpannerMetricsTracerFactory,
+)
 import pytest
 from spanner_observability import disable_builtin_metrics
 
@@ -49,7 +53,6 @@ def test_disable_builtin_metrics_success(
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_ID}" in out
     assert PROJECT_ID not in out
-    assert "Built-in Metrics Disabled: True" in out
     assert "Check Result: 1" in out
     assert err == ""
 
@@ -88,8 +91,6 @@ def test_disable_builtin_metrics_errors(
     assert out == ""
     assert err.startswith(expected_prefix)
     assert PROJECT_ID not in err
-    assert PROJECT_ID not in err
-    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
@@ -121,18 +122,24 @@ def test_disable_builtin_metrics_cli_entrypoint(
         "spanner_observability.disable_builtin_metrics", run_name="__main__"
     )
 
-    assert "Built-in Metrics Disabled: True" in capsys.readouterr().out
+    assert "Check Result: 1" in capsys.readouterr().out
 
 
 @conftest.live_only
 def test_disable_builtin_metrics_live(capsys: pytest.CaptureFixture[str]) -> None:
-    disable_builtin_metrics.disable_builtin_metrics(
-        conftest.LIVE_PROJECT_ID,
-        conftest.LIVE_INSTANCE_ID,
-        conftest.LIVE_DATABASE_ID,
-    )
+    with mock.patch.object(spanner, "Client", wraps=spanner.Client) as spy_client:
+        disable_builtin_metrics.disable_builtin_metrics(
+            conftest.LIVE_PROJECT_ID,
+            conftest.LIVE_INSTANCE_ID,
+            conftest.LIVE_DATABASE_ID,
+        )
 
+    spy_client.assert_called_once_with(
+        project=conftest.LIVE_PROJECT_ID,
+        disable_builtin_metrics=True,
+    )
+    assert SpannerMetricsTracerFactory().enabled is False
     out, err = capsys.readouterr()
     assert err == ""
-    assert "Built-in Metrics Disabled: True" in out
+    assert conftest.LIVE_PROJECT_ID not in out
     assert "Check Result: 1" in out

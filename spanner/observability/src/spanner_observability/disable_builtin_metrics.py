@@ -37,7 +37,7 @@ def disable_builtin_metrics(
 
     try:
         with database.snapshot() as snapshot:
-            row = list(snapshot.execute_sql("SELECT 1"))[0]
+            row = next(iter(snapshot.execute_sql("SELECT 1")))
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
@@ -52,7 +52,6 @@ def disable_builtin_metrics(
         )
     else:
         print(f"Resource ID: {database_id}")
-        print("Built-in Metrics Disabled: True")
         print(f"Check Result: {row[0]}")
 
 
