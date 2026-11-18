@@ -61,6 +61,7 @@ def test_create_database_with_property_graph_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (
             exceptions.AlreadyExists("dup"),
             "error: database 'example-graph-db' already exists",
