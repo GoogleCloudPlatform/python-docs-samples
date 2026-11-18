@@ -35,16 +35,13 @@ def insert_graph_data_with_dml(
     inserted_accounts = 0
     inserted_transfers = 0
 
-    def insert_accounts(transaction: spanner_v1.transaction.Transaction) -> None:
-        nonlocal inserted_accounts
+    def insert_data(transaction: spanner_v1.transaction.Transaction) -> None:
+        nonlocal inserted_accounts, inserted_transfers
         inserted_accounts = transaction.execute_update(
             "INSERT INTO Account (id, create_time, is_blocked) VALUES "
             "(1, CAST('2000-08-10 08:18:48.463959-07:52' AS TIMESTAMP), false), "
             "(2, CAST('2000-08-12 07:13:16.463959-03:41' AS TIMESTAMP), true)"
         )
-
-    def insert_transfers(transaction: spanner_v1.transaction.Transaction) -> None:
-        nonlocal inserted_transfers
         inserted_transfers = transaction.execute_update(
             "INSERT INTO AccountTransferAccount (id, to_id, create_time, amount) "
             "VALUES "
@@ -53,8 +50,7 @@ def insert_graph_data_with_dml(
         )
 
     try:
-        database.run_in_transaction(insert_accounts)
-        database.run_in_transaction(insert_transfers)
+        database.run_in_transaction(insert_data)
     except exceptions.AlreadyExists as err:
         print(
             f"error: graph rows already exist on database '{database_id}' "

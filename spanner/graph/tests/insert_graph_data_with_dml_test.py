@@ -48,6 +48,11 @@ def test_insert_graph_data_with_dml_success(
         PROJECT_ID, INSTANCE_ID, DATABASE_ID
     )
 
+    database = (
+        mock_client_class.return_value.instance.return_value.database.return_value
+    )
+    database.run_in_transaction.assert_called_once()
+    assert txn.execute_update.call_count == 2
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_ID}" in out
     assert "Inserted Accounts: 2" in out
