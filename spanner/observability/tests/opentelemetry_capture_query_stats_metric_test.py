@@ -76,7 +76,6 @@ def test_capture_query_stats_metric_success(
     assert f"Resource ID: {DATABASE_ID}" in out
     assert PROJECT_ID not in out
     assert "Elapsed Milliseconds: 2.50" in out
-    assert "Metric Name: spanner/query_stats_elapsed" in out
     assert "Row Count: 1" in out
     assert err == ""
 
@@ -157,7 +156,7 @@ def test_capture_query_stats_metric_cli_entrypoint(
         run_name="__main__",
     )
 
-    assert "Metric Name: spanner/query_stats_elapsed" in capsys.readouterr().out
+    assert "Elapsed Milliseconds: 1.20" in capsys.readouterr().out
 
 
 @conftest.live_only
@@ -172,5 +171,6 @@ def test_capture_query_stats_metric_live(capsys: pytest.CaptureFixture[str]) -> 
 
     out, err = capsys.readouterr()
     assert err == ""
-    assert "Metric Name: spanner/query_stats_elapsed" in out
+    assert conftest.LIVE_PROJECT_ID not in out
+    assert "Elapsed Milliseconds:" in out
     assert "Row Count:" in out

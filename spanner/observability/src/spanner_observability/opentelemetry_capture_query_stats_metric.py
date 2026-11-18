@@ -73,7 +73,6 @@ def capture_query_stats_metric(
     else:
         print(f"Resource ID: {database_id}")
         print(f"Elapsed Milliseconds: {elapsed_ms:.2f}")
-        print("Metric Name: spanner/query_stats_elapsed")
         print(f"Row Count: {len(rows)}")
     finally:
         meter_provider.shutdown()
