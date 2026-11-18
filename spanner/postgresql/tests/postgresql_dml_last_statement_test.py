@@ -16,6 +16,7 @@ import runpy
 from unittest import mock
 
 from google.api_core import exceptions
+from google.cloud import spanner
 import pytest
 from spanner_postgresql import postgresql_dml_last_statement
 
@@ -48,7 +49,8 @@ def test_update_postgresql_dml_last_statement_success(
     assert "$1" in call.args[0]
     assert call.kwargs["last_statement"] is True
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Last Statement Optimization: True" in out
     assert "Updated Rows: 1" in out
     assert err == ""
@@ -86,6 +88,9 @@ def test_update_postgresql_dml_last_statement_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
@@ -125,13 +130,30 @@ def test_update_postgresql_dml_last_statement_cli_entrypoint(
 def test_update_postgresql_dml_last_statement_live(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    postgresql_dml_last_statement.update_postgresql_dml_last_statement(
-        conftest.LIVE_PROJECT_ID,
-        conftest.LIVE_INSTANCE_ID,
-        conftest.LIVE_DATABASE_ID,
+    client = spanner.Client(project=conftest.LIVE_PROJECT_ID)
+    database = client.instance(conftest.LIVE_INSTANCE_ID).database(
+        conftest.LIVE_DATABASE_ID
     )
+    database.run_in_transaction(
+        lambda txn: txn.execute_update(
+            "INSERT INTO Singers (SingerId, FirstName, LastName) "
+            "VALUES (54214, 'John', 'Smith') "
+            "ON CONFLICT (SingerId) DO UPDATE SET LastName = 'Smith'"
+        )
+    )
+    try:
+        postgresql_dml_last_statement.update_postgresql_dml_last_statement(
+            conftest.LIVE_PROJECT_ID,
+            conftest.LIVE_INSTANCE_ID,
+            conftest.LIVE_DATABASE_ID,
+        )
 
-    out, err = capsys.readouterr()
-    assert err == ""
-    assert "Last Statement Optimization: True" in out
-    assert "Updated Rows: 1" in out
+        out, err = capsys.readouterr()
+        assert err == ""
+        assert conftest.LIVE_PROJECT_ID not in out
+        assert "Last Statement Optimization: True" in out
+        assert "Updated Rows: 1" in out
+    finally:
+        database.run_in_transaction(
+            lambda txn: txn.execute_update("DELETE FROM Singers WHERE SingerId = 54214")
+        )

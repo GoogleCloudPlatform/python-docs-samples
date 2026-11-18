@@ -36,37 +36,36 @@ def update_postgresql_dml_last_statement(
     """
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
-    updated_counts: list[int] = []
+    updated_count = 0
 
     def update_singers(transaction: spanner_v1.Transaction) -> None:
+        nonlocal updated_count
         row_count = transaction.execute_update(
             "UPDATE Singers SET LastName = $1 WHERE SingerId = $2",
             params={"p1": "Doe", "p2": 54214},
             param_types={"p1": param_types.STRING, "p2": param_types.INT64},
             last_statement=True,
         )
-        updated_counts.append(int(row_count))
+        updated_count = int(row_count)
 
     try:
         database.run_in_transaction(update_singers)
     except exceptions.NotFound as err:
         print(
             f"error: PostgreSQL database '{database_id}' on instance "
-            f"'{instance_id}' in project '{project_id}' was not found: "
-            f"{err.message}",
+            f"'{instance_id}' was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: PostgreSQL DML last_statement update failed on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print("Last Statement Optimization: True")
-        print(f"Updated Rows: {updated_counts[-1]}")
+        print(f"Updated Rows: {updated_count}")
 
 
 # [END spanner_postgresql_dml_last_statement]
