@@ -42,9 +42,10 @@ def batch_update_dml(project_id: str, instance_id: str, database_id: str) -> Non
     def update_albums(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal executed_statements, total_rows_modified
         status, row_counts = transaction.batch_update(statements)
-        if status.code == 0:
-            executed_statements = len(row_counts)
-            total_rows_modified = sum(row_counts)
+        if status.code != 0:
+            raise exceptions.GoogleAPICallError(status.message)
+        executed_statements = len(row_counts)
+        total_rows_modified = sum(row_counts)
 
     try:
         database.run_in_transaction(update_albums)

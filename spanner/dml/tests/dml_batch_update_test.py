@@ -83,6 +83,21 @@ def test_batch_update_dml_errors(
 
 
 @mock.patch(SPANNER_CLIENT)
+def test_batch_update_dml_nonzero_status(
+    mock_client_class: mock.MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    txn = _setup_txn(mock_client_class)
+    txn.batch_update.return_value = (mock.MagicMock(code=3, message="invalid"), [])
+
+    dml_batch_update.batch_update_dml(PROJECT_ID, INSTANCE_ID, DATABASE_ID)
+
+    out, err = capsys.readouterr()
+    assert out == ""
+    assert err.startswith("error: Batch DML failed")
+    assert PROJECT_ID not in err
+
+
+@mock.patch(SPANNER_CLIENT)
 def test_batch_update_dml_cli_entrypoint(
     mock_client_class: mock.MagicMock,
     monkeypatch: pytest.MonkeyPatch,
