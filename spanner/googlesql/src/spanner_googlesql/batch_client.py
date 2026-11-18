@@ -39,9 +39,9 @@ def run_batch_read(project_id: str, instance_id: str, database_id: str) -> None:
     def process_partition(partition: dict[str, object]) -> None:
         nonlocal total_rows
         assert batch_snapshot is not None
-        rows = list(batch_snapshot.process_read_batch(partition))
+        count = sum(1 for _ in batch_snapshot.process_read_batch(partition))
         with row_lock:
-            total_rows += len(rows)
+            total_rows += count
 
     try:
         batch_snapshot = database.batch_snapshot()
