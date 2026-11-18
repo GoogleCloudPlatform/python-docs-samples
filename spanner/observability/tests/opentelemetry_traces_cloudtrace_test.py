@@ -99,6 +99,8 @@ def test_configure_cloud_trace_tracing_errors(
     assert out == ""
     assert err.startswith(expected_prefix)
     assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(CT_EXPORTER_SRC)
