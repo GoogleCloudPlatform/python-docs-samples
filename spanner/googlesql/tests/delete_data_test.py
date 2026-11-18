@@ -45,10 +45,12 @@ def test_delete_data_success(
 
     delete_data.delete_data(PROJECT_ID, INSTANCE_ID, DATABASE_ID)
 
+    assert database.batch.call_count == 2
     assert batch.delete.call_count == 3
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_ID}" in out
-    assert "Committed At: 2026-01-15T12:00:00+00:00" in out
+    assert "Remaining Rows Committed At: 2026-01-15T12:00:00+00:00" in out
+    assert "Specific Rows Committed At: 2026-01-15T12:00:00+00:00" in out
     assert PROJECT_ID not in out
     assert err == ""
 
@@ -107,7 +109,9 @@ def test_delete_data_cli_entrypoint(
 
     runpy.run_module("spanner_googlesql.delete_data", run_name="__main__")
 
-    assert "Committed At: 2026-01-15T12:00:00+00:00" in capsys.readouterr().out
+    out = capsys.readouterr().out
+    assert "Remaining Rows Committed At: 2026-01-15T12:00:00+00:00" in out
+    assert "Specific Rows Committed At: 2026-01-15T12:00:00+00:00" in out
 
 
 @conftest.live_only
@@ -163,7 +167,8 @@ def test_delete_data_live(capsys: pytest.CaptureFixture[str]) -> None:
         out, err = capsys.readouterr()
         assert err == ""
         assert conftest.LIVE_PROJECT_ID not in out
-        assert "Committed At:" in out
+        assert "Remaining Rows Committed At:" in out
+        assert "Specific Rows Committed At:" in out
 
         with temp_db.snapshot() as snap:
             remaining = list(snap.execute_sql("SELECT COUNT(*) FROM Singers"))

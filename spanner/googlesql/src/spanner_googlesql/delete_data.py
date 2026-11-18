@@ -36,10 +36,11 @@ def delete_data(project_id: str, instance_id: str, database_id: str) -> None:
     remaining_singers = spanner.KeySet(all_=True)
 
     try:
-        with database.batch() as batch:
-            batch.delete("Albums", albums_to_delete)
-            batch.delete("Singers", singers_to_delete)
-            batch.delete("Singers", remaining_singers)
+        with database.batch() as specific_batch:
+            specific_batch.delete("Albums", albums_to_delete)
+            specific_batch.delete("Singers", singers_to_delete)
+        with database.batch() as remaining_batch:
+            remaining_batch.delete("Singers", remaining_singers)
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
@@ -54,7 +55,8 @@ def delete_data(project_id: str, instance_id: str, database_id: str) -> None:
         )
     else:
         print(f"Resource ID: {database_id}")
-        print(f"Committed At: {batch.committed.isoformat()}")
+        print(f"Remaining Rows Committed At: {remaining_batch.committed.isoformat()}")
+        print(f"Specific Rows Committed At: {specific_batch.committed.isoformat()}")
 
 
 # [END spanner_delete_data]
