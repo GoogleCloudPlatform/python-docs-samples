@@ -64,7 +64,6 @@ def create_vector_index(project_id: str, instance_id: str, database_id: str) -> 
         )
     else:
         print(f"Resource ID: {database_id}")
-        print("Distance Type: COSINE")
         print(f"Index Name: {index_name}")
 
 

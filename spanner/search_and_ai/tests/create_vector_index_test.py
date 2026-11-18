@@ -48,7 +48,6 @@ def test_create_vector_index_success(
     assert "Waiting for vector index 'DocEmbeddingIndex'" in out
     assert f"Resource ID: {DATABASE_ID}" in out
     assert PROJECT_ID not in out
-    assert "Distance Type: COSINE" in out
     assert "Index Name: DocEmbeddingIndex" in out
     assert err == ""
 
