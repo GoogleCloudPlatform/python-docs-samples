@@ -44,7 +44,8 @@ def test_create_search_index_success(
 
     out, err = capsys.readouterr()
     assert "Waiting for search index 'AlbumsIndex'" in out
-    assert f"Resource ID: {DATABASE_PATH}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Index Name: AlbumsIndex" in out
     assert "Token Column: AlbumTitle_Tokens" in out
     assert err == ""
@@ -78,6 +79,8 @@ def test_create_search_index_errors(
 
     _out, err = capsys.readouterr()
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(ADMIN_CLIENT)

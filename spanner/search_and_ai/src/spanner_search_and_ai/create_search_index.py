@@ -48,19 +48,19 @@ def create_search_index(project_id: str, instance_id: str, database_id: str) -> 
     except (exceptions.AlreadyExists, exceptions.FailedPrecondition) as err:
         print(
             f"error: search index '{index_name}' already exists or preconditions "
-            f"failed on database '{database_id}' in instance '{instance_id}' "
-            f"for project '{project_id}': {err.message}",
+            f"failed on database '{database_id}' in instance '{instance_id}': "
+            f"{err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to create search index '{index_name}' on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}'"
+            f": {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database_path}")
+        print(f"Resource ID: {database_id}")
         print(f"Index Name: {index_name}")
         print("Token Column: AlbumTitle_Tokens")
 
