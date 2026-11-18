@@ -119,7 +119,7 @@ def test_read_write_transaction_live(capsys: pytest.CaptureFixture[str]) -> None
     client = spanner.Client(project=conftest.LIVE_PROJECT_ID)
     db = client.instance(conftest.LIVE_INSTANCE_ID).database(conftest.LIVE_DATABASE_ID)
     with db.batch() as batch:
-        batch.update(
+        batch.insert_or_update(
             table="Albums",
             columns=("SingerId", "AlbumId", "MarketingBudget"),
             values=[(1, 1, 300000), (2, 2, 500000)],
@@ -137,7 +137,7 @@ def test_read_write_transaction_live(capsys: pytest.CaptureFixture[str]) -> None
         assert "Second Album Budget: 300000" in out
     finally:
         with db.batch() as batch:
-            batch.update(
+            batch.insert_or_update(
                 table="Albums",
                 columns=("SingerId", "AlbumId", "MarketingBudget"),
                 values=[(1, 1, 300000), (2, 2, 500000)],

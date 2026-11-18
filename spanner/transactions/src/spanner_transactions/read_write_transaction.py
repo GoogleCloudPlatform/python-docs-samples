@@ -48,8 +48,11 @@ def read_write_transaction(project_id: str, instance_id: str, database_id: str) 
                     keyset=second_key,
                     limit=1,
                 )
-            )
+            ),
+            None,
         )
+        if second_row is None:
+            raise ValueError("Second album not found.")
         second_budget = int(second_row[0] or 0)
         if second_budget < transfer_amount:
             raise ValueError("Second album does not have sufficient funds.")
@@ -62,8 +65,11 @@ def read_write_transaction(project_id: str, instance_id: str, database_id: str) 
                     keyset=first_key,
                     limit=1,
                 )
-            )
+            ),
+            None,
         )
+        if first_row is None:
+            raise ValueError("First album not found.")
         updated_first_budget = int(first_row[0] or 0) + transfer_amount
         updated_second_budget = second_budget - transfer_amount
         updated_values = [
