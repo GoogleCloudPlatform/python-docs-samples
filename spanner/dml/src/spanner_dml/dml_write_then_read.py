@@ -31,7 +31,7 @@ def write_and_read_dml(project_id: str, instance_id: str, database_id: str) -> N
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
     inserted_rows = 0
-    read_rows: list[tuple[str, str]] = []
+    read_rows: list[list[str]] = []
 
     def write_then_read(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal inserted_rows, read_rows
