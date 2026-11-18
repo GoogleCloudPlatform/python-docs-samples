@@ -70,6 +70,13 @@ def create_postgresql_sequence(
             f"database '{database_id}' in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
+    except TimeoutError as err:
+        print(
+            f"error: timed out waiting to create PostgreSQL sequence 'Seq' on "
+            f"database '{database_id}' in instance '{instance_id}'; the "
+            f"operation may still be running: {err}",
+            file=sys.stderr,
+        )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to create PostgreSQL sequence on database "

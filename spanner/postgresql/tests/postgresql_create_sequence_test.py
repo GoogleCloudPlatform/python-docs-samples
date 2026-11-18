@@ -76,6 +76,10 @@ def test_create_postgresql_sequence_success(
             "error: sequence 'Seq' or table 'Customers' already exists",
         ),
         (
+            TimeoutError("deadline"),
+            "error: timed out waiting to create PostgreSQL sequence 'Seq'",
+        ),
+        (
             exceptions.PermissionDenied("denied"),
             "error: failed to create PostgreSQL sequence",
         ),
