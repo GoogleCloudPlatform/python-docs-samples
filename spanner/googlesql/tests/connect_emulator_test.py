@@ -77,6 +77,7 @@ def test_connect_with_emulator_missing_host_env(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (
             exceptions.AlreadyExists("exists"),
             "error: emulator resource already exists",
