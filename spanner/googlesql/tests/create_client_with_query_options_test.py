@@ -28,7 +28,7 @@ DATABASE_ID = "example-db"
 SPANNER_CLIENT = "google.cloud.spanner.Client"
 
 
-@mock.patch(SPANNER_CLIENT)
+@mock.patch(SPANNER_CLIENT, autospec=True)
 def test_create_client_with_query_options_success(
     mock_client_class: mock.MagicMock, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -63,7 +63,7 @@ def test_create_client_with_query_options_success(
         ),
     ],
 )
-@mock.patch(SPANNER_CLIENT)
+@mock.patch(SPANNER_CLIENT, autospec=True)
 def test_create_client_with_query_options_errors(
     mock_client_class: mock.MagicMock,
     capsys: pytest.CaptureFixture[str],
@@ -87,7 +87,7 @@ def test_create_client_with_query_options_errors(
     assert PROJECT_ID not in err
 
 
-@mock.patch(SPANNER_CLIENT)
+@mock.patch(SPANNER_CLIENT, autospec=True)
 def test_create_client_with_query_options_cli_entrypoint(
     mock_client_class: mock.MagicMock,
     monkeypatch: pytest.MonkeyPatch,
