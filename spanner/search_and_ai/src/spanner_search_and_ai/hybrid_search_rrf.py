@@ -93,17 +93,17 @@ def run_hybrid_search_rrf(project_id: str, instance_id: str, database_id: str) -
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
-            f"in project '{project_id}' was not found: {err.message}",
+            f"was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: hybrid RRF search failed on database '{database_id}' "
-            f"in instance '{instance_id}' for project '{project_id}': {err.message}",
+            f"in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         for item_id, title, rrf_score in rows:
             print(f"Item ID: {item_id}")
             print(f"RRF Score: {rrf_score:.6f}")

@@ -50,7 +50,8 @@ def test_run_hybrid_search_rrf_success(
     assert "SUM(1.0 / (60 + rank))" in sql
 
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Item ID: 1" in out
     assert "RRF Score: 0.033333" in out
     assert err == ""
@@ -87,6 +88,8 @@ def test_run_hybrid_search_rrf_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
