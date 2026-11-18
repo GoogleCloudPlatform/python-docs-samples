@@ -17,7 +17,6 @@ import sys
 
 from google.api_core import exceptions
 from google.cloud import spanner
-from google.cloud import spanner_v1
 
 
 def query_with_query_options(
@@ -32,10 +31,10 @@ def query_with_query_options(
     """
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
-    query_options = spanner_v1.ExecuteSqlRequest.QueryOptions(
-        optimizer_version="1",
-        optimizer_statistics_package="latest",
-    )
+    query_options = {
+        "optimizer_version": "1",
+        "optimizer_statistics_package": "latest",
+    }
 
     try:
         with database.snapshot() as snapshot:

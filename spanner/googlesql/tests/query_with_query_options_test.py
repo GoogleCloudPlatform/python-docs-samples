@@ -42,8 +42,8 @@ def test_query_with_query_options_success(
     )
 
     q_opts = snapshot.execute_sql.call_args.kwargs["query_options"]
-    assert q_opts.optimizer_version == "1"
-    assert q_opts.optimizer_statistics_package == "latest"
+    assert q_opts["optimizer_version"] == "1"
+    assert q_opts["optimizer_statistics_package"] == "latest"
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_ID}" in out
     assert "Row Count: 1" in out
