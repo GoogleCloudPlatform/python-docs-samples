@@ -53,7 +53,8 @@ def test_run_data_boost_partitioned_query_success(
     )
     snapshot.close.assert_called_once()
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Partition Count: 2" in out
     assert "Total Rows: 3" in out
     assert err == ""
@@ -93,6 +94,8 @@ def test_run_data_boost_partitioned_query_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
@@ -140,5 +143,8 @@ def test_run_data_boost_partitioned_query_live(
 
     out, err = capsys.readouterr()
     assert err == ""
+    assert conftest.LIVE_PROJECT_ID not in out
     assert "Partition Count:" in out
-    assert "Total Rows: 3" in out
+    row_lines = [line for line in out.splitlines() if line.startswith("Total Rows: ")]
+    assert len(row_lines) == 1
+    assert int(row_lines[0].split(": ", 1)[1]) >= 1

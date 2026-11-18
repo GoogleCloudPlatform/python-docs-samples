@@ -51,18 +51,18 @@ def run_data_boost_partitioned_query(
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
-            f"in project '{project_id}' was not found: {err.message}",
+            f"was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: Data Boost partitioned query failed on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}'"
+            f": {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print(f"Partition Count: {partition_count}")
         print(f"Total Rows: {total_rows}")
     finally:
