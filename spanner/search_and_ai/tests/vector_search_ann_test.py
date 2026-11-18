@@ -51,7 +51,8 @@ def test_find_approximate_nearest_neighbors_success(
     assert "FORCE_INDEX=CatalogEmbeddingIndex" in sql
     assert "Embedding IS NOT NULL" in sql
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Item ID: 1" in out
     assert "Title: Ultralight Alpine Tent" in out
     assert err == ""
@@ -90,6 +91,8 @@ def test_find_approximate_nearest_neighbors_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
