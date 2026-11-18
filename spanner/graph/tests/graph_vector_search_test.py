@@ -48,7 +48,8 @@ def test_run_graph_vector_search_success(
     assert "GRAPH FinGraph" in sql
     assert "EUCLIDEAN_DISTANCE" in sql
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Owner Name: Alex" in out
     assert err == ""
 
@@ -84,6 +85,8 @@ def test_run_graph_vector_search_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
