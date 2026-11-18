@@ -53,6 +53,7 @@ def test_create_search_index_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (
             exceptions.FailedPrecondition("Duplicate name"),
             "error: search index 'AlbumsIndex' already exists",
