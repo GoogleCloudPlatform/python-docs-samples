@@ -17,7 +17,6 @@ import sys
 
 from google.api_core import exceptions
 from google.cloud import spanner
-from google.cloud.spanner_v1 import param_types
 
 
 def query_struct_field(project_id: str, instance_id: str, database_id: str) -> None:
@@ -30,10 +29,10 @@ def query_struct_field(project_id: str, instance_id: str, database_id: str) -> N
     """
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
-    name_type = param_types.Struct(
+    name_type = spanner.param_types.Struct(
         [
-            param_types.StructField("FirstName", param_types.STRING),
-            param_types.StructField("LastName", param_types.STRING),
+            spanner.param_types.StructField("FirstName", spanner.param_types.STRING),
+            spanner.param_types.StructField("LastName", spanner.param_types.STRING),
         ]
     )
 
