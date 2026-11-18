@@ -35,21 +35,17 @@ def delete_graph_data_with_dml(
     deleted_transfers = 0
     deleted_accounts = 0
 
-    def delete_transfers(transaction: spanner_v1.transaction.Transaction) -> None:
-        nonlocal deleted_transfers
+    def delete_data(transaction: spanner_v1.transaction.Transaction) -> None:
+        nonlocal deleted_transfers, deleted_accounts
         deleted_transfers = transaction.execute_update(
             "DELETE FROM AccountTransferAccount WHERE id = 1 AND to_id = 2"
         )
-
-    def delete_accounts(transaction: spanner_v1.transaction.Transaction) -> None:
-        nonlocal deleted_accounts
         deleted_accounts = transaction.execute_update(
             "DELETE FROM Account WHERE id = 2"
         )
 
     try:
-        database.run_in_transaction(delete_transfers)
-        database.run_in_transaction(delete_accounts)
+        database.run_in_transaction(delete_data)
     except exceptions.FailedPrecondition as err:
         print(
             f"error: foreign-key constraint blocked graph delete on database "
