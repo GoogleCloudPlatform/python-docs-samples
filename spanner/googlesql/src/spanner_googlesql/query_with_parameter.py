@@ -17,7 +17,6 @@ import sys
 
 from google.api_core import exceptions
 from google.cloud import spanner
-from google.cloud.spanner_v1 import param_types
 
 
 def query_with_parameter(project_id: str, instance_id: str, database_id: str) -> None:
@@ -38,7 +37,7 @@ def query_with_parameter(project_id: str, instance_id: str, database_id: str) ->
                     "SELECT SingerId, FirstName, LastName FROM Singers "
                     "WHERE LastName = @lastName",
                     params={"lastName": "Garcia"},
-                    param_types={"lastName": param_types.STRING},
+                    param_types={"lastName": spanner.param_types.STRING},
                 )
             )
     except exceptions.NotFound as err:
