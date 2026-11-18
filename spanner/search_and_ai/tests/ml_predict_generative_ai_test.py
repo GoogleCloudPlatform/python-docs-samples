@@ -67,6 +67,7 @@ def test_generate_product_recommendations_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (
             exceptions.NotFound("model not found"),
             "error: database 'example-db' or Vertex AI model",
