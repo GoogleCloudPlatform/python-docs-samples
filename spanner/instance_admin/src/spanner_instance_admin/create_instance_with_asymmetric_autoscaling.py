@@ -88,6 +88,12 @@ def create_instance_with_asymmetric_autoscaling(
             f"{err.message}",
             file=sys.stderr,
         )
+    except TimeoutError as err:
+        print(
+            f"error: timed out waiting for the operation on instance '{instance_id}' "
+            f"to complete; the operation may still be running: {err}",
+            file=sys.stderr,
+        )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: failed to create asymmetric-autoscaling instance "

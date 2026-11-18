@@ -74,6 +74,7 @@ def test_create_instance_with_asymmetric_autoscaling_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
+        (TimeoutError("deadline"), "error: timed out waiting for the operation"),
         (
             exceptions.AlreadyExists("exists"),
             "error: Spanner instance 'example-asym-instance' already exists",
