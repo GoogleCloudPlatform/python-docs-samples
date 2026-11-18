@@ -53,7 +53,10 @@ def test_read_only_transaction_success(
 @pytest.mark.parametrize(
     "error, expected_prefix",
     [
-        (exceptions.NotFound("missing"), "error: database 'example-db'"),
+        (
+            exceptions.NotFound("missing"),
+            "error: resource not found in database 'example-db'",
+        ),
         (
             exceptions.PermissionDenied("denied"),
             "error: read-only transaction failed",

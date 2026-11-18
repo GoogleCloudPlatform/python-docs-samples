@@ -42,8 +42,8 @@ def read_only_transaction(project_id: str, instance_id: str, database_id: str) -
             )
     except exceptions.NotFound as err:
         print(
-            f"error: database '{database_id}' on instance '{instance_id}' "
-            f"was not found: {err.message}",
+            f"error: resource not found in database '{database_id}' on "
+            f"instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
