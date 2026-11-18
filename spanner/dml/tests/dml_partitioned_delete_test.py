@@ -115,17 +115,12 @@ def test_delete_data_with_partitioned_dml_live(
     client = spanner.Client(project=conftest.LIVE_PROJECT_ID)
     db = client.instance(conftest.LIVE_INSTANCE_ID).database(conftest.LIVE_DATABASE_ID)
     with db.snapshot(multi_use=True) as snap:
-        saved_singers = list(
-            snap.execute_sql(
-                "SELECT SingerId, FirstName, LastName FROM Singers WHERE SingerId > 10"
-            )
-        )
-        saved_albums = list(
-            snap.execute_sql(
-                "SELECT SingerId, AlbumId, AlbumTitle, MarketingBudget "
-                "FROM Albums WHERE SingerId > 10"
-            )
-        )
+        singers_result = snap.execute_sql("SELECT * FROM Singers WHERE SingerId > 10")
+        saved_singers = list(singers_result)
+        singers_columns = tuple(field.name for field in singers_result.fields)
+        albums_result = snap.execute_sql("SELECT * FROM Albums WHERE SingerId > 10")
+        saved_albums = list(albums_result)
+        albums_columns = tuple(field.name for field in albums_result.fields)
     with db.batch() as batch:
         batch.insert_or_update(
             table="Singers",
@@ -147,17 +142,12 @@ def test_delete_data_with_partitioned_dml_live(
             with db.batch() as batch:
                 batch.insert_or_update(
                     table="Singers",
-                    columns=("SingerId", "FirstName", "LastName"),
+                    columns=singers_columns,
                     values=saved_singers,
                 )
                 if saved_albums:
                     batch.insert_or_update(
                         table="Albums",
-                        columns=(
-                            "SingerId",
-                            "AlbumId",
-                            "AlbumTitle",
-                            "MarketingBudget",
-                        ),
+                        columns=albums_columns,
                         values=saved_albums,
                     )
