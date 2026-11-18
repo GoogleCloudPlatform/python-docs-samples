@@ -56,7 +56,8 @@ def test_configure_otlp_tracing_success(
     assert obs["enable_end_to_end_tracing"] is True
     assert obs["enable_extended_tracing"] is True
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Check Result: 1" in out
     assert "End-to-End Tracing: True" in out
     assert "Trace Exporter: OTLP" in out
@@ -99,6 +100,7 @@ def test_configure_otlp_tracing_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
 
 
 @mock.patch(OTLP_EXPORTER_SRC)
