@@ -35,21 +35,17 @@ def update_graph_data_with_dml(
     updated_accounts = 0
     updated_transfers = 0
 
-    def update_accounts(transaction: spanner_v1.transaction.Transaction) -> None:
-        nonlocal updated_accounts
+    def update_data(transaction: spanner_v1.transaction.Transaction) -> None:
+        nonlocal updated_accounts, updated_transfers
         updated_accounts = transaction.execute_update(
             "UPDATE Account SET is_blocked = false WHERE id = 2"
         )
-
-    def update_transfers(transaction: spanner_v1.transaction.Transaction) -> None:
-        nonlocal updated_transfers
         updated_transfers = transaction.execute_update(
             "UPDATE AccountTransferAccount SET amount = 300 WHERE id = 1 AND to_id = 2"
         )
 
     try:
-        database.run_in_transaction(update_accounts)
-        database.run_in_transaction(update_transfers)
+        database.run_in_transaction(update_data)
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
