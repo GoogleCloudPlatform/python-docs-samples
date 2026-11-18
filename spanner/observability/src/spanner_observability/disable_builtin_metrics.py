@@ -41,18 +41,17 @@ def disable_builtin_metrics(
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
-            f"in project '{project_id}' was not found: {err.message}",
+            f"was not found: {err.message}",
             file=sys.stderr,
         )
     except exceptions.GoogleAPICallError as err:
         print(
             f"error: query failed with built-in metrics disabled on database "
-            f"'{database_id}' in instance '{instance_id}' for project "
-            f"'{project_id}': {err.message}",
+            f"'{database_id}' in instance '{instance_id}': {err.message}",
             file=sys.stderr,
         )
     else:
-        print(f"Resource ID: {database.name}")
+        print(f"Resource ID: {database_id}")
         print("Built-in Metrics Disabled: True")
         print(f"Check Result: {row[0]}")
 

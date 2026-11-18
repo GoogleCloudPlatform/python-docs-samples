@@ -47,7 +47,8 @@ def test_disable_builtin_metrics_success(
         project=PROJECT_ID, disable_builtin_metrics=True
     )
     out, err = capsys.readouterr()
-    assert f"Resource ID: {DATABASE_NAME}" in out
+    assert f"Resource ID: {DATABASE_ID}" in out
+    assert PROJECT_ID not in out
     assert "Built-in Metrics Disabled: True" in out
     assert "Check Result: 1" in out
     assert err == ""
@@ -86,6 +87,7 @@ def test_disable_builtin_metrics_errors(
     out, err = capsys.readouterr()
     assert out == ""
     assert err.startswith(expected_prefix)
+    assert PROJECT_ID not in err
 
 
 @mock.patch(SPANNER_CLIENT)
