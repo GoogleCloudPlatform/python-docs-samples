@@ -17,7 +17,6 @@ import sys
 
 from google.api_core import exceptions
 from google.cloud import spanner
-from google.cloud.spanner_v1 import param_types
 
 
 def query_data_with_index(project_id: str, instance_id: str, database_id: str) -> None:
@@ -32,8 +31,8 @@ def query_data_with_index(project_id: str, instance_id: str, database_id: str) -
     database = client.instance(instance_id).database(database_id)
     params = {"start_title": "Aardvark", "end_title": "Goo"}
     types = {
-        "start_title": param_types.STRING,
-        "end_title": param_types.STRING,
+        "start_title": spanner.param_types.STRING,
+        "end_title": spanner.param_types.STRING,
     }
 
     try:
