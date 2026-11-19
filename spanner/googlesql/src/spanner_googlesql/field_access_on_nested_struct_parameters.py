@@ -51,11 +51,13 @@ def query_nested_struct_field(
         with database.snapshot() as snapshot:
             rows = list(
                 snapshot.execute_sql(
-                    "SELECT SingerId, @song_info.SongName "
-                    "FROM Singers WHERE "
-                    "STRUCT<FirstName STRING, LastName STRING>"
-                    "(FirstName, LastName) "
-                    "IN UNNEST(@song_info.ArtistNames)",
+                    """
+                    SELECT SingerId, @song_info.SongName
+                    FROM Singers WHERE
+                    STRUCT<FirstName STRING, LastName STRING>
+                    (FirstName, LastName)
+                    IN UNNEST(@song_info.ArtistNames)
+                    """,
                     params={"song_info": song_info},
                     param_types={"song_info": song_info_type},
                 )
