@@ -34,11 +34,11 @@ def update_data_with_dml(project_id: str, instance_id: str, database_id: str) ->
 
     def update_albums(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal updated_rows
-        updated_rows = transaction.execute_update(
-            "UPDATE Albums "
-            "SET MarketingBudget = MarketingBudget * 2 "
-            "WHERE SingerId = 1 AND AlbumId = 1"
-        )
+        updated_rows = transaction.execute_update("""
+            UPDATE Albums
+            SET MarketingBudget = MarketingBudget * 2
+            WHERE SingerId = 1 AND AlbumId = 1
+        """)
 
     try:
         database.run_in_transaction(update_albums)
