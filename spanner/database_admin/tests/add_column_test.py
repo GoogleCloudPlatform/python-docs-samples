@@ -40,6 +40,10 @@ def test_add_column_success(
 
     add_column.add_column(PROJECT_ID, INSTANCE_ID, DATABASE_ID)
 
+    client = mock_client_class.return_value
+    request = client.update_database_ddl.call_args.kwargs["request"]
+    assert request.database == client.database_path.return_value
+    assert request.statements == ["ALTER TABLE Albums ADD COLUMN MarketingBudget INT64"]
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_ID}" in out
     assert "Added Column: MarketingBudget" in out
