@@ -32,10 +32,10 @@ def add_split_points(project_id: str, instance_id: str, database_id: str) -> Non
     index_name = "SingersByFirstLastName"
     ddl_request = spanner_admin_database_v1.UpdateDatabaseDdlRequest(
         database=database_path,
-        statements=[
-            f"CREATE INDEX IF NOT EXISTS {index_name} "
-            "ON Singers(FirstName, LastName)"
-        ],
+        statements=[f"""
+            CREATE INDEX IF NOT EXISTS {index_name}
+            ON Singers(FirstName, LastName)
+        """],
     )
 
     table_key = spanner_admin_database_v1.SplitPoints.Key(key_parts=["42"])
