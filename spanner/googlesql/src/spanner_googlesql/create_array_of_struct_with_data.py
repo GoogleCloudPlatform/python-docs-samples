@@ -48,8 +48,10 @@ def create_array_of_struct_with_data(
         with database.snapshot() as snapshot:
             rows = list(
                 snapshot.execute_sql(
-                    "SELECT member.FirstName, member.LastName "
-                    "FROM UNNEST(@names) AS member",
+                    """
+                    SELECT member.FirstName, member.LastName
+                    FROM UNNEST(@names) AS member
+                    """,
                     params={"names": band_members},
                     param_types={"names": param_types.Array(name_type)},
                 )
