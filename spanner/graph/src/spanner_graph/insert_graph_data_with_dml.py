@@ -37,17 +37,17 @@ def insert_graph_data_with_dml(
 
     def insert_data(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal inserted_accounts, inserted_transfers
-        inserted_accounts = transaction.execute_update(
-            "INSERT INTO Account (id, create_time, is_blocked) VALUES "
-            "(1, CAST('2000-08-10 08:18:48.463959-07:52' AS TIMESTAMP), false), "
-            "(2, CAST('2000-08-12 07:13:16.463959-03:41' AS TIMESTAMP), true)"
-        )
-        inserted_transfers = transaction.execute_update(
-            "INSERT INTO AccountTransferAccount (id, to_id, create_time, amount) "
-            "VALUES "
-            "(1, 2, CAST('2000-09-11 03:11:18.463959-06:36' AS TIMESTAMP), 100), "
-            "(1, 1, CAST('2000-09-12 04:09:34.463959-05:12' AS TIMESTAMP), 200)"
-        )
+        inserted_accounts = transaction.execute_update("""
+            INSERT INTO Account (id, create_time, is_blocked) VALUES
+            (1, CAST('2000-08-10 08:18:48.463959-07:52' AS TIMESTAMP), false),
+            (2, CAST('2000-08-12 07:13:16.463959-03:41' AS TIMESTAMP), true)
+        """)
+        inserted_transfers = transaction.execute_update("""
+            INSERT INTO AccountTransferAccount (id, to_id, create_time, amount)
+            VALUES
+            (1, 2, CAST('2000-09-11 03:11:18.463959-06:36' AS TIMESTAMP), 100),
+            (1, 1, CAST('2000-09-12 04:09:34.463959-05:12' AS TIMESTAMP), 200)
+        """)
 
     try:
         database.run_in_transaction(insert_data)
