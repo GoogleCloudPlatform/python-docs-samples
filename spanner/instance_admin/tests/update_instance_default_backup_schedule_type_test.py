@@ -114,6 +114,10 @@ def test_update_instance_default_backup_schedule_type_cli_entrypoint(
 def test_update_instance_default_backup_schedule_type_live(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
+    required = ("SPANNER_INSTANCE_ID",)
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     live_inst = os.environ["SPANNER_INSTANCE_ID"]
     admin = spanner_admin_instance_v1.InstanceAdminClient()
     inst_path = admin.instance_path(conftest.LIVE_PROJECT_ID, live_inst)
@@ -128,14 +132,18 @@ def test_update_instance_default_backup_schedule_type_live(
         assert conftest.LIVE_PROJECT_ID not in out
         assert "Default Backup Schedule Type: AUTOMATIC" in out
     finally:
-        if (
-            orig_type
-            != spanner_admin_instance_v1.Instance.DefaultBackupScheduleType.DEFAULT_BACKUP_SCHEDULE_TYPE_UNSPECIFIED
-        ):
+        schedule_types = spanner_admin_instance_v1.Instance.DefaultBackupScheduleType
+        was_unspecified = (
+            orig_type == schedule_types.DEFAULT_BACKUP_SCHEDULE_TYPE_UNSPECIFIED
+        )
+        if orig_type != schedule_types.AUTOMATIC:
             admin.update_instance(
                 request=spanner_admin_instance_v1.UpdateInstanceRequest(
                     instance=spanner_admin_instance_v1.Instance(
-                        name=inst_path, default_backup_schedule_type=orig_type
+                        name=inst_path,
+                        default_backup_schedule_type=(
+                            schedule_types.NONE if was_unspecified else orig_type
+                        ),
                     ),
                     field_mask={"paths": ["default_backup_schedule_type"]},
                 )
