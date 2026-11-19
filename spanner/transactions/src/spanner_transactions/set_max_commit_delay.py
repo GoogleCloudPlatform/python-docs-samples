@@ -36,10 +36,10 @@ def set_max_commit_delay(project_id: str, instance_id: str, database_id: str) ->
 
     def insert_singers(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal inserted_rows
-        inserted_rows = transaction.execute_update(
-            "INSERT INTO Singers (SingerId, FirstName, LastName) "
-            "VALUES (111, 'Grace', 'Bennis')"
-        )
+        inserted_rows = transaction.execute_update("""
+            INSERT INTO Singers (SingerId, FirstName, LastName)
+            VALUES (111, 'Grace', 'Bennis')
+        """)
 
     try:
         database.run_in_transaction(insert_singers, max_commit_delay=commit_delay)
