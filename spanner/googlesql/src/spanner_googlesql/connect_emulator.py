@@ -48,13 +48,13 @@ def connect_with_emulator(project_id: str, instance_id: str, database_id: str) -
         display_name="Example Emulator Instance",
         node_count=1,
     )
-    ddl_statements = [
-        "CREATE TABLE IF NOT EXISTS Singers ("
-        "  SingerId INT64 NOT NULL,"
-        "  FirstName STRING(1024),"
-        "  LastName STRING(1024)"
-        ") PRIMARY KEY (SingerId)"
-    ]
+    ddl_statements = ["""
+        CREATE TABLE IF NOT EXISTS Singers (
+          SingerId INT64 NOT NULL,
+          FirstName STRING(1024),
+          LastName STRING(1024)
+        ) PRIMARY KEY (SingerId)
+    """]
 
     try:
         if not instance.exists():
