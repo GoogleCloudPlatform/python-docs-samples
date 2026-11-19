@@ -122,6 +122,10 @@ def test_list_backup_operations_cli_entrypoint(
 
 @conftest.live_only
 def test_list_backup_operations_live(capsys: pytest.CaptureFixture[str]) -> None:
+    required = ("SPANNER_BACKUP_ID",)
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     src_bkp = os.environ["SPANNER_BACKUP_ID"]
     list_backup_operations.list_backup_operations(
         conftest.LIVE_PROJECT_ID,
