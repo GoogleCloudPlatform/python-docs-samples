@@ -36,12 +36,12 @@ def update_dml_returning(project_id: str, instance_id: str, database_id: str) ->
     def update_albums(transaction: spanner_v1.Transaction) -> None:
         nonlocal row_count
         budgets.clear()
-        results = transaction.execute_sql(
-            "UPDATE Albums "
-            "SET MarketingBudget = MarketingBudget * 2 "
-            "WHERE SingerId = 1 AND AlbumId = 1 "
-            "THEN RETURN MarketingBudget"
-        )
+        results = transaction.execute_sql("""
+            UPDATE Albums
+            SET MarketingBudget = MarketingBudget * 2
+            WHERE SingerId = 1 AND AlbumId = 1
+            THEN RETURN MarketingBudget
+        """)
         for row in results:
             budgets.append(int(row[0] or 0))
         row_count = int(results.stats.row_count_exact) if results.stats else 0
