@@ -33,7 +33,7 @@ def list_dlp_jobs(
         specified filter in the request.
     Args:
         project: The project id to use as a parent resource.
-        filter: (Optional) Allows filtering.
+        filter_string: (Optional) Allows filtering.
             Supported syntax:
             * Filter expressions are made up of one or more restrictions.
             * Restrictions can be combined by 'AND' or 'OR' logical operators.
@@ -52,7 +52,8 @@ def list_dlp_jobs(
             * inspected_storage = cloud_storage OR inspected_storage = bigquery
             * inspected_storage = cloud_storage AND
                                   (state = done OR state = canceled)
-        type: (Optional) The type of job. Defaults to 'INSPECT'.
+        job_type: (Optional) The type of job. If not set, the API defaults to
+            INSPECT_JOB.
             Choices:
             DLP_JOB_TYPE_UNSPECIFIED
             INSPECT_JOB: The job inspected content for sensitive data.
