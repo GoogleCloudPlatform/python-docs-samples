@@ -33,11 +33,11 @@ def create_change_stream(project_id: str, instance_id: str, database_id: str) ->
     client = spanner_admin_database_v1.DatabaseAdminClient()
     database_path = client.database_path(project_id, instance_id, database_id)
     stream_name = "NamesAndAlbumsStream"
-    ddl_statement = (
-        f"CREATE CHANGE STREAM {stream_name} "
-        "FOR Singers(FirstName, LastName), Albums "
-        "OPTIONS (retention_period = '36h', allow_txn_exclusion = true)"
-    )
+    ddl_statement = f"""
+        CREATE CHANGE STREAM {stream_name}
+        FOR Singers(FirstName, LastName), Albums
+        OPTIONS (retention_period = '36h', allow_txn_exclusion = true)
+    """
     request = spanner_admin_database_v1.UpdateDatabaseDdlRequest(
         database=database_path,
         statements=[ddl_statement],
