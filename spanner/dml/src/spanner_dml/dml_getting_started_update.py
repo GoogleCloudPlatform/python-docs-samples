@@ -42,12 +42,10 @@ def transfer_budget_with_dml(
     def transfer_budget(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal updated_first_budget, updated_second_budget, updated_rows
         second_row = next(
-            iter(
-                transaction.execute_sql(
-                    "SELECT MarketingBudget FROM Albums "
-                    "WHERE SingerId = 2 AND AlbumId = 2"
-                )
-            ),
+            iter(transaction.execute_sql("""
+                SELECT MarketingBudget FROM Albums
+                WHERE SingerId = 2 AND AlbumId = 2
+            """)),
             None,
         )
         if second_row is None:
@@ -57,12 +55,10 @@ def transfer_budget_with_dml(
             raise ValueError("Second album does not have sufficient funds.")
 
         first_row = next(
-            iter(
-                transaction.execute_sql(
-                    "SELECT MarketingBudget FROM Albums "
-                    "WHERE SingerId = 1 AND AlbumId = 1"
-                )
-            ),
+            iter(transaction.execute_sql("""
+                SELECT MarketingBudget FROM Albums
+                WHERE SingerId = 1 AND AlbumId = 1
+            """)),
             None,
         )
         if first_row is None:
@@ -73,14 +69,18 @@ def transfer_budget_with_dml(
         first_params = {"AlbumBudget": updated_first_budget}
         second_params = {"AlbumBudget": updated_second_budget}
         first_ct = transaction.execute_update(
-            "UPDATE Albums SET MarketingBudget = @AlbumBudget "
-            "WHERE SingerId = 1 AND AlbumId = 1",
+            """
+            UPDATE Albums SET MarketingBudget = @AlbumBudget
+            WHERE SingerId = 1 AND AlbumId = 1
+            """,
             params=first_params,
             param_types=budget_types,
         )
         second_ct = transaction.execute_update(
-            "UPDATE Albums SET MarketingBudget = @AlbumBudget "
-            "WHERE SingerId = 2 AND AlbumId = 2",
+            """
+            UPDATE Albums SET MarketingBudget = @AlbumBudget
+            WHERE SingerId = 2 AND AlbumId = 2
+            """,
             params=second_params,
             param_types=budget_types,
         )
