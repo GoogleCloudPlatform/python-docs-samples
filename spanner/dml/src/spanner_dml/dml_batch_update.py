@@ -31,10 +31,14 @@ def batch_update_dml(project_id: str, instance_id: str, database_id: str) -> Non
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
     statements = [
-        "INSERT INTO Albums (SingerId, AlbumId, AlbumTitle, MarketingBudget) "
-        "VALUES (1, 3, 'Test Album Title', 10000)",
-        "UPDATE Albums SET MarketingBudget = MarketingBudget * 2 "
-        "WHERE SingerId = 1 AND AlbumId = 3",
+        """
+        INSERT INTO Albums (SingerId, AlbumId, AlbumTitle, MarketingBudget)
+        VALUES (1, 3, 'Test Album Title', 10000)
+        """,
+        """
+        UPDATE Albums SET MarketingBudget = MarketingBudget * 2
+        WHERE SingerId = 1 AND AlbumId = 3
+        """,
     ]
     executed_statements = 0
     total_rows_modified = 0
