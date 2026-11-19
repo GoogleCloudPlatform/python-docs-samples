@@ -36,13 +36,13 @@ def insert_singers_getting_started(
 
     def insert_singers(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal inserted_rows
-        inserted_rows = transaction.execute_update(
-            "INSERT INTO Singers (SingerId, FirstName, LastName) VALUES "
-            "(12, 'Melissa', 'Garcia'), "
-            "(13, 'Russell', 'Morales'), "
-            "(14, 'Jacqueline', 'Long'), "
-            "(15, 'Dylan', 'Shaw')"
-        )
+        inserted_rows = transaction.execute_update("""
+            INSERT INTO Singers (SingerId, FirstName, LastName) VALUES
+            (12, 'Melissa', 'Garcia'),
+            (13, 'Russell', 'Morales'),
+            (14, 'Jacqueline', 'Long'),
+            (15, 'Dylan', 'Shaw')
+        """)
 
     try:
         database.run_in_transaction(insert_singers)
