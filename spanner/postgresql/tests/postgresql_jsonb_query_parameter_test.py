@@ -127,11 +127,13 @@ def test_query_postgresql_jsonb_parameter_live(
         request={
             "database": db_path,
             "statements": [
-                "CREATE TABLE IF NOT EXISTS venues ("
-                "  venueid bigint NOT NULL,"
-                "  venuedetails jsonb,"
-                "  PRIMARY KEY (venueid)"
-                ")"
+                """
+                CREATE TABLE IF NOT EXISTS venues (
+                  venueid bigint NOT NULL,
+                  venuedetails jsonb,
+                  PRIMARY KEY (venueid)
+                )
+                """
             ],
         }
     ).result(timeout=240)

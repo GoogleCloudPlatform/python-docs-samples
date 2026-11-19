@@ -37,8 +37,10 @@ def query_postgresql_jsonb_parameter(
         with database.snapshot() as snapshot:
             rows = list(
                 snapshot.execute_sql(
-                    "SELECT venueid, venuedetails FROM venues "
-                    "WHERE CAST(venuedetails ->> 'rating' AS INTEGER) > $1",
+                    """
+                    SELECT venueid, venuedetails FROM venues
+                    WHERE CAST(venuedetails ->> 'rating' AS INTEGER) > $1
+                    """,
                     params={"p1": 2},
                     param_types={"p1": param_types.INT64},
                 )
