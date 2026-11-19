@@ -37,8 +37,10 @@ def execute_statement_with_timeout(
     def write_with_timeout(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal inserted_rows
         inserted_rows = transaction.execute_update(
-            "INSERT INTO Singers (SingerId, FirstName, LastName) "
-            "VALUES (112, 'George', 'Washington')",
+            """
+            INSERT INTO Singers (SingerId, FirstName, LastName)
+            VALUES (112, 'George', 'Washington')
+            """,
             timeout=60.0,
         )
 
