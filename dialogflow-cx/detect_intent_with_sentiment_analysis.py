@@ -78,7 +78,7 @@ def detect_intent_with_sentiment_analysis(
 
     response = session_client.detect_intent(request=request)
     score = response.query_result.sentiment_analysis_result.score
-    print("Sentiment Score: {score}")
+    print(f"Sentiment Score: {score}")
     return score
 
 

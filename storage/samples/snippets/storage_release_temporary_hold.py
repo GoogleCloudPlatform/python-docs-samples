@@ -40,7 +40,7 @@ def release_temporary_hold(bucket_name, blob_name):
     blob.temporary_hold = False
     blob.patch(if_metageneration_match=metageneration_match_precondition)
 
-    print("Temporary hold was release for #{blob_name}")
+    print(f"Temporary hold was released for {blob_name}")
 
 
 # [END storage_release_temporary_hold]

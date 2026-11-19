@@ -39,7 +39,7 @@ def set_temporary_hold(bucket_name, blob_name):
     blob.temporary_hold = True
     blob.patch(if_metageneration_match=metageneration_match_precondition)
 
-    print("Temporary hold was set for #{blob_name}")
+    print(f"Temporary hold was set for {blob_name}")
 
 
 # [END storage_set_temporary_hold]
