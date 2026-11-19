@@ -37,8 +37,10 @@ def query_postgresql_with_parameter(
         with database.snapshot() as snapshot:
             rows = list(
                 snapshot.execute_sql(
-                    "SELECT singerid, firstname, lastname FROM singers "
-                    "WHERE lastname = $1",
+                    """
+                    SELECT singerid, firstname, lastname FROM singers
+                    WHERE lastname = $1
+                    """,
                     params={"p1": "Garcia"},
                     param_types={"p1": param_types.STRING},
                 )
