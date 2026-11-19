@@ -31,11 +31,11 @@ def create_search_index(project_id: str, instance_id: str, database_id: str) -> 
     database_path = client.database_path(project_id, instance_id, database_id)
     index_name = "AlbumsIndex"
 
-    ddl_statement = (
-        f"CREATE SEARCH INDEX {index_name} "
-        "ON Albums(AlbumTitle_Tokens) "
-        "STORING (AlbumTitle)"
-    )
+    ddl_statement = f"""
+        CREATE SEARCH INDEX {index_name}
+        ON Albums(AlbumTitle_Tokens)
+        STORING (AlbumTitle)
+    """
     request = spanner_admin_database_v1.UpdateDatabaseDdlRequest(
         database=database_path,
         statements=[ddl_statement],
