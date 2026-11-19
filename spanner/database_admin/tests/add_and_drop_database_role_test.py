@@ -121,26 +121,32 @@ def test_add_and_drop_database_role_live(capsys: pytest.CaptureFixture[str]) -> 
         conftest.LIVE_INSTANCE_ID,
         conftest.LIVE_DATABASE_ID,
     )
-    for cleanup_stmt in [
-        "REVOKE ROLE new_parent FROM ROLE new_child",
-        "DROP ROLE new_child",
-        "REVOKE SELECT ON TABLE Singers FROM ROLE new_parent",
-        "DROP ROLE new_parent",
-    ]:
-        try:
-            admin.update_database_ddl(
-                request={"database": db_path, "statements": [cleanup_stmt]}
-            ).result(timeout=120)
-        except exceptions.GoogleAPICallError:
-            pass
 
-    add_and_drop_database_role.add_and_drop_database_role(
-        conftest.LIVE_PROJECT_ID,
-        conftest.LIVE_INSTANCE_ID,
-        conftest.LIVE_DATABASE_ID,
-    )
-    out, err = capsys.readouterr()
-    assert err == ""
-    assert conftest.LIVE_PROJECT_ID not in out
-    assert "Active Role: new_parent" in out
-    assert "Dropped Role: new_child" in out
+    def cleanup_roles() -> None:
+        for cleanup_stmt in [
+            "REVOKE ROLE new_parent FROM ROLE new_child",
+            "DROP ROLE new_child",
+            "REVOKE SELECT ON TABLE Singers FROM ROLE new_parent",
+            "DROP ROLE new_parent",
+        ]:
+            try:
+                admin.update_database_ddl(
+                    request={"database": db_path, "statements": [cleanup_stmt]}
+                ).result(timeout=120)
+            except exceptions.GoogleAPICallError:
+                pass
+
+    cleanup_roles()
+    try:
+        add_and_drop_database_role.add_and_drop_database_role(
+            conftest.LIVE_PROJECT_ID,
+            conftest.LIVE_INSTANCE_ID,
+            conftest.LIVE_DATABASE_ID,
+        )
+        out, err = capsys.readouterr()
+        assert err == ""
+        assert conftest.LIVE_PROJECT_ID not in out
+        assert "Active Role: new_parent" in out
+        assert "Dropped Role: new_child" in out
+    finally:
+        cleanup_roles()
