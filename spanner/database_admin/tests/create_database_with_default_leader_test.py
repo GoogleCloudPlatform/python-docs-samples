@@ -129,6 +129,10 @@ def test_create_database_with_default_leader_cli_entrypoint(
 def test_create_database_with_default_leader_live(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
+    required = ("SPANNER_MR_INSTANCE_ID",)
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     mr_instance = os.environ["SPANNER_MR_INSTANCE_ID"]
     admin = spanner_admin_database_v1.DatabaseAdminClient()
     temp_db_id = f"example-ldr-{uuid.uuid4().hex[:6]}"
