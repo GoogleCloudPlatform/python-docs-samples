@@ -34,8 +34,10 @@ def query_with_parameter(project_id: str, instance_id: str, database_id: str) ->
         with database.snapshot() as snapshot:
             rows = list(
                 snapshot.execute_sql(
-                    "SELECT SingerId, FirstName, LastName FROM Singers "
-                    "WHERE LastName = @lastName",
+                    """
+                    SELECT SingerId, FirstName, LastName FROM Singers
+                    WHERE LastName = @lastName
+                    """,
                     params={"lastName": "Garcia"},
                     param_types={"lastName": spanner.param_types.STRING},
                 )
