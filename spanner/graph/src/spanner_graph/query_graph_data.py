@@ -29,12 +29,12 @@ def query_graph_data(project_id: str, instance_id: str, database_id: str) -> Non
     """
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
-    gql = (
-        "GRAPH FinGraph "
-        "MATCH (a:Person)-[o:Owns]->()-[t:Transfers]->()<-[p:Owns]-(b:Person) "
-        "RETURN a.name AS sender, b.name AS receiver, "
-        "       t.amount, t.create_time AS transfer_at"
-    )
+    gql = """
+        GRAPH FinGraph
+        MATCH (a:Person)-[o:Owns]->()-[t:Transfers]->()<-[p:Owns]-(b:Person)
+        RETURN a.name AS sender, b.name AS receiver,
+               t.amount, t.create_time AS transfer_at
+    """
 
     try:
         with database.snapshot() as snapshot:
