@@ -31,11 +31,11 @@ def query_information_schema_database_options(
     """
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
-    sql = (
-        "SELECT OPTION_VALUE AS default_leader "
-        "FROM INFORMATION_SCHEMA.DATABASE_OPTIONS "
-        "WHERE SCHEMA_NAME = '' AND OPTION_NAME = 'default_leader'"
-    )
+    sql = """
+        SELECT OPTION_VALUE AS default_leader
+        FROM INFORMATION_SCHEMA.DATABASE_OPTIONS
+        WHERE SCHEMA_NAME = '' AND OPTION_NAME = 'default_leader'
+    """
 
     try:
         with database.snapshot() as snapshot:
