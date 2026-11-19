@@ -39,10 +39,12 @@ def query_with_json_parameter(
         with database.snapshot() as snapshot:
             rows = list(
                 snapshot.execute_sql(
-                    "SELECT VenueId, VenueDetails "
-                    "FROM Venues "
-                    "WHERE JSON_VALUE(VenueDetails, '$.rating') = "
-                    "JSON_VALUE(@details, '$.rating')",
+                    """
+                    SELECT VenueId, VenueDetails
+                    FROM Venues
+                    WHERE JSON_VALUE(VenueDetails, '$.rating') =
+                    JSON_VALUE(@details, '$.rating')
+                    """,
                     params={"details": details_json},
                     param_types={"details": param_types.JSON},
                 )
