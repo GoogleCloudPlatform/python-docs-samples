@@ -36,11 +36,11 @@ def update_data_with_timestamp_dml(
 
     def update_albums(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal updated_rows
-        updated_rows = transaction.execute_update(
-            "UPDATE Albums "
-            "SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP() "
-            "WHERE SingerId = 1"
-        )
+        updated_rows = transaction.execute_update("""
+            UPDATE Albums
+            SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP()
+            WHERE SingerId = 1
+        """)
 
     try:
         database.run_in_transaction(update_albums)
