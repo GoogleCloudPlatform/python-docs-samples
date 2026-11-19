@@ -37,11 +37,13 @@ def create_postgresql_sequence(
         database=database_path,
         statements=[
             "CREATE SEQUENCE Seq BIT_REVERSED_POSITIVE",
-            "CREATE TABLE Customers ("
-            "  CustomerId bigint DEFAULT nextval('Seq'),"
-            "  CustomerName character varying(1024),"
-            "  PRIMARY KEY (CustomerId)"
-            ")",
+            """
+            CREATE TABLE Customers (
+              CustomerId bigint DEFAULT nextval('Seq'),
+              CustomerName character varying(1024),
+              PRIMARY KEY (CustomerId)
+            )
+            """,
         ],
     )
     client = spanner.Client(project=project_id)
@@ -50,13 +52,11 @@ def create_postgresql_sequence(
 
     def insert_customers(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal customer_ids
-        rows = list(
-            transaction.execute_sql(
-                "INSERT INTO Customers (CustomerName) VALUES "
-                "('Alice'), ('David'), ('Marc') "
-                "RETURNING CustomerId"
-            )
-        )
+        rows = list(transaction.execute_sql("""
+            INSERT INTO Customers (CustomerName) VALUES
+            ('Alice'), ('David'), ('Marc')
+            RETURNING CustomerId
+        """))
         customer_ids = [int(row[0]) for row in rows]
 
     try:
