@@ -35,7 +35,11 @@ def test_delete_instance_config_success(
 ) -> None:
     delete_instance_config.delete_instance_config(PROJECT_ID, CUSTOM_ID)
 
-    mock_client_class.return_value.delete_instance_config.assert_called_once()
+    client = mock_client_class.return_value
+    client.instance_config_path.assert_called_once_with(PROJECT_ID, CUSTOM_ID)
+    client.delete_instance_config.assert_called_once_with(
+        name=client.instance_config_path.return_value
+    )
     out, err = capsys.readouterr()
     assert f"Resource ID: {CUSTOM_ID}" in out
     assert f"Deleted Config: {CUSTOM_ID}" in out
