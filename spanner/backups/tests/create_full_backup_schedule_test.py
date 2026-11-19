@@ -127,7 +127,8 @@ def test_create_full_backup_schedule_live(capsys: pytest.CaptureFixture[str]) ->
         conftest.LIVE_DATABASE_ID,
     )
     for existing in admin.list_backup_schedules(parent=db_path):
-        admin.delete_backup_schedule(name=existing.name)
+        if existing.name.split("/")[-1].startswith("example-fsc-"):
+            admin.delete_backup_schedule(name=existing.name)
     sid = f"example-fsc-{uuid.uuid4().hex[:6]}"
     spath = admin.backup_schedule_path(
         conftest.LIVE_PROJECT_ID,
