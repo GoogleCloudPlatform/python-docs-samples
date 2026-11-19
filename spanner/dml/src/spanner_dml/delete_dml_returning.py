@@ -36,10 +36,10 @@ def delete_dml_returning(project_id: str, instance_id: str, database_id: str) ->
     def delete_singers(transaction: spanner_v1.Transaction) -> None:
         nonlocal row_count
         deleted_singers.clear()
-        results = transaction.execute_sql(
-            "DELETE FROM Singers WHERE FirstName = 'David' "
-            "THEN RETURN SingerId, FullName"
-        )
+        results = transaction.execute_sql("""
+            DELETE FROM Singers WHERE FirstName = 'David'
+            THEN RETURN SingerId, FullName
+        """)
         for singer_id, full_name in results:
             deleted_singers.append((int(singer_id), str(full_name)))
         row_count = int(results.stats.row_count_exact) if results.stats else 0
