@@ -43,13 +43,11 @@ def alter_postgresql_sequence(
 
     def insert_customers(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal customer_ids
-        rows = list(
-            transaction.execute_sql(
-                "INSERT INTO Customers (CustomerName) VALUES "
-                "('Lea'), ('Cataline'), ('Smith') "
-                "RETURNING CustomerId"
-            )
-        )
+        rows = list(transaction.execute_sql("""
+            INSERT INTO Customers (CustomerName) VALUES
+            ('Lea'), ('Cataline'), ('Smith')
+            RETURNING CustomerId
+        """))
         customer_ids = [int(row[0]) for row in rows]
 
     try:
