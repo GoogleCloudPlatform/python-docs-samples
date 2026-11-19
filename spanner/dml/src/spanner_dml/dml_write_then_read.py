@@ -35,10 +35,10 @@ def write_and_read_dml(project_id: str, instance_id: str, database_id: str) -> N
 
     def write_then_read(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal inserted_rows, read_rows
-        inserted_rows = transaction.execute_update(
-            "INSERT INTO Singers (SingerId, FirstName, LastName) "
-            "VALUES (11, 'Timothy', 'Campbell')"
-        )
+        inserted_rows = transaction.execute_update("""
+            INSERT INTO Singers (SingerId, FirstName, LastName)
+            VALUES (11, 'Timothy', 'Campbell')
+        """)
         read_rows = list(
             transaction.execute_sql(
                 "SELECT FirstName, LastName FROM Singers WHERE SingerId = 11"
