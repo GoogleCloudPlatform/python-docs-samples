@@ -126,6 +126,14 @@ def test_create_backup_with_mr_cmek_cli_entrypoint(
 
 @conftest.live_only
 def test_create_backup_with_mr_cmek_live(capsys: pytest.CaptureFixture[str]) -> None:
+    required = (
+        "SPANNER_MR_INSTANCE_ID",
+        "SPANNER_MR_DATABASE_ID",
+        "SPANNER_MR_KMS_KEY_NAMES",
+    )
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     mr_inst = os.environ["SPANNER_MR_INSTANCE_ID"]
     mr_db = os.environ["SPANNER_MR_DATABASE_ID"]
     mr_keys = [k for k in os.environ["SPANNER_MR_KMS_KEY_NAMES"].split(",") if k]
