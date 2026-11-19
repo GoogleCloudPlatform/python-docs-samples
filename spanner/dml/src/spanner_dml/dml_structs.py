@@ -43,9 +43,11 @@ def update_dml_with_struct(project_id: str, instance_id: str, database_id: str) 
     def write_with_struct(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal updated_rows
         updated_rows = transaction.execute_update(
-            "UPDATE Singers SET LastName = 'Grant' "
-            "WHERE STRUCT<FirstName STRING, LastName STRING>"
-            "(FirstName, LastName) = @name",
+            """
+            UPDATE Singers SET LastName = 'Grant'
+            WHERE STRUCT<FirstName STRING, LastName STRING>
+            (FirstName, LastName) = @name
+            """,
             params={"name": record_value},
             param_types={"name": record_type},
         )
