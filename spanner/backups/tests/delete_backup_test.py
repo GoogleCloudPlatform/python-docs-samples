@@ -80,6 +80,25 @@ def test_delete_backup_errors(
 
 
 @mock.patch(ADMIN_CLIENT)
+def test_delete_backup_times_out_while_referenced(
+    mock_client_class: mock.MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _setup_admin(mock_client_class)
+    client = mock_client_class.return_value
+    client.get_backup.return_value.referencing_databases = ["restored-db"]
+
+    with mock.patch.object(delete_backup, "time") as mock_time:
+        mock_time.monotonic.side_effect = [0.0, 2000.0]
+        delete_backup.delete_backup(PROJECT_ID, INSTANCE_ID, BACKUP_ID)
+
+    client.delete_backup.assert_not_called()
+    out, err = capsys.readouterr()
+    assert f"Waiting for backup '{BACKUP_ID}' to be unreferenced..." in out
+    assert err.startswith(f"error: timed out waiting to delete backup '{BACKUP_ID}'")
+    assert PROJECT_ID not in err
+
+
+@mock.patch(ADMIN_CLIENT)
 def test_delete_backup_cli_entrypoint(
     mock_client_class: mock.MagicMock,
     monkeypatch: pytest.MonkeyPatch,
@@ -106,6 +125,10 @@ def test_delete_backup_cli_entrypoint(
 
 @conftest.live_only
 def test_delete_backup_live(capsys: pytest.CaptureFixture[str]) -> None:
+    required = ("SPANNER_DISPOSABLE_BACKUP_ID",)
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     disposable_bkp = os.environ["SPANNER_DISPOSABLE_BACKUP_ID"]
     delete_backup.delete_backup(
         conftest.LIVE_PROJECT_ID,

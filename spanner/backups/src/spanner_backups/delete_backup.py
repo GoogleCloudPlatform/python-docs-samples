@@ -34,14 +34,25 @@ def delete_backup(project_id: str, instance_id: str, backup_id: str) -> None:
     delete_request = spanner_admin_database_v1.DeleteBackupRequest(name=backup_path)
 
     def wait_until_unreferenced() -> None:
+        deadline = time.monotonic() + 1800
         backup = client.get_backup(request=get_request)
+        if backup.referencing_databases:
+            print(f"Waiting for backup '{backup_id}' to be unreferenced...")
         while backup.referencing_databases:
+            if time.monotonic() > deadline:
+                raise TimeoutError("restored databases still reference the backup")
             time.sleep(10)
             backup = client.get_backup(request=get_request)
 
     try:
         wait_until_unreferenced()
         client.delete_backup(request=delete_request)
+    except TimeoutError as err:
+        print(
+            f"error: timed out waiting to delete backup '{backup_id}' on "
+            f"instance '{instance_id}': {err}",
+            file=sys.stderr,
+        )
     except exceptions.NotFound as err:
         print(
             f"error: backup '{backup_id}' on instance '{instance_id}' "
