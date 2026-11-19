@@ -34,10 +34,10 @@ def update_database_with_default_leader(
     database_path = client.database_path(project_id, instance_id, database_id)
     request = spanner_admin_database_v1.UpdateDatabaseDdlRequest(
         database=database_path,
-        statements=[
-            f"ALTER DATABASE `{database_id}` "
-            f"SET OPTIONS (default_leader = '{default_leader}')"
-        ],
+        statements=[f"""
+            ALTER DATABASE `{database_id}`
+            SET OPTIONS (default_leader = '{default_leader}')
+        """],
     )
 
     try:
