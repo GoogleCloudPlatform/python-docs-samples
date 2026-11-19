@@ -130,9 +130,10 @@ def test_create_incremental_backup_schedule_live(
         conftest.LIVE_INSTANCE_ID,
         conftest.LIVE_DATABASE_ID,
     )
-    # Remove any default incremental schedule temporarily if present
+    # Remove schedules left behind by earlier runs of these tests.
     for existing in admin.list_backup_schedules(parent=db_path):
-        admin.delete_backup_schedule(name=existing.name)
+        if existing.name.split("/")[-1].startswith(("example-fsc-", "example-isc-")):
+            admin.delete_backup_schedule(name=existing.name)
 
     sid = f"example-isc-{uuid.uuid4().hex[:6]}"
     spath = admin.backup_schedule_path(
