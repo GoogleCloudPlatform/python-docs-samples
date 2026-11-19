@@ -55,15 +55,19 @@ def set_transaction_tag(project_id: str, instance_id: str, database_id: str) -> 
     def update_venues(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal updated_rows, inserted_rows
         updated_rows = transaction.execute_update(
-            "UPDATE Venues SET Capacity = DIV(Capacity, 4) "
-            "WHERE OutdoorVenue = false AND VenueId IN (4, 42)",
+            """
+            UPDATE Venues SET Capacity = DIV(Capacity, 4)
+            WHERE OutdoorVenue = false AND VenueId IN (4, 42)
+            """,
             request_options=update_opts,
         )
         inserted_rows = transaction.execute_update(
-            "INSERT INTO Venues "
-            "(VenueId, VenueName, Capacity, OutdoorVenue, LastUpdateTime) "
-            "VALUES (@venueId, @venueName, @capacity, @outdoorVenue, "
-            "PENDING_COMMIT_TIMESTAMP())",
+            """
+            INSERT INTO Venues
+            (VenueId, VenueName, Capacity, OutdoorVenue, LastUpdateTime)
+            VALUES (@venueId, @venueName, @capacity, @outdoorVenue,
+            PENDING_COMMIT_TIMESTAMP())
+            """,
             params=venue_params,
             param_types=venue_types,
             request_options=insert_opts,
