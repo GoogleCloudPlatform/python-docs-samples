@@ -126,6 +126,10 @@ def test_enable_fine_grained_access_cli_entrypoint(
 
 @conftest.live_only
 def test_enable_fine_grained_access_live(capsys: pytest.CaptureFixture[str]) -> None:
+    required = ("SPANNER_FGAC_IAM_MEMBER",)
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     iam_member = os.environ["SPANNER_FGAC_IAM_MEMBER"]
     admin = spanner_admin_database_v1.DatabaseAdminClient()
     db_path = admin.database_path(
