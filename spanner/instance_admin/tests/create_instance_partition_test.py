@@ -127,6 +127,10 @@ def test_create_instance_partition_cli_entrypoint(
 
 @conftest.live_only
 def test_create_instance_partition_live(capsys: pytest.CaptureFixture[str]) -> None:
+    required = ("SPANNER_MR_INSTANCE_ID",)
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     ep_inst = os.environ["SPANNER_MR_INSTANCE_ID"]
     admin = spanner_admin_instance_v1.InstanceAdminClient()
     part_id = f"example-prt-{uuid.uuid4().hex[:6]}"
