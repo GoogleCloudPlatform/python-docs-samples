@@ -33,10 +33,10 @@ def alter_sequence(project_id: str, instance_id: str, database_id: str) -> None:
     database_path = admin_client.database_path(project_id, instance_id, database_id)
     ddl_request = spanner_admin_database_v1.UpdateDatabaseDdlRequest(
         database=database_path,
-        statements=[
-            "ALTER SEQUENCE Seq SET OPTIONS "
-            "(skip_range_min = 1000, skip_range_max = 5000000)"
-        ],
+        statements=["""
+            ALTER SEQUENCE Seq SET OPTIONS
+            (skip_range_min = 1000, skip_range_max = 5000000)
+        """],
     )
     client = spanner.Client(project=project_id)
     database = client.instance(instance_id).database(database_id)
@@ -44,13 +44,11 @@ def alter_sequence(project_id: str, instance_id: str, database_id: str) -> None:
 
     def insert_customers(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal customer_ids
-        rows = list(
-            transaction.execute_sql(
-                "INSERT INTO Customers (CustomerName) VALUES "
-                "('Lea'), ('Cataline'), ('Smith') "
-                "THEN RETURN CustomerId"
-            )
-        )
+        rows = list(transaction.execute_sql("""
+            INSERT INTO Customers (CustomerName) VALUES
+            ('Lea'), ('Cataline'), ('Smith')
+            THEN RETURN CustomerId
+        """))
         customer_ids = [int(row[0]) for row in rows]
 
     try:
