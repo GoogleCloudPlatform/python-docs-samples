@@ -32,10 +32,10 @@ def create_storing_index(project_id: str, instance_id: str, database_id: str) ->
     index_name = "AlbumsByAlbumTitle2"
     request = spanner_admin_database_v1.UpdateDatabaseDdlRequest(
         database=database_path,
-        statements=[
-            f"CREATE INDEX {index_name} ON Albums(AlbumTitle) "
-            "STORING (MarketingBudget)"
-        ],
+        statements=[f"""
+            CREATE INDEX {index_name} ON Albums(AlbumTitle)
+            STORING (MarketingBudget)
+        """],
     )
 
     try:
