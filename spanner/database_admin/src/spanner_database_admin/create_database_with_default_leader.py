@@ -36,20 +36,26 @@ def create_database_with_default_leader(
         parent=parent,
         create_statement=f"CREATE DATABASE `{database_id}`",
         extra_statements=[
-            "CREATE TABLE Singers ("
-            "  SingerId INT64 NOT NULL,"
-            "  FirstName STRING(1024),"
-            "  LastName STRING(1024),"
-            "  SingerInfo BYTES(MAX)"
-            ") PRIMARY KEY (SingerId)",
-            "CREATE TABLE Albums ("
-            "  SingerId INT64 NOT NULL,"
-            "  AlbumId INT64 NOT NULL,"
-            "  AlbumTitle STRING(MAX)"
-            ") PRIMARY KEY (SingerId, AlbumId),"
-            "  INTERLEAVE IN PARENT Singers ON DELETE CASCADE",
-            f"ALTER DATABASE `{database_id}` "
-            f"SET OPTIONS (default_leader = '{default_leader}')",
+            """
+            CREATE TABLE Singers (
+              SingerId INT64 NOT NULL,
+              FirstName STRING(1024),
+              LastName STRING(1024),
+              SingerInfo BYTES(MAX)
+            ) PRIMARY KEY (SingerId)
+            """,
+            """
+            CREATE TABLE Albums (
+              SingerId INT64 NOT NULL,
+              AlbumId INT64 NOT NULL,
+              AlbumTitle STRING(MAX)
+            ) PRIMARY KEY (SingerId, AlbumId),
+              INTERLEAVE IN PARENT Singers ON DELETE CASCADE
+            """,
+            f"""
+            ALTER DATABASE `{database_id}`
+            SET OPTIONS (default_leader = '{default_leader}')
+            """,
         ],
     )
 
