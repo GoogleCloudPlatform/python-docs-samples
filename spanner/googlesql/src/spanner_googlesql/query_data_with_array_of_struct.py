@@ -48,9 +48,11 @@ def query_data_with_array_of_struct(
         with database.snapshot() as snapshot:
             rows = list(
                 snapshot.execute_sql(
-                    "SELECT SingerId FROM Singers WHERE "
-                    "STRUCT<FirstName STRING, LastName STRING>"
-                    "(FirstName, LastName) IN UNNEST(@names)",
+                    """
+                    SELECT SingerId FROM Singers WHERE
+                    STRUCT<FirstName STRING, LastName STRING>
+                    (FirstName, LastName) IN UNNEST(@names)
+                    """,
                     params={"names": band_members},
                     param_types={"names": param_types.Array(name_type)},
                 )
