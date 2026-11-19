@@ -128,6 +128,10 @@ def test_restore_backup_with_encryption_key_cli_entrypoint(
 def test_restore_backup_with_encryption_key_live(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
+    required = ("SPANNER_BACKUP_ID", "SPANNER_KMS_KEY_NAME")
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     src_bkp = os.environ["SPANNER_BACKUP_ID"]
     kms_key = os.environ["SPANNER_KMS_KEY_NAME"]
     admin = spanner_admin_database_v1.DatabaseAdminClient()
