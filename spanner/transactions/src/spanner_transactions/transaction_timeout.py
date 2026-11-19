@@ -37,17 +37,15 @@ def execute_transaction_with_timeout(
 
     def read_then_write(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal read_count, inserted_rows
-        rows = list(
-            transaction.execute_sql(
-                "SELECT SingerId, FirstName, LastName "
-                "FROM Singers ORDER BY LastName, FirstName"
-            )
-        )
+        rows = list(transaction.execute_sql("""
+            SELECT SingerId, FirstName, LastName
+            FROM Singers ORDER BY LastName, FirstName
+        """))
         read_count = len(rows)
-        inserted_rows = transaction.execute_update(
-            "INSERT INTO Singers (SingerId, FirstName, LastName) "
-            "VALUES (100, 'George', 'Washington')"
-        )
+        inserted_rows = transaction.execute_update("""
+            INSERT INTO Singers (SingerId, FirstName, LastName)
+            VALUES (100, 'George', 'Washington')
+        """)
 
     try:
         database.run_in_transaction(read_then_write, timeout_secs=60)
