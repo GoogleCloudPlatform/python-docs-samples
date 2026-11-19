@@ -98,6 +98,29 @@ def test_create_instance_config_errors(
 
 
 @mock.patch(ADMIN_CLIENT)
+def test_create_instance_config_without_optional_replicas(
+    mock_client_class: mock.MagicMock, capsys: pytest.CaptureFixture[str]
+) -> None:
+    client = mock_client_class.return_value
+    client.instance_config_path.side_effect = (
+        lambda p, c: f"projects/{p}/instanceConfigs/{c}"
+    )
+    base_config = _mock_base_config()
+    del base_config.optional_replicas[:]
+    client.get_instance_config.return_value = base_config
+
+    create_instance_config.create_instance_config(PROJECT_ID, CUSTOM_ID, BASE_ID)
+
+    client.create_instance_config.assert_not_called()
+    out, err = capsys.readouterr()
+    assert out == ""
+    assert err.startswith(
+        "error: cannot create custom instance config from base config"
+    )
+    assert PROJECT_ID not in err
+
+
+@mock.patch(ADMIN_CLIENT)
 def test_create_instance_config_cli_entrypoint(
     mock_client_class: mock.MagicMock,
     monkeypatch: pytest.MonkeyPatch,

@@ -36,6 +36,8 @@ def create_instance_config(
 
     try:
         base_config = client.get_instance_config(name=base_config_path)
+        if not base_config.optional_replicas:
+            raise ValueError("base config has no optional replicas to add")
         replicas = list(base_config.replicas) + [base_config.optional_replicas[0]]
         custom_config = spanner_admin_instance_v1.InstanceConfig(
             name=custom_config_path,
@@ -53,6 +55,12 @@ def create_instance_config(
         operation = client.create_instance_config(request=request)
         print(f"Waiting for custom instance config '{custom_config_id}'...")
         created = operation.result(timeout=300)
+    except ValueError as err:
+        print(
+            f"error: cannot create custom instance config from base config "
+            f"'{base_config_id}': {err}",
+            file=sys.stderr,
+        )
     except exceptions.AlreadyExists as err:
         print(
             f"error: custom instance config '{custom_config_id}' already "
