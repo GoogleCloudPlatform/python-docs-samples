@@ -133,13 +133,11 @@ def test_update_postgresql_dml_last_statement_live(
     database = client.instance(conftest.LIVE_INSTANCE_ID).database(
         conftest.LIVE_DATABASE_ID
     )
-    database.run_in_transaction(
-        lambda txn: txn.execute_update(
-            "INSERT INTO Singers (SingerId, FirstName, LastName) "
-            "VALUES (54214, 'John', 'Smith') "
-            "ON CONFLICT (SingerId) DO UPDATE SET LastName = 'Smith'"
-        )
-    )
+    database.run_in_transaction(lambda txn: txn.execute_update("""
+        INSERT INTO Singers (SingerId, FirstName, LastName)
+        VALUES (54214, 'John', 'Smith')
+        ON CONFLICT (SingerId) DO UPDATE SET LastName = 'Smith'
+    """))
     try:
         postgresql_dml_last_statement.update_postgresql_dml_last_statement(
             conftest.LIVE_PROJECT_ID,
