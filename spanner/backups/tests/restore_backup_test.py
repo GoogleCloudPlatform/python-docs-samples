@@ -120,6 +120,10 @@ def test_restore_backup_cli_entrypoint(
 
 @conftest.live_only
 def test_restore_backup_live(capsys: pytest.CaptureFixture[str]) -> None:
+    required = ("SPANNER_BACKUP_ID",)
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     src_bkp = os.environ["SPANNER_BACKUP_ID"]
     admin = spanner_admin_database_v1.DatabaseAdminClient()
     new_db = f"example-rst-{uuid.uuid4().hex[:6]}"
