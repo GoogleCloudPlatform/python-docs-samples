@@ -42,11 +42,13 @@ def create_database_with_mr_cmek(
         parent=parent,
         create_statement=f"CREATE DATABASE `{database_id}`",
         extra_statements=[
-            "CREATE TABLE Singers ("
-            "  SingerId INT64 NOT NULL,"
-            "  FirstName STRING(1024),"
-            "  LastName STRING(1024)"
-            ") PRIMARY KEY (SingerId)",
+            """
+            CREATE TABLE Singers (
+              SingerId INT64 NOT NULL,
+              FirstName STRING(1024),
+              LastName STRING(1024)
+            ) PRIMARY KEY (SingerId)
+            """,
         ],
         encryption_config=encryption_config,
     )
