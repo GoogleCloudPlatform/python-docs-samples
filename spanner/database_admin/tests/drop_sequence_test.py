@@ -39,6 +39,13 @@ def test_drop_sequence_success(
 
     drop_sequence.drop_sequence(PROJECT_ID, INSTANCE_ID, DATABASE_ID)
 
+    client = mock_client_class.return_value
+    request = client.update_database_ddl.call_args.kwargs["request"]
+    assert request.database == client.database_path.return_value
+    assert request.statements == [
+        "ALTER TABLE Customers ALTER COLUMN CustomerId DROP DEFAULT",
+        "DROP SEQUENCE Seq",
+    ]
     out, err = capsys.readouterr()
     assert f"Resource ID: {DATABASE_ID}" in out
     assert "Dropped Sequence: Seq" in out
