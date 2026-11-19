@@ -36,14 +36,14 @@ def insert_dml_returning(project_id: str, instance_id: str, database_id: str) ->
     def insert_singers(transaction: spanner_v1.Transaction) -> None:
         nonlocal row_count
         inserted_names.clear()
-        results = transaction.execute_sql(
-            "INSERT INTO Singers (SingerId, FirstName, LastName) VALUES "
-            "(21, 'Luann', 'Chizoba'), "
-            "(22, 'Denis', 'Patricio'), "
-            "(23, 'Felix', 'Ronan'), "
-            "(24, 'Dominik', 'Martyna') "
-            "THEN RETURN FullName"
-        )
+        results = transaction.execute_sql("""
+            INSERT INTO Singers (SingerId, FirstName, LastName) VALUES
+            (21, 'Luann', 'Chizoba'),
+            (22, 'Denis', 'Patricio'),
+            (23, 'Felix', 'Ronan'),
+            (24, 'Dominik', 'Martyna')
+            THEN RETURN FullName
+        """)
         for row in results:
             inserted_names.append(str(row[0]))
         row_count = int(results.stats.row_count_exact) if results.stats else 0
