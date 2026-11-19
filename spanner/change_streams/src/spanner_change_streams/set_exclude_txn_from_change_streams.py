@@ -40,10 +40,10 @@ def set_exclude_txn_from_change_streams(
 
     def insert_and_update_singer(transaction: spanner_v1.Transaction) -> None:
         nonlocal modified_statements
-        inserted = transaction.execute_update(
-            "INSERT OR UPDATE Singers (SingerId, FirstName, LastName) "
-            "VALUES (101, ' Virginia', 'Watson')"
-        )
+        inserted = transaction.execute_update("""
+            INSERT OR UPDATE Singers (SingerId, FirstName, LastName)
+            VALUES (101, ' Virginia', 'Watson')
+        """)
         updated = transaction.execute_update(
             "UPDATE Singers SET FirstName = 'Virginia' WHERE SingerId = 101"
         )
