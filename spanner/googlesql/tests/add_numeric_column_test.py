@@ -119,12 +119,12 @@ def test_add_numeric_column_live(capsys: pytest.CaptureFixture[str]) -> None:
             request=spanner_admin_database_v1.CreateDatabaseRequest(
                 parent=parent,
                 create_statement=f"CREATE DATABASE `{temp_db_id}`",
-                extra_statements=[
-                    "CREATE TABLE Venues ("
-                    "  VenueId INT64 NOT NULL,"
-                    "  VenueName STRING(1024)"
-                    ") PRIMARY KEY (VenueId)"
-                ],
+                extra_statements=["""
+                    CREATE TABLE Venues (
+                      VenueId INT64 NOT NULL,
+                      VenueName STRING(1024)
+                    ) PRIMARY KEY (VenueId)
+                """],
             )
         ).result(timeout=300)
 
