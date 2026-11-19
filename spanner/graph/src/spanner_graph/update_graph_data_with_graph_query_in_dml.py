@@ -36,14 +36,13 @@ def update_graph_data_with_graph_query_in_dml(
 
     def update_accounts(transaction: spanner_v1.transaction.Transaction) -> None:
         nonlocal updated_accounts
-        updated_accounts = transaction.execute_update(
-            "UPDATE Account SET is_blocked = true "
-            "WHERE id IN {"
-            "  GRAPH FinGraph "
-            "  MATCH (a:Account WHERE a.id = 1)-[:Transfers]->{1,2}(b:Account) "
-            "  RETURN b.id"
-            "}"
-        )
+        updated_accounts = transaction.execute_update("""
+            UPDATE Account SET is_blocked = true
+            WHERE id IN {
+              GRAPH FinGraph
+              MATCH (a:Account WHERE a.id = 1)-[:Transfers]->{1,2}(b:Account)
+              RETURN b.id}
+        """)
 
     try:
         database.run_in_transaction(update_accounts)
