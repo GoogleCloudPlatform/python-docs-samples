@@ -39,9 +39,11 @@ def query_data_with_index(project_id: str, instance_id: str, database_id: str) -
         with database.snapshot() as snapshot:
             rows = list(
                 snapshot.execute_sql(
-                    "SELECT AlbumId, AlbumTitle, MarketingBudget "
-                    "FROM Albums@{FORCE_INDEX=AlbumsByAlbumTitle} "
-                    "WHERE AlbumTitle >= @start_title AND AlbumTitle < @end_title",
+                    """
+                    SELECT AlbumId, AlbumTitle, MarketingBudget
+                    FROM Albums@{FORCE_INDEX=AlbumsByAlbumTitle}
+                    WHERE AlbumTitle >= @start_title AND AlbumTitle < @end_title
+                    """,
                     params=params,
                     param_types=types,
                 )
