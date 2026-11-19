@@ -32,13 +32,13 @@ def create_vector_index(project_id: str, instance_id: str, database_id: str) -> 
     index_name = "DocEmbeddingIndex"
 
     # STORING WordCount lets ANN queries filter at the vector index leaf level.
-    ddl_statement = (
-        f"CREATE VECTOR INDEX {index_name} "
-        "ON Documents(DocEmbedding) "
-        "STORING (WordCount) "
-        "WHERE DocEmbedding IS NOT NULL "
-        "OPTIONS (distance_type = 'COSINE')"
-    )
+    ddl_statement = f"""
+        CREATE VECTOR INDEX {index_name}
+        ON Documents(DocEmbedding)
+        STORING (WordCount)
+        WHERE DocEmbedding IS NOT NULL
+        OPTIONS (distance_type = 'COSINE')
+    """
     request = spanner_admin_database_v1.UpdateDatabaseDdlRequest(
         database=database_path,
         statements=[ddl_statement],
