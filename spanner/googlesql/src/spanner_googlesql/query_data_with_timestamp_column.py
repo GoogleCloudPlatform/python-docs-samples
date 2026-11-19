@@ -34,12 +34,10 @@ def query_data_with_timestamp(
 
     try:
         with database.snapshot() as snapshot:
-            rows = list(
-                snapshot.execute_sql(
-                    "SELECT SingerId, AlbumId, MarketingBudget, LastUpdateTime "
-                    "FROM Albums ORDER BY LastUpdateTime DESC"
-                )
-            )
+            rows = list(snapshot.execute_sql("""
+                SELECT SingerId, AlbumId, MarketingBudget, LastUpdateTime
+                FROM Albums ORDER BY LastUpdateTime DESC
+            """))
     except exceptions.NotFound as err:
         print(
             f"error: database '{database_id}' on instance '{instance_id}' "
