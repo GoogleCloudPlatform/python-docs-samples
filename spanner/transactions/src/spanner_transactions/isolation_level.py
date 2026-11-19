@@ -56,10 +56,10 @@ def run_transaction_with_isolation_level(
         if row is None:
             raise ValueError("Album row not found.")
         previous_title = str(row[0])
-        updated_rows = transaction.execute_update(
-            "UPDATE Albums SET AlbumTitle = 'A New Title' "
-            "WHERE SingerId = 1 AND AlbumId = 1"
-        )
+        updated_rows = transaction.execute_update("""
+            UPDATE Albums SET AlbumTitle = 'A New Title'
+            WHERE SingerId = 1 AND AlbumId = 1
+        """)
 
     try:
         database.run_in_transaction(
