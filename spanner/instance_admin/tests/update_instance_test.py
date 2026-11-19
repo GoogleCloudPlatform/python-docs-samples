@@ -106,6 +106,10 @@ def test_update_instance_cli_entrypoint(
 
 @conftest.live_only
 def test_update_instance_live(capsys: pytest.CaptureFixture[str]) -> None:
+    required = ("SPANNER_INSTANCE_ID",)
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     live_inst = os.environ["SPANNER_INSTANCE_ID"]
     admin = spanner_admin_instance_v1.InstanceAdminClient()
     inst_path = admin.instance_path(conftest.LIVE_PROJECT_ID, live_inst)
