@@ -131,6 +131,10 @@ def test_create_database_with_encryption_key_cli_entrypoint(
 def test_create_database_with_encryption_key_live(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
+    required = ("SPANNER_KMS_KEY_NAME",)
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:
+        pytest.skip(f"Set {', '.join(missing)} to run this live test.")
     kms_key = os.environ["SPANNER_KMS_KEY_NAME"]
     admin = spanner_admin_database_v1.DatabaseAdminClient()
     temp_db_id = f"example-cmk-{uuid.uuid4().hex[:6]}"
