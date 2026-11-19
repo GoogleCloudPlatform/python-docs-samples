@@ -40,21 +40,25 @@ def create_postgresql_database(
     ddl_request = spanner_admin_database_v1.UpdateDatabaseDdlRequest(
         database=database_path,
         statements=[
-            "CREATE TABLE Singers ("
-            "  SingerId bigint NOT NULL,"
-            "  FirstName character varying(1024),"
-            "  LastName character varying(1024),"
-            "  SingerInfo bytea,"
-            "  FullName character varying(2048) "
-            "    GENERATED ALWAYS AS (FirstName || ' ' || LastName) STORED,"
-            "  PRIMARY KEY (SingerId)"
-            ")",
-            "CREATE TABLE Albums ("
-            "  SingerId bigint NOT NULL,"
-            "  AlbumId bigint NOT NULL,"
-            "  AlbumTitle character varying(1024),"
-            "  PRIMARY KEY (SingerId, AlbumId)"
-            ") INTERLEAVE IN PARENT Singers ON DELETE CASCADE",
+            """
+            CREATE TABLE Singers (
+              SingerId bigint NOT NULL,
+              FirstName character varying(1024),
+              LastName character varying(1024),
+              SingerInfo bytea,
+              FullName character varying(2048)
+                GENERATED ALWAYS AS (FirstName || ' ' || LastName) STORED,
+              PRIMARY KEY (SingerId)
+            )
+            """,
+            """
+            CREATE TABLE Albums (
+              SingerId bigint NOT NULL,
+              AlbumId bigint NOT NULL,
+              AlbumTitle character varying(1024),
+              PRIMARY KEY (SingerId, AlbumId)
+            ) INTERLEAVE IN PARENT Singers ON DELETE CASCADE
+            """,
         ],
     )
 
