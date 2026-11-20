@@ -47,4 +47,7 @@ def get_rapid_cache(bucket_name: str, cache_id: str) -> None:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print(f"Usage: python {sys.argv[0]} <bucket_name> <cache_id>")
+        sys.exit(1)
     get_rapid_cache(bucket_name=sys.argv[1], cache_id=sys.argv[2])
