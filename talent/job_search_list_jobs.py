@@ -38,10 +38,10 @@ def list_jobs(project_id, tenant_id, filter_):
     results = []
     for job in client.list_jobs(parent=parent, filter=filter_):
         results.append(job.name)
-        print("Job name: {job.name}")
-        print("Job requisition ID: {job.requisition_id}")
-        print("Job title: {job.title}")
-        print("Job description: {job.description}")
+        print(f"Job name: {job.name}")
+        print(f"Job requisition ID: {job.requisition_id}")
+        print(f"Job title: {job.title}")
+        print(f"Job description: {job.description}")
     return results
 
 

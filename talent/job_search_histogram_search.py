@@ -55,12 +55,12 @@ def search_jobs(project_id, tenant_id, query):
         histogram_queries=histogram_queries,
     )
     for response_item in client.search_jobs(request=request).matching_jobs:
-        print("Job summary: {response_item.job_summary}")
-        print("Job title snippet: {response_item.job_title_snippet}")
+        print(f"Job summary: {response_item.job_summary}")
+        print(f"Job title snippet: {response_item.job_title_snippet}")
         job = response_item.job
         results.append(job)
-        print("Job name: {job.name}")
-        print("Job title: {job.title}")
+        print(f"Job name: {job.name}")
+        print(f"Job title: {job.title}")
     return results
 
 
