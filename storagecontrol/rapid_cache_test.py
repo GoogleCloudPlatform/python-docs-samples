@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Exercises the Rapid Cache samples end to end.
 import os
 
 import create_rapid_cache
