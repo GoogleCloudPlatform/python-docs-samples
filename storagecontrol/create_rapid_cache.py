@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Rapid Cache sample (see the storage control documentation).
 import sys
 
 # [START storage_control_create_rapid_cache]
