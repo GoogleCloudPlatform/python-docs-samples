@@ -26,7 +26,7 @@ beartype==0.22.9
     # via apache-beam
 cachetools==6.2.6
     # via apache-beam
-certifi==2026.7.22
+certifi==2026.10.18
     # via
     #   google-cloud-aiplatform
     #   httpcore
