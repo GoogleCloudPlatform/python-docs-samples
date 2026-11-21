@@ -56,11 +56,9 @@ Set the following environment variables:
 
 To run list_clusters.py:
 
-    python list_clusters.py $GOOGLE_CLOUD_PROJECT --region=$REGION
+    python list_clusters.py --project_id=$GOOGLE_CLOUD_PROJECT --region=$REGION
 
-`submit_job_to_cluster.py` can create the Dataproc cluster or use an existing cluster. To create a cluster before running the code, you can use the [Cloud Console](console.cloud.google.com) or run:
-
-    gcloud dataproc clusters create your-cluster-name
+`submit_job_to_cluster.py` creates a new Dataproc cluster, runs the job on it, and then deletes the cluster.
 
 To run submit_job_to_cluster.py, first create a GCS bucket (used by Cloud Dataproc to stage files) from the Cloud Console or with gsutil:
 
@@ -71,14 +69,10 @@ Next, set the following environment variables:
     BUCKET=your-staging-bucket
     CLUSTER=your-cluster-name
 
-Then, if you want to use an existing cluster, run:
+Then run:
 
-    python submit_job_to_cluster.py --project_id=$GOOGLE_CLOUD_PROJECT --zone=us-central1-b --cluster_name=$CLUSTER --gcs_bucket=$BUCKET
+    python submit_job_to_cluster.py --project_id=$GOOGLE_CLOUD_PROJECT --region=$REGION --cluster_name=$CLUSTER --gcs_bucket=$BUCKET
 
-Alternatively, to create a new cluster, which will be deleted at the end of the job, run:
-
-    python submit_job_to_cluster.py --project_id=$GOOGLE_CLOUD_PROJECT --zone=us-central1-b --cluster_name=$CLUSTER --gcs_bucket=$BUCKET --create_new_cluster
-
-The script will setup a cluster, upload the PySpark file, submit the job, print the result, then, if it created the cluster, delete the cluster.
+The script will create the cluster, upload the PySpark file, submit the job, print the result, then delete the cluster.
 
 Optionally, you can add the `--pyspark_file` argument to change from the default `pyspark_sort.py` included in this script to a new script.
