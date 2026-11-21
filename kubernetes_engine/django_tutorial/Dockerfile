@@ -11,19 +11,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# The Google App Engine python runtime is Debian Jessie with Python installed
-# and various os-level packages to allow installation of popular Python
-# libraries. The source is on github at:
-# https://github.com/GoogleCloudPlatform/python-docker
-FROM gcr.io/google_appengine/python
+# Use the official lightweight Python image.
+# https://hub.docker.com/_/python
+FROM python:3.14-slim
 
-# Create a virtualenv for the application dependencies.
-# # If you want to use Python 2, use the -p python2.7 flag.
-RUN virtualenv -p python3 /env
-ENV PATH /env/bin:$PATH
+# Allow statements and log messages to immediately appear in the logs
+ENV PYTHONUNBUFFERED True
 
-ADD requirements.txt /app/requirements.txt
-RUN /env/bin/pip install --upgrade pip && /env/bin/pip install -r /app/requirements.txt
-ADD . /app
+# polls.yaml expects the container to listen on port 8080.
+ENV PORT 8080
 
-CMD gunicorn -b :$PORT mysite.wsgi
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+
+# Install dependencies first to take advantage of layer caching.
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy local code to the container image.
+COPY . ./
+
+CMD exec gunicorn --bind :$PORT mysite.wsgi
