@@ -20,25 +20,35 @@ Install [`pip`][pip] and [`virtualenv`][virtualenv] if you do not already have t
 For more information, refer to the
 [Python Development Environment Setup Guide][setup] for Google Cloud.
 
-1. Create a virtualenv. Samples are compatible with Python 3.9+.
+1. Create a virtualenv. Samples are compatible with Python 3.13+.
 
     ```sh
     virtualenv env
     source env/bin/activate
     ```
 
-1. Install the dependencies needed to run the samples.
+1. Install the samples from this directory. The `workflows-samples` package
+   isn't published, so always install it from this directory, never by name
+   from PyPI.
 
     ```sh
-    pip install -r requirements.txt
+    pip install -e .
     ```
 
 1. Start the application, setting your project name in an environment variable, `GOOGLE_CLOUD_PROJECT`:
 
     ```sh
     export GOOGLE_CLOUD_PROJECT=your-project-id
-    python main.py
+    python -m workflows_samples.main
     ```
+
+    Each sample in `src/workflows_samples/` runs the same way, for example
+    `python -m workflows_samples.execute_with_arguments`. Run any sample with `--help`
+    to see its flags.
+
+The top-level `main.py`, `execute_with_arguments.py`, and
+`execute_without_arguments.py` are deprecated copies, kept until the docs
+pages embed the files in `src/workflows_samples/`.
 
 1. Observe the results:
 
