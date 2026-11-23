@@ -66,7 +66,7 @@
 /pubsublite/**/*                       @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /managedkafka/**/*                     @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /dataplex/**/*                         @GoogleCloudPlatform/googleapi-dataplex @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
-/agentregistry/**/*                    @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers @GoogleCloudPlatform/teams/cloud-docs
+/agentregistry/**/*                    @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers @GoogleCloudPlatform/cloud-docs
 
 # For practicing
 # ---* Use with codelabs to learn to submit samples
