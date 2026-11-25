@@ -59,7 +59,7 @@ Demonstrates how to generate image and edit images using Generative AI models. C
 and [Imagen on Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview) for details.
 
 
-### [Live API](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/genai/live_api/)
+### [Live API](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/genai/live/)
 
 Provides examples of using the Generative AI [Live API](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal-live-api).
 This allows for real-time interactions and dynamic content generation.
@@ -70,7 +70,7 @@ Provides examples of using the Generative AI [Model Optimizer](https://cloud.goo
 Vertex AI Model Optimizer is a dynamic endpoint designed to simplify model selection by automatically applying the 
 Gemini model which best meets your needs.
 
-### [Provisioned Throughput](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/genai/live_api/)
+### [Provisioned Throughput](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/genai/provisioned_throughput/)
 
 Provides examples demonstrating how to use Provisioned Throughput with Generative AI models. This feature provides a
 fixed-cost monthly subscription or weekly service that reserves throughput for supported generative AI models on Vertex AI.
