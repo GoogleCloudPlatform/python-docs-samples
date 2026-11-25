@@ -41,14 +41,14 @@ separate App Engine service within the same project.
 
 For the gateway:
 
-[Gateway service <default>](gateway/app.yaml)
+[Gateway service <default>](gateway-service/app.yaml)
 
 This is the `default` service.  There must be one (and not more).  The deployed
 url will be `https://<your project id>.appspot.com`
 
 For the static file server:
 
-[Static file service <static>](static/app.yaml)
+[Static file service <static>](static-service/app.yaml)
 
 The deployed url will be `https://<service name>-dot-<your project id>.appspot.com`
 
