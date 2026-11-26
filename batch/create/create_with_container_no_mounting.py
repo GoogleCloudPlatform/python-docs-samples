@@ -78,7 +78,7 @@ def create_container_job(project_id: str, region: str, job_name: str) -> batch_v
     job.labels = {"env": "testing", "type": "container"}
     # We use Cloud Logging as it's an out of the box available option
     job.logs_policy = batch_v1.LogsPolicy()
-    job.logs_policy.destination = batch_v1.LogsPolicy.Destination.CLOUD_LOGGING
+    job.logs_policy.destination = batch_v1.LogsPolicy.Destination(batch_v1.LogsPolicy.Destination.CLOUD_LOGGING)
 
     create_request = batch_v1.CreateJobRequest()
     create_request.job = job
