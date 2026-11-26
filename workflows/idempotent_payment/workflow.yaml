@@ -1,0 +1,84 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Processes an order once per client-supplied order_id, even when the client
+# retries the execution or the workflow retries the payment call.
+# Deploy with the PAYMENT_FUNCTION_URL environment variable, and optionally
+# FIRESTORE_DATABASE.
+
+# [START workflows_idempotent_order_workflow]
+main:
+  params: [args]
+  steps:
+    - init:
+        assign:
+          - order_id: ${string(args.order_id)}
+          - database: ${default(sys.get_env("FIRESTORE_DATABASE"), "(default)")}
+          - documents: ${"projects/" + sys.get_env("GOOGLE_CLOUD_PROJECT_ID") + "/databases/" + database + "/documents"}
+    - create_order:
+        try:
+          # Creating a document with the order ID fails with 409 if it exists,
+          # so concurrent executions can't both create the order.
+          call: googleapis.firestore.v1.projects.databases.documents.createDocument
+          args:
+            collectionId: orders
+            parent: ${documents}
+            documentId: ${order_id}
+            body:
+              fields:
+                order_state:
+                  stringValue: created
+                amount_cents:
+                  integerValue: ${string(args.amount_cents)}
+        except:
+          as: e
+          steps:
+            - check_conflict:
+                switch:
+                  - condition: ${map.get(e, "code") == 409}
+                    next: read_order
+            - unhandled_error:
+                raise: ${e}
+        next: call_payment
+    - read_order:
+        # A retried request finds the existing order and resumes from its state,
+        # instead of exiting and leaving an unpaid order behind.
+        call: googleapis.firestore.v1.projects.databases.documents.get
+        args:
+          name: ${documents + "/orders/" + order_id}
+        result: existing_order
+    - check_state:
+        switch:
+          - condition: ${existing_order.fields.order_state.stringValue == "paid"}
+            return:
+              order_id: ${order_id}
+              status: paid
+              already_processed: true
+    - call_payment:
+        try:
+          call: http.post
+          args:
+            url: ${sys.get_env("PAYMENT_FUNCTION_URL")}
+            auth:
+              type: OIDC
+            body:
+              order_id: ${order_id}
+            timeout: 30
+          result: payment
+        # The payment function is idempotent, so retrying timeouts and
+        # 429, 502, 503, and 504 responses can't charge twice.
+        retry: ${http.default_retry}
+    - finish:
+        return: ${payment.body}
+# [END workflows_idempotent_order_workflow]
