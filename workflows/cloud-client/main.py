@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,87 +12,86 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+# Deprecated: moved to src/workflows_samples/main.py. Kept until docs pages
+# embed the new path.
+# [START workflows_api_quickstart]
+import sys
+import time
 
-from google.cloud.workflows.executions_v1 import Execution
+from google.api_core import exceptions
+from google.cloud.workflows import executions_v1
 
 
-def execute_workflow(
-    project_id: str,
-    location: str,
-    workflow_id: str
-) -> Execution:
-    """Execute a workflow and print the execution results.
-
-    A workflow consists of a series of steps described
-    using the Workflows syntax, and can be written in either YAML or JSON.
+def execute_workflow(project_id: str, location_id: str, workflow_id: str) -> None:
+    """Runs a workflow and waits for it to finish.
 
     Args:
-        project: The ID of the Google Cloud project
-            which contains the workflow to execute.
-        location: The location for the workflow.
-        workflow: The ID of the workflow to execute.
-
-    Returns:
-        The execution response.
+        project_id: The Google Cloud project ID (for example, 'example-project-id').
+        location_id: The region of the workflow (for example, 'us-central1').
+        workflow_id: The ID of the workflow to run (for example, 'myFirstWorkflow').
     """
+    client = executions_v1.ExecutionsClient()
+    parent = f"projects/{project_id}/locations/{location_id}/workflows/{workflow_id}"
 
-# [START workflows_execute_without_arguments]
-# [START workflows_api_quickstart]
-    import time
-
-    from google.cloud import workflows_v1
-    from google.cloud.workflows import executions_v1
-
-    from google.cloud.workflows.executions_v1.types import executions
-
-    # TODO(developer): Update and uncomment the following lines.
-    # project_id = "MY_PROJECT_ID"
-    # location = "MY_LOCATION"  # For example: us-central1
-    # workflow_id = "MY_WORKFLOW_ID"  # For example: myFirstWorkflow
-
-    # [START workflows_api_quickstart_client_libraries]
-    # Initialize API clients.
-    execution_client = executions_v1.ExecutionsClient()
-    workflows_client = workflows_v1.WorkflowsClient()
-    # [END workflows_api_quickstart_client_libraries]
-
-    # [START workflows_api_quickstart_execution]
-    # Construct the fully qualified location path.
-    parent = workflows_client.workflow_path(project_id, location, workflow_id)
-
-    # Execute the workflow.
-    response = execution_client.create_execution(request={"parent": parent})
-    print(f"Created execution: {response.name}")
-
-    # Wait for execution to finish, then print results.
-    execution_finished = False
-    backoff_delay = 1  # Start wait with delay of 1 second.
-    print("Poll for result...")
-
-    while not execution_finished:
-        execution = execution_client.get_execution(
-            request={"name": response.name}
+    try:
+        execution = client.create_execution(parent=parent)
+        print(f"Waiting for execution {execution.name} to finish...")
+        # Executions run asynchronously. Poll with exponential backoff until done.
+        delay_seconds = 1
+        while execution.state == executions_v1.Execution.State.ACTIVE:
+            time.sleep(delay_seconds)
+            delay_seconds = min(delay_seconds * 2, 30)
+            execution = client.get_execution(name=execution.name)
+    except exceptions.NotFound as err:
+        print(
+            f"error: workflow '{workflow_id}' not found in location "
+            f"'{location_id}' for project '{project_id}': {err.message}",
+            file=sys.stderr,
         )
-        execution_finished = execution.state != executions.Execution.State.ACTIVE
+    except exceptions.GoogleAPICallError as err:
+        print(
+            f"error: failed to run workflow '{workflow_id}' in location "
+            f"'{location_id}' for project '{project_id}': {err.message}",
+            file=sys.stderr,
+        )
+    else:
+        print(f"Resource ID: {execution.name}")
+        if execution.state == executions_v1.Execution.State.FAILED:
+            print(f"Error: {execution.error.payload}")
+        print(f"Result: {execution.result}")
+        print(f"State: {execution.state.name}")
 
-        # If we haven't seen the result yet, keep waiting.
-        if not execution_finished:
-            print("- Waiting for results...")
-            time.sleep(backoff_delay)
-            # Double the delay to provide exponential backoff.
-            backoff_delay *= 2
-        else:
-            print(f"Execution finished with state: {execution.state.name}")
-            print(f"Execution results: {execution.result}")
-    # [END workflows_api_quickstart_execution]
+
 # [END workflows_api_quickstart]
-# [END workflows_execute_without_arguments]
-            return execution
 
 
 if __name__ == "__main__":
-    PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
-    assert PROJECT, "'GOOGLE_CLOUD_PROJECT' environment variable not set."
+    import argparse
+    import os
 
-    execute_workflow(PROJECT, "us-central1", "myFirstWorkflow")
+    # Each flag defaults to its environment variable, then to an example value.
+    parser = argparse.ArgumentParser(
+        description=execute_workflow.__doc__.splitlines()[0]
+    )
+    parser.add_argument(
+        "--project-id",
+        default=os.environ.get("GOOGLE_CLOUD_PROJECT", "example-project-id"),
+        help="Google Cloud project ID (default: $GOOGLE_CLOUD_PROJECT)",
+    )
+    parser.add_argument(
+        "--location-id",
+        default=os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1"),
+        help="Region of the workflow (default: $GOOGLE_CLOUD_LOCATION)",
+    )
+    parser.add_argument(
+        "--workflow-id",
+        default=os.environ.get("WORKFLOW_ID", "myFirstWorkflow"),
+        help="ID of the workflow (default: $WORKFLOW_ID)",
+    )
+    args = parser.parse_args()
+
+    execute_workflow(
+        project_id=args.project_id,
+        location_id=args.location_id,
+        workflow_id=args.workflow_id,
+    )
