@@ -1,0 +1,117 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Charges an order, then fulfills it. If charging or fulfillment fails after
+# retries, runs the compensating refund step so the order never ends up paid
+# without being fulfilled. When a charge response is lost, no fixed retry
+# budget can prove whether the provider charged, so the refund step cancels or
+# refunds by the charge's key; pair this in production with a periodic
+# reconciliation check against the payment provider's records.
+# Deploy with the PAYMENT_FUNCTION_URL, FULFILLMENT_URL, and REFUND_FUNCTION_URL
+# environment variables, and optionally FIRESTORE_DATABASE.
+
+# [START workflows_order_saga_workflow]
+main:
+  params: [args]
+  steps:
+    - init:
+        assign:
+          - order_id: ${string(args.order_id)}
+          - database: ${default(sys.get_env("FIRESTORE_DATABASE"), "(default)")}
+          - documents: ${"projects/" + sys.get_env("GOOGLE_CLOUD_PROJECT_ID") + "/databases/" + database + "/documents"}
+          - failure_reason: ""
+    - create_order:
+        try:
+          call: googleapis.firestore.v1.projects.databases.documents.createDocument
+          args:
+            collectionId: orders
+            parent: ${documents}
+            documentId: ${order_id}
+            body:
+              fields:
+                order_state:
+                  stringValue: created
+                amount_cents:
+                  integerValue: ${string(args.amount_cents)}
+        except:
+          as: e
+          steps:
+            - check_conflict:
+                switch:
+                  # A retried request continues with the existing order.
+                  - condition: ${map.get(e, "code") != 409}
+                    raise: ${e}
+    - charge:
+        try:
+          call: http.post
+          args:
+            url: ${sys.get_env("PAYMENT_FUNCTION_URL")}
+            auth:
+              type: OIDC
+            body:
+              order_id: ${order_id}
+            timeout: 30
+        retry: ${http.default_retry}
+        except:
+          as: charge_error
+          steps:
+            # A timed-out charge might have succeeded at the provider, so
+            # compensate before reporting failure.
+            - assign_charge_failure:
+                assign:
+                  - failure_reason: ${default(map.get(charge_error, "message"), "charge failed")}
+            - go_compensate_charge:
+                next: compensate
+    - fulfill:
+        try:
+          call: http.post
+          args:
+            url: ${sys.get_env("FULFILLMENT_URL")}
+            auth:
+              type: OIDC
+            body:
+              order_id: ${order_id}
+            timeout: 30
+        retry: ${http.default_retry}
+        except:
+          as: fulfill_error
+          steps:
+            - assign_fulfill_failure:
+                assign:
+                  - failure_reason: ${default(map.get(fulfill_error, "message"), "fulfillment failed")}
+            - go_compensate_fulfill:
+                next: compensate
+    - finish:
+        return:
+          order_id: ${order_id}
+          status: fulfilled
+    - compensate:
+        # Refunds the charge if one happened, or cancels the order if not.
+        try:
+          call: http.post
+          args:
+            url: ${sys.get_env("REFUND_FUNCTION_URL")}
+            auth:
+              type: OIDC
+            body:
+              order_id: ${order_id}
+            timeout: 30
+          result: compensation
+        retry: ${http.default_retry}
+    - report_compensation:
+        return:
+          order_id: ${order_id}
+          status: ${compensation.body.status}
+          reason: ${failure_reason}
+# [END workflows_order_saga_workflow]
