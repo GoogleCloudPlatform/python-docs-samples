@@ -1,0 +1,2 @@
+google-cloud-scheduler==2.21.0
+pytest==9.2.0
