@@ -18,7 +18,6 @@ command line application and sample code for getting the parameter version.
 
 from google.cloud import parametermanager_v1
 
-
 # [START parametermanager_get_param_version]
 
 # The GetParameterVersion operation retrieves parameter metadata and doesn't
@@ -69,7 +68,9 @@ def get_param_version(
     # Show parameter version details.
     # Find more details for the Parameter Version object here:
     # https://cloud.google.com/secret-manager/parameter-manager/docs/reference/rest/v1/projects.locations.parameters.versions#ParameterVersion
-    print(f"Found parameter version {response.name} with state {'disabled' if response.disabled else 'enabled'}")
+    print(
+        f"Found parameter version {response.name} with state {'disabled' if response.disabled else 'enabled'}"
+    )
     if not response.disabled:
         print(f"Payload: {response.payload.data.decode('utf-8')}")
     # [END parametermanager_get_param_version]
