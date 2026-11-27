@@ -1,0 +1,32 @@
+{
+  "supportedInterfaces": [
+    {
+      "url": "https://example.com/mock-travel-agent",
+      "protocolBinding": "HTTP+JSON",
+      "protocolVersion": "1.0.0"
+    }
+  ],
+  "name": "mock-travel-agent",
+  "description": "A mock agent that plans travel itineraries.",
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false
+  },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/plain"],
+  "skills": [
+    {
+      "id": "BookFlight",
+      "name": "BookFlight",
+      "description": "Books a flight to a destination.",
+      "tags": ["travel", "booking"]
+    },
+    {
+      "id": "SearchHotels",
+      "name": "SearchHotels",
+      "description": "Searches for hotels in a destination city.",
+      "tags": ["travel", "accommodation"]
+    }
+  ]
+}

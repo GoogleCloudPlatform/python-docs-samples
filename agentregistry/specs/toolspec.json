@@ -1,0 +1,23 @@
+{
+  "tools": [
+    {
+      "name": "get_customer_info",
+      "description": "Retrieves customer details from the database.",
+      "annotations": {
+        "title": "Get Customer Info",
+        "readOnlyHint": true,
+        "idempotentHint": true
+      }
+    },
+    {
+      "name": "create_support_ticket",
+      "description": "Creates a new support ticket in the issue tracking system.",
+      "annotations": {
+        "title": "Create Support Ticket",
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    }
+  ]
+}

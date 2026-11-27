@@ -1,0 +1,47 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# [START agentregistry_gke_mcp_server_manifest]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-mcp-server
+  labels:
+    # GKE takes this label and registers the deployment as an MCP server
+    registry.gke.io/functional-type: "MCP_SERVER"
+  annotations:
+    # Endpoint URLs where the GKE controller can access this MCP server
+    modelcontextprotocol.info/urls: |
+      - https://my-mcp-server.default.svc.cluster.local/mcp
+    # Defines structural capabilities for the MCP server card
+    modelcontextprotocol.info/capabilities: |
+      card:
+        endpoint: "/mcp"
+        protocol: "HTTP"
+spec:
+  selector:
+    matchLabels:
+      app: my-mcp-server
+  template:
+    metadata:
+      labels:
+        app: my-mcp-server
+      annotations:
+        # Agent Identity annotation for identity and access management
+        iam.gke.io/spiffe-identity-type: agent-identity
+    spec:
+      containers:
+      - name: server
+        image: gcr.io/PROJECT_ID/my-mcp-server:1.0.0
+# [END agentregistry_gke_mcp_server_manifest]
