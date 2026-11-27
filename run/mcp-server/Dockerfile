@@ -17,7 +17,7 @@
 FROM python:3.14-slim
 
 # Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.13.10 /uv /uvx /bin/
 
 # Install the project into /app
 COPY . /app
