@@ -6,4 +6,4 @@ opentelemetry-exporter-otlp-proto-grpc==1.39.1
 opentelemetry-resourcedetector-gcp==1.11.0a0
 google-auth==2.38.0
 grpcio==1.70.0
-requests==2.32.3
+requests==2.33.0
