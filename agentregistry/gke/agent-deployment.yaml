@@ -1,0 +1,67 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# [START agentregistry_gke_agent_manifest]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-agent
+  labels:
+    # GKE takes this label and registers the agent to Agent Registry
+    registry.gke.io/functional-type: "AGENT"
+  annotations:
+    # A2A protocol metadata annotation for automated Agent Card discovery
+    a2a-protocol.org/agent-card: |
+      card:
+        endpoint: /.well-known/agent-card.json
+        protocol: HTTP
+        port: 8080
+spec:
+  selector:
+    matchLabels:
+      app: my-agent
+  template:
+    metadata:
+      labels:
+        app: my-agent
+      annotations:
+        # Agent Identity annotation for identity and access management
+        iam.gke.io/spiffe-identity-type: agent-identity
+    spec:
+      containers:
+      - name: server
+        image: gcr.io/PROJECT_ID/my-agent:1.0.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+---
+# Kubernetes Service for in-cluster network routing to the agent pod
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-agent-service
+  labels:
+    app: my-agent
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: my-agent
+# [END agentregistry_gke_agent_manifest]
