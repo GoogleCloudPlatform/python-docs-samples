@@ -3,12 +3,12 @@ name = "mcp-server"
 version = "0.1.0"
 description = "Example of deploying an MCP server on Cloud Run"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.14"
 dependencies = [
-    "fastmcp==3.4.3",
-    "opentelemetry-api==1.40.0",
-    "opentelemetry-sdk==1.40.0",
-    "opentelemetry-exporter-otlp-proto-grpc==1.40.0",
+    "fastmcp==4.2.6",
+    "opentelemetry-api==1.45.2",
+    "opentelemetry-sdk==1.45.2",
+    "opentelemetry-exporter-otlp-proto-grpc==1.45.2",
     "google-auth==2.62.0",
     "grpcio==1.80.0",
     "requests==2.34.2",

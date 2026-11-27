@@ -45,7 +45,7 @@ provides a fast, Pythonic way to build MCP servers and clients.
 
 ## Prerequisites
 
-- Python 3.10+
+- Python 3.14+
 - Uv (for package and project management, see [docs for installation](https://docs.astral.sh/uv/getting-started/installation/))
 - Google Cloud SDK (gcloud)
 
