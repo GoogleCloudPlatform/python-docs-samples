@@ -1,0 +1,6 @@
+google-api-core==2.44.0
+google-cloud-spanner==3.72.0
+opentelemetry-api==1.45.2
+opentelemetry-exporter-gcp-trace==1.15.0
+opentelemetry-exporter-otlp-proto-grpc==1.45.2
+opentelemetry-sdk==1.45.2
