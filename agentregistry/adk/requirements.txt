@@ -1,0 +1,4 @@
+google-adk[a2a,agent-identity,mcp]>=1.29.0
+google-cloud-aiplatform[agent_engines]>=1.112.0
+httpx>=0.28.0
+google-auth>=2.0.0
