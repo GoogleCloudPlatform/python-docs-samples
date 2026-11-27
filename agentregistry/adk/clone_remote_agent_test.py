@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
 import clone_remote_agent
+import pytest
 
 
 def test_clone_remote_agent(
@@ -34,6 +33,4 @@ def test_clone_remote_agent(
     assert hotel_orchestrator.name == "hotel_orchestrator"
     assert len(flight_orchestrator.sub_agents) == 1
     assert len(hotel_orchestrator.sub_agents) == 1
-    assert (
-        flight_orchestrator.sub_agents[0] is not hotel_orchestrator.sub_agents[0]
-    )
+    assert flight_orchestrator.sub_agents[0] is not hotel_orchestrator.sub_agents[0]

@@ -14,10 +14,9 @@
 
 import uuid
 
+import deploy_agent_runtime
 import pytest
 import vertexai
-
-import deploy_agent_runtime
 
 
 def test_deploy_agent_runtime(

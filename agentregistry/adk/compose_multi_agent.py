@@ -48,9 +48,12 @@ def compose_multi_agent(
             self.creds, _ = google.auth.default()
 
         def auth_flow(self, request: httpx.Request) -> Iterator[httpx.Request]:
-            if not self.creds.valid:
-                self.creds.refresh(Request())
-            request.headers["Authorization"] = f"Bearer {self.creds.token}"
+            self.creds.before_request(
+                Request(),
+                request.method,
+                str(request.url),
+                request.headers,
+            )
             yield request
 
     httpx_client = httpx.AsyncClient(
