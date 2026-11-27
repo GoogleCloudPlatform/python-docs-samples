@@ -32,11 +32,11 @@ from google.cloud.storage.asyncio.async_multi_range_downloader import (
 async def storage_optimize_write_latency_pool(
     bucket_name: str, key_prefix: str, pool_size: int = 3, grpc_client=None
 ):
-    """Uses a pre-warmed pool of writers for a zonal bucket.
+    """Uses a pre-warmed pool of writers for appendable objects in a rapid bucket.
 
     grpc_client: an existing grpc_client to use, this is only for testing.
     """
-    # The ID of your GCS zonal bucket
+    # The ID of your GCS rapid bucket
     # bucket_name = "your-unique-bucket-name"
 
     # The prefix for your pooled GCS objects
@@ -117,7 +117,7 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
-        "--bucket_name", help="Your Cloud Storage zonal bucket name."
+        "--bucket_name", help="Your Cloud Storage rapid bucket name."
     )
     parser.add_argument(
         "--key_prefix", help="Prefix for pooled object names."
