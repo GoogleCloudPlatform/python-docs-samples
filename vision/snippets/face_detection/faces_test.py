@@ -13,9 +13,9 @@
 
 import os
 
-from PIL import Image
-
 from faces import main
+
+from PIL import Image
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
