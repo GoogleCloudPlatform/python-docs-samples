@@ -24,8 +24,8 @@ TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # > The Python version used is defined by the Dockerfile, so it's redundant
     # > to run multiple tests since they would all be running the same Dockerfile.
-    # Note: Docker-based sample, testing only against version specified in Dockerfile (3.14)
-    "ignored_versions": ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"],
+    # Note: Docker-based sample, testing only against version specified in Dockerfile (3.13)
+    "ignored_versions": ["3.8", "3.9", "3.10", "3.11", "3.12", "3.14"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": True,
